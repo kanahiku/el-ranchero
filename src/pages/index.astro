@@ -1,0 +1,118 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import BrandBar from '~/components/widgets/BrandBar.astro';
+import MenuCategories from '~/components/widgets/MenuCategories.astro';
+import Locations from '~/components/widgets/Locations.astro';
+import Testimonials from '~/components/widgets/Testimonials.astro';
+import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+import Image from '~/components/common/Image.astro';
+import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
+import { PRIMARY_CTA_HREF, CATERING_CTA_HREF } from '~/config/cta';
+import { getSanityHomepageImages } from '~/lib/content/sanity';
+
+const homepageImages = await getSanityHomepageImages();
+
+const metadata = {
+  title: 'El Ranchero | Fresh Salads & Local Ahi on Oahu',
+  description:
+    'Founded in Kailua in 2006, El Ranchero serves fresh island-grown produce and never-frozen local ahi across six Oahu locations. Order online for pickup.',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  {/* ── 1. Hero ───────────────────────────────────────────── */}
+  <Hero2
+    id="home-hero"
+    variant="overlay"
+    overlapHeader={false}
+    tagline="Kailua-born since 2006 · Six spots on Oahu"
+    title="El Ranchero: Fresh Food<br/>Crafted Daily on Oahu."
+    subtitle="Founded in Kailua in May 2006, El Ranchero provides fresh, locally grown food tailored to active island lifestyles. Voted First Place Hawaiis Best 2024 in the Peoples Choice Awards by the Star Advertiser, we operate six neighborhood restaurants across Oahu."
+    image={homepageImages.hero}
+    actions={[
+      { variant: 'primary', text: 'Order Online', href: PRIMARY_CTA_HREF },
+      { variant: 'ghost', text: 'Order Catering', href: CATERING_CTA_HREF },
+    ]}
+  />
+
+  {/* ── 2. Brand bar ─────────────────────────────────────── */}
+  <BrandBar />
+
+  {/* ── 3. Menu categories ───────────────────────────────── */}
+  <MenuCategories
+    eyebrow="Order Now"
+    title="Explore Our Full Menu"
+    subtitle="We prepare meals from scratch daily across our six Oahu locations. Browse our core categories below to find your meal or order ahead for fast pickup."
+    ctaText="View Full Menu"
+    ctaHref="/menu"
+    maxRows={2}
+  />
+
+  {/* ── 4. Local sourcing — SaladBuilder-style gradient split ── */}
+  <section class="not-prose relative w-full overflow-hidden bg-section-dark">
+    <div class="mx-auto max-w-container px-4 py-12 md:px-8">
+      <div
+        class="flex min-h-[610px] w-full flex-col items-center justify-center gap-10 bg-page px-4 py-10 md:flex-row md:gap-16 md:px-16 md:py-16"
+      >
+        {/* Left — text + CTA */}
+        <div class="flex min-w-0 flex-1 flex-col items-start gap-6">
+          <div class="flex w-full flex-col gap-6">
+            <Heading variant="eyebrow" color="inherit" class="text-accent opacity-80"> Local sourcing </Heading>
+            <Heading variant="h2">Our Local Sourcing</Heading>
+            <Text variant="body-lg" color="default">
+              We partner with Hawaii growers and suppliers to bring quality ingredients into our kitchens. We feature
+              vine-ripe tomatoes from Hauula and exclusively use never-frozen local ahi sourced through a Honolulu
+              seafood supplier with vessel-level catch traceability.
+            </Text>
+          </div>
+          <Button variant="primary" text="Our Ingredients" href="/ingredients" hideNote={true} />
+        </div>
+
+        {/* Right — food photo placeholder */}
+        <div class="relative w-full max-w-[400px] shrink-0" style="aspect-ratio: 562 / 624;">
+          {
+            homepageImages.localSourcing ? (
+              <Image
+                {...homepageImages.localSourcing}
+                class="absolute inset-0 h-full w-full object-cover"
+                widths={[320, 480, 640, 828]}
+                sizes="(max-width: 768px) 100vw, 400px"
+                loading="lazy"
+                width={562}
+                height={624}
+                layout="cover"
+                format="webp"
+              />
+            ) : (
+              <HeroImagePlaceholder fill class="absolute inset-0" />
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ── 5. Testimonials — fetched from Sanity ────────────── */}
+  <Testimonials id="reviews" heading="What Our Customers Say" />
+
+  {/* ── 6. Locations ─────────────────────────────────────── */}
+  <Locations
+    id="locations"
+    eyebrow="Visit Now"
+    title="Visit a Store Near You"
+    subtitle="Stop by any of our six Oahu locations in Kailua, Kahala, Kaneohe, Kapolei, Mililani, or Pearlridge."
+    ctaText="View All Locations"
+    ctaHref="/locations"
+    image={homepageImages.locations}
+  />
+
+  {/* ── 7. Salad builder — hidden (not in copy brief) ───── */}
+  {/* <SaladBuilder id="salad-builder" /> */}
+
+  {/* ── 8. Our story — hidden (not in copy brief) ─────── */}
+  {/* <OurStory id="our-story" /> */}
+</Layout>

@@ -1,0 +1,117 @@
+---
+/**
+ * CTABanner — page CTA closer.
+ *
+ * Restaurant-grade redesign:
+ *   - Full-width deep cacao section (bg-dark, #3C2718) — the most premium
+ *     brand dark, used as the closing act before the footer.
+ *   - Centered column layout: ornamental rule → eyebrow → display headline
+ *     → subtitle → primary CTA button → ornamental rule.
+ *   - Headline uses h1 scale (Norca Rough) — takes maximum visual weight.
+ *   - CTA is primary (hibiscus fill, cream text) — not ghost/outline.
+ *   - No blob shapes, no pill containers, no gradient pills.
+ *
+ * Sequence on page: LocalSourcing (sage) → FAQs (blueberry) → CTABanner (cacao)
+ * → Footer (cream).
+ */
+
+import Button from '~/components/ui/Button.astro';
+import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import { PRIMARY_CTA_HREF, LOCATION_CTA_HREF, CATERING_CTA_HREF } from '~/config/cta';
+
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  id?: string;
+
+  /** @deprecated Legacy template props — accepted but ignored. */
+  ctaText?: string;
+  /** @deprecated Legacy template props — accepted but ignored. */
+  ctaHref?: string;
+  /** @deprecated Legacy template props — accepted but ignored. */
+  secondaryCtaText?: string;
+  /** @deprecated Legacy template props — accepted but ignored. */
+  secondaryCtaHref?: string;
+  /** @deprecated Legacy template props — accepted but ignored. */
+  showAfterHoursNote?: boolean;
+  /** @deprecated Legacy template prop — accepted but ignored. */
+  license?: string;
+  /** @deprecated Legacy template props — accepted but ignored. */
+  extraLines?: string[];
+}
+
+const {
+  eyebrow,
+  title,
+  subtitle,
+  id,
+} = Astro.props;
+
+const conversionLinks = [
+  { text: 'Find a location', href: LOCATION_CTA_HREF, variant: 'ghost' as const },
+  { text: 'Order Online', href: PRIMARY_CTA_HREF, variant: 'primary' as const },
+  { text: 'Order Catering', href: CATERING_CTA_HREF, variant: 'ghost' as const },
+];
+---
+
+<section
+  {...id ? { id } : {}}
+  class="not-prose relative w-full overflow-hidden bg-section-dark py-20 md:py-32 lg:py-40"
+>
+
+  <div class="relative z-[1] mx-auto flex w-full max-w-container flex-col items-center gap-8 px-5 text-center sm:px-8 md:px-16">
+
+    {/* ── Top ornamental rule ──────────────────────────────── */}
+    <div class="flex w-full max-w-xs items-center gap-4">
+      <div class="h-px flex-1 bg-page/20"></div>
+      <span class="font-script text-[22px] leading-none text-accent" aria-hidden="true">✦</span>
+      <div class="h-px flex-1 bg-page/20"></div>
+    </div>
+
+    <div class="flex w-full flex-col items-center gap-6">
+      {/* ── Eyebrow ─────────────────────────────────────────── */}
+      {eyebrow && (
+        <p class="font-script text-[var(--aw-text-eyebrow)] leading-none text-contrast/50">{eyebrow}</p>
+      )}
+
+      {/* ── Display headline — h2 scale (semantic: not a page title) ─── */}
+      <Heading
+        variant="h2"
+        color="inherit"
+        class="max-w-3xl text-balance text-contrast"
+      >
+        {title}
+      </Heading>
+
+      {/* ── Subtitle ─────────────────────────────────────────── */}
+      {subtitle && (
+        <Text variant="body-lg" class="max-w-lg text-balance text-contrast/55">
+          {subtitle}
+        </Text>
+      )}
+
+      {/* ── CTAs ─────────────────────────────────────────────── */}
+      <div class="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
+        {conversionLinks.map((link) => (
+          <Button
+            variant={link.variant}
+            tone="dark"
+            text={link.text}
+            href={link.href}
+            hideNote={true}
+          />
+        ))}
+      </div>
+    </div>
+
+    {/* ── Bottom ornamental rule ───────────────────────────── */}
+    <div class="flex w-full max-w-xs items-center gap-4">
+      <div class="h-px flex-1 bg-page/20"></div>
+      <span class="font-script text-[22px] leading-none text-accent" aria-hidden="true">✦</span>
+      <div class="h-px flex-1 bg-page/20"></div>
+    </div>
+
+  </div>
+</section>

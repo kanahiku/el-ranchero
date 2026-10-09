@@ -1,0 +1,7 @@
+---
+import { site } from '~/config/site';
+---
+
+{site.analytics.googleSiteVerificationId && (
+  <meta name="google-site-verification" content={site.analytics.googleSiteVerificationId} />
+)}

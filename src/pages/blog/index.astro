@@ -1,0 +1,52 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import SectionBg from '~/components/ui/SectionBg.astro';
+import BlogCard from '~/components/ui/BlogCard.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import { getBlogPosts } from '~/lib/content';
+import { CONTACT } from '~/config/contact';
+import { PRIMARY_CTA_LABEL } from '~/config/cta';
+
+export const prerender = false;
+
+const posts = await getBlogPosts();
+
+const metadata = {
+  title: `Blog | ${CONTACT.businessName}`,
+  description: `Articles and updates from ${CONTACT.businessName}.`,
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <WidgetWrapper containerClass="max-w-container mx-auto">
+    <h1
+      class="text-[42px] md:text-[56px] font-normal leading-[105%] tracking-tighter font-heading text-heading mb-[30px]"
+    >
+      Blogs
+    </h1>
+    {
+      posts.length ? (
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          {posts.map((post) => (
+            <BlogCard post={post} variant="dark" />
+          ))}
+        </div>
+      ) : (
+        <p class="text-[16px] md:text-[17px] font-normal leading-[160%] text-muted">
+          New articles will appear here as they are published.
+        </p>
+      )
+    }
+    <Fragment slot="bg">
+      <SectionBg variant="grey" />
+    </Fragment>
+  </WidgetWrapper>
+
+  <CTABanner
+    title="Have a question?"
+    subtitle={`Contact ${CONTACT.businessName} and we will follow up.`}
+    ctaText={PRIMARY_CTA_LABEL}
+  />
+</Layout>

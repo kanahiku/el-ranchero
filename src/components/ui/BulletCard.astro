@@ -1,0 +1,36 @@
+---
+import CardWrapper from './CardWrapper.astro';
+
+export interface Props {
+  title: string;
+  items: string[];
+  variant?: 'dark' | 'light';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const {
+  title,
+  items,
+  variant = 'dark',
+  size = 'lg',
+  class: className = '',
+} = Astro.props;
+
+const headingClass = variant === 'dark' ? 'text-card-heading-dark' : 'text-card-heading-light';
+const bodyClass = variant === 'dark' ? 'text-card-body-dark' : 'text-card-body-light';
+---
+
+<CardWrapper variant={variant} size={size} class={className}>
+  <h3 class:list={['text-[22px] md:text-[26px] font-sans font-medium leading-[130%] mb-5 ', headingClass]}>
+    {title}
+  </h3>
+  <ul class="space-y-4">
+    {items.map((item) => (
+      <li class="flex gap-3">
+        <span class="shrink-0 text-accent font-bold text-[18px] leading-[160%]" aria-hidden="true">›</span>
+        <span class:list={['text-[15px] md:text-[16px] font-normal leading-[160%]', bodyClass]}>{item}</span>
+      </li>
+    ))}
+  </ul>
+</CardWrapper>

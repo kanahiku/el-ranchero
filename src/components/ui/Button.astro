@@ -1,0 +1,95 @@
+---
+/**
+ * Button atom — single component for all CTA variants.
+ *
+ * Hover animation lives on the `.btn` / `.btn-*` utilities in tailwind.css
+ * (200ms ease, fill/color swap, 1px lift). Do not add per-page hover classes.
+ *
+ * Variants:
+ *   primary → square hibiscus fill, cream Norca-Rough 14px, px-7 py-6
+ *   ghost tone=dark  → 2px cream outline on photos
+ *   ghost tone=light → 2px cacao outline on cream
+ *   link → inline hibiscus text link
+ *
+ * Backward-compat aliases: 'ghost-dark' and 'ghost-light' still resolve correctly
+ * so existing data objects (actions arrays, CMS entries) dont need updating.
+ *
+ * Usage:
+ *   <Button variant="primary" text="order online" href="#" />
+ *   <Button variant="ghost" text="view locations" href="/locations" />
+ *   <Button variant="ghost" tone="light" text="Learn more" href="/about" />
+ *   <Button variant="link" text="Read more" href="/blog" />
+ */
+import { Icon } from 'astro-icon/components';
+import { twMerge } from 'tailwind-merge';
+import type { CallToAction } from '~/types';
+import CTANote from '~/components/ui/CTANote.astro';
+import { PRIMARY_CTA_NOTE } from '~/config/cta';
+
+export interface Props extends CallToAction {
+  /**
+   * Controls ghost button surface.
+   * tone="dark"  → white-border glass  (default — for hero / dark / photo sections)
+   * tone="light" → dark-border          (for light / grey sections)
+   * Only used when variant="ghost".
+   */
+  tone?: 'dark' | 'light';
+}
+
+const {
+  variant = 'primary',
+  tone = 'dark',
+  target,
+  text = Astro.slots.render('default'),
+  icon = '',
+  class: className = '',
+  type,
+  hideNote = false,
+  noteTone = 'light',
+  ...rest
+} = Astro.props;
+
+// Resolve ghost based on tone; keep legacy aliases for data-driven action arrays.
+const variantClass: Record<string, string> = {
+  primary:      'btn-primary',
+  secondary:    'btn-secondary',
+  tertiary:     'btn-secondary',
+  ghost:        tone === 'light' ? 'btn-ghost-light' : 'btn-ghost-dark',
+  'ghost-dark':  'btn-ghost-dark',   // backward compat
+  'ghost-light': 'btn-ghost-light',  // backward compat
+  link:         'btn-link',
+};
+
+const showNote = variant === 'primary' && !hideNote && Boolean(PRIMARY_CTA_NOTE);
+const isNativeButton = type === 'button' || type === 'submit' || type === 'reset';
+const buttonClass = twMerge(variantClass[variant] ?? '', className, showNote && 'w-auto self-start');
+---
+
+{
+  showNote ? (
+    <div class="flex flex-col gap-1.5 w-full">
+      {isNativeButton ? (
+        <button type={type} class={buttonClass} {...rest}>
+          <Fragment set:html={text} />
+          {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
+        </button>
+      ) : (
+        <a class={buttonClass} {...(target ? { target, rel: 'noopener noreferrer' } : {})} {...rest}>
+          <Fragment set:html={text} />
+          {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
+        </a>
+      )}
+      <CTANote tone={noteTone} />
+    </div>
+  ) : isNativeButton ? (
+    <button type={type} class={buttonClass} {...rest}>
+      <Fragment set:html={text} />
+      {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
+    </button>
+  ) : (
+    <a class={buttonClass} {...(target ? { target, rel: 'noopener noreferrer' } : {})} {...rest}>
+      <Fragment set:html={text} />
+      {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
+    </a>
+  )
+}

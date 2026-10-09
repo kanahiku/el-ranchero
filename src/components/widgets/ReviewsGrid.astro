@@ -1,0 +1,86 @@
+---
+import Headline from '~/components/ui/Headline.astro';
+import ReviewCard from '~/components/ui/ReviewCard.astro';
+import Button from '~/components/ui/Button.astro';
+import { getReviewFeed, limitReviewsForDisplay, type ReviewSource } from '~/lib/reviews';
+
+export interface Props {
+  heading?: string;
+  intro?: string;
+  sources?: ReviewSource[];
+  variant?: 'light' | 'dark';
+  showHeader?: boolean;
+  isDark?: boolean;
+  showCta?: boolean;
+}
+
+const {
+  heading,
+  intro,
+  sources = ['google', 'yelp'],
+  variant = 'dark',
+  showHeader = true,
+  isDark = false,
+  showCta = true,
+} = Astro.props;
+
+const feed = limitReviewsForDisplay(await getReviewFeed(sources), sources);
+const ctaVariant = isDark ? 'ghost-dark' : 'ghost-light';
+const introColor = isDark ? 'text-white/70' : 'text-muted';
+const viewAll = [
+  sources.includes('google') && feed.viewAll.google
+    ? { label: 'View all on Google', href: feed.viewAll.google }
+    : null,
+  sources.includes('yelp') && feed.viewAll.yelp ? { label: 'View all on Yelp', href: feed.viewAll.yelp } : null,
+].filter(Boolean) as { label: string; href: string }[];
+
+const count = feed.reviews.length;
+const gridClass =
+  count >= 6 || count === 3
+    ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6'
+    : count === 4
+      ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6'
+      : 'grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6';
+---
+
+{
+  showHeader && heading && (
+    <>
+      <Headline
+        isDark={isDark}
+        title={heading}
+        classes={{ container: `${intro ? 'mb-[9px]' : 'mb-[30px]'} text-left md:mx-0` }}
+      />
+      {intro && (
+        <p
+          class:list={[
+            'text-[16px] md:text-[17px] font-normal leading-[160%] text-left max-w-3xl mb-[30px]',
+            introColor,
+          ]}
+        >
+          {intro}
+        </p>
+      )}
+    </>
+  )
+}
+
+{
+  count > 0 && (
+    <div class={gridClass}>
+      {feed.reviews.map((review) => (
+        <ReviewCard review={review} variant={variant} showLink={showCta} />
+      ))}
+    </div>
+  )
+}
+
+{
+  showCta && viewAll.length > 0 && (
+    <div class:list={['flex flex-wrap justify-center gap-3', count > 0 ? 'mt-8 md:mt-10' : '']}>
+      {viewAll.map((cta) => (
+        <Button variant={ctaVariant} text={cta.label} href={cta.href} target="_blank" />
+      ))}
+    </div>
+  )
+}

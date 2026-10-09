@@ -1,0 +1,195 @@
+---
+import { Icon } from 'astro-icon/components';
+import Button from '~/components/ui/Button.astro';
+import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Image from '~/components/common/Image.astro';
+import type { Content as Props } from '~/types';
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline,
+  content = await Astro.slots.render('content'),
+  callToAction,
+  items = [],
+  columns,
+  image = await Astro.slots.render('image'),
+  isReversed = false,
+  isAfterContent = false,
+  imageFit = 'bleed',
+
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+
+const columnsClass =
+  columns === 4
+    ? 'lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2'
+    : columns === 3
+      ? 'lg:grid-cols-3 sm:grid-cols-2'
+      : columns === 2
+        ? 'sm:grid-cols-2'
+        : '';
+
+const hasImage = Boolean(image);
+const isBleed = hasImage && imageFit === 'bleed';
+---
+
+<WidgetWrapper
+  id={id}
+  isDark={isDark}
+  containerClass={`max-w-container mx-auto ${isBleed ? 'px-0 py-0 md:px-0 md:py-0 lg:py-0' : ''} ${isAfterContent ? 'pt-0 md:pt-0 lg:pt-0' : ''} ${classes?.container ?? ''}`}
+  bg={bg}
+>
+  {!hasImage && (
+    <Headline
+      title={title}
+      subtitle={subtitle}
+      tagline={tagline}
+      classes={{
+      title: 'text-[26px] md:text-[40px] font-normal leading-[110%] tracking-tighter font-heading',
+      subtitle: 'text-[16px] md:text-[17px] font-normal leading-[160%] text-muted dark:text-slate-400',
+      }}
+    />
+  )}
+  <div class="mx-auto">
+    <div
+      class:list={[
+        { 'md:flex': hasImage },
+        { 'md:items-stretch md:min-h-[560px] lg:min-h-[700px]': isBleed },
+        { 'md:gap-16': hasImage && !isBleed },
+        { 'md:flex-row-reverse': hasImage && isReversed },
+      ]}
+    >
+      <div
+        class:list={[
+          'flex flex-col items-start gap-6',
+          { 'md:basis-1/2': hasImage },
+          isBleed
+            ? [
+                'self-center py-12 md:py-16 lg:py-20 px-4',
+                isReversed
+                  ? 'md:pr-6 md:pl-16 lg:pl-24'
+                  : 'md:pl-6 md:pr-16 lg:pr-24',
+              ]
+            : 'self-center',
+        ]}
+      >
+        {hasImage && title && (
+          <h2
+            class={`text-[26px] md:text-[40px] font-normal leading-[110%] tracking-tighter font-heading ${classes?.title ?? 'text-heading'}`}
+            set:html={title}
+          />
+        )}
+        {content && (
+          <div
+            class="text-[16px] md:text-[17px] font-normal leading-[160%] dark:text-slate-400"
+            set:html={content}
+          />
+        )}
+
+        {
+          items.length > 0 && (
+            <div class:list={['grid mx-auto gap-y-4 md:gap-y-8 gap-8', columnsClass]}>
+              {items.map(({ title: itemTitle, description, icon, callToAction }) => (
+                <div class="intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+                  <div class="flex flex-row max-w-none">
+                    <div class="flex justify-center">
+                      <Icon
+                        name={icon || 'tabler:check'}
+                        class="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-black p-1 mr-2 rtl:mr-0 rtl:ml-2"
+                      />
+                    </div>
+                    <div class="mt-0.5">
+                      {itemTitle && (
+                        <h3 class="text-[18px] md:text-[20px] font-sans font-medium leading-[130%] ml-2 rtl:ml-0 rtl:mr-2">
+                          {itemTitle}
+                        </h3>
+                      )}
+                      {description && (
+                        <p
+                          class:list={[{ 'mt-3': itemTitle }, 'text-muted dark:text-slate-400 ml-2 rtl:ml-0 rtl:mr-2']}
+                          set:html={description}
+                        />
+                      )}
+                      {callToAction && (
+                        <div
+                          class:list={[
+                            { 'mt-3': itemTitle || description },
+                            'text-lg font-medium leading-6 dark:text-white ml-2 rtl:ml-0 rtl:mr-2',
+                          ]}
+                        >
+                          <Button variant="link" {...callToAction} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        }
+
+        {
+          callToAction && (
+            <div>
+              <Button {...callToAction} />
+            </div>
+          )
+        }
+      </div>
+      {
+        hasImage && (
+          <div
+            aria-hidden={!isBleed}
+            class:list={[
+              isBleed
+                ? 'relative mt-8 md:mt-0 md:basis-1/2 aspect-[4/3] md:aspect-auto'
+                : 'mt-10 md:mt-0 md:basis-1/2 flex justify-center',
+              !isBleed && (isReversed ? 'md:justify-start' : 'md:justify-end'),
+            ]}
+          >
+            {isBleed ? (
+              <div class="absolute inset-0 overflow-hidden [&>*]:h-full [&>*]:w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:rounded-none">
+                {typeof image === 'string' ? (
+                  <Fragment set:html={image} />
+                ) : (
+                  <Image
+                    {...image}
+                    class="w-full h-full object-cover"
+                    width={700}
+                    height={700}
+                    widths={[400, 768, 1200]}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    layout="cover"
+                    format="webp"
+                  />
+                )}
+              </div>
+            ) : (
+              <div class="relative w-full max-w-[500px] aspect-square">
+                {typeof image === 'string' ? (
+                  <Fragment set:html={image} />
+                ) : (
+                  <Image
+                    class="w-full h-full rounded-lg object-cover bg-gray-500 shadow-lg"
+                    width={500}
+                    height={500}
+                    widths={[400, 768]}
+                    sizes="(max-width: 768px) 100vw, 500px"
+                    layout="cover"
+                    format="webp"
+                    {...image}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</WidgetWrapper>

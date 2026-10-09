@@ -1,0 +1,30 @@
+---
+description: Image placement — always use grey placeholder boxes during build; never embed real images
+alwaysApply: true
+---
+
+# Image placeholders
+
+During the build phase, **never** import or embed real images. Use a grey placeholder `<div>` instead. Images are polished in a separate design pass.
+
+## Rule
+
+Every place Figma shows an image (photo, chart, illustration, icon background):
+
+```astro
+<!-- ✅ CORRECT — grey box placeholder -->
+<div
+  class="w-full rounded-[32px] bg-section-grey"
+  style="aspect-ratio: 16 / 9;"
+  aria-hidden="true"
+/>
+
+<!-- ❌ WRONG — do not import or embed real images yet -->
+<Image src={chart} alt="…" class="w-full rounded-[32px]" />
+```
+
+- Set `aspect-ratio` to the Figma image's exact ratio (e.g. `1695 / 928`, `4 / 3`, `1 / 1`).
+- Use `bg-section-grey` as the fill color (token already available).
+- Add `rounded-*` to match the Figma corner radius of the image frame.
+- Leave a `<!-- TODO: replace with <Image> when asset is ready -->` comment so it's easy to find later.
+- Do **not** download, save, or reference image files from the Figma MCP localhost server in production code.

@@ -1,0 +1,63 @@
+---
+import { Icon } from 'astro-icon/components';
+import CardWrapper from './CardWrapper.astro';
+import type { CardVariant } from '~/config/theme';
+
+export interface Props {
+  title: string;
+  description: string;
+  icon?: string;
+  variant?: CardVariant;
+  size?: 'sm' | 'md' | 'lg';
+  border?: boolean;
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  icon,
+  variant = 'dark',
+  size = 'md',
+  border = true,
+  class: className = '',
+} = Astro.props;
+
+const headingClass: Record<CardVariant, string> = {
+  dark: 'text-card-heading-dark',
+  light: 'text-card-heading-light',
+  outlined: 'text-card-heading-outlined',
+  glass: 'text-card-heading-glass',
+}[variant];
+
+const bodyClass: Record<CardVariant, string> = {
+  dark: 'text-card-body-dark',
+  light: 'text-card-body-light',
+  outlined: 'text-card-body-outlined',
+  glass: 'text-card-body-glass',
+}[variant];
+
+// Icon mark: dark bg square for light cards; accent-bordered square for dark/glass
+const iconMark: Record<CardVariant, string> = {
+  dark: 'border border-accent/60',
+  light: 'bg-card-dark',
+  outlined: 'bg-card-dark',
+  glass: 'border border-accent/60',
+}[variant];
+---
+
+<CardWrapper variant={variant} size={size} border={border} class={className}>
+  {
+    icon && (
+      <div class:list={['mb-4 size-9 sm:size-10 rounded-md flex items-center justify-center shrink-0', iconMark]}>
+        <Icon name={icon} class="size-3.5 sm:size-5 text-accent" aria-hidden="true" />
+      </div>
+    )
+  }
+  <h3 class:list={['text-[16px] md:text-[18px] font-sans font-medium leading-[130%] mb-2', headingClass]}>
+    {title}
+  </h3>
+  <p class:list={['text-[14px] md:text-[15px] font-normal leading-[160%]', bodyClass]}>
+    {description}
+  </p>
+</CardWrapper>

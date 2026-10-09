@@ -1,0 +1,90 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
+import LocalSourcing from '~/components/widgets/LocalSourcing.astro';
+import MenuCategories from '~/components/widgets/MenuCategories.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import { PRIMARY_CTA_HREF, LOCATION_CTA_HREF, CATERING_CTA_HREF } from '~/config/cta';
+import { getMenuCategory } from '~/lib/content';
+
+const metadata = {
+  title: 'Misc Menu Favorites | El Ranchero Oahu',
+  description:
+    'Explore additional El Ranchero favorites including avocado toast, dessert toast, and acai bowls across our Oahu locations.',
+  ignoreTitleTemplate: true,
+};
+
+const miscItems = [
+  {
+    title: 'Avocado Toast',
+  },
+  {
+    title: 'Dessert Toast',
+  },
+  {
+    title: 'Acai Bowl',
+  },
+];
+
+const cmsCategory = await getMenuCategory('misc');
+const menuItems = cmsCategory?.items.length ? cmsCategory.items : miscItems;
+
+const faqs = [
+  {
+    title: 'Where can I find these menu items?',
+    description:
+      "Availability may vary by location. Order online or contact your neighborhood El Ranchero to confirm what is available today.",
+  },
+  {
+    title: 'Can I order these items online?',
+    description: 'Yes. Available items can be added to your online order for fast pickup.',
+  },
+  {
+    title: 'Are these items available for catering?',
+    description: 'Some menu favorites may be available for group orders. Contact us to plan your catering menu.',
+  },
+];
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    title="Misc Menu Favorites"
+    content="Explore additional favorites and cafe-style selections from the El Ranchero menu."
+    actions={[
+      { variant: 'primary', text: 'Order Online', href: PRIMARY_CTA_HREF },
+      { variant: 'ghost', tone: 'dark', text: 'Find a Location', href: LOCATION_CTA_HREF },
+    ]}
+  />
+
+  <MenuItemsSection title="Our Misc Menu" items={menuItems} />
+
+  <LocalSourcing
+    title="Fresh Ingredients"
+    subtitle="Our additional menu favorites follow the same ingredient-first approach as our signature salads, wraps, and bowls."
+    ctaText="Learn More About Our Ingredients"
+    ctaHref="/ingredients"
+    withPhoto={true}
+  />
+
+  <MenuCategories
+    title="Explore Other Menu Categories"
+    subtitle="Looking for something else? Browse the rest of our menu:"
+    excludeHrefs={['/menu/misc', '/menu/design-your-own-salad']}
+    ctaText=""
+  />
+
+  <CTABanner
+    title="Ready to Order?"
+    subtitle="Skip the line and place your order online for fast pickup. Planning a group event? We also offer catering options."
+    ctaText="Order Online"
+    ctaHref={PRIMARY_CTA_HREF}
+    secondaryCtaText="Order Catering"
+    secondaryCtaHref={CATERING_CTA_HREF}
+  />
+
+  <FAQs title="Frequently Asked Questions" items={faqs} isDark={true} />
+</PageLayout>

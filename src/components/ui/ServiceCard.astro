@@ -1,0 +1,62 @@
+---
+import CardWrapper from './CardWrapper.astro';
+import type { CardVariant } from '~/config/theme';
+
+export interface Props {
+  title: string;
+  description: string;
+  href: string;
+  linkText?: string;
+  variant?: CardVariant;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  href,
+  linkText = 'Learn More →',
+  variant = 'dark',
+  size = 'md',
+  class: className = '',
+} = Astro.props;
+
+const headingClass: Record<CardVariant, string> = {
+  dark: 'text-card-heading-dark',
+  light: 'text-card-heading-light',
+  outlined: 'text-card-heading-outlined',
+  glass: 'text-card-heading-glass',
+}[variant];
+
+const bodyClass: Record<CardVariant, string> = {
+  dark: 'text-card-body-dark',
+  light: 'text-card-body-light',
+  outlined: 'text-card-body-outlined',
+  glass: 'text-card-body-glass',
+}[variant];
+
+const linkClass: Record<CardVariant, string> = {
+  dark: 'text-card-link-dark hover:text-white',
+  light: 'btn-link',
+  outlined: 'btn-link',
+  glass: 'text-card-link-glass hover:text-white',
+}[variant];
+---
+
+<CardWrapper variant={variant} size={size} href={href} class={className}>
+  <h3 class:list={['text-[18px] md:text-[20px] font-sans font-medium leading-[130%] mb-2', headingClass]}>
+    {title}
+  </h3>
+  <p class:list={['text-[14px] md:text-[15px] font-normal leading-[160%] mb-3 flex-1', bodyClass]}>
+    {description}
+  </p>
+  <span
+    class:list={[
+      'mt-auto text-[14px] md:text-[15px] font-medium card-link',
+      linkClass,
+    ]}
+  >
+    {linkText}
+  </span>
+</CardWrapper>

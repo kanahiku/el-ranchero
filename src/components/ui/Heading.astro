@@ -1,0 +1,76 @@
+---
+/**
+ * Heading atom — one component for every heading level and the eyebrow label.
+ *
+ * variant  (controls visual scale and default semantic element):
+ *   h1      → <h1>   36→72 px / lh 1     hero headlines (Norca-Rough)
+ *   h2      → <h2>   32→52 px / lh 1     section headings (Norca-Rough)
+ *   h3      → <h3>   20→26 px / lh 1     dish / numbered titles (Norca-Rough)
+ *   h4      → <h4>   20→24 px / lh 1     card / subsection titles (Norca)
+ *   eyebrow → <p>    16 px script        Figma `tag` — Wreck Script, sentence case
+ *
+ * color:
+ *   default  → heading color  (h1–h4) / hibiscus accent (eyebrow)
+ *   white    → cream on photos (h1–h4 and eyebrow)
+ *   muted    → text-muted
+ *   inherit  → no color class — use class= to pass a custom token (e.g. class="text-tan")
+ *
+ * as:  Override the semantic element while keeping the visual scale.
+ *      Useful when hierarchy demands h2 but the design uses h3 sizing.
+ *
+ * Usage:
+ *   <Heading variant="h1">Fresh, healthy food that tastes worth coming back for.</Heading>
+ *   <Heading variant="h2" html="Two <em>lines</em>" />
+ *   <Heading variant="h3" color="white">On a dark section</Heading>
+ *   <Heading variant="eyebrow" color="white">Phase 1</Heading>
+ *   <Heading variant="eyebrow" color="white" class="opacity-50">Dimmed label</Heading>
+ *   <Heading variant="h2" color="inherit" class="text-tan">Custom colour</Heading>
+ */
+import { twMerge } from 'tailwind-merge';
+
+type Variant = 'h1' | 'h2' | 'h3' | 'h4' | 'eyebrow';
+type Color   = 'default' | 'white' | 'muted' | 'inherit';
+
+export interface Props {
+  /** Visual scale + default semantic element. Defaults to h2. */
+  variant?: Variant;
+  /** Override semantic element independently of visual scale. */
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span';
+  /** Text colour preset. Defaults to 'default'. */
+  color?: Color;
+  /** Render HTML string via set:html instead of using the slot. */
+  html?: string;
+  class?: string;
+}
+
+const { variant = 'h2', as: asOverride, color = 'default', html, class: className = '' } = Astro.props;
+
+// Default semantic element per variant
+const defaultElement: Record<Variant, string> = {
+  h1: 'h1', h2: 'h2', h3: 'h3', h4: 'h4', eyebrow: 'p',
+};
+const Tag = (asOverride ?? defaultElement[variant as Variant]) as any;
+
+// Visual scale per variant
+const scale: Record<string, string> = {
+  h1:      'text-h1 font-rough font-normal leading-none',
+  h2:      'text-h2 font-rough font-normal leading-none',
+  h3:      'text-h3 font-rough font-normal leading-none',
+  h4:      'text-h4 font-heading font-normal leading-none',
+  eyebrow: 'type-eyebrow font-script',
+};
+
+const colorClass = (() => {
+  if (color === 'inherit') return '';
+  if (color === 'muted')   return 'text-muted';
+  if (color === 'white')   return 'text-contrast';
+  return variant === 'eyebrow' ? 'text-accent' : 'text-heading';
+})();
+
+// twMerge only handles color vs className so `text-h2` (font-size utility) is
+// never stripped by twMerges text-* conflict resolution.
+const overrideCls = twMerge(colorClass, className);
+const cls = [scale[variant as string] ?? '', overrideCls].filter(Boolean).join(' ');
+---
+
+{html ? <Tag class={cls} set:html={html} /> : <Tag class={cls}><slot /></Tag>}

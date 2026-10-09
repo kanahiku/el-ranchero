@@ -1,0 +1,23 @@
+---
+import Button from '~/components/ui/Button.astro';
+import CTANote from '~/components/ui/CTANote.astro';
+import type { CallToAction } from '~/types';
+
+export interface Props {
+  actions: CallToAction[];
+  noteTone?: 'light' | 'onDark' | 'cta';
+  class?: string;
+}
+
+const { actions, noteTone = 'light', class: className = '' } = Astro.props;
+const showNote = actions.some((action) => action.variant === 'primary');
+---
+
+<div class:list={['flex flex-col gap-1.5 w-full', className]}>
+  <div class="flex w-full flex-col sm:w-auto sm:flex-row sm:flex-wrap sm:items-center justify-start gap-3">
+    {actions.map((action) => (
+      <Button {...action} hideNote class="w-full sm:mb-0 sm:w-auto" />
+    ))}
+  </div>
+  {showNote && <CTANote tone={noteTone} />}
+</div>

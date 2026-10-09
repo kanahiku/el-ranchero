@@ -1,0 +1,21 @@
+---
+description: Never start the dev server unless the user explicitly asks
+alwaysApply: true
+---
+
+# Dev server
+
+Do **not** start, restart, or stop the local server from the terminal unless the user explicitly asks.
+
+- Do not run `npm run dev`, `astro dev`, `npx astro dev`, or any other command that boots a long-running local server
+- Do not kill or restart an already-running server
+- Assume localhost is already up if browser verification is needed
+- If the app is not reachable, say so and wait for the user to start it — do not start it yourself
+
+```bash
+# ❌ BAD — starting the server unprompted
+npm run dev
+
+# ✅ GOOD — only when the user said to start it
+npm run dev
+```

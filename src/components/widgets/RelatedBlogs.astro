@@ -1,0 +1,54 @@
+---
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Headline from '~/components/ui/Headline.astro';
+import SectionBg from '~/components/ui/SectionBg.astro';
+import BlogCard from '~/components/ui/BlogCard.astro';
+import { getBlogPostsRelatedTo, getRelatedBlogPosts } from '~/lib/content';
+import { cardVariant, isDarkSurface, type SectionSurface } from '~/lib/content/sectionTheme';
+import type { BlogPost } from '~/lib/content/types';
+
+export interface Props {
+  pageSlug?: string;
+  post?: BlogPost;
+  excludeSlug?: string;
+  surface?: SectionSurface;
+  title?: string;
+}
+
+const RELATED_LIMIT = 3;
+
+const {
+  pageSlug,
+  post,
+  excludeSlug,
+  surface = 'grey',
+  title = 'Related Blogs',
+} = Astro.props;
+
+const related = post
+  ? await getRelatedBlogPosts(post, RELATED_LIMIT)
+  : pageSlug
+    ? (await getBlogPostsRelatedTo(pageSlug))
+        .filter((item) => item.slug !== excludeSlug)
+        .slice(0, RELATED_LIMIT)
+    : [];
+
+const isDark = isDarkSurface(surface);
+const variant = cardVariant(surface);
+---
+
+{
+  related.length > 0 && (
+    <WidgetWrapper containerClass="max-w-container mx-auto" isDark={isDark}>
+      <Headline isDark={isDark} title={title} classes={{ container: 'mb-[30px]' }} />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        {related.map((item) => (
+          <BlogCard post={item} variant={variant} />
+        ))}
+      </div>
+      <Fragment slot="bg">
+        <SectionBg variant={surface} />
+      </Fragment>
+    </WidgetWrapper>
+  )
+}

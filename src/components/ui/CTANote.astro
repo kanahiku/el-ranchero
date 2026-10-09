@@ -1,0 +1,22 @@
+---
+import { twMerge } from 'tailwind-merge';
+import { PRIMARY_CTA_NOTE } from '~/config/cta';
+
+export interface Props {
+  tone?: 'light' | 'onDark' | 'cta';
+  class?: string;
+}
+
+const { tone = 'light', class: className = '' } = Astro.props;
+
+const toneClass =
+  tone === 'onDark' ? 'text-white/70' : tone === 'cta' ? 'text-black/70' : 'text-muted dark:text-white/70';
+---
+
+{
+  PRIMARY_CTA_NOTE ? (
+    <p class={twMerge('text-[13px] md:text-[14px] font-normal leading-[160%]', toneClass, className)}>
+      {PRIMARY_CTA_NOTE}
+    </p>
+  ) : null
+}

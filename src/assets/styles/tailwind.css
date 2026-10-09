@@ -1,0 +1,862 @@
+@import 'tailwindcss';
+
+@plugin "@tailwindcss/typography";
+
+@variant dark (&:where(.dark, .dark *));
+
+@custom-variant intersect (&:not([no-intersect]));
+
+/* Disable faux-bold/italic. Headings/buttons are Norca-Rough; body is Host Grotesk; tag/quote/ticker are Wreck Script. */
+@layer base {
+  html {
+    font-synthesis: none;
+  }
+}
+
+@theme {
+  --color-primary: var(--aw-color-primary);
+  --color-secondary: var(--aw-color-secondary);
+  --color-accent: var(--aw-color-accent);
+  --color-accent-hover: var(--aw-color-accent-hover);
+  --color-default: var(--aw-color-text-default);
+  --color-muted: var(--aw-color-text-muted);
+  --color-heading: var(--aw-color-text-heading);
+  --color-eyebrow: var(--aw-color-text-eyebrow);
+  --color-page: var(--aw-color-bg-page);
+  --color-contrast: var(--aw-color-text-contrast);
+  --color-page-end: var(--aw-color-bg-page-end);
+  --color-card: var(--aw-color-bg-card);
+  --color-section-grey: var(--aw-color-bg-section-grey);
+  --color-section-dark: var(--aw-color-bg-section-dark);
+  --color-section-green: var(--aw-color-bg-section-green);
+  --color-cta: var(--aw-color-bg-cta);
+  --color-cta-end: var(--aw-color-bg-cta-end);
+  --color-tan: var(--aw-color-text-tan);
+  --color-tan-body: var(--aw-color-text-tan-body);
+  --color-gradient-from: var(--aw-color-gradient-from);
+  --color-gradient-to: var(--aw-color-gradient-to);
+  --max-width-container: 1440px;
+
+  --font-sans:
+    var(--aw-font-sans, ui-sans-serif), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-serif: var(--aw-font-serif, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--aw-font-heading, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--aw-font-script, cursive), cursive;
+  --font-rough: var(--aw-font-rough, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-card: var(--aw-shadow-card);
+  --shadow-header: var(--aw-shadow-header);
+
+  --radius: var(--aw-radius);
+  --radius-xs: var(--aw-radius);
+  --radius-sm: var(--aw-radius);
+  --radius-md: var(--aw-radius);
+  --radius-lg: var(--aw-radius);
+  --radius-xl: var(--aw-radius);
+  --radius-2xl: var(--aw-radius);
+  --radius-3xl: var(--aw-radius);
+  --radius-4xl: var(--aw-radius);
+  --radius-full: var(--aw-radius-full);
+  --radius-hero: var(--aw-radius-hero);
+
+  --animate-fade: fadeInUp 1s both;
+
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(2rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@utility max-w-container {
+  max-width: 1440px;
+}
+
+@utility font-heading {
+  font-family: var(--font-heading);
+  font-weight: 400;
+}
+
+@utility font-script {
+  font-family: var(--font-script);
+  font-weight: 400;
+}
+
+@utility font-rough {
+  font-family: var(--font-rough);
+  font-weight: 400;
+}
+
+@utility text-h1 {
+  font-size: var(--aw-text-h1-mobile);
+  line-height: var(--aw-leading-h1);
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-h1);
+  }
+}
+
+@utility text-h2 {
+  font-size: var(--aw-text-h2-mobile);
+  line-height: var(--aw-leading-h2);
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-h2);
+  }
+}
+
+@utility text-h3 {
+  font-size: var(--aw-text-h3-mobile);
+  line-height: var(--aw-leading-h3);
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-h3);
+  }
+}
+
+@utility text-h4 {
+  font-size: var(--aw-text-h4-mobile);
+  line-height: var(--aw-leading-h4);
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-h4);
+  }
+}
+
+@utility text-body {
+  font-size: var(--aw-text-body-mobile);
+  line-height: var(--aw-leading-body);
+  letter-spacing: var(--aw-tracking-body);
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-body);
+  }
+}
+
+@utility text-body-lg {
+  font-size: var(--aw-text-body-lg-mobile);
+  line-height: var(--aw-leading-body);
+  letter-spacing: var(--aw-tracking-body-lg);
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-body-lg);
+  }
+}
+
+@utility type-eyebrow {
+  font-family: var(--font-script);
+  font-size: var(--aw-text-eyebrow-mobile);
+  letter-spacing: var(--aw-tracking-eyebrow);
+  font-weight: 400;
+  line-height: 1;
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-eyebrow);
+  }
+}
+
+@utility type-label {
+  font-family: var(--font-rough);
+  font-size: var(--aw-text-label-mobile);
+  letter-spacing: var(--aw-tracking-label);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-label);
+  }
+}
+
+@utility type-ticker {
+  font-family: var(--font-script);
+  font-size: var(--aw-text-ticker-mobile);
+  font-weight: 400;
+  line-height: 1;
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-ticker);
+  }
+}
+
+@utility type-quote {
+  font-family: var(--font-script);
+  font-size: var(--aw-text-quote-mobile);
+  font-weight: 400;
+  line-height: var(--aw-leading-quote);
+  @media (min-width: 768px) {
+    font-size: var(--aw-text-quote);
+  }
+}
+
+@utility text-small {
+  font-size: var(--aw-text-small);
+  line-height: var(--aw-leading-small);
+}
+
+@utility bg-surface {
+  background-color: var(--aw-color-bg-card);
+}
+
+@utility bg-card {
+  background-color: var(--aw-color-bg-card);
+  --color-accent: var(--aw-color-accent);
+  --color-accent-hover: var(--aw-color-accent-hover);
+  --aw-band-btn-bg: initial;
+  --aw-band-btn-text: initial;
+  --aw-band-btn-hover-bg: initial;
+  --aw-band-btn-hover-text: initial;
+}
+
+@utility bg-nav-glass {
+  background-color: var(--aw-color-nav-glass);
+}
+
+@utility bg-header {
+  background-color: var(--aw-color-bg-header);
+}
+
+/* Yellow header bar — flips text/accent tokens to dark so nav stays legible. */
+.header-theme {
+  --color-heading: var(--aw-color-header-text);
+  --color-default: var(--aw-color-header-text);
+  --color-muted: var(--aw-color-header-text);
+  --color-accent: var(--aw-color-header-accent);
+  --color-accent-hover: var(--aw-color-header-accent-hover);
+  --aw-color-text-heading: var(--aw-color-header-text);
+  --aw-color-accent: var(--aw-color-header-accent);
+  --aw-color-bg-card: var(--aw-color-bg-header);
+  --aw-color-bg-section-grey: rgb(0 0 0 / 8%);
+}
+
+@utility bg-page {
+  background-color: var(--aw-color-bg-page);
+  --color-accent: var(--aw-color-accent);
+  --color-accent-hover: var(--aw-color-accent-hover);
+  --aw-band-btn-bg: initial;
+  --aw-band-btn-text: initial;
+  --aw-band-btn-hover-bg: initial;
+  --aw-band-btn-hover-text: initial;
+}
+
+@utility bg-page-end {
+  background-color: var(--aw-color-bg-page-end);
+}
+
+/* Solid fallback on <html>. Cream, not blueberry — Chrome drops compositor
+   layers when a tab is backgrounded, and the html color is what you see
+   for a beat on return. Blueberry read as a blank blue screen. */
+@utility bg-wash-end {
+  background-color: var(--aw-color-bg-page);
+}
+
+/* Main page wash — warm cream gradient, top to bottom. */
+@utility bg-page-wash {
+  background-color: var(--aw-color-page-wash-to);
+  background-image: linear-gradient(to bottom, var(--aw-color-page-wash-from) 0%, var(--aw-color-page-wash-to) 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* Green-band layer — used by PageBg.
+   Solid fallback is the sage start (70% of the gradient), not the blueberry
+   end — otherwise a discarded GPU layer paints a full-viewport blue flash. */
+@utility bg-green-wash {
+  background-color: var(--aw-color-gradient-from);
+  background-image: linear-gradient(
+    to bottom,
+    var(--aw-color-gradient-from) 0%,
+    var(--aw-color-gradient-from) 70%,
+    var(--aw-color-gradient-to) 100%
+  );
+}
+
+@utility bg-dark {
+  background-color: var(--aw-color-bg-page-dark);
+}
+
+@utility bg-light {
+  background-color: var(--aw-color-bg-page);
+}
+
+@utility bg-section-white {
+  background-color: var(--aw-color-bg-section-white);
+  --color-accent: var(--aw-color-accent);
+  --color-accent-hover: var(--aw-color-accent-hover);
+  --aw-band-btn-bg: initial;
+  --aw-band-btn-text: initial;
+  --aw-band-btn-hover-bg: initial;
+  --aw-band-btn-hover-text: initial;
+}
+
+@utility bg-section-grey {
+  background-color: var(--aw-color-bg-section-grey);
+  --color-accent: var(--aw-color-accent);
+  --color-accent-hover: var(--aw-color-accent-hover);
+  --aw-band-btn-bg: initial;
+  --aw-band-btn-text: initial;
+  --aw-band-btn-hover-bg: initial;
+  --aw-band-btn-hover-text: initial;
+}
+
+/* Maroon band — accent text and primary buttons flip to cream so they stay
+   visible. Light surfaces nested inside a band reset these (see `light-surface`). */
+@utility bg-section-dark {
+  background-color: var(--aw-color-bg-section-dark);
+  --color-accent: var(--aw-color-text-contrast);
+  --color-accent-hover: var(--aw-color-text-contrast);
+  --aw-band-btn-bg: var(--aw-color-text-contrast);
+  --aw-band-btn-text: var(--aw-color-bg-section-dark);
+  --aw-band-btn-hover-bg: var(--aw-color-bg-section-grey);
+  --aw-band-btn-hover-text: var(--aw-color-bg-section-dark);
+}
+
+/* Deep green band — same contrast flips as the maroon band. */
+@utility bg-section-green {
+  background-color: var(--aw-color-bg-section-green);
+  --color-accent: var(--aw-color-text-contrast);
+  --color-accent-hover: var(--aw-color-text-contrast);
+  --aw-band-btn-bg: var(--aw-color-text-contrast);
+  --aw-band-btn-text: var(--aw-color-bg-section-green);
+  --aw-band-btn-hover-bg: var(--aw-color-bg-section-grey);
+  --aw-band-btn-hover-text: var(--aw-color-bg-section-green);
+}
+
+@utility bg-card-dark {
+  background-color: var(--aw-color-bg-card-dark);
+}
+
+@utility bg-card-light {
+  background-color: var(--aw-color-bg-card-light);
+  --color-accent: var(--aw-color-accent);
+  --color-accent-hover: var(--aw-color-accent-hover);
+  --aw-band-btn-bg: initial;
+  --aw-band-btn-text: initial;
+  --aw-band-btn-hover-bg: initial;
+  --aw-band-btn-hover-text: initial;
+}
+
+@utility bg-feature-card {
+  background-color: var(--aw-color-bg-feature-card);
+  --color-accent: var(--aw-color-accent);
+  --color-accent-hover: var(--aw-color-accent-hover);
+  --aw-band-btn-bg: initial;
+  --aw-band-btn-text: initial;
+  --aw-band-btn-hover-bg: initial;
+  --aw-band-btn-hover-text: initial;
+}
+
+@utility bg-cta {
+  background-color: var(--aw-color-bg-cta);
+}
+
+@utility bg-cta-pink {
+  background-color: var(--aw-color-bg-cta-pink);
+}
+
+@utility text-cta-pink {
+  color: var(--aw-color-text-cta-pink);
+}
+
+@utility shadow-card-mist {
+  box-shadow: var(--aw-shadow-card-mist);
+}
+
+@utility shadow-card-pink {
+  box-shadow: var(--aw-shadow-card-pink);
+}
+
+/* Flat offset-only mist shadow — used by schedule cards (Figma: 3px 3px 0 #E4EDF2, no blur) */
+@utility shadow-mist-offset {
+  box-shadow: 3px 3px 0 0 var(--aw-color-bg-card-light);
+}
+
+/* Subtle page-coloured glow behind display text (e.g. bucket numbers, pullquotes) */
+@utility text-shadow-page {
+  text-shadow: 0 0 40px var(--aw-color-bg-page);
+}
+
+@utility text-card-heading-dark {
+  color: var(--aw-color-card-heading-dark);
+}
+
+@utility text-card-body-dark {
+  color: var(--aw-color-card-body-dark);
+}
+
+@utility text-card-link-dark {
+  color: var(--aw-color-card-link-dark);
+}
+
+@utility text-card-heading-light {
+  color: var(--aw-color-card-heading-light);
+}
+
+@utility text-card-body-light {
+  color: var(--aw-color-card-body-light);
+}
+
+@utility text-card-link-light {
+  color: var(--aw-color-card-link-light);
+}
+
+@utility border-card-dark {
+  border-color: var(--aw-color-card-border-dark);
+}
+
+@utility border-card-light {
+  border-color: var(--aw-color-card-border-light);
+}
+
+/* ── Outlined card (white bg + subtle border — clean/modern) ── */
+@utility bg-card-outlined {
+  background-color: var(--aw-color-bg-card-outlined);
+  --color-accent: var(--aw-color-accent);
+  --color-accent-hover: var(--aw-color-accent-hover);
+  --aw-band-btn-bg: initial;
+  --aw-band-btn-text: initial;
+  --aw-band-btn-hover-bg: initial;
+  --aw-band-btn-hover-text: initial;
+}
+
+@utility border-card-outlined {
+  border-color: var(--aw-color-card-border-outlined);
+}
+
+@utility text-card-heading-outlined {
+  color: var(--aw-color-card-heading-outlined);
+}
+
+@utility text-card-body-outlined {
+  color: var(--aw-color-card-body-outlined);
+}
+
+@utility text-card-link-outlined {
+  color: var(--aw-color-card-link-outlined);
+}
+
+/* ── Glass card (frosted semi-transparent — for dark sections) ── */
+@utility bg-card-glass {
+  background-color: var(--aw-color-bg-card-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@utility border-card-glass {
+  border-color: var(--aw-color-card-border-glass);
+}
+
+@utility text-card-heading-glass {
+  color: var(--aw-color-card-heading-glass);
+}
+
+@utility text-card-body-glass {
+  color: var(--aw-color-card-body-glass);
+}
+
+@utility text-card-link-glass {
+  color: var(--aw-color-card-link-glass);
+}
+
+@utility text-contrast {
+  color: var(--aw-color-text-contrast);
+}
+
+@utility text-heading {
+  color: var(--aw-color-text-heading);
+}
+
+@utility text-muted {
+  color: var(--aw-color-text-muted);
+}
+
+@utility text-headline-light {
+  color: var(--aw-color-headline-light);
+}
+
+@utility text-headline-dark {
+  color: var(--aw-color-headline-dark);
+}
+
+@utility text-headline-subtitle-light {
+  color: var(--aw-color-headline-subtitle-light);
+}
+
+@utility text-headline-subtitle-dark {
+  color: var(--aw-color-headline-subtitle-dark);
+}
+
+@utility text-timeline-step-light {
+  color: var(--aw-color-timeline-step-light);
+}
+
+@utility text-timeline-icon-light {
+  color: var(--aw-color-timeline-icon-light);
+}
+
+@utility text-timeline-icon-dark {
+  color: var(--aw-color-timeline-icon-dark);
+}
+
+@utility border-timeline-icon-border-light {
+  border-color: var(--aw-color-timeline-icon-border-light);
+}
+
+@utility border-timeline-icon-border-dark {
+  border-color: var(--aw-color-timeline-icon-border-dark);
+}
+
+@utility bg-timeline-icon-bg-light {
+  background-color: var(--aw-color-timeline-icon-bg-light);
+}
+
+@utility bg-timeline-icon-bg-dark {
+  background-color: var(--aw-color-timeline-icon-bg-dark);
+}
+
+@utility text-timeline-title-light {
+  color: var(--aw-color-timeline-title-light);
+}
+
+@utility text-timeline-title-dark {
+  color: var(--aw-color-timeline-title-dark);
+}
+
+@utility text-timeline-desc-light {
+  color: var(--aw-color-timeline-desc-light);
+}
+
+@utility text-timeline-desc-dark {
+  color: var(--aw-color-timeline-desc-dark);
+}
+
+/* Testimonials utilities */
+@utility bg-testimonial-card-light {
+  background-color: var(--aw-color-testimonial-card-bg-light);
+}
+
+@utility bg-testimonial-card-dark {
+  background-color: var(--aw-color-testimonial-card-bg-dark);
+}
+
+@utility border-testimonial-card-light {
+  border-color: var(--aw-color-testimonial-card-border-light);
+}
+
+@utility border-testimonial-card-dark {
+  border-color: var(--aw-color-testimonial-card-border-dark);
+}
+
+@utility text-testimonial-light {
+  color: var(--aw-color-testimonial-text-light);
+}
+
+@utility text-testimonial-dark {
+  color: var(--aw-color-testimonial-text-dark);
+}
+
+@utility text-testimonial-name-light {
+  color: var(--aw-color-testimonial-name-light);
+}
+
+@utility text-testimonial-name-dark {
+  color: var(--aw-color-testimonial-name-dark);
+}
+
+@utility text-testimonial-job-light {
+  color: var(--aw-color-testimonial-job-light);
+}
+
+@utility text-testimonial-job-dark {
+  color: var(--aw-color-testimonial-job-dark);
+}
+
+@utility border-testimonial-hr-light {
+  border-color: var(--aw-color-testimonial-hr-light);
+}
+
+@utility border-testimonial-hr-dark {
+  border-color: var(--aw-color-testimonial-hr-dark);
+}
+
+/* FAQ utilities */
+@utility border-faq-light {
+  border-color: var(--aw-color-faq-border-light);
+}
+
+@utility border-faq-dark {
+  border-color: var(--aw-color-faq-border-dark);
+}
+
+@utility text-faq-question-light {
+  color: var(--aw-color-faq-question-light);
+}
+
+@utility text-faq-question-dark {
+  color: var(--aw-color-faq-question-dark);
+}
+
+@utility text-faq-answer-light {
+  color: var(--aw-color-faq-answer-light);
+}
+
+@utility text-faq-answer-dark {
+  color: var(--aw-color-faq-answer-dark);
+}
+
+@utility border-faq-toggle-light {
+  border-color: var(--aw-color-faq-toggle-border-light);
+}
+
+@utility border-faq-toggle-dark {
+  border-color: var(--aw-color-faq-toggle-border-dark);
+}
+
+@utility text-faq-toggle-light {
+  color: var(--aw-color-faq-toggle-text-light);
+}
+
+@utility text-faq-toggle-dark {
+  color: var(--aw-color-faq-toggle-text-dark);
+}
+
+/* Projects Section utilities */
+@utility bg-projects-card-light {
+  background-color: var(--aw-color-projects-card-bg-light);
+}
+
+@utility bg-projects-card-dark {
+  background-color: var(--aw-color-projects-card-bg-dark);
+}
+
+@utility border-projects-card-light {
+  border-color: var(--aw-color-projects-card-border-light);
+}
+
+@utility border-projects-card-dark {
+  border-color: var(--aw-color-projects-card-border-dark);
+}
+
+@utility text-projects-title-light {
+  color: var(--aw-color-projects-title-light);
+}
+
+@utility text-projects-title-dark {
+  color: var(--aw-color-projects-title-dark);
+}
+
+@utility text-projects-desc-light {
+  color: var(--aw-color-projects-desc-light);
+}
+
+@utility text-projects-desc-dark {
+  color: var(--aw-color-projects-desc-dark);
+}
+
+@utility card {
+  @apply rounded-lg border border-white/16 shadow-card;
+}
+
+/* Site-wide CTA hover — used by Button.astro via btn / btn-* utilities.
+   Color tokens per variant; motion (200ms ease + 1px lift) is shared. */
+@utility btn {
+  @apply inline-flex items-center justify-center rounded-full border-2 font-rough font-semibold text-center leading-none py-6 px-7 cursor-pointer;
+  font-size: var(--aw-text-button);
+  transition-property: background-color, color, border-color, box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  &:hover {
+    transform: translateY(-1px);
+  }
+  &:active {
+    transform: translateY(0);
+    transition-duration: 80ms;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition-property: background-color, color, border-color;
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+@utility btn-primary {
+  @apply btn;
+  background-color: var(--aw-band-btn-bg, var(--aw-color-btn-primary-bg));
+  color: var(--aw-band-btn-text, var(--aw-color-btn-primary-text));
+  border-color: var(--aw-band-btn-bg, var(--aw-color-btn-primary-border));
+  &:hover {
+    background-color: var(--aw-band-btn-hover-bg, var(--aw-color-btn-primary-bg-hover));
+    color: var(--aw-band-btn-hover-text, var(--aw-color-btn-primary-text-hover));
+    border-color: var(--aw-band-btn-hover-bg, var(--aw-color-btn-primary-border-hover));
+  }
+}
+
+@utility btn-secondary {
+  @apply btn;
+  background-color: var(--aw-color-btn-secondary-bg);
+  color: var(--aw-color-btn-secondary-text);
+  border-color: var(--aw-color-btn-secondary-border);
+  &:hover {
+    background-color: var(--aw-color-btn-secondary-bg-hover);
+    color: var(--aw-color-btn-secondary-text-hover);
+    border-color: var(--aw-color-btn-secondary-border-hover);
+  }
+}
+
+@utility btn-ghost-light {
+  @apply btn;
+  background-color: var(--aw-color-btn-ghost-light-bg);
+  color: var(--aw-color-btn-ghost-light-text);
+  border-color: var(--aw-color-btn-ghost-light-border);
+  &:hover {
+    background-color: var(--aw-color-btn-ghost-light-bg-hover);
+    color: var(--aw-color-btn-ghost-light-text-hover);
+    border-color: var(--aw-color-btn-ghost-light-border-hover);
+  }
+}
+
+@utility btn-ghost-dark {
+  @apply btn;
+  background-color: var(--aw-color-btn-ghost-dark-bg);
+  color: var(--aw-color-btn-ghost-dark-text);
+  border-color: var(--aw-color-btn-ghost-dark-border);
+  &:hover {
+    background-color: var(--aw-color-btn-ghost-dark-bg-hover);
+    color: var(--aw-color-btn-ghost-dark-text-hover);
+    border-color: var(--aw-color-btn-ghost-dark-border-hover);
+  }
+}
+
+@utility btn-link {
+  @apply inline-flex items-center font-rough font-semibold text-[14px] cursor-pointer;
+  color: var(--aw-color-btn-link);
+  text-underline-offset: 2px;
+  transition-property: color, text-decoration-color;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  &:hover {
+    color: var(--aw-color-btn-link-hover);
+    text-decoration: underline;
+  }
+}
+
+@utility btn-tertiary {
+  @apply btn-secondary;
+}
+
+@utility tag-pill {
+  @apply inline-flex items-center rounded-full bg-primary/20 border border-primary/30 px-2.5 py-0.5 font-heading font-semibold text-[11px] md:text-[12px] leading-[18px] text-primary dark:bg-primary/20 dark:border-white/20 dark:text-white/80;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 50;
+  min-width: 220px;
+  max-height: min(24rem, 70vh);
+  overflow-y: auto;
+  padding: 8px 0;
+  background: var(--aw-color-bg-card);
+  border: 1px solid color-mix(in srgb, var(--aw-color-text-heading) 10%, transparent);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 8%);
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 16px;
+  font-family: var(--aw-font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--aw-color-text-heading);
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .dropdown.expanded > .dropdown-menu {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) {
+  /* Hover-only on desktop. :focus / :focus-within would pin the menu
+     open after a click on the parent nav link. Keyboard still works via
+     :focus-visible on the trigger (Tab), not mouse-click focus. */
+  .dropdown:hover > .dropdown-menu,
+  .dropdown:has(:focus-visible) > .dropdown-menu {
+    display: block;
+  }
+}
+
+/* Active nav link — top-level */
+nav > ul > li > a.aw-link-active,
+nav > ul > li > a.aw-link-active:hover,
+nav > ul > li > span.aw-link-active,
+nav > ul > li > div > a.aw-link-active,
+nav > ul > li > div > a.aw-link-active:hover,
+nav > ul > li > div > button.aw-link-active {
+  color: var(--aw-color-accent);
+}
+
+[data-nav='embedded'] nav a.aw-link-active,
+[data-nav='embedded'] nav a.aw-link-active:hover {
+  color: var(--aw-color-bg-cta);
+  text-shadow: 2px 2px 4px rgb(0 0 0 / 10%);
+}
+
+[data-mobile-panel] a.aw-link-active,
+[data-mobile-panel] a.aw-link-active:hover {
+  background-color: rgb(255 255 255 / 10%);
+  color: var(--aw-color-accent);
+}
+
+/* Dropdown option hover */
+.dropdown-menu a:hover {
+  background-color: var(--aw-color-bg-section-grey);
+  color: var(--aw-color-text-heading);
+}
+
+/* Active nav link — inside dropdown */
+.dropdown-menu a.aw-link-active {
+  color: var(--aw-color-accent);
+  font-weight: 600;
+}
+.dropdown-menu a.aw-link-active:hover {
+  background-color: var(--aw-color-bg-section-grey);
+  color: var(--aw-color-accent);
+}
+.dark .dropdown-menu a.aw-link-active {
+  color: var(--aw-color-accent);
+}
+
+[astro-icon].icon-light > * {
+  stroke-width: 1.2;
+}
+
+[astro-icon].icon-bold > * {
+  stroke-width: 2.4;
+}
+
+[data-aw-toggle-menu] path {
+  @apply transition;
+}
+[data-aw-toggle-menu].expanded g > path:first-child {
+  @apply -rotate-45 translate-y-[15px] translate-x-[-3px];
+}
+[data-aw-toggle-menu].expanded g > path:last-child {
+  @apply rotate-45 translate-y-[-8px] translate-x-[14px];
+}
+
+@utility gold-bar {
+  @apply block w-12 h-0.75 bg-accent rounded-full mt-3;
+}
+
+/* Linked-card hover: underline the URL when the card is hovered. No lift or bounce. */
+@utility card-link {
+  @apply underline underline-offset-[3px] decoration-2 decoration-transparent transition-[color,text-decoration-color] duration-200 group-hover:decoration-current;
+}
+
+.dd *:first-child {
+  margin-top: 0;
+}

@@ -1,0 +1,165 @@
+---
+import { Icon } from 'astro-icon/components';
+import Image from '~/components/common/Image.astro';
+import { trimSlash } from '~/utils/permalinks';
+import type { NavLink, NavSubLink } from '~/lib/content/types';
+
+export interface Props {
+  links?: NavLink[];
+  class?: string;
+}
+
+const { links = [], class: className = '' } = Astro.props;
+
+const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+const navLinkClass =
+  'inline-flex min-h-11 items-center font-rough text-[14px] font-semibold leading-none text-heading hover:text-accent whitespace-nowrap';
+const hasRichContent = (link: NavSubLink) => Boolean(link.description || link.image?.src);
+---
+
+<ul class={className}>
+  {
+    links.map(({ text, href, links: childLinks, columns }) => {
+      const nestedLinks = columns?.length ? columns.flatMap((column) => column.links) : (childLinks ?? []);
+      const isDropdown = nestedLinks.length > 0;
+      const isRichDropdown = Boolean(columns?.length || nestedLinks.some(hasRichContent));
+      if (!isDropdown) {
+        return (
+          <li>
+            <a class:list={[navLinkClass, { 'aw-link-active text-heading': href === currentPath }]} href={href}>
+              {text}
+            </a>
+          </li>
+        );
+      }
+
+      return (
+        <li class="dropdown relative">
+          <div>
+            <a class:list={[navLinkClass, 'inline-flex items-center gap-1']} href={href}>
+              {text}
+              <Icon name="tabler:chevron-down" class="size-3.5" aria-hidden="true" />
+            </a>
+          </div>
+          <ul class:list={['dropdown-menu', { 'dropdown-menu-rich': isRichDropdown }]} role="list">
+            {columns?.length
+              ? columns.map(({ title, links: columnLinks }) => (
+                  <li class="nav-column">
+                    <p class="nav-column-title">{title}</p>
+                    <ul role="list">
+                      {columnLinks.map(({ text: childText, href: childHref, description, image }) => (
+                        <li>
+                          <a class:list={[{ 'aw-link-active': childHref === currentPath }]} href={childHref}>
+                            {image?.src && (
+                              <Image
+                                src={image.src}
+                                alt={image.alt || ''}
+                                width={72}
+                                height={54}
+                                loading="lazy"
+                                decoding="async"
+                                class="nav-item-image"
+                              />
+                            )}
+                            <span class="nav-item-copy">
+                              <span class="nav-item-title">{childText}</span>
+                              {description && <span class="nav-item-description">{description}</span>}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))
+              : nestedLinks.map(({ text: childText, href: childHref, description, image }) => (
+                  <li>
+                    <a class:list={[{ 'aw-link-active': childHref === currentPath }]} href={childHref}>
+                      {image?.src && (
+                        <Image
+                          src={image.src}
+                          alt={image.alt || ''}
+                          width={72}
+                          height={54}
+                          loading="lazy"
+                          decoding="async"
+                          class="nav-item-image"
+                        />
+                      )}
+                      <span class="nav-item-copy">
+                        <span class="nav-item-title">{childText}</span>
+                        {description && <span class="nav-item-description">{description}</span>}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+          </ul>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .dropdown-menu-rich {
+    min-width: min(520px, calc(100vw - 2rem));
+    padding: 8px;
+  }
+
+  .dropdown-menu-rich a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: var(--aw-radius-sm);
+    padding: 8px;
+    white-space: normal;
+  }
+
+  .dropdown-menu-rich :global(.nav-item-image) {
+    aspect-ratio: 4 / 3;
+    width: 72px;
+    height: 54px;
+    flex: 0 0 auto;
+    object-fit: cover;
+  }
+
+  .dropdown-menu-rich .nav-item-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .dropdown-menu-rich .nav-item-title {
+    font-family: var(--aw-font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--aw-color-text-heading);
+  }
+
+  .dropdown-menu-rich .nav-item-description {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--aw-color-text-muted);
+  }
+
+  .dropdown-menu-rich .nav-column + .nav-column {
+    margin-top: 8px;
+    border-top: 1px solid color-mix(in srgb, var(--aw-color-text-heading) 10%, transparent);
+    padding-top: 8px;
+  }
+
+  .dropdown-menu-rich .nav-column-title {
+    padding: 4px 8px 6px;
+    font-family: var(--aw-font-heading);
+    font-size: 12px;
+    line-height: 1;
+    color: var(--aw-color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+</style>

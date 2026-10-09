@@ -1,0 +1,16 @@
+---
+export interface Props {
+  variant: 'hero' | 'dark' | 'grey' | 'white';
+}
+
+const { variant } = Astro.props;
+
+const bgClass = {
+  hero: '',
+  dark: 'bg-section-dark',
+  grey: 'bg-section-grey',
+  white: '',
+}[variant];
+---
+
+{bgClass && <div class={`absolute inset-0 ${bgClass}`}></div>}

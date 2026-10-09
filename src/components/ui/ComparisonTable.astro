@@ -1,0 +1,71 @@
+---
+export interface Props {
+  featureLabel?: string;
+  columns: [string, string];
+  rows: Array<{ feature: string; left: string; right: string }>;
+  isDark?: boolean;
+}
+
+const { featureLabel = 'Feature', columns, rows, isDark = false } = Astro.props;
+
+const cellBg = isDark ? 'bg-white' : 'bg-card-light';
+const headerCell = 'font-sans font-medium text-[16px] leading-[160%]';
+const rowLabel = 'font-sans font-medium text-[15px] leading-[160%]';
+const rowCell = 'font-sans font-normal text-[15px] leading-[160%]';
+---
+
+<div class="overflow-x-auto">
+  <table class="w-full min-w-[640px] border-separate border-spacing-0 text-left font-sans">
+    <thead>
+      <tr>
+        <th
+          class={`bg-card-dark text-white ${headerCell} px-4 md:px-5 py-3 md:py-4 rounded-tl-lg w-[22%] border-r border-accent`}
+        >
+          {featureLabel}
+        </th>
+        <th class={`bg-card-dark text-white ${headerCell} px-4 md:px-5 py-3 md:py-4 w-[39%] border-r border-accent`}>
+          {columns[0]}
+        </th>
+        <th
+          class={`bg-card-dark text-white ${headerCell} px-4 md:px-5 py-3 md:py-4 rounded-tr-lg w-[39%]`}
+        >
+          {columns[1]}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map(({ feature, left, right }, index) => {
+          const isLast = index === rows.length - 1;
+          return (
+            <tr>
+              <th
+                class:list={[
+                  `align-top ${cellBg} text-heading ${rowLabel} px-4 md:px-5 py-4 md:py-5 border-r border-accent`,
+                  isLast && 'rounded-bl-lg',
+                ]}
+              >
+                {feature}
+              </th>
+              <td
+                class:list={[
+                  `align-top ${cellBg} text-muted ${rowCell} px-4 md:px-5 py-4 md:py-5 border-r border-accent`,
+                ]}
+              >
+                {left}
+              </td>
+              <td
+                class:list={[
+                  `align-top ${cellBg} text-muted ${rowCell} px-4 md:px-5 py-4 md:py-5`,
+                  isLast && 'rounded-br-lg',
+                ]}
+              >
+                {right}
+              </td>
+            </tr>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</div>

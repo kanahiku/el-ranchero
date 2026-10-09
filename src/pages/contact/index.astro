@@ -1,0 +1,56 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import Contact from '~/components/widgets/Contact.astro';
+import { CONTACT } from '~/config/contact';
+import { contactHelpOptions } from '~/data/pages/contact';
+import { site } from '~/config/site';
+import { CATERING_CTA_HREF } from '~/config/cta';
+
+const metadata = {
+  title: `Contact | ${site.name}`,
+  description: `Get in touch with ${CONTACT.businessName} — catering, locations, and general questions.`,
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    hideImage
+    title="Get in Touch"
+    content="Questions about an order, catering, or a store? Send a note and we will follow up soon."
+    actions={[
+      { variant: 'primary', text: 'Email Us', href: `mailto:${CONTACT.email}` },
+      { variant: 'ghost-dark', text: 'Order Catering', href: CATERING_CTA_HREF },
+    ]}
+  />
+
+  <Contact
+    title="Send a message"
+    subtitle={`Tell us what you need and the right person from El Ranchero will get back to you.`}
+    button="Send message"
+    inputs={[
+      { type: 'text', name: 'name', label: 'Name', autocomplete: 'name', placeholder: 'Your name', required: true },
+      {
+        type: 'email',
+        name: 'email',
+        label: 'Email',
+        autocomplete: 'email',
+        placeholder: 'you@email.com',
+        required: true,
+      },
+      { type: 'tel', name: 'phone', label: 'Phone', autocomplete: 'tel', placeholder: CONTACT.phone.display },
+      {
+        type: 'select',
+        name: 'topic',
+        label: 'How can we help?',
+        placeholder: 'Select a topic',
+        required: true,
+        options: contactHelpOptions,
+      },
+    ]}
+    textarea={{ label: 'Message', name: 'message', placeholder: 'How can we help?' }}
+  />
+</Layout>

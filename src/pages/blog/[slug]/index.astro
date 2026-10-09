@@ -1,0 +1,108 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import SectionBg from '~/components/ui/SectionBg.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
+import BlogArticleImage from '~/components/blog/BlogArticleImage.astro';
+import BlogArticleBody from '~/components/blog/BlogArticleBody.astro';
+import BlogSidebar from '~/components/blog/BlogSidebar.astro';
+import { Icon } from 'astro-icon/components';
+import { getFormattedDate } from '~/utils/utils';
+import { getBlogPost } from '~/lib/content';
+import { getArticleToc, getLeadInlineImages, shouldUsePortableBody } from '~/lib/content/blogArticle';
+import { PRIMARY_CTA_LABEL } from '~/config/cta';
+
+export const prerender = false;
+
+const slug = Astro.params.slug;
+const post = typeof slug === 'string' ? await getBlogPost(slug) : undefined;
+
+if (!post) {
+  Astro.response.status = 404;
+  return Astro.rewrite('/404');
+}
+
+const publishDate = new Date(post.publishDate);
+const usePortableBody = shouldUsePortableBody(post);
+const leadParagraphs = usePortableBody ? [] : post.heroParagraphs.length ? post.heroParagraphs : post.body;
+const leadImages = getLeadInlineImages(post);
+const toc = getArticleToc(post);
+
+const metadata = {
+  title: post.meta.title,
+  description: post.meta.description,
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="relative">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none -z-[1]" aria-hidden="true">
+      <SectionBg variant="white" />
+    </div>
+    <div class="relative max-w-container mx-auto px-4 md:px-6 py-8 md:py-16 lg:py-20">
+      <div class="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12 xl:gap-16 lg:items-start">
+        <BlogSidebar
+          toc={toc}
+          ctaTitle={post.ctaBanner.title}
+          ctaHref={post.ctaBanner.ctaHref}
+        />
+
+        <article class="min-w-0">
+          <a
+            href="/blog"
+            class="btn-link gap-1 mb-6"
+          >
+            <Icon name="tabler:chevron-left" class="w-4 h-4" aria-hidden="true" />
+            All articles
+          </a>
+
+          <h1 class="text-[42px] md:text-[56px] font-normal leading-[105%] tracking-tighter font-heading text-heading mb-4">
+            {post.title}
+          </h1>
+          <p class="text-[14px] md:text-[15px] font-medium text-muted mb-8">
+            <time datetime={post.publishDate}>{getFormattedDate(publishDate)}</time>
+            {post.author ? ` · ${post.author}` : ''}
+          </p>
+
+          {post.image?.src && <BlogArticleImage image={post.image} eager class="mb-8 mt-0" />}
+
+          {
+            leadParagraphs.length > 0 && (
+              <div class="space-y-5">
+                {leadParagraphs.map((paragraph) => (
+                  <p class="text-[16px] md:text-[17px] font-normal leading-[160%] text-muted">{paragraph}</p>
+                ))}
+              </div>
+            )
+          }
+
+          {
+            leadImages.map((imageBlock) => (
+              <BlogArticleImage image={imageBlock.image} caption={imageBlock.caption} />
+            ))
+          }
+
+          {
+            toc.length > 0 && (
+              <div class="mt-10">
+                <BlogSidebar variant="inline" toc={toc} />
+              </div>
+            )
+          }
+
+          <BlogArticleBody post={post} />
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <RelatedBlogs post={post} surface="grey" />
+
+  <CTABanner
+    title={post.ctaBanner.title}
+    subtitle={post.ctaBanner.subtitle}
+    ctaText={PRIMARY_CTA_LABEL}
+    ctaHref={post.ctaBanner.ctaHref}
+  />
+</Layout>

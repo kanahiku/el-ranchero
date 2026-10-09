@@ -1,0 +1,419 @@
+---
+/**
+ * Hero section — overlay (photo background), split (image right/left),
+ * words (photo + three positioned words), page (light gradient + title / lede),
+ * and title (photo + centered h1).
+ *
+ * This is the single hero widget for the whole site. Do NOT fork per page.
+ * Overlay (59:1341) sits below PageLayout chrome — do not embed Header on the homepage.
+ *
+ * Atoms used: Heading, Text, CTAActions.
+ */
+import Image from '~/components/common/Image.astro';
+import ArtDirectedImage from '~/components/ui/ArtDirectedImage.astro';
+import CTAActions from '~/components/ui/CTAActions.astro';
+import Text from '~/components/ui/Text.astro';
+import Heading from '~/components/ui/Heading.astro';
+import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
+import type { ContentImage } from '~/lib/content/types';
+
+import type { Hero as Props } from '~/types';
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline,
+  content = await Astro.slots.render('content'),
+  actions = await Astro.slots.render('actions'),
+  image = await Astro.slots.render('image'),
+  imageMobile,
+  variant = 'split',
+  words = [],
+  isReversed = false,
+  overlapHeader = true,
+  stacked = false,
+  withImage = false,
+  hideImage = false,
+  imageFit = 'cover',
+  id,
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+
+const isWords = variant === 'words';
+const isTitle = variant === 'title';
+const isPage = variant === 'page';
+const isSplitDark = variant === 'split-dark';
+const isContainImage = imageFit === 'contain';
+const isOverlay = variant === 'overlay' || isWords || isTitle;
+const isPhotoOverlay = variant === 'overlay';
+const isChrome = isOverlay || isPage || isSplitDark;
+const hasStats = variant === 'overlay' && Astro.slots.has('stats');
+const hasNav = Astro.slots.has('nav');
+const keepHomeHeroImage = id === 'home-hero';
+const showSplitDarkImage = isSplitDark && !hideImage;
+
+const wordAlignClass = {
+  start: 'self-start md:justify-start',
+  center: 'self-center md:justify-center',
+  end: 'self-end md:justify-end',
+} as const;
+
+const asContentImage = (value: unknown): ContentImage | undefined => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
+  const src = 'src' in value && typeof value.src === 'string' ? value.src.trim() : '';
+  if (!src) return undefined;
+  const alt = 'alt' in value && typeof value.alt === 'string' ? value.alt : '';
+  return { src, alt };
+};
+
+const imageRecord =
+  image && typeof image === 'object' && !Array.isArray(image) ? (image as Record<string, unknown>) : undefined;
+const contentImage = asContentImage(image);
+const hasImage = typeof image === 'string' ? Boolean(image.trim()) : Boolean(contentImage);
+const isSplitImage = !isOverlay && !isSplitDark && hasImage;
+const overlayDesktop = isOverlay ? contentImage : undefined;
+const overlayMobile = isOverlay ? asContentImage(imageMobile) : undefined;
+const hasOverlayPhoto = Boolean(overlayDesktop || overlayMobile);
+const isLocalOverlayImage =
+  isOverlay &&
+  Boolean(contentImage) &&
+  typeof imageRecord?.width === 'number' &&
+  typeof imageRecord.height === 'number';
+---
+
+{
+  isChrome ? (
+    <section
+      class:list={[
+        'relative not-prose overflow-hidden flex flex-col w-full',
+        !isPhotoOverlay && 'rounded-b-hero',
+        isPage && 'bg-gradient-to-t from-transparent to-section-grey',
+        isWords && 'min-h-[520px] md:h-[579px] md:min-h-[579px]',
+        isTitle && 'min-h-[320px] md:h-[450px] md:min-h-[450px]',
+        isPage && 'min-h-[480px] md:min-h-[629px]',
+        isPhotoOverlay && 'min-h-[520px] md:h-[760px]',
+        isSplitDark &&
+          (hideImage
+            ? 'bg-section-dark min-h-[460px] md:min-h-[560px]'
+            : 'bg-section-dark min-h-[560px] md:min-h-[740px]'),
+      ]}
+      {...(id ? { id } : {})}
+    >
+      {isOverlay && (
+        <div class="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
+          <slot name="bg">{bg ? <Fragment set:html={bg} /> : null}</slot>
+          {keepHomeHeroImage && isLocalOverlayImage ? (
+            <img
+              src={contentImage?.src}
+              alt={contentImage?.alt ?? ''}
+              width={typeof imageRecord?.width === 'number' ? imageRecord.width : 1440}
+              height={typeof imageRecord?.height === 'number' ? imageRecord.height : 800}
+              class:list={['absolute inset-0 h-full w-full object-cover', isTitle ? 'object-bottom' : 'object-center']}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          ) : keepHomeHeroImage && hasOverlayPhoto ? (
+            <ArtDirectedImage
+              desktop={overlayDesktop}
+              mobile={overlayMobile}
+              class="absolute inset-0 h-full w-full object-cover object-center"
+              widths={[768, 1200, 1600, 1920]}
+              mobileWidths={[400, 640, 828, 1080]}
+              sizes="100vw"
+              mobileSizes="100vw"
+              loading="eager"
+              fetchpriority="high"
+              width={1920}
+              layout="cover"
+              format="webp"
+            />
+          ) : (
+            /* TODO: replace with <Image> when asset is ready */
+            <HeroImagePlaceholder
+              fill
+              class="absolute inset-0"
+              style={
+                isTitle
+                  ? 'aspect-ratio: 1440 / 450;'
+                  : isWords
+                    ? 'aspect-ratio: 1440 / 579;'
+                    : 'aspect-ratio: 1440 / 760;'
+              }
+            />
+          )}
+          {isPhotoOverlay ? (
+            <div class="absolute inset-0 z-[1] bg-black/60 md:bg-transparent md:bg-gradient-to-r md:from-black/70 md:from-[30%] md:via-black/25 md:via-[58%] md:to-transparent" />
+          ) : isWords || isTitle ? (
+            <div class="absolute inset-0 z-[1] bg-heading/10" />
+          ) : (
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent from-[85.25%] to-page/80 z-[1]" />
+          )}
+        </div>
+      )}
+
+      <div
+        class:list={[
+          'relative z-[2] flex flex-1 flex-col w-full mx-auto max-w-container',
+          isSplitDark
+            ? 'px-5 sm:px-8 md:pl-16 md:pr-0 py-0'
+            : isPhotoOverlay
+              ? 'px-5 py-10 sm:px-8 md:px-16 md:py-16'
+              : 'px-5 py-6 sm:px-8 md:px-16 lg:py-8',
+          isSplitDark ? 'gap-0' : isPhotoOverlay ? 'gap-0' : 'gap-2.5',
+        ]}
+      >
+        <slot name="nav" />
+        {overlapHeader && !hasNav && <div class="pt-0 md:pt-[76px] pointer-events-none" />}
+
+        {isWords ? (
+          <Heading
+            variant="h1"
+            color="white"
+            class="flex min-h-[280px] w-full flex-1 flex-col justify-between py-12 md:h-[428px] md:min-h-0 md:flex-none md:flex-row md:items-stretch md:py-16"
+          >
+            {words.map((word) => (
+              <span
+                class:list={[
+                  'flex md:h-full md:flex-col',
+                  word.italic && 'italic',
+                  wordAlignClass[word.align ?? 'start'],
+                ]}
+              >
+                {word.text}
+              </span>
+            ))}
+          </Heading>
+        ) : isTitle ? (
+          title && (
+            <Heading
+              variant="h1"
+              color="white"
+              class="flex w-full flex-1 items-center justify-center text-center"
+              html={title}
+            />
+          )
+        ) : isPage ? (
+          <div
+            class:list={[
+              'flex w-full flex-1 flex-col py-16 md:py-[120px]',
+              withImage ? 'items-stretch gap-6 md:gap-[72px]' : 'items-start gap-6',
+            ]}
+          >
+            {tagline && <Heading variant="eyebrow" color="inherit" class="mb-2 text-heading/60 md:mb-4" html={tagline} />}
+            <div
+              class:list={[
+                'flex w-full flex-col items-start',
+                stacked ? 'gap-6' : 'gap-10 md:flex-row md:gap-[72px]',
+                !withImage && 'flex-1',
+              ]}
+            >
+              {title && (
+                <h1
+                  class:list={[
+                    'font-rough text-h1 shrink-0 overflow-visible bg-[linear-gradient(var(--aw-color-bg-section-dark)_5%,var(--aw-color-primary)_97%)] bg-clip-text font-normal leading-[1.25] text-transparent [text-box-edge:cap_text] [text-box-trim:trim-start]',
+                    stacked
+                      ? 'w-full'
+                      : typeof title === 'string' && /<br\s*\/?>/i.test(title)
+                        ? 'w-full md:w-auto md:whitespace-nowrap'
+                        : 'md:whitespace-nowrap',
+                  ]}
+                  set:html={title}
+                />
+              )}
+              {subtitle && (
+                <div
+                  class:list={[
+                    'font-heading text-h4 font-normal leading-[1.2] text-muted [&_p+p]:mt-[1.2em]',
+                    stacked ? 'w-full' : 'min-w-0 flex-1',
+                  ]}
+                  set:html={subtitle}
+                />
+              )}
+            </div>
+            {/* CTA actions for the page variant */}
+            {actions &&
+              (Array.isArray(actions) ? (
+                <CTAActions actions={actions} noteTone="light" />
+              ) : (
+                <Fragment set:html={actions} />
+              ))}
+            {withImage && (
+              <HeroImagePlaceholder
+                fill
+                class="w-full rounded-[32px]"
+                style="aspect-ratio: 1200 / 400;"
+                label="El Ranchero page hero placeholder"
+              />
+            )}
+          </div>
+        ) : isSplitDark ? (
+          <div class="flex flex-1 flex-col lg:flex-row lg:items-stretch gap-0 pb-0">
+            {/* left: text column */}
+            <div
+              class:list={[
+                'flex shrink-0 flex-col items-start justify-center gap-6 pb-10 pt-6 lg:py-24 lg:pr-16',
+                showSplitDarkImage ? 'lg:w-[55%]' : 'lg:w-full lg:max-w-[760px]',
+              ]}
+            >
+              {tagline && <Heading variant="eyebrow" color="inherit" class="text-contrast/55" html={tagline} />}
+              {title && <h1 class="font-rough text-h1 font-normal leading-[1.05] text-contrast" set:html={title} />}
+              {content && (
+                <div class="font-sans text-[16px] leading-[1.55] text-contrast/60 max-w-[480px]" set:html={content} />
+              )}
+              {actions &&
+                (Array.isArray(actions) ? (
+                  <CTAActions actions={actions} noteTone="onDark" />
+                ) : (
+                  <Fragment set:html={actions} />
+                ))}
+            </div>
+            {/* right: image column — visible on all screen sizes */}
+            {showSplitDarkImage && (
+              <div class="w-full h-[280px] sm:h-[380px] lg:h-auto lg:flex-1 lg:min-w-0 lg:self-stretch">
+                {hasImage ? (
+                  <div
+                    class:list={[
+                      'relative w-full h-full overflow-hidden',
+                      isContainImage && 'p-6 sm:p-8 lg:p-12 bg-section-dark',
+                    ]}
+                  >
+                    {typeof image === 'string' ? (
+                      <Fragment set:html={image} />
+                    ) : (
+                      <Image
+                        src={contentImage?.src}
+                        alt={contentImage?.alt ?? ''}
+                        class:list={[
+                          'h-full w-full object-center',
+                          isContainImage ? 'object-contain bg-section-dark' : 'object-cover',
+                        ]}
+                        widths={[400, 768, 1200, 1600]}
+                        sizes="(max-width: 1024px) 100vw, 45vw"
+                        loading="eager"
+                        width={900}
+                        height={isContainImage ? undefined : 900}
+                        layout={isContainImage ? 'none' : 'cover'}
+                        format="webp"
+                      />
+                    )}
+                  </div>
+                ) : (
+                  /* TODO: replace with <Image> when asset is ready */
+                  <div class="w-full h-full min-h-[380px] relative overflow-hidden" aria-hidden="true">
+                    <HeroImagePlaceholder fill class="absolute inset-0" />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div class="flex flex-1 flex-col items-start justify-center min-h-0">
+            <div class="flex w-full max-w-[604px] flex-col items-start gap-6">
+              {tagline && <Heading variant="eyebrow" color="white" html={tagline} />}
+              {title && <Heading variant="h1" color="white" html={title} />}
+              {subtitle && <Text variant="body-lg" color="inherit" class="text-contrast" html={subtitle} />}
+              {content && <Text variant="body-lg" color="inherit" class="text-contrast" html={content} />}
+              {actions &&
+                (Array.isArray(actions) ? (
+                  <CTAActions actions={actions} noteTone="onDark" />
+                ) : (
+                  <Fragment set:html={actions} />
+                ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {hasStats && (
+        <div class="relative bg-[rgb(14_13_7_/_0.1)] backdrop-blur-[15px]">
+          <div class="max-w-container mx-auto px-4 sm:px-6 py-2 md:py-[22px]">
+            <slot name="stats" />
+          </div>
+        </div>
+      )}
+    </section>
+  ) : (
+    <section class:list={['relative not-prose', overlapHeader && 'md:-mt-[76px]']} {...(id ? { id } : {})}>
+      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <slot name="bg">{bg ? <Fragment set:html={bg} /> : null}</slot>
+      </div>
+      <div class:list={['relative max-w-container mx-auto', !isSplitImage && 'px-4 sm:px-6']}>
+        {!isSplitImage && overlapHeader && <div class="pt-0 md:pt-[76px] pointer-events-none" />}
+        <div
+          class:list={[
+            isSplitImage && 'md:flex md:items-stretch md:min-h-[640px] lg:min-h-[760px]',
+            isSplitImage && isReversed && 'md:flex-row-reverse',
+            !hasImage && 'py-12 md:py-[100px]',
+          ]}
+        >
+          <div
+            class:list={[
+              hasImage ? 'md:basis-1/2 self-center text-left' : 'w-full max-w-3xl text-left',
+              isSplitImage && [
+                'px-4 sm:px-6 py-12 md:pb-20 lg:pb-[100px]',
+                overlapHeader ? 'md:pt-[calc(76px+5rem)]' : 'md:pt-20',
+                isReversed ? 'md:pl-16 lg:pl-24' : 'md:pr-16 lg:pr-24',
+              ],
+            ]}
+          >
+            {tagline && (
+              <p
+                class="type-eyebrow text-eyebrow font-sans intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
+                set:html={tagline}
+              />
+            )}
+            {title && (
+              <h1
+                class="text-h2 font-normal leading-[105%] font-heading text-heading dark:text-gray-200 intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
+                set:html={title}
+              />
+            )}
+            <div class="max-w-3xl lg:max-w-none flex flex-col items-start gap-6">
+              {subtitle && (
+                <p
+                  class="text-body text-muted dark:text-slate-300 intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
+                  set:html={subtitle}
+                />
+              )}
+              {actions &&
+                (Array.isArray(actions) ? (
+                  <CTAActions
+                    actions={actions}
+                    noteTone="light"
+                    class="intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
+                  />
+                ) : (
+                  <Fragment set:html={actions} />
+                ))}
+            </div>
+            {content && <Fragment set:html={content} />}
+          </div>
+          {isSplitImage && (
+            <div class="relative mt-8 md:mt-0 md:basis-1/2 aspect-[4/3] md:aspect-auto">
+              <div class="absolute inset-0 overflow-hidden [&>*]:!h-full [&>*]:!w-full [&>*]:!max-w-none [&>*]:!rounded-none [&>*]:!aspect-auto [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:rounded-none">
+                {typeof image === 'string' ? (
+                  <Fragment set:html={image} />
+                ) : (
+                  <Image
+                    src={contentImage?.src}
+                    alt={contentImage?.alt ?? ''}
+                    class="w-full h-full object-cover"
+                    widths={[400, 768, 1200]}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    loading="eager"
+                    width={700}
+                    height={700}
+                    layout="cover"
+                    format="webp"
+                  />
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+

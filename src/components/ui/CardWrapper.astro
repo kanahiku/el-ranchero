@@ -1,0 +1,72 @@
+---
+import type { CardVariant } from '~/config/theme';
+
+export interface Props {
+  /**
+   * Visual style of this card.
+   *
+   * 'dark'     — bg-[#222] + accent border + white text   (bold / trade)
+   * 'light'    — yellow-tint bg + no border + dark text   (warm / soft)
+   * 'outlined' — white bg + subtle border + dark text     (clean / modern)
+   * 'glass'    — semi-transparent + backdrop blur + white (frosted / editorial)
+   *
+   * Default comes from THEME.card.onGrey / onWhite / onDark in src/config/theme.ts.
+   */
+  variant?: CardVariant;
+  size?: 'sm' | 'md' | 'lg';
+  border?: boolean;
+  href?: string;
+  class?: string;
+}
+
+const {
+  variant = 'dark',
+  size = 'md',
+  border = true,
+  href,
+  class: className = '',
+} = Astro.props;
+
+const isClickable = !!href;
+
+const sizeClasses = {
+  sm: 'p-3 md:p-4',
+  md: 'p-4 md:p-5',
+  lg: 'p-5 md:p-6',
+};
+
+const variantClasses: Record<CardVariant, string> = {
+  dark: 'bg-card-dark',
+  light: 'bg-card-light',
+  outlined: 'bg-card-outlined',
+  glass: 'bg-card-glass',
+};
+
+const borderClasses: Record<CardVariant, string> = {
+  dark: border ? 'border border-card-dark' : '',
+  light: border ? 'border border-card-light' : '',
+  outlined: border ? 'border border-card-outlined' : '',
+  glass: border ? 'border border-card-glass' : '',
+};
+
+const baseClasses = [
+  'rounded-lg',
+  'flex flex-col h-full',
+  variantClasses[variant],
+  borderClasses[variant],
+  sizeClasses[size],
+  isClickable ? 'group cursor-pointer' : '',
+  'intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
+  className,
+].filter(Boolean).join(' ');
+---
+
+{isClickable ? (
+  <a href={href} class={baseClasses} data-card-variant={variant}>
+    <slot />
+  </a>
+) : (
+  <div class={baseClasses} data-card-variant={variant}>
+    <slot />
+  </div>
+)}

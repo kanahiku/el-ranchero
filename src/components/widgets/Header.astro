@@ -1,0 +1,515 @@
+---
+import { Icon } from 'astro-icon/components';
+import Logo from '~/components/Logo.astro';
+import ToggleTheme from '~/components/common/ToggleTheme.astro';
+import ToggleMenu from '~/components/common/ToggleMenu.astro';
+import Image from '~/components/common/Image.astro';
+import Button from '~/components/ui/Button.astro';
+import NavList from '~/components/widgets/NavList.astro';
+import { SOCIAL } from '~/config/social';
+
+import { getHomePermalink } from '~/utils/permalinks';
+import { trimSlash, getAsset } from '~/utils/permalinks';
+import type { CallToAction } from '~/types';
+import type { NavLink } from '~/lib/content/types';
+
+export interface Props {
+  id?: string;
+  links?: NavLink[];
+  actions?: Array<CallToAction>;
+  phone?: { text: string; href: string };
+  isSticky?: boolean;
+  isDark?: boolean;
+  isFullWidth?: boolean;
+  showToggleTheme?: boolean;
+  showRssFeed?: boolean;
+  position?: string;
+  /** Render only the glass nav bar, for use inside an overlay hero. */
+  embedded?: boolean;
+}
+
+const {
+  id = 'header',
+  links = [],
+  actions = [],
+  phone,
+  isSticky = false,
+  isFullWidth = false,
+  showToggleTheme = false,
+  showRssFeed = false,
+  embedded = false,
+} = Astro.props;
+
+const extraActions = (actions ?? []).filter(
+  (action) => action.href !== phone?.href && !String(action.href ?? '').startsWith('tel:')
+);
+const phoneAction = phone
+  ? { variant: 'primary' as const, text: phone.text, href: phone.href, icon: 'tabler:phone' }
+  : undefined;
+const phoneLabel = phone ? `Call ${phone.text}` : '';
+const phoneBoxClass =
+  'inline-flex items-center justify-center shrink-0 size-9 rounded-md bg-accent text-black border-2 border-accent hover:bg-accent-hover hover:border-accent-hover transition duration-200';
+const socialLinks = SOCIAL.nav;
+const socialIconClass =
+  'inline-flex size-9 items-center justify-center text-heading/75 transition-colors hover:text-accent';
+
+const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+
+const mobileLinkClass =
+  'flex items-center px-3 py-3 font-rough text-[18px] font-semibold leading-none text-heading transition-colors hover:bg-section-grey/40';
+const mobileNestedLinkClass =
+  'flex items-center gap-3 px-3 py-2.5 text-heading transition-colors hover:bg-section-grey/40';
+const mobilePanelClass =
+  'absolute inset-x-0 top-full z-50 max-h-[min(24rem,calc(100dvh-5.5rem))] flex-col overflow-y-auto border-t border-heading/10 bg-header p-3';
+---
+
+<aw-header transition:persist={embedded ? 'hero-nav' : 'header'}>
+  {
+    embedded ? (
+      <header class="relative z-40 w-full" data-nav="embedded" {...(id ? { id } : {})}>
+        <div class="flex h-14 w-full items-center justify-between box-border rounded-[var(--aw-radius-lg)] bg-nav-glass py-2 pl-4 pr-2 backdrop-blur-[15px] md:h-[77px] md:py-3 md:pl-6 md:pr-3">
+          <div class="flex shrink-0 items-center justify-between w-full md:w-auto">
+            <a class="flex items-center shrink-0" href={getHomePermalink()} aria-label="El Ranchero home">
+              <Logo class="h-5 w-auto max-w-none mix-blend-soft-light md:h-[31px] md:w-[43px]" />
+            </a>
+            <ToggleMenu class="flex size-12 flex-col items-center justify-center rounded-lg bg-white/10 text-white cursor-pointer group md:hidden" />
+          </div>
+          <nav
+            class="hidden md:flex items-center shrink-0 w-full md:w-auto"
+            data-desktop-nav
+            aria-label="Main navigation"
+          >
+            <NavList links={links} class="flex flex-col md:flex-row md:items-center gap-6" />
+          </nav>
+          {(socialLinks.length > 0 || extraActions.length > 0) && (
+            <div class="hidden md:flex items-center shrink-0 gap-3">
+              {socialLinks.length > 0 && (
+                <ul class="flex items-center gap-1" aria-label="Social media">
+                  {socialLinks.map(({ href, ariaLabel, icon }) => (
+                    <li>
+                      <a href={href} aria-label={ariaLabel} target="_blank" rel="noopener noreferrer" class={socialIconClass}>
+                        <Icon name={icon} class="size-5" aria-hidden="true" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {extraActions.map((btnProps) => (
+                <Button {...btnProps} hideNote class="whitespace-nowrap" />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div class={mobilePanelClass} data-mobile-panel>
+          <nav aria-label="Mobile navigation">
+            <ul class="flex flex-col">
+              {links.map(({ text, href }) => (
+                <li>
+                  <a class:list={[mobileLinkClass, { 'aw-link-active': href === currentPath }]} href={href}>
+                    {text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          {extraActions.length > 0 && (
+            <div class="mt-2 flex flex-col gap-2 border-t border-white/10 pt-3">
+              {extraActions.map((btnProps) => (
+                <Button {...btnProps} hideNote class="w-full justify-center" />
+              ))}
+            </div>
+          )}
+        </div>
+      </header>
+    ) : (
+      <header
+        class:list={[{ sticky: isSticky, relative: !isSticky }, 'header-theme top-0 z-40 flex-none mx-auto w-full border-b border-secondary/30 bg-header shadow-header']}
+        {...(isSticky ? { 'data-aw-sticky-header': true } : {})}
+        {...(id ? { id } : {})}
+      >
+        <div
+          class:list={[
+            'relative mx-auto flex w-full items-center justify-between px-5 py-4 md:gap-10 md:px-16',
+            { 'max-w-container': !isFullWidth },
+          ]}
+        >
+          <a class="flex shrink-0 items-center md:hidden" href={getHomePermalink()} aria-label="El Ranchero home">
+            <Logo />
+          </a>
+          <div class="flex items-center gap-2 md:hidden">
+            {phone && (
+              <a href={phone.href} class={phoneBoxClass} aria-label={phoneLabel}>
+                <Icon name="tabler:phone" class="size-4" aria-hidden="true" />
+              </a>
+            )}
+            <ToggleMenu class="flex size-12 flex-col items-center justify-center bg-heading/5 text-heading cursor-pointer group" />
+          </div>
+
+          <div class="hidden md:flex md:flex-1 md:basis-0 md:items-center">
+            <a class="flex shrink-0 items-center" href={getHomePermalink()} aria-label="El Ranchero home">
+              <Logo />
+            </a>
+          </div>
+
+          <nav class="hidden shrink-0 md:block" data-desktop-nav aria-label="Main navigation">
+            <NavList links={links} class="flex items-center gap-8" />
+          </nav>
+
+          <div class="hidden items-center justify-end gap-8 md:flex md:flex-1 md:basis-0">
+            {showToggleTheme && <ToggleTheme iconClass="w-5 h-5" />}
+            {showRssFeed && (
+              <a class="text-secondary" aria-label="RSS Feed" href={getAsset('/rss.xml')}>
+                <Icon name="tabler:rss" class="w-5 h-5" />
+              </a>
+            )}
+            {extraActions.map((btnProps) => (
+              <Button {...btnProps} hideNote class="whitespace-nowrap" />
+            ))}
+            {socialLinks.length > 0 && (
+              <ul class="flex items-center gap-1" aria-label="Social media">
+                {socialLinks.map(({ href, ariaLabel, icon }) => (
+                  <li>
+                    <a href={href} aria-label={ariaLabel} target="_blank" rel="noopener noreferrer" class={socialIconClass}>
+                      <Icon name={icon} class="size-5" aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+        </div>
+
+        <div class={mobilePanelClass} data-mobile-panel>
+          <nav aria-label="Mobile navigation">
+            <ul class="flex flex-col">
+              {links.map(({ text, href, links: childLinks, columns }) => {
+                const isDropdown = Boolean(childLinks?.length || columns?.length);
+                const nested = columns?.length ? columns.flatMap((col) => col.links) : (childLinks ?? []);
+                return (
+                  <li>
+                    {isDropdown ? (
+                      <details>
+                        <summary class="flex cursor-pointer list-none items-center">
+                          {/* Tappable parent link — occupies most of the row */}
+                          <a class:list={[mobileLinkClass, 'flex-1']} href={href} data-mobile-parent-link>
+                            {text}
+                          </a>
+                          {/* Chevron-only toggle zone — tapping this toggles the accordion */}
+                          <span
+                            class="mobile-chevron-toggle flex size-10 shrink-0 items-center justify-center text-heading/50"
+                            aria-hidden="true"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="size-3.5 transition-transform duration-200 [[open]_&]:rotate-180"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            >
+                              <path d="M6 9l6 6 6-6" />
+                            </svg>
+                          </span>
+                        </summary>
+                        <ul class="mb-1 ml-2 flex flex-col border-l border-heading/10 pl-2">
+                          {nested.map(({ text: nestedText, href: nestedHref, description, image }) => (
+                            <li>
+                              <a
+                                class:list={[mobileNestedLinkClass, { 'aw-link-active': nestedHref === currentPath }]}
+                                href={nestedHref}
+                              >
+                                {image?.src && (
+                                  <Image
+                                    src={image.src}
+                                    alt={image.alt || ''}
+                                    width={64}
+                                    height={48}
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="size-12 shrink-0 object-cover"
+                                  />
+                                )}
+                                <span class="flex min-w-0 flex-col gap-1">
+                                  <span class="font-rough text-[15px] font-semibold leading-none">{nestedText}</span>
+                                  {description && (
+                                    <span class="line-clamp-2 font-sans text-[12px] leading-snug text-muted">
+                                      {description}
+                                    </span>
+                                  )}
+                                </span>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    ) : (
+                      <a class:list={[mobileLinkClass, { 'aw-link-active': href === currentPath }]} href={href}>
+                        {text}
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+          {(phoneAction || extraActions.length > 0) && (
+            <div class="mt-2 flex flex-col gap-2 border-t border-heading/10 pt-3">
+              {phoneAction && <Button {...phoneAction} hideNote class="w-full justify-center" />}
+              {extraActions.map((btnProps) => (
+                <Button {...btnProps} hideNote class="w-full justify-center" />
+              ))}
+            </div>
+          )}
+          {socialLinks.length > 0 && (
+            <div class="mt-3 flex items-center justify-center gap-2 border-t border-heading/10 pt-3">
+              {socialLinks.map(({ href, ariaLabel, icon }) => (
+                <a href={href} aria-label={ariaLabel} target="_blank" rel="noopener noreferrer" class={socialIconClass}>
+                  <Icon name={icon} class="size-5" aria-hidden="true" />
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </header>
+    )
+  }
+</aw-header>
+
+<style>
+  aw-header {
+    display: contents;
+  }
+
+  [data-mobile-panel] {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    #header.expanded [data-mobile-panel] {
+      display: flex;
+    }
+
+    [data-aw-toggle-dropdown][aria-expanded='true'] :global(svg) {
+      transform: rotate(180deg);
+    }
+
+    [data-mobile-panel] summary::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .mega-menu-columns {
+      grid-template-columns: repeat(var(--mega-columns), minmax(0, 1fr));
+    }
+
+    li.mega .mega-menu {
+      transform: translateX(calc(-50% + var(--mega-shift, 0px)));
+    }
+
+    /* Desktop chevron follows hover / keyboard focus, never click-to-toggle. */
+    li.dropdown:hover > div > a :global(svg),
+    li.dropdown:hover > div > button :global(svg),
+    li.dropdown:has(:focus-visible) > div > a :global(svg),
+    li.dropdown:has(:focus-visible) > div > button :global(svg) {
+      transform: rotate(180deg);
+    }
+  }
+</style>
+
+<script>
+  // Mobile nav: tapping the parent link navigates; tapping the chevron toggles.
+  document.addEventListener(
+    'click',
+    (e) => {
+      const link = (e.target as HTMLElement)?.closest('[data-mobile-parent-link]');
+      if (!link) return;
+      e.stopPropagation(); // prevent <details> from toggling
+    },
+    true
+  ); // capture phase so it fires before the <details> toggle
+</script>
+
+<script>
+  class AwHeader extends HTMLElement {
+    private mql?: MediaQueryList;
+    private onMqlChange?: () => void;
+    private onResize?: () => void;
+    private onPageLoad = () => {
+      this.updateActiveLinks();
+      this.closeOpenDropdown();
+    };
+
+    connectedCallback() {
+      const header = this.querySelector<HTMLElement>('#header');
+      const toggle = this.querySelector<HTMLElement>('[data-aw-toggle-menu]');
+      const nav = this.querySelector<HTMLElement>('[data-desktop-nav]');
+      const panel = this.querySelector<HTMLElement>('[data-mobile-panel]');
+
+      // The header persists across view transitions (transition:persist), so
+      // the server-rendered `aw-link-active` class would go stale. Re-compute it
+      // on every navigation (astro:page-load fires on load and after each swap).
+      this.updateActiveLinks();
+      document.addEventListener('astro:page-load', this.onPageLoad);
+      window.addEventListener('hashchange', this.onPageLoad);
+
+      const setDropdownOpen = (li: HTMLElement, open: boolean) => {
+        li.classList.toggle('expanded', open);
+        li.querySelectorAll<HTMLElement>('[data-aw-toggle-dropdown]').forEach((btn) => {
+          btn.setAttribute('aria-expanded', String(open));
+        });
+      };
+
+      const collapseDropdowns = () => {
+        nav?.querySelectorAll<HTMLElement>('li.dropdown.expanded').forEach((li) => setDropdownOpen(li, false));
+      };
+
+      const closeMenu = () => {
+        toggle?.classList.remove('expanded');
+        toggle?.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('overflow-hidden');
+        header?.classList.remove('expanded');
+        collapseDropdowns();
+      };
+
+      // Mobile menu toggle.
+      toggle?.addEventListener('click', () => {
+        const expanded = toggle.classList.toggle('expanded');
+        toggle.setAttribute('aria-expanded', String(expanded));
+        document.body.classList.toggle('overflow-hidden', expanded);
+        header?.classList.toggle('expanded', expanded);
+        if (!expanded) collapseDropdowns();
+      });
+
+      const isMobileNav = () => window.matchMedia('(max-width: 767px)').matches;
+
+      // Mobile: accordion chevrons toggle a submenu. Desktop: ignore clicks so
+      // the menu never pins open and the chevron does not flip on its own.
+      nav?.addEventListener('click', (e) => {
+        const dropdownToggle = (e.target as HTMLElement)?.closest<HTMLElement>('[data-aw-toggle-dropdown]');
+        if (dropdownToggle) {
+          if (!isMobileNav()) {
+            dropdownToggle.blur();
+            return;
+          }
+          e.preventDefault();
+          e.stopPropagation();
+          const li = dropdownToggle.closest<HTMLElement>('li.dropdown');
+          if (!li) return;
+          const willOpen = !li.classList.contains('expanded');
+          nav.querySelectorAll<HTMLElement>('li.dropdown.expanded').forEach((open) => {
+            if (open !== li) setDropdownOpen(open, false);
+          });
+          setDropdownOpen(li, willOpen);
+          return;
+        }
+
+        const link = (e.target as HTMLElement)?.closest<HTMLElement>('a');
+        if (link) link.blur();
+
+        if (header?.classList.contains('expanded')) closeMenu();
+      });
+
+      panel?.addEventListener('click', (e) => {
+        const link = (e.target as HTMLElement)?.closest<HTMLElement>('a');
+        if (link) closeMenu();
+      });
+
+      // Close it when leaving the mobile breakpoint.
+      this.mql = window.matchMedia('(max-width: 767px)');
+      this.onMqlChange = () => closeMenu();
+      this.mql.addEventListener('change', this.onMqlChange);
+
+      this.querySelectorAll<HTMLElement>('li.mega').forEach((li) => {
+        li.addEventListener('mouseenter', () => this.clampMegaMenu(li));
+        li.addEventListener('focusin', () => this.clampMegaMenu(li));
+      });
+      this.onResize = () => {
+        this.querySelectorAll<HTMLElement>('li.mega:hover, li.mega:focus-within').forEach((li) => {
+          this.clampMegaMenu(li);
+        });
+      };
+      window.addEventListener('resize', this.onResize);
+
+      document.documentElement.classList.add('motion-safe:scroll-smooth');
+    }
+
+    disconnectedCallback() {
+      if (this.mql && this.onMqlChange) this.mql.removeEventListener('change', this.onMqlChange);
+      if (this.onResize) window.removeEventListener('resize', this.onResize);
+      document.removeEventListener('astro:page-load', this.onPageLoad);
+      window.removeEventListener('hashchange', this.onPageLoad);
+    }
+
+    private clampMegaMenu(li: HTMLElement) {
+      const menu = li.querySelector<HTMLElement>('.mega-menu');
+      if (!menu) return;
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        menu.style.removeProperty('--mega-shift');
+        return;
+      }
+
+      menu.style.setProperty('--mega-shift', '0px');
+      requestAnimationFrame(() => {
+        const pad = 16;
+        const vw = window.innerWidth;
+        const rect = menu.getBoundingClientRect();
+        if (!rect.width) return;
+
+        let shift = 0;
+        if (rect.width >= vw - pad * 2) {
+          shift = pad - rect.left;
+        } else if (rect.left < pad) {
+          shift = pad - rect.left;
+        } else if (rect.right > vw - pad) {
+          shift = vw - pad - rect.right;
+        }
+        menu.style.setProperty('--mega-shift', `${Math.round(shift)}px`);
+      });
+    }
+
+    // With `transition:persist` the header (and its focus) survives client-side
+    // navigations, so a clicked dropdown link keeps `:focus-within` and its menu
+    // would stay open on the next page. Drop the focus so the CSS closes it.
+    private closeOpenDropdown() {
+      const active = document.activeElement as HTMLElement | null;
+      if (active && this.contains(active) && active.closest('.dropdown')) active.blur();
+    }
+
+    private updateActiveLinks() {
+      const norm = (p: string) => '/' + p.replace(/^\/+|\/+$/g, '');
+      const current = norm(window.location.pathname);
+      const currentHash = window.location.hash;
+
+      const isActive = (href: string) => {
+        const url = new URL(href, window.location.origin);
+        if (norm(url.pathname) !== current) return false;
+        if (url.hash) return url.hash === currentHash;
+        return !currentHash || currentHash === '#';
+      };
+
+      this.querySelectorAll<HTMLAnchorElement>('nav a[href]').forEach((a) => {
+        a.classList.toggle('aw-link-active', isActive(a.href));
+      });
+
+      this.querySelectorAll<HTMLElement>('nav > ul > li.dropdown').forEach((li) => {
+        const childLinks = li.querySelectorAll<HTMLAnchorElement>('.dropdown-menu a[href]');
+        const anyChildActive = Array.from(childLinks).some((a) => isActive(a.href));
+        const trigger = li.querySelector<HTMLElement>(
+          ':scope > a, :scope > span, :scope > div > a, :scope > div > button'
+        );
+        const triggerHref = trigger instanceof HTMLAnchorElement ? trigger.href : null;
+        const triggerActive = Boolean(triggerHref && isActive(triggerHref));
+        if (trigger) trigger.classList.toggle('aw-link-active', anyChildActive || triggerActive);
+      });
+    }
+  }
+
+  if (!customElements.get('aw-header')) {
+    customElements.define('aw-header', AwHeader);
+  }
+</script>

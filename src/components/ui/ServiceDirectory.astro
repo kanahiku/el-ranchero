@@ -1,0 +1,39 @@
+---
+export interface Props {
+  items: Array<{ title: string; description: string; href: string; linkText?: string }>;
+  variant?: 'light' | 'dark';
+}
+
+const { items, variant = 'dark' } = Astro.props;
+
+const divideClass = variant === 'dark' ? 'divide-white/15' : 'divide-black/10';
+const titleClass = variant === 'dark' ? 'text-white' : 'text-heading';
+const bodyClass = variant === 'dark' ? 'text-white/60' : 'text-muted';
+const linkClass = variant === 'dark' ? 'text-white' : 'text-timeline-step-light';
+---
+
+<div class:list={['divide-y', divideClass]}>
+  {
+    items.map(({ title, description, href, linkText = 'Learn More' }) => (
+      <a
+        href={href}
+        class="group flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-5 -mx-4 rounded-md cursor-pointer"
+      >
+        <div class="min-w-0">
+          <h3 class:list={['text-[18px] md:text-[20px] font-sans font-medium leading-[130%] mb-1', titleClass]}>
+            {title}
+          </h3>
+          <p class:list={['text-[14px] md:text-[15px] font-normal leading-[160%]', bodyClass]}>{description}</p>
+        </div>
+        <span
+          class:list={[
+            'text-[14px] md:text-[15px] font-medium shrink-0 card-link',
+            linkClass,
+          ]}
+        >
+          {linkText}
+        </span>
+      </a>
+    ))
+  }
+</div>

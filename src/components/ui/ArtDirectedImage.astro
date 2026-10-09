@@ -1,0 +1,95 @@
+---
+/**
+ * One photo below `md`, another from `md` up. If only one source is passed,
+ * that image is used at every breakpoint.
+ */
+import Image from '~/components/common/Image.astro';
+import type { ContentImage } from '~/lib/content/types';
+
+interface Props {
+  desktop?: ContentImage;
+  mobile?: ContentImage;
+  class?: string;
+  widths?: number[];
+  mobileWidths?: number[];
+  sizes?: string;
+  mobileSizes?: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  width?: number;
+  height?: number;
+  layout?: 'constrained' | 'full-width' | 'fixed' | 'cover' | 'none';
+  format?: 'avif' | 'jpeg' | 'jpg' | 'png' | 'webp';
+}
+
+const {
+  desktop,
+  mobile,
+  class: className,
+  widths = [400, 768, 1200],
+  mobileWidths = [400, 640, 828],
+  sizes = '(max-width: 768px) 100vw, 50vw',
+  mobileSizes = '100vw',
+  loading = 'eager',
+  fetchpriority,
+  width = 700,
+  height,
+  layout = 'cover',
+  format = 'webp',
+} = Astro.props;
+
+const desktopSrc = desktop?.src?.trim();
+const mobileSrc = mobile?.src?.trim();
+const shared = desktopSrc && mobileSrc ? desktopSrc === mobileSrc : false;
+const showPair = Boolean(desktopSrc && mobileSrc && !shared);
+const single = desktopSrc ? desktop : mobileSrc ? mobile : undefined;
+---
+
+{
+  showPair && desktop && mobile ? (
+    <>
+      <Image
+        src={mobile.src}
+        alt={mobile.alt || desktop.alt || ''}
+        class:list={['md:hidden', className]}
+        widths={mobileWidths}
+        sizes={mobileSizes}
+        loading={loading}
+        fetchpriority={fetchpriority}
+        width={width}
+        height={height}
+        layout={layout}
+        format={format}
+      />
+      <Image
+        src={desktop.src}
+        alt={desktop.alt || mobile.alt || ''}
+        class:list={['hidden md:block', className]}
+        widths={widths}
+        sizes={sizes}
+        loading={loading}
+        fetchpriority={fetchpriority}
+        width={width}
+        height={height}
+        layout={layout}
+        format={format}
+      />
+    </>
+  ) : (
+    single && (
+      <Image
+        src={single.src}
+        alt={single.alt || ''}
+        class={className}
+        widths={desktopSrc ? widths : mobileWidths}
+        sizes={desktopSrc ? sizes : mobileSizes}
+        loading={loading}
+        fetchpriority={fetchpriority}
+        width={width}
+        height={height}
+        layout={layout}
+        format={format}
+      />
+    )
+  )
+}

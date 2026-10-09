@@ -1,0 +1,34 @@
+---
+description: One component per pattern. Restyle atoms first, then shared sections. Never fork per page.
+alwaysApply: true
+---
+
+# Component reuse
+
+Figma build order: design system → atoms → sections → pages.
+
+Before creating a component, check `src/registry/components.json` and `src/components/`.
+
+## Atoms (`src/components/ui/`)
+
+Restyle the existing primitive to match Figma (Button, Headline, Form, InfoCard, ServiceCard, IconPoint). Do not add a second button or a page-specific heading component.
+
+## Sections (`src/components/widgets/`)
+
+One pattern = one widget for the whole site:
+
+- FAQ accordion → `FAQs` (every page that has FAQs)
+- Hero → `Hero2`
+- Page CTA band → `CTABanner`
+- Quotes → `Testimonials`
+- Split + image → `Content`
+
+If Figma’s FAQ (or hero, CTA, …) looks different, restyle **that** widget. Pass copy and `isDark` as props. Do not create `HomeFAQ.astro` / `ServicesFAQ.astro`.
+
+## New UI
+
+New unique Figma shape → **one** new component, then add it to `src/registry/components.json` (`id`, `figmaNames`, `shape`, `component`, `import`). Never paste one-off markup into a page file.
+
+Do not pick layouts from item counts (band vs grid vs cards). Figma already decided.
+
+Cards with a link or button: card `flex flex-col h-full`, body `flex-1`, CTA `mt-auto` so links line up regardless of copy length.

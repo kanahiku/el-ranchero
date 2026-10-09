@@ -1,0 +1,48 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Headline from '~/components/ui/Headline.astro';
+import SectionBg from '~/components/ui/SectionBg.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import ReviewsGrid from '~/components/widgets/ReviewsGrid.astro';
+import { CONTACT } from '~/config/contact';
+import { PRIMARY_CTA_HREF } from '~/config/cta';
+
+export const prerender = false;
+
+const metadata = {
+  title: `Reviews | ${CONTACT.businessName}`,
+  description: `Read recent Google and Yelp reviews for ${CONTACT.businessName}.`,
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <Hero2>
+    <Fragment slot="title">Reviews</Fragment>
+    <Fragment slot="subtitle">
+      What people are saying about {CONTACT.businessName}.
+    </Fragment>
+    <Fragment slot="bg">
+      <SectionBg variant="hero" />
+    </Fragment>
+  </Hero2>
+
+  <WidgetWrapper containerClass="max-w-container mx-auto">
+    <Headline title="Recent reviews" classes={{ container: 'mb-[9px]' }} />
+    <ReviewsGrid showHeader={false} sources={['google', 'yelp']} variant="dark" showCta={false} />
+    <Fragment slot="bg">
+      <SectionBg variant="grey" />
+    </Fragment>
+  </WidgetWrapper>
+
+  <CTABanner
+    title="Find a Location"
+    subtitle="Six neighborhood restaurants across Oahu. Come see us."
+    ctaText="Find a Location"
+    ctaHref="/locations"
+    secondaryCtaText="Order Online"
+    secondaryCtaHref={PRIMARY_CTA_HREF}
+  />
+</Layout>

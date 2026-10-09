@@ -1,0 +1,311 @@
+---
+/**
+ * MenuCategories — Menu page category grid.
+ *
+ * Design language follows the approved homepage FeaturedDishes widget:
+ *   - bg-page (cream) section background
+ *   - Section header: eyebrow + h2 left, CTA right
+ *   - Photo-first cards with a bottom gradient overlay, consistent content height
+ *   - Three-tier size hierarchy:
+ *       Row 1 (hero):   Salads (7/12) + Design Your Own (5/12)
+ *       Row 2 (medium): Wraps & Subs · Soups · Drinks  (4/12 each)
+ *       Row 3 (small):  Keiki · Vegan · Vegetarian · Healthy (3/12 each)
+ */
+import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+import Image from '~/components/common/Image.astro';
+import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
+import { CATERING_CTA_HREF, CATERING_CTA_LABEL } from '~/config/cta';
+import { getMenuCategories } from '~/lib/content';
+import type { ContentImage } from '~/lib/content/types';
+
+
+export interface Props {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  /** Empty string hides the header CTA. Defaults to catering. */
+  ctaText?: string;
+  ctaHref?: string;
+  /** Drop the current category so this grid can sit on menu subpages. */
+  excludeHref?: string;
+  /** Drop multiple categories when the copy brief omits them from related links. */
+  excludeHrefs?: string[];
+  /** Keep the original row layout but stop after this row. */
+  maxRows?: 1 | 2 | 3;
+  id?: string;
+}
+
+const {
+  eyebrow,
+  title = 'Explore Our Menu Categories',
+  subtitle,
+  ctaText = CATERING_CTA_LABEL,
+  ctaHref = CATERING_CTA_HREF,
+  excludeHref,
+  excludeHrefs = [],
+  maxRows = 3,
+  id,
+} = Astro.props;
+
+interface MenuCategory {
+  label: string;
+  href: string;
+  description: string;
+  colSpan: string;
+  row: 1 | 2 | 3;
+  img?: ContentImage | null;
+}
+
+const CATEGORIES: MenuCategory[] = [
+  // ── Row 1 ────────────────────────────────────────────────────────────
+  {
+    label: 'Salads',
+    href: '/menu/salads',
+    description: 'Signature bowls featuring crisp greens, local ahi, and house-made dressings.',
+    colSpan: 'md:col-span-7',
+    row: 1,
+    img: null,
+  },
+  {
+    label: 'Design Your Own Salad',
+    href: '/menu/design-your-own-salad',
+    description: 'Build a custom bowl with your choice of greens, toppings, and dressings.',
+    colSpan: 'md:col-span-5',
+    row: 1,
+    img: null,
+  },
+  // ── Row 2 ────────────────────────────────────────────────────────────
+  {
+    label: 'Wraps & Subs',
+    href: '/menu/wraps-subs',
+    description: 'Hearty options wrapped in fresh tortillas or served on artisan bread.',
+    colSpan: 'md:col-span-4',
+    row: 2,
+    img: null,
+  },
+  {
+    label: 'Soups',
+    href: '/menu/soups',
+    description: 'Comforting warm seasonal selections.',
+    colSpan: 'md:col-span-4',
+    row: 2,
+    img: null,
+  },
+  {
+    label: 'Drinks',
+    href: '/menu/drinks',
+    description: 'Chilled Big Island mamaki mint tea and local beverages.',
+    colSpan: 'md:col-span-4',
+    row: 2,
+    img: null,
+  },
+  // ── Row 3 ────────────────────────────────────────────────────────────
+  {
+    label: 'Keiki / Kids Menu',
+    href: '/menu/kids',
+    description: 'Wholesome options sized for children.',
+    colSpan: 'md:col-span-3',
+    row: 3,
+    img: null,
+  },
+  {
+    label: 'Vegan Options',
+    href: '/menu/vegan',
+    description: 'Dedicated plant-based choices and meatless meal selections.',
+    colSpan: 'md:col-span-3',
+    row: 3,
+    img: null,
+  },
+  {
+    label: 'Vegetarian Options',
+    href: '/menu/vegetarian',
+    description: 'Dedicated meatless meal selections for vegetarians.',
+    colSpan: 'md:col-span-3',
+    row: 3,
+    img: null,
+  },
+  {
+    label: 'Healthy Food',
+    href: '/menu/healthy-options',
+    description: 'Wholesome menu choices for an active island lifestyle.',
+    colSpan: 'md:col-span-3',
+    row: 3,
+    img: null,
+  },
+  {
+    label: 'Misc',
+    href: '/menu/misc',
+    description: 'Additional favorites and cafe-style selections.',
+    colSpan: 'md:col-span-3',
+    row: 3,
+    img: null,
+  },
+];
+
+const excludedCategoryHrefs = new Set([excludeHref, ...excludeHrefs].filter(Boolean));
+const isGrid = excludedCategoryHrefs.size > 0;
+
+const cmsCategories = await getMenuCategories();
+const cmsCategoryByHref = new Map(cmsCategories.map((category) => [category.href, category]));
+
+const categories = CATEGORIES.map((cat) => {
+  const cmsCategory = cmsCategoryByHref.get(cat.href);
+  const image = cmsCategory?.items.find((item) => item.image?.src)?.image;
+
+  return {
+    ...cat,
+    description: cmsCategory?.description || cat.description,
+    img: image ?? cat.img,
+  };
+});
+
+const visibleCategories = categories
+  .filter((cat) => cat.row <= maxRows && !excludedCategoryHrefs.has(cat.href))
+  .map((cat, index) =>
+    isGrid
+      ? {
+          ...cat,
+          colSpan: 'md:col-span-3',
+          row: (index < 4 ? 2 : 3) as 2 | 3,
+        }
+      : cat
+  );
+---
+
+<section {...id ? { id } : {}} class="not-prose relative w-full overflow-hidden bg-page" aria-label="Menu categories">
+
+
+  {/* ── Section header ───────────────────────────────────────────── */}
+  <div
+    class="relative z-[1] mx-auto flex w-full max-w-container flex-col gap-6 px-5 pb-8 pt-16 sm:px-8 md:flex-row md:items-end md:justify-between md:px-16 md:pb-10 md:pt-[120px]"
+  >
+    <div class="flex max-w-[822px] flex-col gap-6">
+      {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
+      {title && <Heading variant="h2">{title}</Heading>}
+      {
+        subtitle && (
+          <Text variant="body-lg" color="default">
+            {subtitle}
+          </Text>
+        )
+      }
+    </div>
+    {ctaText && <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} class="shrink-0" />}
+  </div>
+
+  {/* ── Card grid ────────────────────────────────────────────────── */}
+  <div
+    data-layout={isGrid ? 'grid' : 'bento'}
+    class="relative z-[1] mx-auto grid w-full max-w-container grid-cols-1 gap-3 px-5 pb-16 sm:px-8 md:grid-cols-12 md:gap-4 md:px-16 md:pb-[120px]"
+  >
+    {
+      visibleCategories.map((cat) => (
+        <a
+          href={cat.href}
+          data-row={cat.row}
+          class:list={['group relative flex flex-col overflow-hidden rounded-sm', cat.colSpan]}
+        >
+          {/* ── Photo ── */}
+          <div class="menu-cat-photo relative w-full flex-1 min-h-0 overflow-hidden bg-section-grey">
+            {cat.img?.src ? (
+              <Image
+                src={cat.img.src}
+                alt={cat.img.alt || ''}
+                width={900}
+                height={675}
+                layout="cover"
+                loading="lazy"
+                decoding="async"
+                class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+              />
+            ) : (
+              <>
+                {/* TODO: replace with <Image> when asset is ready */}
+                <HeroImagePlaceholder
+                  fill
+                  class="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.04]"
+                  label={`${cat.label} placeholder`}
+                />
+              </>
+            )}
+            {/* Dark gradient scrim — more depth at bottom for text legibility */}
+            <div class="absolute inset-0 bg-gradient-to-t from-heading/80 via-heading/20 to-transparent" />
+          </div>
+
+          {/* ── Light footer strip — keeps card details readable against photo cards ── */}
+          <div class="relative z-[1] -mt-20 flex min-h-20 flex-col justify-end gap-1.5 border-t border-heading/10 bg-card px-5 pb-4 pt-5 shadow-card md:px-6">
+            {/* Heading row + arrow */}
+            <div class="flex items-start justify-between gap-3">
+              <h3
+                class:list={[
+                  'font-rough font-normal leading-tight text-heading',
+                  cat.row === 1 ? 'text-[26px]' : 'text-[21px]',
+                ]}
+              >
+                {cat.label}
+              </h3>
+              <span
+                class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-heading/20 text-heading/50 transition-all duration-200 group-hover:border-heading group-hover:text-heading"
+                aria-hidden="true"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  class="size-3 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  aria-hidden="true"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 13L13 3M7 3h6v6" />
+                </svg>
+              </span>
+            </div>
+            {/* Description — always reserves 2 lines of space */}
+            <p class="line-clamp-2 min-h-[calc(2*1.45*0.75rem)] text-[12px] leading-[1.45] text-muted">
+              {cat.description}
+            </p>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  /* Mobile: natural aspect-ratio via the photo placeholder */
+  [data-row='1'] .menu-cat-photo {
+    aspect-ratio: 16 / 9;
+  }
+  [data-row='2'] .menu-cat-photo {
+    aspect-ratio: 4 / 3;
+  }
+  [data-row='3'] .menu-cat-photo {
+    aspect-ratio: 4 / 3;
+  }
+
+  @media (min-width: 768px) {
+    /* Desktop: fix total card heights so rows align */
+    [data-row='1'] {
+      height: 480px;
+    }
+    [data-row='2'] {
+      height: 360px;
+    }
+    [data-row='3'] {
+      height: 260px;
+    }
+
+    /* Photo fills all space above the fixed content strip */
+    .menu-cat-photo {
+      aspect-ratio: auto !important;
+      flex: 1 1 0%;
+    }
+
+    [data-layout='grid'] [data-row] {
+      height: 300px;
+    }
+  }
+</style>

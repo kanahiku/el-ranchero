@@ -1,0 +1,78 @@
+---
+import { Icon } from 'astro-icon/components';
+import CardWrapper from './CardWrapper.astro';
+import type { Review } from '~/lib/reviews';
+
+export interface Props {
+  review: Review;
+  variant?: 'dark' | 'light';
+  showLink?: boolean;
+}
+
+const { review, variant = 'dark', showLink = true } = Astro.props;
+
+const headingClass = variant === 'dark' ? 'text-card-heading-dark' : 'text-card-heading-light';
+const bodyClass = variant === 'dark' ? 'text-card-body-dark' : 'text-card-body-light';
+const metaClass = variant === 'dark' ? 'text-white/50' : 'text-muted';
+const sourceLabel = review.source === 'google' ? 'Google' : 'Yelp';
+const sourceIcon = review.source === 'google' ? 'tabler:brand-google' : 'tabler:star';
+const formattedDate = review.date
+  ? new Date(review.date).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
+  : '';
+const stars = [1, 2, 3, 4, 5];
+---
+
+<CardWrapper variant={variant} size="md" border={variant !== 'light'} class="min-h-[220px]">
+  <div class="flex items-start justify-between gap-3 mb-3">
+    <div class="flex items-center gap-0.5" aria-label={`${review.rating} out of 5 stars`}>
+      {
+        stars.map((star) => (
+          <Icon
+            name={star <= review.rating ? 'tabler:star-filled' : 'tabler:star'}
+            class="w-4 h-4 text-accent"
+            aria-hidden="true"
+          />
+        ))
+      }
+    </div>
+    <span class="inline-flex items-center gap-1.5 shrink-0" title={`Reviewed on ${sourceLabel}`}>
+      <Icon name={sourceIcon} class="w-5 h-5 text-accent" aria-hidden="true" />
+      <span class="sr-only">{sourceLabel}</span>
+    </span>
+  </div>
+
+  <h3
+    class:list={[
+      'text-[16px] md:text-[18px] font-sans font-medium leading-[130%]',
+      formattedDate ? 'mb-1' : 'mb-3',
+      headingClass,
+    ]}
+  >
+    {review.authorName}
+  </h3>
+  {
+    formattedDate && (
+      <p class:list={['text-[13px] md:text-[14px] font-medium leading-[160%] mb-3', metaClass]}>{formattedDate}</p>
+    )
+  }
+  <p class:list={['text-[14px] md:text-[15px] font-normal leading-[160%] flex-1', bodyClass]}>“{review.text}”</p>
+  {
+    showLink && review.sourceUrl && (
+      <a
+        href={review.sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class:list={[
+          'mt-auto pt-4 btn-link',
+          variant === 'light' ? '' : 'text-contrast hover:text-white',
+        ]}
+      >
+        View on {sourceLabel}
+      </a>
+    )
+  }
+</CardWrapper>

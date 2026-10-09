@@ -1,0 +1,232 @@
+---
+import { Icon } from 'astro-icon/components';
+import { twMerge } from 'tailwind-merge';
+import type { Item } from '~/types';
+
+export interface Props {
+  items?: Array<Item>;
+  defaultIcon?: string;
+  isDark?: boolean;
+  surface?: 'white' | 'grey';
+  variant?: 'vertical' | 'horizontal';
+  classes?: Record<string, string>;
+}
+
+const {
+  items = [],
+  classes = {},
+  defaultIcon,
+  isDark = false,
+  surface = 'grey',
+  variant = 'horizontal',
+} = Astro.props as Props;
+
+const {
+  container: containerClass = '',
+  panel: panelClass = '',
+  title: titleClass = '',
+  description: descriptionClass = '',
+  icon: iconClass = '',
+} = classes;
+
+const isHorizontal = variant === 'horizontal';
+const stepCount = items.length;
+const desktopGapRem = stepCount >= 6 ? 1.5 : 2;
+const iconCenter = '1.25rem';
+const railLeft = stepCount > 1 ? iconCenter : '0';
+const railRight =
+  stepCount > 1
+    ? `calc((100% - ${(stepCount - 1) * desktopGapRem}rem) / ${stepCount} - ${iconCenter})`
+    : '0';
+
+const iconBoxClass = isDark
+  ? 'bg-timeline-icon-bg-dark shadow-[0_0_0_8px_var(--aw-color-bg-section-dark)]'
+  : surface === 'white'
+    ? 'bg-timeline-icon-bg-light shadow-[0_0_0_8px_var(--aw-color-bg-section-white)]'
+    : 'bg-timeline-icon-bg-light shadow-[0_0_0_8px_var(--aw-color-bg-section-grey)]';
+const iconGlyphClass = isDark ? 'text-timeline-icon-dark' : 'text-timeline-icon-light';
+const titleColors = isDark ? 'text-timeline-title-dark' : 'text-timeline-title-light';
+const descColors = isDark ? 'text-timeline-desc-dark' : 'text-timeline-desc-light';
+const lineColors = isDark ? 'bg-white/20' : 'bg-black/15';
+
+const titleTypography = 'text-[18px] font-sans font-medium leading-[130%]';
+const descTypography = 'text-[14px] md:text-[15px] font-normal leading-[160%] mt-2';
+---
+
+{
+  items && items.length > 0 && (
+    <div
+      class={twMerge(isHorizontal ? 'rc-tl w-full' : 'flex flex-col', containerClass)}
+      style={
+        isHorizontal
+          ? `--timeline-tracks: repeat(${stepCount}, minmax(0, 1fr)); --timeline-gap: ${desktopGapRem}rem`
+          : undefined
+      }
+    >
+      <div class={isHorizontal ? 'rc-tl-track relative' : undefined}>
+        {isHorizontal && stepCount > 1 && (
+          <div
+            class:list={['rc-tl-rail absolute z-0 h-px pointer-events-none', lineColors]}
+            style={`top: 1.25rem; left: ${railLeft}; right: ${railRight};`}
+            aria-hidden="true"
+          />
+        )}
+
+        {items.map(({ title, description, icon, classes: itemClasses = {} }, index = 0) => {
+          const isLast = index === items.length - 1;
+          const iconName = icon || defaultIcon;
+          const stepLabel = String(index + 1).padStart(2, '0');
+
+          return (
+            <div
+              class={twMerge(
+                isHorizontal ? 'rc-tl-item relative' : 'flex',
+                'intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
+                panelClass,
+                itemClasses?.panel
+              )}
+            >
+              <div
+                class:list={[
+                  'rc-tl-mark relative z-10 flex shrink-0 flex-col items-center',
+                  !isHorizontal && 'mr-4 rtl:mr-0 rtl:ml-4',
+                ]}
+              >
+                {iconName && (
+                  <div
+                    class={twMerge(
+                      'size-9 sm:size-10 rounded-md flex items-center justify-center shrink-0 relative z-10',
+                      iconBoxClass,
+                      iconClass,
+                      itemClasses?.icon
+                    )}
+                  >
+                    <Icon name={iconName} class:list={['size-3.5 sm:size-5', iconGlyphClass]} />
+                  </div>
+                )}
+                {!isLast && (
+                  <div class={twMerge('rc-tl-connector w-px flex-1 min-h-12', lineColors)} />
+                )}
+              </div>
+
+              <div
+                class:list={[
+                  'rc-tl-copy min-w-0 pt-1',
+                  !isLast && !isHorizontal && 'pb-12',
+                  !isLast && isHorizontal && 'rc-tl-copy-pad',
+                ]}
+              >
+                {isHorizontal && (
+                  <p
+                    class:list={[
+                      'rc-tl-step text-[13px] md:text-[14px] font-medium leading-[160%] mb-2',
+                      isDark ? 'text-white/50' : 'text-timeline-step-light',
+                    ]}
+                  >
+                    {stepLabel}
+                  </p>
+                )}
+                {title && (
+                  <p
+                    class={twMerge(titleTypography, titleColors, titleClass, itemClasses?.title)}
+                    set:html={title}
+                  />
+                )}
+                {description && (
+                  <p
+                    class={twMerge(descTypography, descColors, descriptionClass, itemClasses?.description)}
+                    set:html={description}
+                  />
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  )
+}
+
+<style is:global>
+  .rc-tl {
+    container-type: inline-size;
+    container-name: rc-tl;
+  }
+
+  .rc-tl-track {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .rc-tl-item {
+    display: flex;
+  }
+
+  .rc-tl-item:not(:last-child) .rc-tl-copy-pad {
+    padding-bottom: 3rem;
+  }
+
+  .rc-tl-mark {
+    margin-right: 1rem;
+  }
+
+  .rc-tl-rail,
+  .rc-tl-step {
+    display: none;
+  }
+
+  @container rc-tl (min-width: 420px) {
+    .rc-tl-track {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 2.5rem;
+      row-gap: 2.75rem;
+    }
+
+    .rc-tl-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .rc-tl-item:not(:last-child) .rc-tl-copy-pad {
+      padding-bottom: 0;
+    }
+
+    .rc-tl-mark {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+
+    .rc-tl-connector {
+      display: none;
+    }
+
+    .rc-tl-copy {
+      padding-top: 0;
+      padding-bottom: 0;
+      width: 100%;
+      max-width: none;
+      text-align: left;
+    }
+
+    .rc-tl-step {
+      display: block;
+    }
+  }
+
+  @container rc-tl (min-width: 900px) {
+    .rc-tl-track {
+      grid-template-columns: var(--timeline-tracks);
+      column-gap: var(--timeline-gap, 2rem);
+      row-gap: 0;
+    }
+
+    .rc-tl-rail {
+      display: block;
+    }
+  }
+</style>

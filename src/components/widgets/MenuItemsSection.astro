@@ -1,0 +1,107 @@
+---
+/**
+ * MenuItemsSection — restaurant menu list for location pages and category pages.
+ * Stays a vertical list so 4 items and 20 items use the same rhythm.
+ */
+import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+import Image from '~/components/common/Image.astro';
+import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
+import type { ContentImage } from '~/lib/content/types';
+
+export interface MenuItem {
+  title: string;
+  description?: string;
+  badge?: string;
+  note?: string;
+  image?: ContentImage;
+}
+
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  items?: MenuItem[];
+  ctaText?: string;
+  ctaHref?: string;
+  id?: string;
+}
+
+const { eyebrow, title, intro, items = [], ctaText, ctaHref, id } = Astro.props;
+---
+
+<section {...id ? { id } : {}} class="not-prose relative w-full scroll-mt-24 overflow-hidden bg-page md:scroll-mt-32">
+  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+  </div>
+
+  <div class="relative z-[1] mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
+    <div class="mb-10 flex max-w-4xl flex-col gap-6 md:mb-14">
+      {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
+      <Heading variant="h2">{title}</Heading>
+      {
+        intro && (
+          <Text variant="body-lg" color="default">
+            {intro}
+          </Text>
+        )
+      }
+    </div>
+
+    {
+      items.length > 0 && (
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {items.map((item) => (
+            <article class="flex h-full flex-col overflow-hidden bg-card">
+              <div class="relative w-full bg-section-grey" style="aspect-ratio: 4 / 3;">
+                {item.image?.src ? (
+                  <Image
+                    src={item.image.src}
+                    alt={item.image.alt || ''}
+                    width={640}
+                    height={480}
+                    layout="cover"
+                    loading="lazy"
+                    decoding="async"
+                    class="absolute inset-0 h-full w-full object-cover"
+                  />
+                ) : (
+                  <>
+                    {/* TODO: replace with <Image> when asset is ready */}
+                    <HeroImagePlaceholder fill class="absolute inset-0" label={`${item.title} menu item placeholder`} />
+                  </>
+                )}
+                {item.badge && (
+                  <span class="absolute bottom-3 left-3 z-10 bg-section-dark px-2.5 pt-[4px] pb-[2px] font-heading text-[11px] font-medium leading-none tracking-[0.06em] text-contrast shadow-sm uppercase">
+                    {item.badge}
+                  </span>
+                )}
+              </div>
+              <div class="flex flex-1 flex-col gap-3 px-5 py-5">
+                <div class="flex items-center justify-between gap-3">
+                  <h3 class="font-rough text-h4 font-normal leading-none text-heading">{item.title}</h3>
+                  {item.note && (
+                    <span class="shrink-0 text-right font-sans text-[11px] leading-snug tracking-[0.02em] text-section-dark">
+                      {item.note}
+                    </span>
+                  )}
+                </div>
+                {item.description && (
+                  <p class="font-sans text-body leading-[1.45] tracking-[-0.01em] text-muted">{item.description}</p>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      ctaText && ctaHref && (
+        <div class="mt-10 md:mt-16">
+          <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} />
+        </div>
+      )
+    }
+  </div>
+</section>

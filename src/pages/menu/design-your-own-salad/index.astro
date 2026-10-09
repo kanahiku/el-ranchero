@@ -1,0 +1,130 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import BuildSteps from '~/components/widgets/BuildSteps.astro';
+import LocalSourcing from '~/components/widgets/LocalSourcing.astro';
+import MenuCategories from '~/components/widgets/MenuCategories.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import {
+  PRIMARY_CTA_HREF,
+  LOCATION_CTA_HREF,
+  CATERING_CTA_HREF,
+} from '~/config/cta';
+import { getSanityMenuPagesImages } from '~/lib/content/sanity';
+
+const menuPagesImages = await getSanityMenuPagesImages().catch(() => ({} as Awaited<ReturnType<typeof getSanityMenuPagesImages>>));
+
+const metadata = {
+  title: 'Build Your Own Salad | Custom Bowls | El Ranchero Oahu',
+  description:
+    'Build your own salad at El Ranchero with your choice of fresh lettuce, toppings, cheese, and house-made dressing. Order online across our six Oahu locations.',
+  ignoreTitleTemplate: true,
+};
+
+const heroTitle = 'Design Your Own Salad at El Ranchero';
+const heroContent =
+  "Build your own salad using our daily selection of fresh ingredients. You get to choose exactly what goes into your bowl, backed by the same quality standards we use across our six Oahu locations.";
+
+const sourcingSubtitle =
+  'Custom salads are built using the same high-quality components as our signature bowls, including our house-made dressings and vessel-tracked local ahi.';
+
+const faqs = [
+  {
+    title: 'What is included in a custom salad?',
+    description:
+      'The Design Your Own Salad option includes your choice of lettuce, four regular toppings, one cheese, and one dressing.',
+  },
+  {
+    title: 'Can I add extra ingredients to my custom salad?',
+    description: 'Yes. You can add extra toppings, premium proteins, or additional cheese for an extra charge.',
+  },
+  {
+    title: 'Are your dressings made from scratch?',
+    description: 'Yes. All of our signature salad dressings are crafted daily in our kitchens.',
+  },
+  {
+    title: 'Can I order a custom salad online?',
+    description: 'Yes. You can build your salad exactly how you want it through our online ordering system.',
+  },
+  {
+    title: 'Where can I pick up my custom order?',
+    description:
+      "You can order ahead for fast pickup at any of our six neighborhood restaurants across Oahu.",
+  },
+];
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    title={heroTitle}
+    content={heroContent}
+    image={menuPagesImages.designYourOwnHero}
+    actions={[
+      { variant: 'primary', text: 'Order Online', href: PRIMARY_CTA_HREF },
+      { variant: 'ghost', tone: 'dark', text: 'Find a Location', href: LOCATION_CTA_HREF },
+    ]}
+  />
+
+  <BuildSteps
+    id="how-to-build"
+    title="How to Build Your Own Salad"
+    subtitle="Includes your choice of lettuce, four regular toppings, one cheese, and one dressing."
+    note="Additional charge for extra toppings, premium proteins, or additional cheese."
+    ctaText="Order Online"
+    ctaHref={PRIMARY_CTA_HREF}
+    image={menuPagesImages.designYourOwnBuild}
+    steps={[
+      {
+        title: 'Lettuce',
+        description: 'Start with your choice of greens.',
+      },
+      {
+        title: 'Four toppings',
+        description: 'Pick four regular toppings from the daily selection.',
+      },
+      {
+        title: 'One cheese',
+        description: 'Add one cheese to finish the bowl.',
+      },
+      {
+        title: 'One dressing',
+        description: 'Finish with a house-made dressing, crafted from scratch daily.',
+      },
+    ]}
+  />
+
+  <LocalSourcing
+    title="Quality Ingredients"
+    subtitle={sourcingSubtitle}
+    ctaText="Learn More About Our Ingredients"
+    ctaHref="/ingredients"
+    withPhoto={true}
+    image={menuPagesImages.designYourOwnQuality}
+  />
+
+  <MenuCategories
+    id="explore-menu"
+    title="Explore Other Menu Categories"
+    subtitle="Looking for one of our signature recipes or a plant-based option? Browse the rest of our menu."
+    ctaText=""
+    excludeHref="/menu/design-your-own-salad"
+  />
+
+  <CTABanner
+    title="Ready to Order?"
+    subtitle="Skip the line and place your custom order online for fast pickup. Planning a group event? We also offer a variety of catering options."
+    ctaText="Order Online"
+    ctaHref={PRIMARY_CTA_HREF}
+    secondaryCtaText="Order Catering"
+    secondaryCtaHref={CATERING_CTA_HREF}
+  />
+
+  <FAQs
+    title="Frequently Asked Questions"
+    items={faqs}
+    isDark={true}
+  />
+</PageLayout>

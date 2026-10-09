@@ -1,0 +1,49 @@
+---
+description: Colors, fonts, and radius live only in src/brand.ts. Never hardcode hex in components or pages.
+alwaysApply: true
+---
+
+# Brand tokens
+
+Phase 1 of every Figma build. Do not restyle buttons or compose pages until `src/brand.ts` matches the file.
+
+`src/brand.ts` is the only look file. `CustomStyles.astro` injects `brandStylesheet()`. `astro.config.ts` reads `brandFontConfig()` for Google Fonts.
+
+## From Figma
+
+- If the file has Variables or a Design System frame: copy color, type, and radius into `brand`.
+- If it does not: walk a few representative frames, collect the most-used fills, text styles (family, weight, size), and corner radius. Map those into `brand.colors`, `brand.fonts`, `brand.radius`. Do not create a token per one-off swatch.
+
+## Type
+
+Map Figma styles into `brand.type` roles, then only use `Heading` / `Text` (or `text-h1`–`text-h4`). Never hardcode `text-[52px]` in widgets.
+
+| Role | Use |
+|---|---|
+| `h1` | Hero / display |
+| `h2` | Section heading |
+| `h3` | Pullquote / numbered title |
+| `h4` | Card / subsection title |
+| `body-lg` | Lede, hero subtitle |
+| `body` | Paragraph |
+| `eyebrow` | All-caps label |
+| `small` | Card body, footnotes |
+| `caption` | Metadata |
+
+**Prefer Figma.** Most files ship a design system for **desktop and mobile**. Copy both:
+
+- `size` ← desktop (usually 1440)
+- `mobile` ← phone / mobile type styles
+
+Do **not** invent mobile sizes when Figma already has them.
+
+**Fallback only** if there is no mobile type (no mobile Variables, no mobile Design System, no mobile text styles). Prefer an **optical** scale that keeps a clear h1 > h2 > h3 step on a ~390px screen — do not flatten display sizes (e.g. 36px h1 next to 32px h2).
+
+This file: Style Guide `110:2377` is desktop only. Mobile is optical — 72/52/26/24 → **40/28/22/18**; ticker 32→24; quote 22→18; body-lg 16→15; eyebrow 16→14. Body/button/small stay the same.
+
+## In code
+
+- Components and pages use Tailwind tokens / CSS variables (`text-heading`, `text-muted`, `bg-card-dark`, `bg-section-grey`, `bg-cta`, `text-accent`).
+- Never hardcode hex (`#222`, `#FAFAFA`, gold, navy) in widgets or pages.
+- Changing a site's look = edit `src/brand.ts` (plus logo/favicons). Do not add a visual-system rule file per client.
+- Name, URL, GTM, and Search Console live in `src/config/site.ts`. Phone and address live in `src/config/contact.ts`.

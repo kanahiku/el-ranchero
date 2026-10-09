@@ -1,0 +1,73 @@
+---
+description: Favicon and brand identity assets — every place the icon appears and how to regenerate them
+alwaysApply: true
+---
+
+# Favicon & brand identity assets
+
+When the client logo or brand changes, **every** identity asset must be regenerated in the same task.
+Never update one file and leave the others stale.
+
+## Files to update — the complete checklist
+
+| File | What it is | How to update |
+|---|---|---|
+| `public/favicon.svg` | Primary icon — used by all modern browsers | Edit SVG directly |
+| `public/favicon.ico` | Fallback for legacy browsers | `node scripts/gen-icons.mjs` |
+| `public/apple-touch-icon.png` | iOS home-screen / Safari pinned tab — 180 × 180 | `node scripts/gen-icons.mjs` |
+| `src/assets/images/og-image.jpg` | Open Graph / Twitter card — 1200 × 630 | `node scripts/gen-icons.mjs` |
+| `src/config.yaml` → `metadata.openGraph.images[0].url` | Points to the OG image | Update path if filename changes |
+| `src/config.yaml` → `metadata.title.default` / `template` | Site name in `<title>` tags | Update to match client |
+| `src/components/Favicons.astro` → `mask-icon color` | Safari pinned-tab tint | Set to brand accent (`brand.colors.accent`) |
+
+## Source of truth for the icon shape
+
+Figma node `1:226` (El Ranchero file). Compound cream badge with hibiscus + **AS** as even-odd holes. Local copy: `public/favicon.svg`.
+
+Sit the path on `brand.colors.navy` (`#3C2718`) so the cut-outs read as cacao, not as transparent holes. Do not leave the Figma MCP localhost SVG URL in production files.
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92.0174 92.0174" width="32" height="32">
+  <rect width="92.0174" height="92.0174" fill="[brand.colors.navy]"/>
+  <path fill="[brand.colors.page]" fill-rule="evenodd" d="…"/>
+</svg>
+```
+
+## Regeneration script
+
+`scripts/gen-icons.mjs` rasterizes `public/favicon.svg` with `sharp`. Run after changing the SVG or palette:
+
+```bash
+node scripts/gen-icons.mjs
+```
+
+## Config.yaml — always keep in sync
+
+```yaml
+metadata:
+  title:
+    default: El Ranchero
+    template: '%s | El Ranchero'
+  description: '…'                     # ← from Figma / SEO brief
+  openGraph:
+    site_name: El Ranchero
+    images:
+      - url: '~/assets/images/og-image.jpg'
+        width: 1200
+        height: 630
+```
+
+## Favicons.astro — mask-icon tint
+
+```astro
+<link rel="mask-icon" href="/favicon.svg" color="[brand.colors.accent]" />
+```
+Always use the brand accent colour (`brand.colors.accent` from `src/brand.ts`), not a hardcoded hex.
+
+## Do not
+
+- Update only `favicon.svg` and leave `.ico` / `apple-touch-icon.png` stale
+- Reference `logo.webp` (old R&C Roofing asset — deleted) anywhere in `config.yaml` or meta tags
+- Hardcode a non-brand colour in `mask-icon`
+- Use the Figma MCP localhost image server URLs in any production asset
+- Commit a 1024 × 124 logo as the OG image — OG cards must be 1200 × 630

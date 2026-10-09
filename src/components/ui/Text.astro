@@ -1,0 +1,81 @@
+---
+/**
+ * Text atom — one component for all body and UI text.
+ *
+ * variant  (controls visual scale and default semantic element):
+ *   body-lg → <p>      16 px / lh 1.3   lede paragraphs, hero subtitles
+ *   body    → <p>      14 px / lh 1.3   standard paragraph copy  ← default
+ *   small   → <p>      12 px / lh 1.3   footnotes, footer taglines
+ *   caption → <p>      11 px / lh 1.3   timestamps, metadata
+ *   button  → <span>   14 px Norca-Rough CTA label without button chrome
+ *                                        (use when you need the exact button font
+ *                                         inside a custom control or rich text)
+ *
+ * color:
+ *   muted   → text-muted    ← default for body variants
+ *   default → text-default
+ *   white   → text-contrast (Figma text/contrast)
+ *   inherit → no color class — use class= for a custom token
+ *
+ * as:  Override the semantic element (e.g. as="span" for inline text).
+ *
+ * Usage:
+ *   <Text>Regular paragraph copy.</Text>
+ *   <Text variant="body-lg" color="white">Lede on a dark section.</Text>
+ *   <Text variant="small" color="white">Footer tagline.</Text>
+ *   <Text variant="button">CTA label inside a custom control.</Text>
+ *   <Text html="Copy with <strong>bold</strong> or a <a href='/'>link</a>." />
+ */
+import { twMerge } from 'tailwind-merge';
+
+type Variant = 'body-lg' | 'body' | 'small' | 'caption' | 'button';
+type Color   = 'default' | 'muted' | 'white' | 'inherit';
+
+export interface Props {
+  /** Visual scale + default semantic element. Defaults to 'body'. */
+  variant?: Variant;
+  /** Override semantic element independently of visual scale. */
+  as?: 'p' | 'span' | 'div';
+  /** Text colour preset. Defaults to 'muted'. */
+  color?: Color;
+  /** Render HTML string via set:html instead of using the slot. */
+  html?: string;
+  class?: string;
+}
+
+const { variant = 'body', as: asOverride, color = 'muted', html, class: className = '' } = Astro.props;
+
+// Default semantic element per variant
+const defaultElement: Record<Variant, string> = {
+  'body-lg': 'p',
+  body:      'p',
+  small:     'p',
+  caption:   'p',
+  button:    'span',
+};
+const Tag = (asOverride ?? defaultElement[variant as Variant]) as any;
+
+// Visual scale per variant
+const scale: Record<string, string> = {
+  'body-lg': 'text-body-lg font-normal',
+  body:      'text-body font-normal',
+  small:     'text-small font-normal',
+  caption:   'text-[11px] leading-[1.3] font-normal',
+  button:    'font-rough [font-size:var(--aw-text-button)] leading-none font-semibold',
+};
+
+const colors: Record<string, string> = {
+  default: 'text-default',
+  muted:   'text-muted',
+  white:   'text-contrast',
+  inherit: '',
+};
+
+// twMerge only handles the color + className layer so `text-body-lg` (font-size utility)
+// is never stripped by twMerges text-* conflict resolution.
+const overrideCls = twMerge(colors[color as string] ?? '', className);
+const face = variant === 'button' ? 'font-rough' : 'font-sans';
+const cls = [face, scale[variant as string] ?? '', overrideCls].filter(Boolean).join(' ');
+---
+
+{html ? <Tag class={cls} set:html={html} /> : <Tag class={cls}><slot /></Tag>}

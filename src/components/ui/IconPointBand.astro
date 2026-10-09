@@ -1,0 +1,28 @@
+---
+import IconPoint from './IconPoint.astro';
+
+export interface Props {
+  items: Array<{ title: string; description: string; icon: string }>;
+  variant?: 'light' | 'dark';
+}
+
+const { items, variant = 'light' } = Astro.props;
+---
+
+<div
+  class="grid grid-cols-1 md:grid-cols-[repeat(var(--point-cols),minmax(0,1fr))] gap-x-5 lg:gap-x-8 gap-y-8"
+  style={`--point-cols: ${items.length}`}
+>
+  {
+    items.map((point) => (
+      <IconPoint
+        title={point.title}
+        description={point.description}
+        icon={point.icon}
+        variant={variant}
+        orientation="stack"
+        align="start"
+      />
+    ))
+  }
+</div>

@@ -1,0 +1,22 @@
+---
+import { twMerge } from 'tailwind-merge';
+import logo from '~/assets/images/logo.png?url';
+import { CONTACT } from '~/config/contact';
+
+interface Props {
+  class?: string;
+  width?: number;
+  height?: number;
+}
+
+const { class: className, width = 185, height = 62 } = Astro.props;
+---
+
+<img
+  src={logo}
+  alt={CONTACT.businessName}
+  width={width}
+  height={height}
+  class={twMerge('block h-12 w-auto shrink-0', className)}
+  decoding="async"
+/>

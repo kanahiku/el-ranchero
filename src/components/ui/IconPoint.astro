@@ -1,0 +1,48 @@
+---
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  title: string;
+  description: string;
+  icon: string;
+  variant?: 'light' | 'dark';
+  orientation?: 'stack' | 'inline';
+  align?: 'center' | 'start';
+}
+
+const { title, description, icon, variant = 'light', orientation = 'inline', align = 'start' } = Astro.props;
+
+const headingClass = variant === 'dark' ? 'text-white' : 'text-heading';
+const bodyClass = variant === 'dark' ? 'text-white/70' : 'text-muted';
+const iconMark = variant === 'dark' ? 'border border-accent/60' : 'bg-card-dark';
+const isStack = orientation === 'stack';
+const isStart = align === 'start';
+---
+
+<div
+  class:list={[
+    isStack
+      ? isStart
+        ? 'flex flex-col items-start text-left min-w-0 h-full'
+        : 'flex flex-col items-center text-center min-w-0 h-full'
+      : 'flex gap-4',
+  ]}
+>
+  <div
+    class:list={[
+      'size-9 sm:size-10 rounded-md flex items-center justify-center shrink-0',
+      isStack ? 'mb-4' : 'mt-0.5',
+      iconMark,
+    ]}
+  >
+    <Icon name={icon} class="size-3.5 sm:size-5 text-accent" aria-hidden="true" />
+  </div>
+  <div class="min-w-0 w-full">
+    <h3 class:list={['text-[16px] md:text-[18px] font-sans font-medium leading-[130%] mb-0.5', headingClass]}>
+      {title}
+    </h3>
+    <p class:list={['text-[13px] md:text-[14px] font-normal leading-[160%]', bodyClass]}>
+      {description}
+    </p>
+  </div>
+</div>

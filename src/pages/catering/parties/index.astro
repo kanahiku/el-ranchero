@@ -1,0 +1,139 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import CateringSubNav from '~/components/widgets/CateringSubNav.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import { CATERING_CTA_HREF, LOCATION_CTA_HREF } from '~/config/cta';
+import { getSanityCateringImages } from '~/lib/content/sanity';
+
+const cateringImages = await getSanityCateringImages();
+
+const metadata = {
+  title: 'Party Catering Oahu | Birthdays, Graduations & Showers | El Ranchero',
+  description:
+    'Order fresh party catering for your next event. We provide salad trays and wrap platters for birthdays, graduations, baby showers, and sports banquets across our six Oahu locations.',
+  ignoreTitleTemplate: true,
+};
+
+const occasions = [
+  {
+    number: '01',
+    title: 'Birthday Party Catering',
+    description:
+      'Serve fresh options at your next birthday gathering. Our sandwich platters and signature salad trays provide easy meals for guests with varying dietary preferences.',
+  },
+  {
+    number: '02',
+    title: 'Graduation Party Catering',
+    description:
+      'Celebrate your graduate with a fresh menu. We offer scaled-up versions of our signature items designed to feed large crowds during graduation season.',
+  },
+  {
+    number: '03',
+    title: 'Shower Catering',
+    description:
+      'Our fresh salads provide a light menu option for baby showers and bridal showers. We can customize your order to include dedicated vegetarian or vegan platters, such as our Aloha Passion Tray.',
+  },
+  {
+    number: '04',
+    title: 'Sports Team Catering',
+    description:
+      'Provide fresh food for your athletes. Our catering trays offer lean protein and fresh vegetables for post-game meals or end-of-season banquets.',
+  },
+];
+---
+
+<PageLayout metadata={metadata}>
+  {/* ── 1. Hero ───────────────────────────────────────────── */}
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    title="Party Catering"
+    content="Provide fresh food for your next celebration. We prepare large-format catering trays and wrap platters for parties of all sizes. All party orders are available for pickup across our six O\u02BBahu locations."
+    image={cateringImages.largeGroups}
+    actions={[
+      { variant: 'primary', text: 'Order Catering Online', href: CATERING_CTA_HREF },
+      { variant: 'ghost', tone: 'dark', text: 'View Full Catering Menu', href: '/catering' },
+    ]}
+  />
+
+  {/* ── 2. Occasions — 2×2 editorial card grid ─── */}
+  <section class="not-prose relative w-full overflow-hidden bg-page" aria-label="Party catering occasions">
+
+    <div class="relative z-[1] mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {
+          occasions.map((occ) => (
+            <article class="group relative flex flex-col justify-between overflow-hidden bg-section-dark px-8 pb-8 pt-10 md:px-10 md:pb-10 md:pt-12">
+              <span
+                class="pointer-events-none absolute right-6 top-4 select-none font-rough text-[96px] leading-none text-contrast/[0.07] md:text-[120px]"
+                aria-hidden="true"
+              >
+                {occ.number}
+              </span>
+
+              <div class="relative flex flex-col gap-4">
+                <span class="font-rough text-[15px] leading-none text-contrast/90">{occ.number}</span>
+                <Heading variant="h3" color="white">
+                  {occ.title}
+                </Heading>
+                <Text color="white" class="text-contrast/75 leading-relaxed">
+                  {occ.description}
+                </Text>
+              </div>
+
+              <div class="mt-8 h-px w-12 bg-accent" />
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ── 3. Other catering sub-pages ───────────────────────── */}
+  <CateringSubNav
+    excludeHref="/catering/parties"
+    subtitle="We provide catering services for various event types. Explore our other catering menus below:"
+  />
+
+  {/* ── 4. FAQs ──────────────────────────────────────────── */}
+  <FAQs
+    isDark={true}
+    title="Frequently Asked Questions"
+    items={[
+      {
+        title: 'Can I order vegetarian trays for a party?',
+        description: 'Yes. The Aloha Passion Tray and Aloha Mediterranean Tray are both meatless.',
+      },
+      {
+        title: 'Do you provide plates and napkins for parties?',
+        description: 'Ask the store when you order and they will let you know what is included.',
+      },
+      {
+        title: 'How far in advance should I order for a large party?',
+        description: 'Please contact your nearest location to confirm the required lead time for your specific party size.',
+      },
+      {
+        title: 'Can I pick up a party order at the weekend?',
+        description: "Weekend collection is available. Check your stores hours and call ahead to arrange the time.",
+      },
+      {
+        title: 'Do you offer beverages for party catering?',
+        description: 'Yes. You can add bottled drinks and our refreshing Big Island m\u0101maki mint tea to complete your party menu.',
+      },
+    ]}
+  />
+
+  {/* ── 5. Ready to order CTA ────────────────────────────── */}
+  <CTABanner
+    title="Ready to Order?"
+    subtitle="Order online for pickup. Call your nearest store if you want to talk through numbers for a bigger party."
+    ctaText="Order Catering Online"
+    ctaHref={CATERING_CTA_HREF}
+    secondaryCtaText="Find a Location"
+    secondaryCtaHref={LOCATION_CTA_HREF}
+  />
+</PageLayout>
