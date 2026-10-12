@@ -53,11 +53,11 @@ const Tag = (asOverride ?? defaultElement[variant as Variant]) as any;
 
 // Visual scale per variant
 const scale: Record<string, string> = {
-  h1:      'text-h1 font-rough font-normal leading-none',
-  h2:      'text-h2 font-rough font-normal leading-none',
-  h3:      'text-h3 font-rough font-normal leading-none',
-  h4:      'text-h4 font-heading font-normal leading-none',
-  eyebrow: 'type-eyebrow font-script',
+  h1:      'text-h1 font-rough font-normal',
+  h2:      'text-h2 font-rough font-normal',
+  h3:      'text-h3 font-rough font-normal',
+  h4:      'text-h4 font-heading font-normal',
+  eyebrow: 'type-eyebrow font-sans',
 };
 
 const colorClass = (() => {

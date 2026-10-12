@@ -1,7 +1,7 @@
 ---
 /**
  * StoreVisit — address, phone, hours, directions, and map for a single shop.
- * Used on every location subpage. Hours belong here, not on the hub directory.
+ * Used on every location subpage: address, phone, hours, directions + DoorDash buttons beside a map.
  */
 import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
@@ -41,7 +41,6 @@ const mapSrc = storeMapEmbedSrc(store);
         <div class="flex flex-col gap-2">
           <Heading variant="eyebrow" color="white" class="text-contrast/55">Address</Heading>
           <address class="not-italic text-contrast">
-            <Text variant="body-lg" color="white" as="span" class="block">{store.shopName}</Text>
             <Text variant="body-lg" color="white" as="span" class="block">{store.addressLine1}</Text>
             <Text variant="body-lg" color="white" as="span" class="block">{store.addressLine2}</Text>
             {
@@ -75,29 +74,13 @@ const mapSrc = storeMapEmbedSrc(store);
           }
         </div>
 
-        <div class="mt-auto flex flex-col gap-3 sm:flex-row">
-          <Button
-            variant="primary"
-            text="Order Pickup"
-            href={store.orderPickupHref ?? PRIMARY_CTA_HREF}
-            target="_blank"
-            hideNote={true}
-          />
-          {store.orderDeliveryHref && (
-            <Button
-              variant="ghost"
-              tone="dark"
-              text="Order Delivery"
-              href={store.orderDeliveryHref}
-              target="_blank"
-              hideNote={true}
-            />
-          )}
+        <div class="mt-auto flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Button variant="primary" text="Get Directions" href={directionsHref} target="_blank" hideNote={true} />
           <Button
             variant="ghost"
             tone="dark"
-            text="Get Directions"
-            href={directionsHref}
+            text="Order on DoorDash"
+            href={store.orderPickupHref ?? PRIMARY_CTA_HREF}
             target="_blank"
             hideNote={true}
           />

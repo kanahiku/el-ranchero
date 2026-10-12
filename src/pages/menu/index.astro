@@ -1,360 +1,121 @@
 ---
+/**
+ * Menu hub — copy from pages-content/Menu Pages/_ menu - Menu Hub.docx.
+ * Composes shared widgets only. Photos are grey placeholders until the
+ * client photography pass.
+ */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
-import FullMenuSection from '~/components/widgets/FullMenuSection.astro';
-import LocalSourcing from '~/components/widgets/LocalSourcing.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import CTABanner from '~/components/widgets/CTABanner.astro';
-import { PRIMARY_CTA_HREF, LOCATION_CTA_HREF } from '~/config/cta';
-import { getMenuCategories } from '~/lib/content';
-import { getSanityMenuPagesImages } from '~/lib/content/sanity';
+import MenuCategories from '~/components/widgets/MenuCategories.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import FeaturedDishes from '~/components/widgets/FeaturedDishes.astro';
+import OptionsTable from '~/components/widgets/OptionsTable.astro';
+import Locations from '~/components/widgets/Locations.astro';
+import Note from '~/components/widgets/Note.astro';
+import Text from '~/components/ui/Text.astro';
+import { PRIMARY_CTA_HREF } from '~/config/cta';
+import { getMeatOptions } from '~/lib/content';
+import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
 
 const metadata = {
-  title: 'Menu | Fresh Salads, Wraps & Local Ahi | El Ranchero',
+  title: 'Mexican Food Menu in Wahiawa & Kapolei | El Ranchero',
   description:
-    'Explore the El Ranchero menu featuring fresh salads, wraps, subs, soups, and Big Island mamaki tea across six Oahu locations. Order online for pickup.',
+    "Explore Taqueria El Ranchero's menu, from Mexican breakfast and burritos to tacos, birria, fajitas and drinks. Order from Wahiawa or Kapolei.",
   ignoreTitleTemplate: true,
 };
 
-const heroTitle = 'Our Menu:<br/>Freshly Crafted on Oahu';
-const heroContent =
-  "We serve fresh, locally grown food prepared daily across our six Oahu locations. Explore our selection of salads, wraps, subs, and local favorites below, or order ahead for fast pickup.";
-
-const sourcingSubtitle =
-  "Every meal is crafted using produce delivered daily by local Hawaii growers, including vine-ripe tomatoes from Hauula, alongside never-frozen local ahi with vessel-level catch traceability.";
-
-const fullMenuCategories = [
-  {
-    title: 'Signature Salads',
-    href: '/menu/salads',
-    description: 'Fresh bowls built with crisp greens, local ahi, and house-made dressings.',
-    items: [
-      {
-        title: 'Aloha Passion',
-        description:
-          'Mixed greens, mango, apples, red grapes, cranberries, blue cheese, candied walnuts, and passion orange vinaigrette.',
-      },
-      {
-        title: 'Ono Island Ahi',
-        description:
-          'Mixed greens, never-frozen local ahi, mango, avocado, coconut, strawberries, green onions, bean sprouts, and passion orange vinaigrette.',
-      },
-      {
-        title: 'Kamuela Cobb',
-        description: 'Mixed greens, avocado, grape tomatoes, egg, bacon, blue cheese, chicken, and herb ranch.',
-      },
-      {
-        title: 'Big Island Beet',
-        note: 'Not available at Kaneohe',
-      },
-      {
-        title: 'Aloha Caesar',
-        description: 'Romaine, parmesan, croutons, Caesar dressing, and your choice of protein.',
-      },
-      {
-        title: 'Mandarin Ginger',
-        description:
-          'Mixed greens, mandarin oranges, carrots, cilantro, green onions, wontons, almonds, chicken, and Asian ginger dressing.',
-      },
-      {
-        title: 'Aloha Mediterranean',
-        description:
-          'Romaine, grape tomatoes, kalamata olives, feta, bell peppers, red onion, cucumbers, garbanzo beans, dill, and Mediterranean dressing.',
-      },
-      {
-        title: 'The Paniolo',
-        description:
-          'Romaine, grape tomatoes, avocado, jicama, corn, black beans, green onions, cheddar cheese, cilantro, and BBQ ranch.',
-      },
-      {
-        title: 'Maui Mozzarella',
-        description:
-          'Mixed greens, tomatoes, fresh mozzarella, red onions, basil, balsamic vinaigrette, and balsamic glaze.',
-      },
-      {
-        title: 'Design Your Own Salad',
-        description:
-          'Includes your choice of lettuce, four regular toppings, one cheese, and one dressing. Extra items may carry an additional charge.',
-      },
-      {
-        title: 'Poke Bowl',
-        badge: 'Coming soon',
-      },
-      {
-        title: 'Poke Salad',
-        badge: 'Coming soon',
-      },
-    ],
-  },
-  {
-    title: 'Wraps & Subs',
-    href: '/menu/wraps-subs',
-    description: 'Hearty wraps and sandwiches made with the same fresh components as our bowls.',
-    items: [
-      {
-        title: 'Grilled Steak Wrap',
-        description:
-          'Grilled steak, mushrooms, red onion, provolone, romaine, sundried tomatoes, and goddess dressing.',
-      },
-      {
-        title: 'Pastrami Melt',
-      },
-      {
-        title: 'Aloha Gyro Wrap',
-        description:
-          'Thinly sliced Mediterranean seasoned lamb and beef with grilled onions, feta cheese, dill, mixed greens, and our famous goddess dressing.',
-      },
-      {
-        title: 'Curried Chicken Wrap',
-        description: 'Curried chicken, mango chutney, carrots, cranberries, grapes, coconut, romaine, and pita.',
-      },
-      {
-        title: 'Club Sub',
-        description: 'Turkey bacon, avocado, lettuce, tomato, and mayo on your choice of bread.',
-      },
-      {
-        title: 'Chicken Pesto Sandwich',
-        description: 'Grilled chicken, pesto, basil, mixed greens, tomatoes, and mayo on your choice of bread.',
-      },
-      {
-        title: "Tutus Chicken Salad Tortilla Wrap",
-        description: 'Chicken breast, romaine, red onions, red grapes, envy apples, celery, and mayo.',
-      },
-      {
-        title: 'Fresh Island Ahi Wrap',
-        description:
-          'Never-frozen local ahi, grape tomatoes, red onion, mixed greens, capers, and champagne dressing in a pita.',
-      },
-      {
-        title: 'Hummus Pita Wrap',
-        description:
-          'Hummus, feta, kalamata olives, cucumbers, sundried tomatoes, red and green bell peppers, red onions, dill, grape tomatoes, and romaine.',
-      },
-      {
-        title: 'Caprese Sub',
-        description:
-          'Fresh mozzarella, tomatoes, basil, red onion, mixed greens, balsamic vinaigrette, and balsamic glaze.',
-      },
-      {
-        title: 'Grilled Cheese Soup Combo',
-        description: 'Havarti, cheddar, and fresh mozzarella on sourdough bread, served with a 6oz tomato bisque.',
-      },
-      {
-        title: 'Poke Wrap',
-        badge: 'Coming soon',
-      },
-    ],
-  },
-  {
-    title: 'Misc',
-    href: '/menu/misc',
-    description: 'Additional favorites and cafe-style selections.',
-    items: [
-      {
-        title: 'Avocado Toast',
-      },
-      {
-        title: 'Dessert Toast',
-      },
-      {
-        title: 'Acai Bowl',
-      },
-    ],
-  },
-  {
-    title: 'Soups',
-    href: '/menu/soups',
-    description: 'Warm sides and pairings for salads, wraps, and subs.',
-    items: [
-      {
-        title: 'Tomato Bisque',
-        description: 'Our signature thick and creamy soup.',
-      },
-      {
-        title: 'Extra Pita',
-        description: 'A warm side option perfect for dipping.',
-      },
-    ],
-  },
-  {
-    title: 'Keiki / Kids',
-    href: '/menu/kids',
-    description: 'A smaller meal option for keiki, built with the same quality standards.',
-    items: [
-      {
-        title: 'Keiki Combo',
-        description: 'Pita sandwich, fruit, keiki drink, and an organic lollipop.',
-      },
-    ],
-  },
-  {
-    title: 'Vegan Options',
-    href: '/menu/vegan',
-    description: 'Dedicated plant-based bowls and custom salad options.',
-    items: [
-      {
-        title: 'Vegan Aloha Mediterranean',
-        description:
-          'Grape tomatoes, cucumbers, red and green bell peppers, red onions, olives, dill, garbanzo beans, romaine, and champagne dressing.',
-      },
-      {
-        title: 'Vegan Mandarin Ginger',
-        description:
-          'Mandarin oranges, carrots, green onions, cilantro, wonton strips, roasted almonds, mixed greens, grilled tofu, and Asian ginger dressing.',
-      },
-      {
-        title: 'Design Your Own Salad',
-        description: 'Build a custom vegan bowl with your choice of greens and plant-based toppings.',
-      },
-    ],
-  },
-  {
-    title: 'Vegetarian Options',
-    href: '/menu/vegetarian',
-    description: 'Meatless salads, wraps, subs, and custom bowl choices.',
-    items: [
-      {
-        title: 'Aloha Passion',
-        description:
-          'Mixed greens, mango, apples, red grapes, cranberries, blue cheese, candied walnuts, and passion orange vinaigrette.',
-      },
-      {
-        title: 'Aloha Mediterranean',
-        description:
-          'Romaine, grape tomatoes, kalamata olives, feta, bell peppers, red onion, cucumbers, garbanzo beans, dill, and Mediterranean dressing.',
-      },
-      {
-        title: 'The Paniolo',
-        description:
-          'Romaine, grape tomatoes, avocado, jicama, corn, black beans, green onions, cheddar cheese, cilantro, and BBQ ranch.',
-      },
-      {
-        title: 'Maui Mozzarella',
-        description:
-          'Mixed greens, tomatoes, fresh mozzarella, red onions, basil, balsamic vinaigrette, and balsamic glaze.',
-      },
-      {
-        title: 'Hummus Pita Wrap',
-        description:
-          'Hummus, feta, kalamata olives, cucumbers, sundried tomatoes, red and green bell peppers, red onions, dill, grape tomatoes, and romaine.',
-      },
-      {
-        title: 'Caprese Sub',
-        description: 'Fresh mozzarella, tomatoes, basil, red onion, mixed greens, balsamic vinaigrette.',
-      },
-      {
-        title: 'Vegan Aloha Mediterranean',
-        description:
-          'Grape tomatoes, cucumbers, red and green bell peppers, red onions, kalamata olives, dill, garbanzo beans, romaine, and champagne dressing.',
-      },
-      {
-        title: 'Vegan Mandarin Ginger',
-        description:
-          'Mandarin oranges, carrots, green onions, cilantro, wonton strips, roasted almonds, mixed greens, grilled tofu, and Asian ginger dressing.',
-      },
-      {
-        title: 'Sides',
-        description: 'A warm pita, dessert and chips as sides.',
-      },
-      {
-        title: 'Design Your Own Salad',
-        description: 'Build a custom vegetarian bowl with your choice of greens, cheeses, and meatless toppings.',
-      },
-    ],
-  },
-  {
-    title: 'Drinks',
-    href: '/menu/drinks',
-    description: 'Chilled beverages, including our Big Island mamaki mint tea.',
-    items: [
-      {
-        title: 'Big Island Mamaki Mint Tea',
-        description: 'Chilled mamaki mint tea brewed fresh in-store using mamaki sourced from Hilo on the Big Island.',
-      },
-      {
-        title: 'Guava Lemonade',
-        description: 'A sweet and tart island favorite.',
-      },
-      {
-        title: 'Fountain Drink',
-        description: 'A selection of carbonated beverages.',
-      },
-      {
-        title: 'Bottle Water',
-        description: 'Chilled still water.',
-      },
-    ],
-  },
-];
-
-const cmsMenuCategories = await getMenuCategories();
-const menuCategories = cmsMenuCategories.length ? cmsMenuCategories : fullMenuCategories;
-const menuPagesImages = await getSanityMenuPagesImages();
-
-const faqs = [
-  {
-    title: 'Can I order online for pickup?',
-    description:
-      "Yes. You can order ahead online for fast pickup at any of our six neighborhood restaurants across Oahu.",
-  },
-  {
-    title: 'Do you offer catering trays?',
-    description: 'Yes. We offer a variety of priced catering trays and sandwich platters for group gatherings.',
-  },
-  {
-    title: 'Are your dressings made in-house?',
-    description: 'Yes. All of our signature salad dressings are crafted from scratch daily.',
-  },
-  {
-    title: 'Do you serve fresh local seafood?',
-    description:
-      'Yes. We exclusively feature never-frozen local ahi sourced through a Honolulu seafood supplier with vessel-level catch traceability.',
-  },
-  {
-    title: 'Where are your locations?',
-    description:
-      "We operate six neighborhood restaurants across Oahu, located in Kailua, Kahala, Kaneohe, Kapolei, Mililani, and Pearlridge.",
-  },
-];
+const meatOptions = await getMeatOptions();
 ---
 
 <PageLayout metadata={metadata}>
   <Hero2
     variant="split-dark"
     overlapHeader={false}
-    title={heroTitle}
-    content={heroContent}
-    image={menuPagesImages.menuHubHero}
-    actions={[
-      { variant: 'primary', text: 'Order Online', href: PRIMARY_CTA_HREF },
-      { variant: 'ghost', tone: 'dark', text: 'Find a Location', href: LOCATION_CTA_HREF },
+    title="Mexican Food Menu in Wahiawa & Kapolei"
+    content="Explore the Mexican food menu at Taqueria El Ranchero, inspired by the taquerias of Northern California. From tacos and burritos to our signature Molcajete, our dishes reflect the straightforward cooking and fresh daily preparation behind El Ranchero.<br /><br />Both our Wahiawa and Kapolei restaurants serve the same menu. Browse by category below, then choose your location when you’re ready to order."
+    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
+  />
+
+  <MenuCategories
+    id="menu-categories"
+    title="Explore Our Menu"
+    subtitle="Find the dishes you’re looking for with our menu categories."
+  />
+
+  <TextSplit
+    id="breakfast"
+    heading="Breakfast Every Day, Starting at 7 AM"
+    withImage
+    imageAspect="4 / 3"
+    class="bg-card"
+  >
+    <div class="flex flex-col gap-6">
+      <Text variant="body-lg" color="default">
+        Breakfast is available at both El Ranchero locations from 7 AM to 12 PM daily.
+      </Text>
+      <Text color="default">
+        Our Breakfast Burrito is a convenient option when you’re picking up food on the go. It comes with your choice of
+        bacon, ham, chorizo or veggie, along with eggs, beans, cheese, potatoes, tomato, onion and jalapeño.
+      </Text>
+      <Text color="default">
+        If you’re sitting down for breakfast, explore dishes such as Chilaquiles, Huevos con Chorizo and Asada and Eggs.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <FeaturedDishes
+    id="featured-dishes"
+    eyebrow=""
+    title="Featured Dishes From Our Menu"
+    subtitle=""
+    ctaText=""
+    dishes={[
+      {
+        title: 'Molcajete',
+        href: '/menu/entrees',
+        description: [
+          'Our signature Molcajete brings grilled meats, vegetables and savory sauces together in a traditional volcanic stone mortar.',
+          'Served with beans, rice and your choice of corn or flour tortillas, the Molcajete is designed for sharing between two to three people.',
+          'Explore Entrees & Fajitas.',
+        ],
+      },
+      {
+        title: 'Taco',
+        href: '/menu/tacos',
+        description: [
+          'Our Taco comes with your choice of meat, onion, cilantro and salsa. You can choose from the meat options listed below.',
+          'Explore Tacos & Birria.',
+        ],
+      },
+      {
+        title: 'California Burrito',
+        href: '/menu/burritos',
+        description: [
+          'Our California Burrito combines your choice of meat with cheese, fries, guacamole and sour cream.',
+          'Explore Burritos.',
+        ],
+      },
     ]}
   />
 
-  <FullMenuSection
-    id="full-menu"
-    title="Full Menu"
-    subtitle="Browse the dishes and drinks available across our menu."
-    categories={menuCategories}
-    ctaText="Order Online"
-    ctaHref={PRIMARY_CTA_HREF}
+  <OptionsTable
+    id="choose-your-meat"
+    tone="card"
+    heading="Choose Your Meat"
+    intro="For dishes that offer a choice of meat, El Ranchero’s menu includes the following options:"
+    note="Available choices depend on the dish. Check the relevant menu category or ordering options for details."
+    rows={meatOptions}
   />
 
-  <LocalSourcing
-    title="Quality Ingredients"
-    subtitle={sourcingSubtitle}
-    ctaText="Our Ingredients"
-    ctaHref="/ingredients"
-    withPhoto={true}
-    image={menuPagesImages.saladsIngredients}
+  <Locations
+    id="order"
+    variant="order"
+    eyebrow=""
+    title="Order From Your Nearest El Ranchero"
+    subtitle="Ready to order? Choose your preferred location to view its DoorDash takeout menu."
+    locations={orderLocations}
+    footnote={locationsFootnote}
   />
 
-  <CTABanner
-    title="Ready to Order?"
-    subtitle="Skip the line and order your favorite meal for quick pickup today."
-    ctaText="Order Online"
-    ctaHref={PRIMARY_CTA_HREF}
-  />
-
-  <FAQs title="Frequently Asked Questions" items={faqs} isDark={true} />
+  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
 </PageLayout>

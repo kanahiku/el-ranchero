@@ -24,16 +24,7 @@ export const cateringContent = defineType({
   type: 'document',
   icon: ImageIcon,
   fields: [
-    imageField('menuImage', 'Catering menu hero image', 'Hero image for the main catering page.'),
-    imageField('corporateImage', 'Corporate catering hero image', 'Hero image for the corporate catering page.'),
-    imageField(
-      'officeLunchImage',
-      'Office lunch catering hero image',
-      'Hero image for the office lunch catering page.'
-    ),
-    imageField('meetingsImage', 'Meeting catering hero image', 'Hero image for the meeting catering page.'),
-    imageField('eventsImage', 'Event catering hero image', 'Hero image for the event catering page.'),
-    imageField('largeGroupsImage', 'Large group catering hero image', 'Hero image for the large group catering page.'),
+    imageField('menuImage', 'Catering page hero image', 'Hero image for the catering page.'),
   ],
   preview: {
     select: { media: 'menuImage' },

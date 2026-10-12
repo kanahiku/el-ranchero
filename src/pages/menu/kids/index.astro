@@ -1,97 +1,60 @@
 ---
+/**
+ * Kids Menu — copy from pages-content/Menu Pages/_ menu_kids - Kids Menu.docx.
+ * Composes shared widgets only. Photos are grey placeholders until the
+ * client photography pass.
+ */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
 import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
-import LocalSourcing from '~/components/widgets/LocalSourcing.astro';
+import Locations from '~/components/widgets/Locations.astro';
 import MenuCategories from '~/components/widgets/MenuCategories.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import CTABanner from '~/components/widgets/CTABanner.astro';
-import { PRIMARY_CTA_HREF, LOCATION_CTA_HREF, CATERING_CTA_HREF } from '~/config/cta';
-import { getMenuCategory } from '~/lib/content';
-import { getSanityMenuPagesImages } from '~/lib/content/sanity';
-
-const menuPagesImages = await getSanityMenuPagesImages().catch(() => ({} as Awaited<ReturnType<typeof getSanityMenuPagesImages>>));
+import Note from '~/components/widgets/Note.astro';
+import { PRIMARY_CTA_HREF } from '~/config/cta';
+import { getMenuSections } from '~/lib/content';
+import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
 
 const metadata = {
-  title: 'Keiki Menu & Kids Meals | El Ranchero Oahu',
+  title: 'Kids Menu in Wahiawa & Kapolei | El Ranchero',
   description:
-    'Discover our Keiki Combo, featuring a wholesome pita sandwich, fresh fruit, a drink, and an organic lollipop. Available across our six Oahu locations.',
+    'Explore the Kids Menu at El Ranchero in Wahiawa and Kapolei, including a Cheese Quesadilla with fries, a Taco with rice and beans, and a Niño Burrito.',
   ignoreTitleTemplate: true,
 };
 
-const kidsItems = [
-  {
-    title: 'Keiki Combo',
-    description: 'Pita sandwich, fruit, keiki drink, and an organic lollipop.',
-  },
-];
+const sections = await getMenuSections('kids');
 
-const cmsCategory = await getMenuCategory('kids');
-const menuItems = cmsCategory?.items.length ? cmsCategory.items : kidsItems;
-
-const faqs = [
-  {
-    title: 'What is included in the Keiki Combo?',
-    description: 'The combo includes a pita sandwich, fresh fruit, a keiki drink, and an organic lollipop.',
-  },
-  {
-    title: 'Are the lollipops organic?',
-    description: 'Yes. Every Keiki Combo comes with an organic lollipop.',
-  },
-  {
-    title: 'Can I order the Keiki Combo for takeout?',
-    description: 'Yes. You can place your order online for fast pickup at your nearest location.',
-  },
-  {
-    title: 'Is the Keiki Menu available at all restaurants?',
-    description: "Yes. Our keiki options are available across all six of our neighborhood restaurants on Oahu.",
-  },
-  {
-    title: 'Where are your Oahu locations?',
-    description:
-      'We operate six neighborhood restaurants located in Kailua, Kahala, Kaneohe, Kapolei, Mililani, and Pearlridge.',
-  },
-];
 ---
 
 <PageLayout metadata={metadata}>
   <Hero2
     variant="split-dark"
     overlapHeader={false}
-    title="Keiki Menu"
-    content="Wholesome and portioned for children, our keiki options offer balanced meals built with the same quality ingredients found across our entire menu."
-    actions={[
-      { variant: 'primary', text: 'Order Online', href: PRIMARY_CTA_HREF },
-      { variant: 'ghost', tone: 'dark', text: 'Find a Location', href: LOCATION_CTA_HREF },
-    ]}
+    title="Kids Menu in Wahiawa & Kapolei"
+    content="Dining with kids? Taqueria El Ranchero has three Kids Menu choices, each listed with its own simple combination of food and sides.<br /><br />Find the Kids Menu at our Wahiawa and Kapolei locations, and check ordering availability at your preferred restaurant."
+    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
   />
 
-  <MenuItemsSection title="Our Keiki Menu" items={menuItems} />
+  <MenuItemsSection id="kids-menu" tone="page" title="Explore Our Kids Menu" items={sections.main} />
 
-  <LocalSourcing
-    title="Quality Ingredients"
-    subtitle="Every item on our menu is built on a foundation of quality ingredients and careful preparation."
-    ctaText="Learn More About Our Ingredients"
-    ctaHref="/ingredients"
-    withPhoto={true}
-    image={menuPagesImages.kidsIngredients}
+  <Locations
+    id="order"
+    variant="order"
+    eyebrow=""
+    title="Order From Your Nearest El Ranchero"
+    subtitle="Both Taqueria El Ranchero restaurants use the same menu. Select your preferred location to check current availability and takeout options through DoorDash."
+    locations={orderLocations}
+    footnote={locationsFootnote}
   />
 
   <MenuCategories
-    title="Explore Other Menu Categories"
-    subtitle="Looking to complete your family order? Browse the rest of our menu:"
-    excludeHrefs={['/menu/kids', '/menu/design-your-own-salad']}
-    ctaText=""
+    id="more-menu"
+    tone="page"
+    title="Explore More of Our Menu"
+    subtitle="Find more Mexican food and drinks at Taqueria El Ranchero. Browse other sections of our menu."
+    excludeHref="/menu/kids"
+    ctaText="View Full Menu"
+    ctaHref="/menu"
   />
 
-  <CTABanner
-    title="Ready to Order?"
-    subtitle="Skip the line and place your family order online for fast pickup. Planning a group event? We also offer a variety of catering options."
-    ctaText="Order Online"
-    ctaHref={PRIMARY_CTA_HREF}
-    secondaryCtaText="Order Catering"
-    secondaryCtaHref={CATERING_CTA_HREF}
-  />
-
-  <FAQs title="Frequently Asked Questions" items={faqs} isDark={true} />
+  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
 </PageLayout>

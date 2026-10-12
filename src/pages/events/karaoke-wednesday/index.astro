@@ -1,0 +1,83 @@
+---
+/**
+ * Karaoke Wednesday — copy from pages-content/Events/_events_karaoke-wednesday - Karaoke Wednesday.docx.
+ * Composes shared widgets only. Photos are grey placeholders until the client photography pass.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import OptionsTable from '~/components/widgets/OptionsTable.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import Text from '~/components/ui/Text.astro';
+import {
+  EVENTS_INSTAGRAM_HANDLE,
+  EVENTS_INSTAGRAM_HREF,
+  instagramLink,
+  locationLinks,
+  moreEventsColumns,
+  moreEventsRows,
+} from '~/data/events';
+
+const metadata = {
+  title: 'Free Karaoke Wednesdays on Oʻahu | El Ranchero',
+  description:
+    'Grab the mic at El Ranchero’s free Karaoke Wednesday in Wahiawa or Kapolei. Sing in Spanish or English, choose your favorite songs, and join the fun.',
+  ignoreTitleTemplate: true,
+};
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    title="Free Karaoke Wednesday at El Ranchero"
+    content="Your favorite song deserves a microphone!<br /><br />Every Wednesday, Taqueria El Ranchero turns up the music for a night of free karaoke at both our Wahiawa and Kapolei locations.<br /><br />Sing in Spanish, English, or whatever music you love. There’s no set theme, no required genre, and everyone’s welcome to join the fun."
+    actions={[{ variant: 'primary', text: 'Check Karaoke Wednesday Updates', href: EVENTS_INSTAGRAM_HREF, target: '_blank' }]}
+  />
+
+  <OptionsTable
+    id="details"
+    heading="Karaoke Wednesday Details"
+    note="Check the latest event announcement for start times and DJ details."
+    columns={['Detail', 'Info']}
+    rows={[
+      ['When', 'Every Wednesday'],
+      ['Admission', 'Karaoke is free.'],
+      ['Where', 'Both Wahiawa and Kapolei locations.'],
+      ['Music', 'Any genre, in Spanish or English.'],
+      ['DJs', 'Two local DJs are part of our Karaoke Wednesday events.'],
+    ]}
+    linkGroups={[{ links: locationLinks }]}
+  />
+
+  <TextSplit id="grab-the-mic" heading="Pick Your Song and Grab the Mic" class="bg-card">
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        Love singing along to your favorite songs? Karaoke Wednesday is your chance to take the mic.
+      </Text>
+      <Text color="default">
+        From Spanish-language favorites to English hits, the song choice is yours. You don’t need to stick to a particular style of music.
+      </Text>
+      <Text color="default">
+        Come with friends, enjoy the music, or take your turn singing. Whether you’re a regular karaoke singer or trying it for the first time, you’re welcome at El Ranchero.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <OptionsTable
+    id="more-events"
+    layout="stacked"
+    heading="More Events at El Ranchero"
+    intro="Keep the good times going throughout the week with more music, food, and events at Taqueria El Ranchero."
+    columns={moreEventsColumns}
+    rows={moreEventsRows('/events/karaoke-wednesday')}
+    ctaText="View All Events"
+    ctaHref="/events"
+  />
+
+  <CTABanner
+    title="Make Wednesday Your Karaoke Night"
+    subtitle={`Got a song in mind? Save it for Wednesday and join us at Wahiawa or Kapolei. Follow ${EVENTS_INSTAGRAM_HANDLE} for the latest karaoke announcements, DJ information, and event times.`}
+    actions={[{ variant: 'primary', text: instagramLink.text, href: instagramLink.href }]}
+  />
+</PageLayout>

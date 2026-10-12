@@ -24,9 +24,10 @@ export const homepageContent = defineType({
   type: 'document',
   icon: ImageIcon,
   fields: [
-    imageField('heroImage', 'Hero image', 'Homepage hero background image.'),
-    imageField('localSourcingImage', 'Our Local Sourcing image', 'Image beside the local sourcing section.'),
-    imageField('locationsImage', 'Visit a Store Near You image', 'Image beside the homepage locations section.'),
+    imageField('heroImage', 'Hero image', 'Homepage hero.'),
+    imageField('breakfastImage', 'Breakfast image', 'Image beside "Mexican Breakfast, Every Day From 7 AM".'),
+    imageField('cateringImage', 'Catering image', 'Image beside "Mexican Catering for Gatherings on Oʻahu".'),
+    imageField('privateEventsImage', 'Private events image', 'Image beside "Host Your Private Event at El Ranchero Kapolei".'),
   ],
   preview: {
     select: { media: 'heroImage' },

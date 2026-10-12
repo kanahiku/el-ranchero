@@ -1,4 +1,4 @@
-import type { BlogPost, NavigationContent, Testimonial, MenuCategory, MenuItem } from './types';
+import type { BlogPost, NavigationContent, Testimonial, MenuCategory, MenuItem, MeatOption } from './types';
 import {
   getSanityBlogPost,
   getSanityBlogPosts,
@@ -6,10 +6,14 @@ import {
   getSanityTestimonials,
   getSanityNavigationContent,
   getSanityMenuCategories,
+  getSanityMeatOptions,
 } from './sanity';
 import { blogPosts as localBlogPosts } from '../../data/pages/blogPosts';
 import { navigationData } from '../../data/navigation';
 import { interiorPaths } from '../../data/pages/interior';
+import { meatOptions as fallbackMeatOptions, menuCategoryLinks } from '../../data/menu';
+import { menuItemSeed } from '../../data/menu-seed';
+import { MENU_SECTION_KEYS, type MenuSectionKey } from './menuSections';
 
 const LEGAL_FOOTER_LINKS = [
   { text: 'Privacy Policy', href: '/privacy-policy' },
@@ -175,8 +179,7 @@ export async function getRelatedBlogPosts(post: BlogPost, max = 3): Promise<Blog
 export type { BlogPost, NavigationContent, Testimonial };
 
 export function formatTestimonialAttribution(item: Testimonial): string {
-  const identity = typeof item.age === 'number' ? `${item.name}, ${item.age}` : item.name;
-  return [identity, item.location, item.tenure].filter(Boolean).join(' · ');
+  return [item.name, item.location].filter(Boolean).join(' · ');
 }
 
 export async function getTestimonials(): Promise<Testimonial[]> {
@@ -188,190 +191,34 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   }
 }
 
-const HIDDEN_MENU_ITEM_TITLES = new Set(['red bull']);
-const MENU_PHOTO_DONOR_TO_BASE_TITLE = new Map([
-  ['aloha caesar (with shrimp)', 'aloha caesar'],
-  ['the paniolo (with gyro meat)', 'the paniolo'],
-  ['spicy ahi poke bowl', 'poke bowl'],
-  ['spicy ahi poke wrap', 'poke wrap'],
-  ['spicy ahi salad (styling a)', 'poke salad'],
-  ['spicy ahi salad (styling b)', 'poke salad'],
-]);
+// ─── Menu ────────────────────────────────────────────────────────────────────
+// Sanity is the source of truth (categories, dishes, "Choose Your Meat").
+// If Sanity is unreachable or has no categories yet, the pages fall back to the
+// seed copy in src/data so they never render empty.
 
-const MENU_TITLE_RENAMES = new Map([['maui mozzarella salad', 'Maui Mozzarella']]);
-const MENU_IMAGE_ALT_RENAMES = new Map([
-  ['hummis pita wrap', 'Hummus Pita Wrap'],
-  ['grilled cheese combo', 'Grilled Cheese Soup Combo'],
-  ['maui mozzarella salad', 'Maui Mozzarella'],
-]);
-
-function normalizeMenuTitle(title: string): string {
-  return title.trim().toLowerCase().replace(/\s+/g, ' ');
-}
-
-function applyMenuItemTextCorrections(item: MenuItem): MenuItem {
-  const title = MENU_TITLE_RENAMES.get(normalizeMenuTitle(item.title)) ?? item.title;
-  const image = item.image
-    ? {
-        ...item.image,
-        alt: MENU_IMAGE_ALT_RENAMES.get(normalizeMenuTitle(item.image.alt)) ?? item.image.alt,
-      }
-    : undefined;
-
-  return { ...item, title, ...(image ? { image } : {}) };
-}
-
-const REQUESTED_MENU_ITEMS: Array<{
-  categorySlug: string;
-  categoryTitle: string;
-  categoryDescription: string;
-  title: string;
-  description?: string;
-  badge?: string;
-  note?: string;
-}> = [
-  {
-    categorySlug: 'salads',
-    categoryTitle: 'Signature Salads',
-    categoryDescription: 'Fresh bowls built with crisp greens, local ahi, and house-made dressings.',
-    title: 'Big Island Beet',
-    note: 'Not available at Kaneohe',
-  },
-  {
-    categorySlug: 'salads',
-    categoryTitle: 'Signature Salads',
-    categoryDescription: 'Fresh bowls built with crisp greens, local ahi, and house-made dressings.',
-    title: 'Poke Bowl',
-    badge: 'Coming soon',
-  },
-  {
-    categorySlug: 'salads',
-    categoryTitle: 'Signature Salads',
-    categoryDescription: 'Fresh bowls built with crisp greens, local ahi, and house-made dressings.',
-    title: 'Poke Salad',
-    badge: 'Coming soon',
-  },
-  {
-    categorySlug: 'wraps-subs',
-    categoryTitle: 'Wraps & Subs',
-    categoryDescription: 'Hearty wraps and sandwiches made with the same fresh components as our bowls.',
-    title: 'Pastrami Melt',
-  },
-  {
-    categorySlug: 'wraps-subs',
-    categoryTitle: 'Wraps & Subs',
-    categoryDescription: 'Hearty wraps and sandwiches made with the same fresh components as our bowls.',
-    title: 'Poke Wrap',
-    badge: 'Coming soon',
-  },
-  {
-    categorySlug: 'misc',
-    categoryTitle: 'Misc',
-    categoryDescription: 'Additional favorites and cafe-style selections.',
-    title: 'Avocado Toast',
-  },
-  {
-    categorySlug: 'misc',
-    categoryTitle: 'Misc',
-    categoryDescription: 'Additional favorites and cafe-style selections.',
-    title: 'Dessert Toast',
-  },
-  {
-    categorySlug: 'misc',
-    categoryTitle: 'Misc',
-    categoryDescription: 'Additional favorites and cafe-style selections.',
-    title: 'Acai Bowl',
-  },
-];
-
-function upsertRequestedMenuItem(items: MenuItem[], requested: (typeof REQUESTED_MENU_ITEMS)[number], image?: MenuItem['image']) {
-  const requestedTitle = normalizeMenuTitle(requested.title);
-  const existingIndex = items.findIndex((item) => normalizeMenuTitle(item.title) === requestedTitle);
-  const requestedFields = {
-    ...(requested.description ? { description: requested.description } : {}),
-    ...(requested.badge ? { badge: requested.badge } : {}),
-    ...(requested.note ? { note: requested.note } : {}),
-    ...(image?.src ? { image: { ...image, alt: requested.title } } : {}),
-  };
-
-  if (existingIndex === -1) return [...items, { title: requested.title, ...requestedFields }];
-
-  return items.map((item, index) =>
-    index === existingIndex
-      ? {
-          ...item,
-          ...requestedFields,
-          description: requested.description ?? item.description,
-          badge: requested.badge ?? item.badge,
-          note: requested.note ?? item.note,
-          image: image?.src ? { ...image, alt: requested.title } : item.image,
-        }
-      : item
-  );
-}
-
-function applyMenuDisplayOverrides(categories: MenuCategory[]): MenuCategory[] {
-  const variantImages = new Map<string, MenuItem['image']>();
-
-  for (const category of categories) {
-    for (const item of category.items) {
-      const baseTitle = MENU_PHOTO_DONOR_TO_BASE_TITLE.get(normalizeMenuTitle(item.title));
-      if (baseTitle && item.image?.src) variantImages.set(baseTitle, { ...item.image, alt: baseTitle });
-    }
-  }
-
-  const nextCategories = categories
-    .map((category) => ({
-      ...category,
-      items: category.items.flatMap((item) => {
-        const title = normalizeMenuTitle(item.title);
-
-        if (HIDDEN_MENU_ITEM_TITLES.has(title) || MENU_PHOTO_DONOR_TO_BASE_TITLE.has(title)) return [];
-
-        const variantImage = variantImages.get(title);
-        return [{ ...item, ...(variantImage?.src ? { image: { ...variantImage, alt: item.title } } : {}) }];
-      }),
-    }))
-    .filter((category) => category.items.length > 0);
-
-  for (const requested of REQUESTED_MENU_ITEMS) {
-    const href = `/menu/${requested.categorySlug}`;
-    const existingIndex = nextCategories.findIndex(
-      (category) => category.slug === requested.categorySlug || category.href === href
-    );
-    const image = variantImages.get(normalizeMenuTitle(requested.title));
-
-    if (existingIndex === -1) {
-      nextCategories.push({
-        title: requested.categoryTitle,
-        slug: requested.categorySlug,
-        href,
-        description: requested.categoryDescription,
-        items: upsertRequestedMenuItem([], requested, image),
-      });
-      continue;
-    }
-
-    const category = nextCategories[existingIndex];
-    nextCategories[existingIndex] = {
-      ...category,
-      items: upsertRequestedMenuItem(category.items, requested, image),
+function fallbackMenuCategories(): MenuCategory[] {
+  return menuCategoryLinks.map((link) => {
+    const slug = link.href.replace(/^\/menu\//, '');
+    return {
+      title: link.label,
+      slug,
+      href: link.href,
+      description: link.description,
+      hubSpan: link.span,
+      items: (menuItemSeed[slug] ?? []).map(({ title, description, section }) => ({ title, description, section })),
     };
-  }
-
-  return nextCategories.map((category) => ({
-    ...category,
-    items: category.items.map(applyMenuItemTextCorrections),
-  }));
+  });
 }
 
 export async function getMenuCategories(): Promise<MenuCategory[]> {
   try {
-    return applyMenuDisplayOverrides(await getSanityMenuCategories());
+    const categories = await getSanityMenuCategories();
+    if (categories.length) return categories;
+    console.warn('Sanity has no menu categories yet; using the local menu fallback.');
   } catch (error) {
-    console.warn('Sanity menu unavailable.', error);
-    return [];
+    console.warn('Sanity menu unavailable; using the local menu fallback.', error);
   }
+  return fallbackMenuCategories();
 }
 
 export async function getMenuCategory(slug: string): Promise<MenuCategory | undefined> {
@@ -380,4 +227,28 @@ export async function getMenuCategory(slug: string): Promise<MenuCategory | unde
   return categories.find((category) => category.slug === normalized || category.href === `/menu/${normalized}`);
 }
 
-export type { MenuCategory };
+/** Dishes of one category page, grouped by the section each dish is placed in. */
+export async function getMenuSections(slug: string): Promise<Record<MenuSectionKey, MenuItem[]>> {
+  const sections = Object.fromEntries(MENU_SECTION_KEYS.map((key) => [key, [] as MenuItem[]])) as Record<
+    MenuSectionKey,
+    MenuItem[]
+  >;
+  const category = await getMenuCategory(slug);
+  for (const item of category?.items ?? []) {
+    const key = (item.section ?? 'main') as MenuSectionKey;
+    if (key in sections) sections[key].push(item);
+  }
+  return sections;
+}
+
+export async function getMeatOptions(): Promise<MeatOption[]> {
+  try {
+    const options = await getSanityMeatOptions();
+    if (options.length) return options;
+  } catch (error) {
+    console.warn('Sanity meat options unavailable; using the local fallback.', error);
+  }
+  return fallbackMeatOptions;
+}
+
+export type { MenuCategory, MenuItem, MeatOption };

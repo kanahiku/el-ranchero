@@ -1,0 +1,84 @@
+---
+/**
+ * Taco Tuesday — copy from pages-content/Events/_events_taco-tuesday - Taco Tuesday.docx.
+ * Composes shared widgets only. Photos are grey placeholders until the client photography pass.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import OptionsTable from '~/components/widgets/OptionsTable.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+import {
+  EVENTS_INSTAGRAM_HANDLE,
+  EVENTS_INSTAGRAM_HREF,
+  instagramLink,
+  locationLinks,
+  moreEventsColumns,
+  moreEventsRows,
+} from '~/data/events';
+
+const metadata = {
+  title: 'Taco Tuesday on Oʻahu | Taqueria El Ranchero',
+  description:
+    'Make Tuesday taco night at El Ranchero on Oʻahu. Find Taco Tuesday details, participating locations, and the latest specials and event announcements.',
+  ignoreTitleTemplate: true,
+};
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    title="Taco Tuesday at Taqueria El Ranchero"
+    content="Tuesdays are for tacos at Taqueria El Ranchero!<br /><br />With meats grilled fresh every morning, homemade salsas, and classic taqueria-style favorites, we’ve got plenty of reasons to make tacos part of your Tuesday plans.<br /><br />Bring your appetite, pick your favorites, and check out what’s happening for Taco Tuesday this week."
+    actions={[{ variant: 'primary', text: 'Check Taco Tuesday Updates', href: EVENTS_INSTAGRAM_HREF, target: '_blank' }]}
+  />
+
+  <OptionsTable
+    id="details"
+    heading="Taco Tuesday Details"
+    columns={['Detail', 'Info']}
+    rows={[
+      ['When', 'Every Tuesday'],
+      ['Time', 'Check the latest event announcement.'],
+      ['Where', `Participating location announced through ${EVENTS_INSTAGRAM_HANDLE}.`],
+      ['Specials', 'Check the current Taco Tuesday announcement for available offers and participating taco selections.'],
+    ]}
+    linkGroups={[{ links: locationLinks }]}
+  />
+
+  <TextSplit id="good-tacos" heading="Good Tacos Make a Good Tuesday" class="bg-card">
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        At El Ranchero, we keep our tacos true to the taqueria style that inspired our restaurant.
+      </Text>
+      <Text color="default">
+        Our regular menu features classic Tacos with your choice of meat, onion, cilantro and salsa, along with Taco Grande, seafood options and Tacos de Birria.
+      </Text>
+      <Text color="default">Whether you stick with your usual order or try something different, there’s plenty to enjoy.</Text>
+      <Text variant="small" color="muted">
+        Taco Tuesday offers may differ from the regular menu. Check the latest announcement for what’s included.
+      </Text>
+      <Button variant="primary" text="See Our Tacos & Birria Menu" href="/menu/tacos" hideNote={true} class="self-start" />
+    </div>
+  </TextSplit>
+
+  <OptionsTable
+    id="more-events"
+    layout="stacked"
+    heading="More Events at El Ranchero"
+    intro="There’s more happening throughout the week. Find your next night out or learn about our private event space."
+    columns={moreEventsColumns}
+    rows={moreEventsRows('/events/taco-tuesday')}
+    ctaText="View All Events"
+    ctaHref="/events"
+  />
+
+  <CTABanner
+    title="See What’s Happening This Tuesday"
+    subtitle={`Taco Tuesday specials and event details are shared through ${EVENTS_INSTAGRAM_HANDLE}. Check the latest post for participating locations, times and what’s on offer before you head out.`}
+    actions={[{ variant: 'primary', text: instagramLink.text, href: instagramLink.href }]}
+  />
+</PageLayout>

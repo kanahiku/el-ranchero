@@ -1,0 +1,197 @@
+---
+/**
+ * OptionsTable — reference table with a maroon header and cream rows.
+ * Used for "Choose Your Meat", weekly event schedules, event details and
+ * "More Events" lists.
+ *
+ * Layouts:
+ *   split   (default) — LEFT heading + intro + footnote + link groups / RIGHT table.
+ *   stacked — heading block on top, full-width table below, optional CTA under it.
+ *
+ * Props:
+ *   heading     — h2
+ *   intro       — lede above the table
+ *   note        — footnote under the intro (plain text)
+ *   columns     — header labels, default ['Meat', 'Description']
+ *   rows        — { name, description }[]  or  Cell[][] (first cell is the row header).
+ *                 A Cell is a string or { text, href?, external? } (renders a link).
+ *   linkGroups  — optional "Label: link | link" lines under the note
+ *   ctaText / ctaHref — optional primary button under the table
+ *   tone        — section background: page (default) or card (tinted). The table
+ *                 itself is always cream with a maroon header.
+ */
+import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+
+export interface OptionRow {
+  name: string;
+  description: string;
+}
+
+export type Cell = string | { text: string; href?: string; external?: boolean };
+
+export interface LinkGroup {
+  label?: string;
+  links: { text: string; href: string; external?: boolean }[];
+}
+
+export interface Props {
+  eyebrow?: string;
+  heading: string;
+  intro?: string;
+  note?: string;
+  columns?: string[];
+  rows: (OptionRow | Cell[])[];
+  layout?: 'split' | 'stacked';
+  linkGroups?: LinkGroup[];
+  ctaText?: string;
+  ctaHref?: string;
+  tone?: 'page' | 'card';
+  id?: string;
+}
+
+const {
+  eyebrow,
+  heading,
+  intro,
+  note,
+  columns = ['Meat', 'Description'],
+  rows,
+  layout = 'split',
+  linkGroups = [],
+  ctaText,
+  ctaHref,
+  tone = 'page',
+  id,
+} = Astro.props;
+
+const tableRows: Cell[][] = rows.map((row) => (Array.isArray(row) ? row : [row.name, row.description]));
+const isStacked = layout === 'stacked';
+const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
+---
+
+<section {...id ? { id } : {}} class:list={['not-prose w-full', tone === 'card' ? 'bg-card' : 'bg-page']}>
+  <div class="mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
+    <div class:list={['flex flex-col gap-12', !isStacked && 'lg:flex-row lg:items-start lg:gap-[120px]']}>
+      <div class:list={['flex min-w-0 flex-col gap-6', isStacked ? 'max-w-[822px]' : 'flex-1']}>
+        {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
+        <Heading variant="h2">{heading}</Heading>
+        {
+          intro && (
+            <Text variant="body-lg" color="default">
+              {intro}
+            </Text>
+          )
+        }
+        {
+          note && (
+            <Text variant="body" color="default">
+              {note}
+            </Text>
+          )
+        }
+        {
+          !isStacked &&
+            linkGroups.map((group) => (
+              <p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-sans text-body text-heading">
+                {group.label && <span>{group.label}</span>}
+                {group.links.map((link, index) => (
+                  <>
+                    {index > 0 && (
+                      <span class="text-heading/30" aria-hidden="true">
+                        |
+                      </span>
+                    )}
+                    <a
+                      href={link.href}
+                      class={linkClass}
+                      {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >
+                      {link.text}
+                    </a>
+                  </>
+                ))}
+              </p>
+            ))
+        }
+      </div>
+
+      <div class:list={['flex min-w-0 flex-col gap-8', !isStacked && 'flex-1']}>
+        <div class="w-full overflow-x-auto">
+          <table class:list={['w-full border-collapse border border-heading/15 text-left', isStacked && 'min-w-[640px]']}>
+            <thead>
+              <tr class="bg-section-dark text-contrast">
+                {
+                  columns.map((column) => (
+                    <th scope="col" class="type-eyebrow px-5 py-4 font-semibold">
+                      {column}
+                    </th>
+                  ))
+                }
+              </tr>
+            </thead>
+            <tbody>
+              {
+                tableRows.map((row) => (
+                  <tr class="border-b border-heading/15 bg-card">
+                    {row.map((cell, index) => {
+                      const text = typeof cell === 'string' ? cell : cell.text;
+                      const href = typeof cell === 'string' ? undefined : cell.href;
+                      const external = typeof cell === 'string' ? false : cell.external;
+                      const content = href ? (
+                        <a
+                          href={href}
+                          class={linkClass}
+                          {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                        >
+                          {text}
+                        </a>
+                      ) : (
+                        text
+                      );
+                      return index === 0 ? (
+                        <th scope="row" class="px-5 py-4 align-top font-sans text-body font-semibold text-heading">
+                          {content}
+                        </th>
+                      ) : (
+                        <td class="px-5 py-4 align-top font-sans text-body text-heading">{content}</td>
+                      );
+                    })}
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        {ctaText && ctaHref && <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} class="self-start" />}
+
+        {
+          isStacked &&
+            linkGroups.map((group) => (
+              <p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-sans text-body text-heading">
+                {group.label && <span>{group.label}</span>}
+                {group.links.map((link, index) => (
+                  <>
+                    {index > 0 && (
+                      <span class="text-heading/30" aria-hidden="true">
+                        |
+                      </span>
+                    )}
+                    <a
+                      href={link.href}
+                      class={linkClass}
+                      {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >
+                      {link.text}
+                    </a>
+                  </>
+                ))}
+              </p>
+            ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

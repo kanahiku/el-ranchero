@@ -1,0 +1,23 @@
+---
+/**
+ * BulletList atom — plain bullet list in body type with an accent marker.
+ * Use inside TextSplit / any section when copy is a list of short points.
+ */
+export interface Props {
+  items: string[];
+  class?: string;
+}
+
+const { items, class: className = '' } = Astro.props;
+---
+
+<ul class:list={['flex flex-col gap-3', className]}>
+  {
+    items.map((item) => (
+      <li class="flex items-start gap-3 font-sans text-body text-default">
+        <span class="mt-[0.45em] size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+        <span>{item}</span>
+      </li>
+    ))
+  }
+</ul>

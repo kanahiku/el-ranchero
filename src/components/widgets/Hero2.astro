@@ -259,7 +259,7 @@ const isLocalOverlayImage =
               {tagline && <Heading variant="eyebrow" color="inherit" class="text-contrast/55" html={tagline} />}
               {title && <h1 class="font-rough text-h1 font-normal leading-[1.05] text-contrast" set:html={title} />}
               {content && (
-                <div class="font-sans text-[16px] leading-[1.55] text-contrast/60 max-w-[480px]" set:html={content} />
+                <div class="font-sans text-body-lg text-contrast/85 max-w-[520px]" set:html={content} />
               )}
               {actions &&
                 (Array.isArray(actions) ? (
@@ -327,7 +327,7 @@ const isLocalOverlayImage =
 
       {hasStats && (
         <div class="relative bg-[rgb(14_13_7_/_0.1)] backdrop-blur-[15px]">
-          <div class="max-w-container mx-auto px-4 sm:px-6 py-2 md:py-[22px]">
+          <div class="max-w-container mx-auto px-5 sm:px-8 md:px-16 py-2 md:py-[22px]">
             <slot name="stats" />
           </div>
         </div>

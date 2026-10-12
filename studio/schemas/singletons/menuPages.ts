@@ -24,50 +24,23 @@ export const menuPagesContent = defineType({
   type: 'document',
   icon: ImageIcon,
   fields: [
-    // ── Menu Hub ───────────────────────────────────────────────
-    imageField('menuHubHeroImage', 'Menu Hub — Hero image', 'Hero image for the main Menu page.'),
-
-    // ── Salads ─────────────────────────────────────────────────
-    imageField('saladsHeroImage', 'Salads — Hero image', 'Hero image for the Signature Salads page.'),
-    imageField('saladsIngredientsImage', 'Salads — Ingredients image', 'Photo for the "Sourced with Care" panel on the Salads page.'),
-
-    // ── Wraps & Subs ───────────────────────────────────────────
-    imageField('wrapsHeroImage', 'Wraps & Subs — Hero image', 'Hero image for the Wraps & Subs page.'),
-    imageField('wrapsIngredientsImage', 'Wraps & Subs — Ingredients image', 'Photo for the "Quality Ingredients" panel on the Wraps page.'),
-
-    // ── Soups ──────────────────────────────────────────────────
-    imageField('soupsHeroImage', 'Soups — Hero image', 'Hero image for the Soups page.'),
-    imageField('soupsIngredientsImage', 'Soups — Ingredients image', 'Photo for the sourcing panel on the Soups page.'),
-
-    // ── Drinks ─────────────────────────────────────────────────
-    imageField('drinksHeroImage', 'Drinks — Hero image', 'Hero image for the Drinks page.'),
-    imageField('drinksIngredientsImage', 'Drinks — Ingredients image', 'Photo for the sourcing panel on the Drinks page.'),
-
-    // ── Vegan ──────────────────────────────────────────────────
-    imageField('veganIngredientsImage', 'Vegan — Ingredients image', 'Photo for the sourcing panel on the Vegan Options page.'),
-
-    // ── Vegetarian ─────────────────────────────────────────────
-    imageField('vegetarianHeroImage', 'Vegetarian — Hero image', 'Hero image for the Vegetarian Options page.'),
-    imageField('vegetarianIngredientsImage', 'Vegetarian — Ingredients image', 'Photo for the sourcing panel on the Vegetarian page.'),
-
-    // ── Healthy Options ────────────────────────────────────────
-    imageField('healthyOptionsHeroImage', 'Healthy Options — Hero image', 'Hero image for the Healthy Options page.'),
-    imageField('healthyOptionsIngredientsImage', 'Healthy Options — Ingredients image', 'Photo for the sourcing panel on the Healthy Options page.'),
-
-    // ── Kids ───────────────────────────────────────────────────
-    imageField('kidsIngredientsImage', 'Kids — Ingredients image', 'Photo for the sourcing panel on the Keiki / Kids page.'),
-
-    // ── Design Your Own Salad ──────────────────────────────────
-    imageField('designYourOwnHeroImage', 'Design Your Own — Hero image', 'Hero image for the Design Your Own Salad page.'),
-    imageField('designYourOwnBuildImage', 'Design Your Own — Build steps image', 'Right-column image in the "How to Build Your Own Salad" section.'),
-    imageField('designYourOwnQualityImage', 'Design Your Own — Quality Ingredients image', 'Photo for the "Quality Ingredients" sourcing panel.'),
+    imageField('menuHubHeroImage', 'Menu hub — Hero image', 'Hero image for the main Menu page.'),
+    imageField('breakfastHeroImage', 'Breakfast — Hero image', 'Hero image for the Breakfast page.'),
+    imageField('burritosHeroImage', 'Burritos — Hero image', 'Hero image for the Burritos page.'),
+    imageField('tacosHeroImage', 'Tacos & Birria — Hero image', 'Hero image for the Tacos & Birria page.'),
+    imageField('entreesHeroImage', 'Entrees & Fajitas — Hero image', 'Hero image for the Entrees & Fajitas page.'),
+    imageField('quesadillasNachosHeroImage', 'Quesadillas & Nachos — Hero image', 'Hero image for the Quesadillas & Nachos page.'),
+    imageField('specialsHeroImage', 'Specials — Hero image', 'Hero image for the Specials page.'),
+    imageField('appetizersSidesHeroImage', 'Appetizers & Sides — Hero image', 'Hero image for the Appetizers & Sides page.'),
+    imageField('kidsHeroImage', 'Kids Menu — Hero image', 'Hero image for the Kids Menu page.'),
+    imageField('drinksHeroImage', 'Drinks & Margaritas — Hero image', 'Hero image for the Drinks & Margaritas page.'),
   ],
   preview: {
-    select: { media: 'saladsHeroImage' },
+    select: { media: 'menuHubHeroImage' },
     prepare({ media }) {
       return {
         title: 'Menu Pages',
-        subtitle: 'Menu sub-page images',
+        subtitle: 'Menu page images',
         media,
       };
     },

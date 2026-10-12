@@ -1,208 +1,317 @@
 ---
+/**
+ * Catering — copy from pages-content/Catering.docx.
+ * The request form posts through the site contact worker (recipient to be confirmed with the client).
+ * The doc lists (808) 621-9000 as the catering phone; the Wahiawa / Kapolei location pages use their own numbers.
+ * The optional catering photo gallery is omitted until real catering photography exists.
+ * Composes shared widgets only. Photos are grey placeholders until the client photography pass.
+ */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
+import Testimonials from '~/components/widgets/Testimonials.astro';
+import BuildSteps from '~/components/widgets/BuildSteps.astro';
+import LocationMaps from '~/components/widgets/LocationMaps.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import CTABanner from '~/components/widgets/CTABanner.astro';
-import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
-import { CATERING_CTA_HREF, LOCATION_CTA_HREF } from '~/config/cta';
-import { getSanityCateringImages } from '~/lib/content/sanity';
-
-const cateringImages = await getSanityCateringImages();
+import Form from '~/components/ui/Form.astro';
+import BulletList from '~/components/ui/BulletList.astro';
+import { storeLocations } from '~/data/locations';
 
 const metadata = {
-  title: 'Catering Menu & Party Trays | El Ranchero Oahu',
+  title: 'Mexican Catering in Wahiawa & Kapolei | Taqueria El Ranchero',
   description:
-    'Order fresh catering trays for your next event. View our full catering menu with pricing, including our Sandwich Platter and Ono Island Ahi Tray.',
+    'Planning an event or group meal? Explore Mexican catering from Taqueria El Ranchero in Wahiawa and Kapolei and submit a catering request today.',
   ignoreTitleTemplate: true,
 };
 
-const menuItems = [
-  { label: 'Sandwich Platter', price: '$85' },
-  { label: 'Ono Island Ahi Tray', price: '$60' },
-  { label: 'Kamuela Cobb Tray', price: '$55' },
-  { label: 'Mandarin Ginger Tray', price: '$52' },
-  { label: 'Aloha Caesar with Chicken Tray', price: '$45' },
-  { label: 'Aloha Passion Tray', price: '$42' },
-  { label: 'Aloha Mediterranean Tray', price: '$42' },
-  { label: 'The Paniolo Tray', price: '$42' },
-  { label: 'Tray of Pita Bread', price: '$24' },
+const CATERING_PHONE_DISPLAY = '(808) 621-9000';
+const CATERING_PHONE_HREF = 'tel:+18086219000';
+
+const requestInputs = [
+  { type: 'text', name: 'name', label: 'Name', autocomplete: 'name', required: true },
+  { type: 'email', name: 'email', label: 'Email', autocomplete: 'email', required: true },
+  { type: 'tel', name: 'phone', label: 'Phone', autocomplete: 'tel' },
+  { type: 'date', name: 'eventDate', label: 'Event date' },
+  { type: 'number', name: 'guests', label: 'Estimated number of guests' },
+  {
+    type: 'select',
+    name: 'location',
+    label: 'Preferred location',
+    placeholder: 'Select a location',
+    options: [
+      { label: 'Wahiawa', value: 'wahiawa' },
+      { label: 'Kapolei', value: 'kapolei' },
+      { label: 'Not sure yet', value: 'not-sure' },
+    ],
+  },
+];
+
+const favorites = [
+  {
+    title: 'Tacos',
+    description:
+      'A taqueria favorite that works well when you are feeding a group and want plenty of flavor and variety.',
+  },
+  {
+    title: 'Burritos',
+    description: 'Bring a hearty El Ranchero favorite to the table with available burrito options for your gathering.',
+  },
+  {
+    title: 'Mexican Favorites',
+    description:
+      'Ask about available Mexican dishes and group-friendly options that can help round out your catering order.',
+  },
+  {
+    title: 'Sides & More',
+    description: 'Complete your spread with available sides and other additions based on your event needs.',
+  },
 ];
 
 const occasions = [
+  'Workplace meals and meetings',
+  'Birthday parties',
+  'Family celebrations',
+  'Team gatherings',
+  'Community events',
+  'Group lunches and dinners',
+  'Other special occasions',
+];
+
+const reviews = [
   {
-    label: 'Corporate Catering',
-    href: '/catering/corporate',
-    description: 'Fresh trays for client meetings, team events, and office gatherings.',
+    quote: 'Cold drinks, great food! Fast service and the food is hot and fresh.',
+    name: 'Ali V.',
+    location: 'Wahiawa',
+    platform: 'google' as const,
   },
   {
-    label: 'Office Lunch Catering',
-    href: '/catering/office-lunches',
-    description: 'Healthy lunch options delivered to your workplace.',
+    quote: 'Great service and spacious atmosphere. The kids menu was a plus. I really enjoyed the quesadilla.',
+    name: 'Lawanda M.',
+    location: 'Kapolei',
+    platform: 'google' as const,
   },
   {
-    label: 'Meeting Catering',
-    href: '/catering/meetings',
-    description: 'Nourish your team with wholesome food during any size meeting.',
+    quote: 'Outstanding food! Best Mexican I’ve had in Hawaii.',
+    name: 'John S.',
+    location: 'Kapolei',
+    platform: 'google' as const,
+  },
+];
+
+const reviewLinks = [
+  {
+    text: 'Read Wahiawa Google Reviews',
+    href: 'https://www.google.com/maps/place/Taqueria+El+Ranchero/@21.4785894,-157.9185514,12.25z/data=!4m6!3m5!1s0x7c005df2e6157385:0x308420cdf244ff60!8m2!3d21.4971101!4d-158.0255454!16s%2Fg%2F11b77try2q?entry=tts&g_ep=EgoyMDI0MDkxMS4wKgBIAVAD',
   },
   {
-    label: 'Event Catering',
-    href: '/catering/events',
-    description: 'Custom salad and wrap trays built for special events.',
+    text: 'Read Kapolei Google Reviews',
+    href: 'https://www.google.com/maps/place/Taqueria+El+Ranchero/@21.3332283,-158.0501425,15z/data=!4m6!3m5!1s0x7c006312335dd9e7:0x38722efab8df9697!8m2!3d21.3332283!4d-158.0501425!16s%2Fg%2F11nmwp8kf6?entry=ttu&g_ep=EgoyMDI2MDgxMS4wIKXMDSoASAFQAw%3D%3D',
+  },
+];
+
+const steps = [
+  {
+    title: 'Tell Us About Your Event',
+    description:
+      'Complete the catering form with your preferred date, estimated guest count and any details that can help us understand what you are planning.',
   },
   {
-    label: 'Large Group Catering',
-    href: '/catering/large-groups',
-    description: "Scaled-up trays and platters for big gatherings across Oahu.",
+    title: 'We’ll Review Your Request',
+    description:
+      'Our team can follow up to discuss current catering options, availability and other details related to your event.',
+  },
+  {
+    title: 'Finalize Your Catering Order',
+    description:
+      'Once the details are confirmed, work with the El Ranchero team to finalize your selections and next steps.',
+  },
+];
+
+const planningChecklist = [
+  'Event date and preferred time',
+  'Estimated number of guests',
+  'Type of event or gathering',
+  'Food preferences or requests',
+  'Dietary needs we should know about',
+  'Preferred location, if applicable',
+  'The best way to contact you',
+];
+
+const faqs = [
+  {
+    title: 'How do I request catering from Taqueria El Ranchero?',
+    description: `Complete the catering form on this page with information about your event. You can also call ${CATERING_PHONE_DISPLAY} to ask about catering.`,
+  },
+  {
+    title: 'Does Taqueria El Ranchero have a catering menu?',
+    description:
+      'Catering selections may differ from the regular restaurant menu. Submit a catering request to learn about current food options for your event.',
+  },
+  {
+    title: 'How much does El Ranchero catering cost?',
+    description:
+      'Catering pricing depends on your selections and the details of your order. Submit a catering request so the El Ranchero team can discuss current options and pricing with you.',
+  },
+  {
+    title: 'How far in advance should I request catering?',
+    description:
+      'Availability can depend on your event date and the needs of your order. Submit your request as early as possible so the team can confirm availability.',
+  },
+  {
+    title: 'Can El Ranchero cater a large group?',
+    description:
+      'Include your estimated guest count in your catering request. The El Ranchero team can confirm available options based on the size and needs of your group.',
+  },
+  {
+    title: 'Can I request catering for a workplace event?',
+    description:
+      'Yes. Tell us about your workplace meal, meeting or gathering using the catering form and include your estimated guest count, date and preferred time.',
+  },
+  {
+    title: 'Is the catering menu the same as the restaurant menu?',
+    description:
+      'Not necessarily. You can browse the <a class="text-accent underline underline-offset-4" href="/menu">El Ranchero menu</a> to explore the food served at our restaurants, but catering selections and availability may differ.',
+  },
+  {
+    title: 'Does El Ranchero offer catering from both Wahiawa and Kapolei?',
+    description:
+      'Taqueria El Ranchero has locations in both Wahiawa and Kapolei. Include your event details and preferred area when submitting your catering request so the team can help determine the appropriate next steps.',
   },
 ];
 ---
 
 <PageLayout metadata={metadata}>
-  {/* ── 1. Hero ───────────────────────────────────────────── */}
   <Hero2
     variant="split-dark"
     overlapHeader={false}
-    tagline="Order Now"
-    title="Catering Menu"
-    content="Provide fresh meals for your next gathering with our catering trays. We prepare scaled-up versions of our signature salads and wraps for pickup across our six Oahu locations."
-    image={cateringImages.menu}
-    actions={[{ variant: 'primary', text: 'Order Catering Online', href: CATERING_CTA_HREF }]}
+    title="Mexican Catering from Taqueria El Ranchero"
+    content="Bring Ranchero-style Mexican food to your next gathering with catering from Taqueria El Ranchero.<br /><br />Whether you are feeding coworkers, family, friends or a larger group, tell us what you are planning and our team can help you explore catering options for your event."
+    actions={[{ variant: 'primary', text: 'Request Catering', href: '#catering-form' }]}
   />
 
-  {/* ── 2. Pricing section ───────────────────────────────── */}
-  <section class="not-prose relative w-full overflow-hidden bg-page" aria-label="Catering menu and pricing">
-    <div class="relative z-[1] mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
-      <div class="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-24">
-        {/* Left — heading + ordering note */}
-        <div class="flex flex-1 flex-col gap-8 lg:sticky lg:top-32">
-          <div class="flex flex-col gap-4">
-            <Heading variant="h2">Catering Menu and Pricing</Heading>
-            <Text variant="body-lg" color="default">
-              Our trays are built using the same high-quality components as our standard menu.
-            </Text>
-          </div>
-          <div class="flex flex-col gap-3 border-l-4 border-accent/30 pl-6">
-            <Heading variant="h4">Ordering Details</Heading>
-            <Text color="default">
-              Please contact your nearest location to confirm serving sizes per tray, minimum order requirements, and
-              necessary lead times for large groups. Delivery availability and radius vary by restaurant.
-            </Text>
-          </div>
-          <div class="mt-2">
-            <Button variant="primary" text="Order Catering Online" href={CATERING_CTA_HREF} hideNote={true} />
-          </div>
-        </div>
-
-        {/* Right — price list */}
-        <div class="flex min-w-0 flex-1 flex-col">
-          <ul class="flex flex-col" role="list">
-            {
-              menuItems.map((item, i) => (
-                <li
-                  class:list={[
-                    'flex items-baseline justify-between gap-6 py-5',
-                    i < menuItems.length - 1 && 'border-b border-heading/10',
-                  ]}
-                >
-                  <span class="font-rough text-[22px] leading-snug text-heading">{item.label}</span>
-                  <span class="shrink-0 font-rough text-[22px] leading-snug text-accent">{item.price}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
+  <TextSplit id="catering-form" heading="Tell Us About Your Catering Needs" alignTop class="scroll-mt-24">
+    <div class="flex flex-col gap-8">
+      <div class="flex flex-col gap-6">
+        <Text color="default">Ready to start planning? Share a few details about your event using the form below.</Text>
+        <Text color="default">
+          Let us know your event date, approximately how many people you are feeding and anything else that can help our team understand what you are looking for.
+        </Text>
+      </div>
+      <Form
+        inputs={requestInputs}
+        textarea={{
+          name: 'message',
+          label: 'Tell us about your event, food preferences and any dietary needs',
+          rows: 5,
+        }}
+        button="Request Catering"
+      />
+      <div class="flex flex-col items-start gap-3">
+        <Text color="default">Prefer to speak with us directly?</Text>
+        <Button
+          variant="ghost"
+          tone="light"
+          text={`Call ${CATERING_PHONE_DISPLAY}`}
+          href={CATERING_PHONE_HREF}
+          hideNote={true}
+        />
       </div>
     </div>
-  </section>
+  </TextSplit>
 
-  {/* ── 3. Occasions grid ────────────────────────────────── */}
-  <section class="not-prose relative w-full overflow-hidden bg-section-grey" aria-label="Catering occasion types">
-    <div class="relative z-[1] mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
-      <div class="flex flex-col gap-10 md:gap-16">
-        <div class="flex flex-col gap-4">
-          <Heading variant="eyebrow">By occasion</Heading>
-          <Heading variant="h2">Catering for Every Occasion</Heading>
-          <Text variant="body-lg" color="default" class="max-w-2xl">
-            We accommodate groups of all sizes across different event types. Select your event category below to learn
-            more:
-          </Text>
-        </div>
-
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {
-            occasions.map((occ) => (
-              <a
-                href={occ.href}
-                class="group flex h-full flex-col gap-4 bg-section-dark px-5 pb-5 pt-6 transition-opacity hover:opacity-90"
-              >
-                <div class="flex flex-1 flex-col gap-3">
-                  <Heading variant="h4" color="white">
-                    {occ.label}
-                  </Heading>
-                  <Text variant="small" color="white" class="text-contrast/75">
-                    {occ.description}
-                  </Text>
-                </div>
-                <div class="flex items-center gap-2 text-contrast/90">
-                  <span class="font-heading text-[13px] uppercase tracking-widest leading-none">Learn more</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.75"
-                    class="size-3 transition-transform duration-200 group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8h10M9 4l4 4-4 4" />
-                  </svg>
-                </div>
-              </a>
-            ))
-          }
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* ── 4. Ready to order CTA ────────────────────────────── */}
-  <CTABanner
-    title="Ready to Order?"
-    subtitle="Order online for pickup at any of our six Oahu stores. For serving sizes, minimums or lead times, call the store you want to collect from."
-    ctaText="Order Catering Online"
-    ctaHref={CATERING_CTA_HREF}
-    secondaryCtaText="Find a Location"
-    secondaryCtaHref={LOCATION_CTA_HREF}
-  />
-
-  {/* ── 5. FAQs ──────────────────────────────────────────── */}
-  <FAQs
-    isDark={true}
-    title="Frequently Asked Questions"
-    items={[
-      {
-        title: 'Do you offer vegetarian catering options?',
-        description: 'Yes. We prepare meatless options including the Aloha Passion Tray and Aloha Mediterranean Tray.',
-      },
-      {
-        title: 'Does catering include serving utensils?',
-        description: 'Ask the store when you order and they will let you know what is included.',
-      },
-      {
-        title: 'How do I place a catering order?',
-        description:
-          'You can place your catering order directly through our online ordering system or by calling your nearest location.',
-      },
-      {
-        title: 'Can I customize the catering trays?',
-        description: 'Trays are built to set recipes. Call the store to talk through anything specific.',
-      },
-      {
-        title: 'Where do I pick up my catering order?',
-        description: "You can pick up your catering order at any of our six neighborhood restaurants across Oahu.",
-      },
+  <MenuItemsSection
+    id="favorites"
+    tone="card"
+    columns={4}
+    title="Catering Favorites"
+    intro={[
+      'Planning food for a group? Bring some of the flavors people know from Taqueria El Ranchero to your next gathering.',
+      'Depending on your event and current catering availability, our team can help you explore options inspired by the food served at our restaurants.',
     ]}
+    items={favorites}
+    footnote="Catering selections may differ from our regular restaurant menu. Submit a catering request to confirm current options, availability and pricing for your event."
+  />
+
+  <TextSplit id="occasions" heading="Bring Ranchero Style to Your Next Gathering">
+    <div class="flex flex-col gap-6">
+      <Text color="default">Good food gives people one more reason to gather around the table.</Text>
+      <Text color="default">El Ranchero catering can be a fit for a range of group occasions, including:</Text>
+      <BulletList items={occasions} />
+      <Text color="default">
+        Tell us what you are planning and our team can help you explore catering options for your date and group.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <TextSplit id="why-cater" heading="Why Cater with Taqueria El Ranchero?" class="bg-card">
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        Taqueria El Ranchero has been serving Oʻahu since 2015, beginning with our original Wahiawa location and later expanding to Kapolei.
+      </Text>
+      <Text color="default">
+        El Ranchero is a veteran-founded local business built around the taqueria experience and Ranchero-style Mexican food.
+      </Text>
+      <Text color="default">
+        The restaurant has also earned local recognition, including Gold for Best Mexican in HONOLULU Magazine’s 2023 Hale ʻAina Awards.
+      </Text>
+      <Text color="default">
+        When you are planning food for a group, catering gives you another way to bring El Ranchero flavors to the occasion.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <Testimonials
+    id="reviews"
+    heading="What Guests Are Saying"
+    subtitle="See what guests have shared about their experiences at Taqueria El Ranchero."
+    testimonials={reviews}
+    footnote="Reviews above reflect guests’ restaurant experiences and are not presented as catering-specific testimonials."
+    actions={reviewLinks}
+  />
+
+  <BuildSteps id="how-it-works" tone="card" hideImage title="How El Ranchero Catering Works" steps={steps} />
+
+  <TextSplit id="planning" heading="Planning Your Catering Order">
+    <div class="flex flex-col gap-6">
+      <Text color="default">You do not need to have every detail figured out before reaching out.</Text>
+      <Text color="default">When submitting your catering request, it helps to include:</Text>
+      <BulletList items={planningChecklist} />
+      <Text color="default">
+        Providing these details helps our team better understand what you need and follow up with the right information.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <TextSplit id="explore-menu" heading="Explore the El Ranchero Menu" class="bg-card">
+    <div class="flex flex-col items-start gap-6">
+      <Text color="default">Want to get a feel for the food before planning your catering order?</Text>
+      <Text color="default">
+        Explore the <a class="text-accent underline underline-offset-4" href="/menu">Taqueria El Ranchero menu</a> to see the Ranchero-style Mexican dishes served at our restaurants.
+      </Text>
+      <Text color="default">
+        Keep in mind that catering selections may differ from the regular restaurant menu. Submit a catering request to confirm what is currently available for your group.
+      </Text>
+      <Button variant="primary" text="Explore Our Menu" href="/menu" hideNote={true} />
+    </div>
+  </TextSplit>
+
+  <LocationMaps
+    id="locations"
+    title="Catering in Wahiawa & Kapolei"
+    subtitle="Taqueria El Ranchero has two Oʻahu locations serving Wahiawa, Kapolei and surrounding communities."
+    stores={storeLocations}
+    footnote="Not sure which location to contact about your event? Submit your catering request with the event details and our team can help with the next steps."
+  />
+
+  <FAQs id="faqs" isDark title="Catering FAQs" items={faqs} />
+
+  <CTABanner
+    title="Ready to Plan Your Catering Order?"
+    subtitle="Tell us about your event, your group and what you have in mind. Submit the catering form and the El Ranchero team can help you explore the options available for your gathering."
+    actions={[{ variant: 'primary', text: 'Request Catering', href: '#catering-form' }]}
   />
 </PageLayout>

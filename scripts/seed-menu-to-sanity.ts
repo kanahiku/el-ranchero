@@ -1,30 +1,25 @@
+/**
+ * Seeds the menu into Sanity: categories, dishes and the "Choose Your Meat" list.
+ * Source copy: src/data/menu.ts (categories, meats) and src/data/menu-seed.ts (dishes).
+ *
+ *   npm run seed:menu               # dry run — shows what would be created
+ *   npm run seed:menu -- --commit   # create the missing documents
+ *   npm run seed:menu -- --commit --force   # also overwrite documents that already exist
+ *
+ * Safe to re-run: existing documents are left alone (so edits and photos added in
+ * the Studio survive) unless --force is passed. Needs SANITY_WRITE_TOKEN.
+ */
 import { createClient } from '@sanity/client';
-import { promises as fs } from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-type SourceMenuItem = {
-  title: string;
-  description?: string;
-};
-
-type SourceMenuCategory = {
-  title: string;
-  href?: string;
-  description?: string;
-  items: SourceMenuItem[];
-};
-
-type SeedMenuItem = SourceMenuItem & {
-  slug: string;
-  placements: Array<{ categoryId: string; order: number }>;
-};
+import { meatOptions, menuCategoryLinks } from '../src/data/menu';
+import { menuItemSeed } from '../src/data/menu-seed';
 
 const projectId = process.env.SANITY_PROJECT_ID ?? 'jntapqhj';
 const dataset = process.env.SANITY_DATASET ?? 'production';
-const token = process.env.SANITY_API_TOKEN;
-const menuPagePath = fileURLToPath(new URL('../src/pages/menu/index.astro', import.meta.url));
+const token = process.env.SANITY_WRITE_TOKEN;
 const commit = process.argv.includes('--commit');
+const force = process.argv.includes('--force');
+
+if (commit && !token) throw new Error('SANITY_WRITE_TOKEN is required with --commit.');
 
 const client = createClient({
   projectId,
@@ -34,133 +29,83 @@ const client = createClient({
   ...(token ? { token } : {}),
 });
 
-function normalize(value: string): string {
-  return value
+const slugify = (value: string) =>
+  value
     .toLowerCase()
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[_']/g, ' ')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim()
-    .replace(/\s+/g, ' ');
-}
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
-function slugify(value: string): string {
-  return normalize(value).replace(/\s+/g, '-');
-}
+type Doc = { _id: string; _type: string } & Record<string, unknown>;
+const docs: Doc[] = [];
 
-function getCategorySlug(category: SourceMenuCategory): string {
-  if (category.href?.startsWith('/menu/')) return path.posix.basename(category.href);
-  return slugify(category.title);
-}
-
-async function readSourceMenuCategories(): Promise<SourceMenuCategory[]> {
-  const page = await fs.readFile(menuPagePath, 'utf8');
-  const match = page.match(/const fullMenuCategories = (\[[\s\S]*?\n\]);/);
-  if (!match?.[1]) throw new Error('Could not extract fullMenuCategories from src/pages/menu/index.astro.');
-
-  return Function(`"use strict"; return (${match[1]});`)() as SourceMenuCategory[];
-}
-
-function buildSeedItems(categories: SourceMenuCategory[]) {
-  const itemsByKey = new Map<string, SeedMenuItem>();
-
-  categories.forEach((category, categoryIndex) => {
-    const categoryId = `menuCategory-${getCategorySlug(category)}`;
-
-    category.items.forEach((item, itemIndex) => {
-      const key = slugify(item.title);
-      const existing = itemsByKey.get(key);
-
-      if (existing) {
-        if (!existing.placements.some((placement) => placement.categoryId === categoryId)) {
-          existing.placements.push({ categoryId, order: itemIndex * 10 });
-        }
-        return;
-      }
-
-      itemsByKey.set(key, {
-        title: item.title,
-        description: item.description,
-        slug: key,
-        placements: [{ categoryId, order: itemIndex * 10 }],
-      });
-    });
-
-    void categoryIndex;
+// ── Categories ──────────────────────────────────────────────────────────────
+menuCategoryLinks.forEach((link, index) => {
+  const slug = link.href.replace(/^\/menu\//, '');
+  docs.push({
+    _id: `menuCategory-${slug}`,
+    _type: 'menuCategory',
+    title: link.label,
+    slug: { _type: 'slug', current: slug },
+    description: link.description,
+    order: index,
+    hubSpan: link.span,
+    showOnFullMenu: true,
   });
+});
 
-  return [...itemsByKey.values()];
-}
-
-async function main() {
-  console.log(commit ? 'Seeding Sanity menu with --commit.' : 'Running Sanity menu seed dry-run.');
-  console.log(`Sanity: ${projectId}/${dataset}`);
-
-  if (commit && !token) throw new Error('SANITY_API_TOKEN is required when running with --commit.');
-
-  const categories = await readSourceMenuCategories();
-  const seedItems = buildSeedItems(categories);
-
-  console.log(`Categories: ${categories.length}`);
-  console.log(`Unique menu items: ${seedItems.length}`);
-
-  if (!commit) {
-    console.log('\nDry-run only. Re-run with --commit to seed Sanity.');
-    return;
-  }
-
-  const transaction = client.transaction();
-
-  categories.forEach((category, categoryIndex) => {
-    const slug = getCategorySlug(category);
-    const id = `menuCategory-${slug}`;
-    transaction.createIfNotExists({
-      _id: id,
-      _type: 'menuCategory',
-      title: category.title,
-    });
-    transaction.patch(id, (patch) =>
-      patch.set({
-        _type: 'menuCategory',
-        title: category.title,
-        slug: { _type: 'slug', current: slug },
-        description: category.description,
-        order: categoryIndex * 10,
-        showOnFullMenu: true,
-      })
-    );
-  });
-
-  seedItems.forEach((item) => {
-    const id = `menuItem-${item.slug}`;
-    transaction.createIfNotExists({
-      _id: id,
+// ── Dishes ──────────────────────────────────────────────────────────────────
+for (const [categorySlug, items] of Object.entries(menuItemSeed)) {
+  const orderBySection = new Map<string, number>();
+  for (const item of items) {
+    const order = orderBySection.get(item.section) ?? 0;
+    orderBySection.set(item.section, order + 1);
+    const itemSlug = `${categorySlug}-${slugify(item.title)}`;
+    docs.push({
+      _id: `menuItem-${itemSlug}`,
       _type: 'menuItem',
       title: item.title,
-    });
-    transaction.patch(id, (patch) =>
-      patch.set({
-        _type: 'menuItem',
-        title: item.title,
-        slug: { _type: 'slug', current: item.slug },
-        description: item.description,
-        isAvailable: true,
-        categoryPlacements: item.placements.map((placement) => ({
-          _key: `${placement.categoryId}-${placement.order}`,
+      slug: { _type: 'slug', current: itemSlug },
+      description: Array.isArray(item.description) ? item.description.join('\n\n') : item.description,
+      isAvailable: true,
+      categoryPlacements: [
+        {
+          _key: 'placement',
           _type: 'categoryPlacement',
-          category: { _type: 'reference', _ref: placement.categoryId },
-          order: placement.order,
-        })),
-      })
-    );
-  });
-
-  await transaction.commit();
-  console.log(`Seeded ${categories.length} categories and ${seedItems.length} menu items.`);
+          category: { _type: 'reference', _ref: `menuCategory-${categorySlug}` },
+          section: item.section,
+          order,
+        },
+      ],
+    });
+  }
 }
 
-main().catch((error: unknown) => {
-  console.error(error instanceof Error ? error.message : error);
-  process.exit(1);
+// ── Choose Your Meat ────────────────────────────────────────────────────────
+meatOptions.forEach((meat, index) => {
+  docs.push({
+    _id: `meatOption-${slugify(meat.name)}`,
+    _type: 'meatOption',
+    name: meat.name,
+    description: meat.description,
+    order: index,
+    isAvailable: true,
+  });
 });
+
+const counts = docs.reduce<Record<string, number>>((acc, doc) => ({ ...acc, [doc._type]: (acc[doc._type] ?? 0) + 1 }), {});
+console.log(`Project ${projectId}/${dataset} — ${docs.length} documents:`, counts);
+
+if (!commit) {
+  console.log('Dry run. Re-run with --commit to write to Sanity.');
+  process.exit(0);
+}
+
+const tx = client.transaction();
+for (const doc of docs) {
+  if (force) tx.createOrReplace(doc);
+  else tx.createIfNotExists(doc);
+}
+const result = await tx.commit();
+console.log(`Done. ${result.results.length} operations (${force ? 'replace' : 'create if missing'}).`);

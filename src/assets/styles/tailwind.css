@@ -80,7 +80,7 @@
 
 @utility font-heading {
   font-family: var(--font-heading);
-  font-weight: 400;
+  font-weight: var(--aw-weight-heading, 400);
 }
 
 @utility font-script {
@@ -90,12 +90,21 @@
 
 @utility font-rough {
   font-family: var(--font-rough);
-  font-weight: 400;
+  font-weight: var(--aw-weight-heading, 400);
+}
+
+/* Display type keeps the brand display weight even where a component adds
+   `font-normal` next to the heading face. */
+.font-rough.font-normal,
+.font-heading.font-normal,
+.font-script.font-normal {
+  font-weight: var(--aw-weight-heading, 400);
 }
 
 @utility text-h1 {
   font-size: var(--aw-text-h1-mobile);
   line-height: var(--aw-leading-h1);
+  letter-spacing: var(--aw-tracking-heading);
   @media (min-width: 768px) {
     font-size: var(--aw-text-h1);
   }
@@ -104,6 +113,7 @@
 @utility text-h2 {
   font-size: var(--aw-text-h2-mobile);
   line-height: var(--aw-leading-h2);
+  letter-spacing: var(--aw-tracking-heading);
   @media (min-width: 768px) {
     font-size: var(--aw-text-h2);
   }
@@ -144,10 +154,10 @@
 }
 
 @utility type-eyebrow {
-  font-family: var(--font-script);
+  font-family: var(--font-sans);
   font-size: var(--aw-text-eyebrow-mobile);
   letter-spacing: var(--aw-tracking-eyebrow);
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1;
   @media (min-width: 768px) {
     font-size: var(--aw-text-eyebrow);
@@ -657,8 +667,9 @@
 /* Site-wide CTA hover — used by Button.astro via btn / btn-* utilities.
    Color tokens per variant; motion (200ms ease + 1px lift) is shared. */
 @utility btn {
-  @apply inline-flex items-center justify-center rounded-full border-2 font-rough font-semibold text-center leading-none py-6 px-7 cursor-pointer;
+  @apply inline-flex items-center justify-center rounded-full border-2 font-sans font-semibold uppercase text-center leading-none py-6 px-7 cursor-pointer;
   font-size: var(--aw-text-button);
+  letter-spacing: var(--aw-tracking-button);
   transition-property: background-color, color, border-color, box-shadow, transform;
   transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
@@ -727,7 +738,8 @@
 }
 
 @utility btn-link {
-  @apply inline-flex items-center font-rough font-semibold text-[14px] cursor-pointer;
+  @apply inline-flex items-center font-sans font-semibold uppercase text-[14px] cursor-pointer;
+  letter-spacing: var(--aw-tracking-button);
   color: var(--aw-color-btn-link);
   text-underline-offset: 2px;
   transition-property: color, text-decoration-color;
@@ -754,8 +766,6 @@
   left: 0;
   z-index: 50;
   min-width: 220px;
-  max-height: min(24rem, 70vh);
-  overflow-y: auto;
   padding: 8px 0;
   background: var(--aw-color-bg-card);
   border: 1px solid color-mix(in srgb, var(--aw-color-text-heading) 10%, transparent);

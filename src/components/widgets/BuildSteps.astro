@@ -27,6 +27,10 @@ export interface Props {
   steps?: BuildStep[];
   id?: string;
   image?: ContentImage;
+  /** Drop the photo column so the steps use the full width. */
+  hideImage?: boolean;
+  /** Section background: page (default) or card (tinted). */
+  tone?: 'page' | 'card';
 }
 
 const {
@@ -39,13 +43,15 @@ const {
   steps = [],
   id,
   image,
+  hideImage = false,
+  tone = 'page',
 } = Astro.props;
 
 ---
 
 <section
   {...id ? { id } : {}}
-  class="not-prose relative w-full overflow-hidden bg-page"
+  class:list={['not-prose relative w-full overflow-hidden', tone === 'card' ? 'bg-card' : 'bg-page']}
 >
   <div class="relative z-[1] mx-auto flex w-full max-w-container flex-col gap-12 px-5 py-16 sm:px-8 md:flex-row md:items-center md:gap-16 md:px-16 md:py-[120px]">
     <div class="flex min-w-0 flex-1 flex-col items-start gap-8">
@@ -91,6 +97,7 @@ const {
       )}
     </div>
 
+    {!hideImage && (
     <div class="relative w-full shrink-0 md:w-[42%] md:max-w-[520px]" style="aspect-ratio: 562 / 624;">
       {image ? (
         <Image
@@ -108,5 +115,6 @@ const {
         <HeroImagePlaceholder fill class="absolute inset-0" />
       )}
     </div>
+    )}
   </div>
 </section>

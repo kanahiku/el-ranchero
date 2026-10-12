@@ -31,6 +31,7 @@
  *   imageAspect     — CSS aspect-ratio for the default placeholder (Figma frame size)
  *   imagePlacement  — "end" (image opposite the text stack) or "under-heading"
  *   imageReverse    — true = image LEFT / text RIGHT (mirrors the default end layout)
+ *   alignTop        — true = text-only columns align to the top (use when the body is tall, e.g. a form)
  *   class           — extra classes on the outer <section>
  */
 
@@ -50,6 +51,7 @@ export interface Props {
   imageAspect?: string;
   imagePlacement?: 'end' | 'under-heading';
   imageReverse?: boolean;
+  alignTop?: boolean;
   class?: string;
 }
 
@@ -64,6 +66,7 @@ const {
   imageAspect = '507 / 657.445',
   imagePlacement = 'end',
   imageReverse = false,
+  alignTop = false,
   class: className = '',
 } = Astro.props;
 
@@ -81,13 +84,14 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
 <section {...id ? { id } : {}} class:list={['not-prose w-full', className]}>
   <div
     class:list={[
-      'mx-auto w-full max-w-container px-5 py-12 sm:px-8 md:px-16 md:py-16 lg:px-[120px]',
-      compact ? 'lg:py-16' : 'lg:py-[120px]',
+      'mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16',
+      compact ? 'md:py-16' : 'md:py-[120px]',
     ]}
   >
     <div
       class:list={[
-        'flex flex-col gap-12 lg:flex-row lg:items-center',
+        'flex flex-col gap-12 lg:flex-row',
+        alignTop && !hasImage ? 'lg:items-start' : 'lg:items-center',
         useNarrowGap ? 'lg:gap-16' : 'lg:gap-[120px]',
         imageReverse && imageAside && 'lg:flex-row-reverse',
       ]}

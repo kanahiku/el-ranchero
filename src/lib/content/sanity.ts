@@ -1,3 +1,4 @@
+import { PRIMARY_CTA_HREF, PRIMARY_CTA_LABEL } from '../../config/cta';
 import { sanityClient } from '../sanity/client';
 import { resolveContentImage, type SanityImageFields } from '../sanity/image';
 import type {
@@ -9,13 +10,13 @@ import type {
   AboutImages,
   CateringImages,
   LocationImages,
-  IngredientsImages,
   MenuPagesImages,
   NavigationContent,
   NavLink,
   NavSubLink,
   MenuCategory,
   MenuItem,
+  MeatOption,
 } from './types';
 
 type FetchedImage = ContentImage & SanityImageFields;
@@ -65,19 +66,21 @@ function normalizeWebsiteCopy(value: string): string {
     .normalize('NFC');
 }
 
-// ─── Homepage ─────────────────────────────────────────────────────────────────
+// ─── Homepage ────────────────────────────────────────────────────────────────
 
 type FetchedHomepageImages = {
   heroImage?: FetchedImage | null;
-  localSourcingImage?: FetchedImage | null;
-  locationsImage?: FetchedImage | null;
+  breakfastImage?: FetchedImage | null;
+  cateringImage?: FetchedImage | null;
+  privateEventsImage?: FetchedImage | null;
 };
 
 const HOMEPAGE_IMAGES_QUERY = /* groq */ `
   *[_type == "homepageContent" && _id == "singleton-homepage"][0] {
-    ${IMAGE_PROJECTION('heroImage', 'Fresh salad from El Ranchero')},
-    ${IMAGE_PROJECTION('localSourcingImage', 'Local ingredients used by El Ranchero')},
-    ${IMAGE_PROJECTION('locationsImage', 'El Ranchero store location')}
+    ${IMAGE_PROJECTION('heroImage', 'Taqueria El Ranchero')},
+    ${IMAGE_PROJECTION('breakfastImage', 'Mexican breakfast at El Ranchero')},
+    ${IMAGE_PROJECTION('cateringImage', 'El Ranchero Mexican catering')},
+    ${IMAGE_PROJECTION('privateEventsImage', 'El Ranchero Kapolei event space')}
   }
 `;
 
@@ -86,26 +89,27 @@ export async function getSanityHomepageImages(): Promise<HomepageImages> {
 
   return {
     hero: resolveContentImage(doc?.heroImage),
-    localSourcing: resolveContentImage(doc?.localSourcingImage),
-    locations: resolveContentImage(doc?.locationsImage),
+    breakfast: resolveContentImage(doc?.breakfastImage),
+    catering: resolveContentImage(doc?.cateringImage),
+    privateEvents: resolveContentImage(doc?.privateEventsImage),
   };
 }
 
-// ─── About ────────────────────────────────────────────────────────────────────
+// ─── About ───────────────────────────────────────────────────────────────────
 
 type FetchedAboutImages = {
   heroImage?: FetchedImage | null;
-  storyImage?: FetchedImage | null;
-  sustainabilityImage?: FetchedImage | null;
-  vendorsImage?: FetchedImage | null;
+  madeFreshDailyImage?: FetchedImage | null;
+  muralsImage?: FetchedImage | null;
+  givingBackImage?: FetchedImage | null;
 };
 
 const ABOUT_IMAGES_QUERY = /* groq */ `
   *[_type == "aboutContent" && _id == "singleton-about"][0] {
-    ${IMAGE_PROJECTION('heroImage', 'About El Ranchero')},
-    ${IMAGE_PROJECTION('storyImage', 'El Ranchero story')},
-    ${IMAGE_PROJECTION('sustainabilityImage', 'El Ranchero sustainability')},
-    ${IMAGE_PROJECTION('vendorsImage', 'El Ranchero vendors')}
+    ${IMAGE_PROJECTION('heroImage', 'About Taqueria El Ranchero')},
+    ${IMAGE_PROJECTION('madeFreshDailyImage', 'Food prepared fresh daily at El Ranchero')},
+    ${IMAGE_PROJECTION('muralsImage', 'Murals at El Ranchero')},
+    ${IMAGE_PROJECTION('givingBackImage', 'El Ranchero giving back to the community')}
   }
 `;
 
@@ -114,31 +118,21 @@ export async function getSanityAboutImages(): Promise<AboutImages> {
 
   return {
     hero: resolveContentImage(doc?.heroImage),
-    story: resolveContentImage(doc?.storyImage),
-    sustainability: resolveContentImage(doc?.sustainabilityImage),
-    vendors: resolveContentImage(doc?.vendorsImage),
+    madeFreshDaily: resolveContentImage(doc?.madeFreshDailyImage),
+    murals: resolveContentImage(doc?.muralsImage),
+    givingBack: resolveContentImage(doc?.givingBackImage),
   };
 }
 
-// ─── Catering ─────────────────────────────────────────────────────────────────
+// ─── Catering ────────────────────────────────────────────────────────────────
 
 type FetchedCateringImages = {
   menuImage?: FetchedImage | null;
-  corporateImage?: FetchedImage | null;
-  officeLunchImage?: FetchedImage | null;
-  meetingsImage?: FetchedImage | null;
-  eventsImage?: FetchedImage | null;
-  largeGroupsImage?: FetchedImage | null;
 };
 
 const CATERING_IMAGES_QUERY = /* groq */ `
   *[_type == "cateringContent" && _id == "singleton-catering"][0] {
-    ${IMAGE_PROJECTION('menuImage', 'El Ranchero catering trays')},
-    ${IMAGE_PROJECTION('corporateImage', 'Corporate catering from El Ranchero')},
-    ${IMAGE_PROJECTION('officeLunchImage', 'Office lunch catering from El Ranchero')},
-    ${IMAGE_PROJECTION('meetingsImage', 'Meeting catering from El Ranchero')},
-    ${IMAGE_PROJECTION('eventsImage', 'Event catering from El Ranchero')},
-    ${IMAGE_PROJECTION('largeGroupsImage', 'Large group catering from El Ranchero')}
+    ${IMAGE_PROJECTION('menuImage', 'El Ranchero catering')}
   }
 `;
 
@@ -147,118 +141,62 @@ export async function getSanityCateringImages(): Promise<CateringImages> {
 
   return {
     menu: resolveContentImage(doc?.menuImage),
-    corporate: resolveContentImage(doc?.corporateImage),
-    officeLunch: resolveContentImage(doc?.officeLunchImage),
-    meetings: resolveContentImage(doc?.meetingsImage),
-    events: resolveContentImage(doc?.eventsImage),
-    largeGroups: resolveContentImage(doc?.largeGroupsImage),
   };
 }
 
-// ─── Locations ────────────────────────────────────────────────────────────────
+// ─── Locations ───────────────────────────────────────────────────────────────
 
 type FetchedLocationImages = {
   directoryImage?: FetchedImage | null;
-  kailuaImage?: FetchedImage | null;
-  kahalaImage?: FetchedImage | null;
-  kaneoheImage?: FetchedImage | null;
+  wahiawaImage?: FetchedImage | null;
   kapoleiImage?: FetchedImage | null;
-  mililaniImage?: FetchedImage | null;
-  pearlridgeImage?: FetchedImage | null;
 };
 
-const LOCATION_IMAGES_QUERY = /* groq */ `
+const LOCATIONS_IMAGES_QUERY = /* groq */ `
   *[_type == "locationsContent" && _id == "singleton-locations"][0] {
     ${IMAGE_PROJECTION('directoryImage', 'El Ranchero locations on Oahu')},
-    ${IMAGE_PROJECTION('kailuaImage', 'El Ranchero Kailua location')},
-    ${IMAGE_PROJECTION('kahalaImage', 'El Ranchero Kahala location')},
-    ${IMAGE_PROJECTION('kaneoheImage', 'El Ranchero Kaneohe location')},
-    ${IMAGE_PROJECTION('kapoleiImage', 'El Ranchero Kapolei location')},
-    ${IMAGE_PROJECTION('mililaniImage', 'El Ranchero Mililani location')},
-    ${IMAGE_PROJECTION('pearlridgeImage', 'El Ranchero Pearlridge location')}
+    ${IMAGE_PROJECTION('wahiawaImage', 'El Ranchero Wahiawa')},
+    ${IMAGE_PROJECTION('kapoleiImage', 'El Ranchero Kapolei')}
   }
 `;
 
 export async function getSanityLocationImages(): Promise<LocationImages> {
-  const doc = await sanityClient.fetch<FetchedLocationImages | null>(LOCATION_IMAGES_QUERY);
+  const doc = await sanityClient.fetch<FetchedLocationImages | null>(LOCATIONS_IMAGES_QUERY);
 
   return {
     directory: resolveContentImage(doc?.directoryImage),
-    kailua: resolveContentImage(doc?.kailuaImage),
-    kahala: resolveContentImage(doc?.kahalaImage),
-    kaneohe: resolveContentImage(doc?.kaneoheImage),
+    wahiawa: resolveContentImage(doc?.wahiawaImage),
     kapolei: resolveContentImage(doc?.kapoleiImage),
-    mililani: resolveContentImage(doc?.mililaniImage),
-    pearlridge: resolveContentImage(doc?.pearlridgeImage),
   };
 }
 
-// ─── Ingredients ──────────────────────────────────────────────────────────────
-
-type FetchedIngredientsImages = {
-  heroImage?: FetchedImage | null;
-  freshLocalProduceImage?: FetchedImage | null;
-};
-
-const INGREDIENTS_IMAGES_QUERY = /* groq */ `
-  *[_type == "ingredientsContent" && _id == "singleton-ingredients"][0] {
-    ${IMAGE_PROJECTION('heroImage', 'Fresh ingredients at El Ranchero')},
-    ${IMAGE_PROJECTION('freshLocalProduceImage', 'Fresh local produce used by El Ranchero')}
-  }
-`;
-
-export async function getSanityIngredientsImages(): Promise<IngredientsImages> {
-  const doc = await sanityClient.fetch<FetchedIngredientsImages | null>(INGREDIENTS_IMAGES_QUERY);
-
-  return {
-    hero: resolveContentImage(doc?.heroImage),
-    freshLocalProduce: resolveContentImage(doc?.freshLocalProduceImage),
-  };
-}
-
-// ─── Menu Pages ───────────────────────────────────────────────────────────────
+// ─── Menu Pages ──────────────────────────────────────────────────────────────
 
 type FetchedMenuPagesImages = {
   menuHubHeroImage?: FetchedImage | null;
-  saladsHeroImage?: FetchedImage | null;
-  saladsIngredientsImage?: FetchedImage | null;
-  wrapsHeroImage?: FetchedImage | null;
-  wrapsIngredientsImage?: FetchedImage | null;
-  soupsHeroImage?: FetchedImage | null;
-  soupsIngredientsImage?: FetchedImage | null;
+  breakfastHeroImage?: FetchedImage | null;
+  burritosHeroImage?: FetchedImage | null;
+  tacosHeroImage?: FetchedImage | null;
+  entreesHeroImage?: FetchedImage | null;
+  quesadillasNachosHeroImage?: FetchedImage | null;
+  specialsHeroImage?: FetchedImage | null;
+  appetizersSidesHeroImage?: FetchedImage | null;
+  kidsHeroImage?: FetchedImage | null;
   drinksHeroImage?: FetchedImage | null;
-  drinksIngredientsImage?: FetchedImage | null;
-  veganIngredientsImage?: FetchedImage | null;
-  vegetarianHeroImage?: FetchedImage | null;
-  vegetarianIngredientsImage?: FetchedImage | null;
-  healthyOptionsHeroImage?: FetchedImage | null;
-  healthyOptionsIngredientsImage?: FetchedImage | null;
-  kidsIngredientsImage?: FetchedImage | null;
-  designYourOwnHeroImage?: FetchedImage | null;
-  designYourOwnBuildImage?: FetchedImage | null;
-  designYourOwnQualityImage?: FetchedImage | null;
 };
 
 const MENU_PAGES_IMAGES_QUERY = /* groq */ `
   *[_type == "menuPagesContent" && _id == "singleton-menu-pages"][0] {
-    ${IMAGE_PROJECTION('menuHubHeroImage', 'Fresh salad bowls from El Ranchero')},
-    ${IMAGE_PROJECTION('saladsHeroImage', 'Signature salads at El Ranchero')},
-    ${IMAGE_PROJECTION('saladsIngredientsImage', 'Fresh ingredients for El Ranchero salads')},
-    ${IMAGE_PROJECTION('wrapsHeroImage', 'Wraps and subs at El Ranchero')},
-    ${IMAGE_PROJECTION('wrapsIngredientsImage', 'Fresh ingredients for El Ranchero wraps')},
-    ${IMAGE_PROJECTION('soupsHeroImage', 'Tomato bisque soup at El Ranchero')},
-    ${IMAGE_PROJECTION('soupsIngredientsImage', 'Fresh ingredients for El Ranchero soups')},
-    ${IMAGE_PROJECTION('drinksHeroImage', 'Drinks at El Ranchero')},
-    ${IMAGE_PROJECTION('drinksIngredientsImage', 'Fresh ingredients for El Ranchero drinks')},
-    ${IMAGE_PROJECTION('veganIngredientsImage', 'Fresh plant-based ingredients at El Ranchero')},
-    ${IMAGE_PROJECTION('vegetarianHeroImage', 'Vegetarian options at El Ranchero')},
-    ${IMAGE_PROJECTION('vegetarianIngredientsImage', 'Fresh vegetarian ingredients at El Ranchero')},
-    ${IMAGE_PROJECTION('healthyOptionsHeroImage', 'Healthy menu options at El Ranchero')},
-    ${IMAGE_PROJECTION('healthyOptionsIngredientsImage', 'Fresh healthy ingredients at El Ranchero')},
-    ${IMAGE_PROJECTION('kidsIngredientsImage', 'Fresh keiki meal ingredients at El Ranchero')},
-    ${IMAGE_PROJECTION('designYourOwnHeroImage', 'Custom salad bowl at El Ranchero')},
-    ${IMAGE_PROJECTION('designYourOwnBuildImage', 'How to build your own salad at El Ranchero')},
-    ${IMAGE_PROJECTION('designYourOwnQualityImage', 'Quality ingredients for custom salads at El Ranchero')}
+    ${IMAGE_PROJECTION('menuHubHeroImage', 'El Ranchero menu')},
+    ${IMAGE_PROJECTION('breakfastHeroImage', 'Breakfast at El Ranchero')},
+    ${IMAGE_PROJECTION('burritosHeroImage', 'Burritos at El Ranchero')},
+    ${IMAGE_PROJECTION('tacosHeroImage', 'Tacos & Birria at El Ranchero')},
+    ${IMAGE_PROJECTION('entreesHeroImage', 'Entrees & Fajitas at El Ranchero')},
+    ${IMAGE_PROJECTION('quesadillasNachosHeroImage', 'Quesadillas & Nachos at El Ranchero')},
+    ${IMAGE_PROJECTION('specialsHeroImage', 'Specials at El Ranchero')},
+    ${IMAGE_PROJECTION('appetizersSidesHeroImage', 'Appetizers & Sides at El Ranchero')},
+    ${IMAGE_PROJECTION('kidsHeroImage', 'Kids Menu at El Ranchero')},
+    ${IMAGE_PROJECTION('drinksHeroImage', 'Drinks & Margaritas at El Ranchero')}
   }
 `;
 
@@ -267,23 +205,15 @@ export async function getSanityMenuPagesImages(): Promise<MenuPagesImages> {
 
   return {
     menuHubHero: resolveContentImage(doc?.menuHubHeroImage),
-    saladsHero: resolveContentImage(doc?.saladsHeroImage),
-    saladsIngredients: resolveContentImage(doc?.saladsIngredientsImage),
-    wrapsHero: resolveContentImage(doc?.wrapsHeroImage),
-    wrapsIngredients: resolveContentImage(doc?.wrapsIngredientsImage),
-    soupsHero: resolveContentImage(doc?.soupsHeroImage),
-    soupsIngredients: resolveContentImage(doc?.soupsIngredientsImage),
+    breakfastHero: resolveContentImage(doc?.breakfastHeroImage),
+    burritosHero: resolveContentImage(doc?.burritosHeroImage),
+    tacosHero: resolveContentImage(doc?.tacosHeroImage),
+    entreesHero: resolveContentImage(doc?.entreesHeroImage),
+    quesadillasNachosHero: resolveContentImage(doc?.quesadillasNachosHeroImage),
+    specialsHero: resolveContentImage(doc?.specialsHeroImage),
+    appetizersSidesHero: resolveContentImage(doc?.appetizersSidesHeroImage),
+    kidsHero: resolveContentImage(doc?.kidsHeroImage),
     drinksHero: resolveContentImage(doc?.drinksHeroImage),
-    drinksIngredients: resolveContentImage(doc?.drinksIngredientsImage),
-    veganIngredients: resolveContentImage(doc?.veganIngredientsImage),
-    vegetarianHero: resolveContentImage(doc?.vegetarianHeroImage),
-    vegetarianIngredients: resolveContentImage(doc?.vegetarianIngredientsImage),
-    healthyOptionsHero: resolveContentImage(doc?.healthyOptionsHeroImage),
-    healthyOptionsIngredients: resolveContentImage(doc?.healthyOptionsIngredientsImage),
-    kidsIngredients: resolveContentImage(doc?.kidsIngredientsImage),
-    designYourOwnHero: resolveContentImage(doc?.designYourOwnHeroImage),
-    designYourOwnBuild: resolveContentImage(doc?.designYourOwnBuildImage),
-    designYourOwnQuality: resolveContentImage(doc?.designYourOwnQualityImage),
   };
 }
 
@@ -430,6 +360,8 @@ export async function getSanityNavigationContent(): Promise<NavigationContent> {
 }
 
 // ─── Menu ────────────────────────────────────────────────────────────────────
+// Menu copy is rendered exactly as written in Sanity (accents like "Niño" and
+// "jalapeño" matter here), so it does not go through normalizeWebsiteCopy.
 
 type FetchedMenuCategory = {
   _id: string;
@@ -437,6 +369,7 @@ type FetchedMenuCategory = {
   slug?: string;
   description?: string;
   order?: number;
+  hubSpan?: number;
 };
 
 type FetchedMenuItem = {
@@ -444,8 +377,10 @@ type FetchedMenuItem = {
   title?: string;
   slug?: string;
   description?: string;
+  badge?: string;
+  note?: string;
   image?: FetchedImage | null;
-  placements?: Array<{ categoryId?: string; order?: number }> | null;
+  placements?: Array<{ categoryId?: string; section?: string; order?: number }> | null;
 };
 
 type FetchedMenuContent = {
@@ -460,13 +395,16 @@ const MENU_QUERY = /* groq */ `
       title,
       "slug": slug.current,
       description,
-      "order": coalesce(order, 0)
+      "order": coalesce(order, 0),
+      hubSpan
     },
     "items": *[_type == "menuItem" && isAvailable != false && defined(title)] | order(title asc) {
       _id,
       title,
       "slug": slug.current,
       description,
+      badge,
+      note,
       "image": select(defined(photo.asset) => {
         "src": photo.asset->url,
         "alt": coalesce(photo.alt, title),
@@ -476,20 +414,34 @@ const MENU_QUERY = /* groq */ `
       }, null),
       "placements": categoryPlacements[defined(category._ref)][] {
         "categoryId": category._ref,
+        "section": coalesce(section, "main"),
         "order": coalesce(order, 0)
       }
     }
   }
 `;
 
-function normalizeMenuItem(item: FetchedMenuItem): MenuItem | null {
-  if (!item.title) return null;
+/** Blank line = new paragraph. Returns a plain string when there is only one. */
+function splitParagraphs(text: string): string | string[] {
+  const parts = text
+    .split(/\n\s*\n/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return parts.length > 1 ? parts : (parts[0] ?? '');
+}
+
+function normalizeMenuItem(item: FetchedMenuItem, section: string): MenuItem | null {
+  if (!item.title?.trim()) return null;
   const image = resolveContentImage(item.image);
+  const description = item.description?.trim() ? splitParagraphs(item.description) : undefined;
   return {
-    title: normalizeWebsiteCopy(item.title),
+    title: item.title.trim(),
+    section,
     ...(item.slug ? { slug: item.slug } : {}),
-    ...(item.description ? { description: normalizeWebsiteCopy(item.description) } : {}),
-    ...(image ? { image: { ...image, alt: normalizeWebsiteCopy(image.alt) } } : {}),
+    ...(description ? { description } : {}),
+    ...(item.badge?.trim() ? { badge: item.badge.trim() } : {}),
+    ...(item.note?.trim() ? { note: item.note.trim() } : {}),
+    ...(image ? { image } : {}),
   };
 }
 
@@ -498,31 +450,46 @@ export async function getSanityMenuCategories(): Promise<MenuCategory[]> {
   const categories = (content.categories ?? []).filter((category) => category._id && category.title);
   const items = content.items ?? [];
 
-  return categories
-    .map((category) => {
-      const categoryItems = items
-        .flatMap((item) =>
-          (item.placements ?? [])
-            .filter((placement) => placement.categoryId === category._id)
-            .map((placement) => ({ item, order: placement.order ?? 0 }))
-        )
-        .map(({ item, order }) => {
-          const normalized = normalizeMenuItem(item);
-          return normalized ? { ...normalized, order } : null;
-        })
-        .filter((item): item is MenuItem & { order: number } => Boolean(item))
-        .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
-        .map(({ order: _order, ...item }) => item);
+  return categories.map((category) => {
+    const categoryItems = items
+      .flatMap((item) =>
+        (item.placements ?? [])
+          .filter((placement) => placement.categoryId === category._id)
+          .map((placement) => ({ item, section: placement.section || 'main', order: placement.order ?? 0 }))
+      )
+      .map(({ item, section, order }) => {
+        const normalized = normalizeMenuItem(item, section);
+        return normalized ? { ...normalized, order } : null;
+      })
+      .filter((item): item is MenuItem & { order: number } => Boolean(item))
+      .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
+      .map(({ order: _order, ...item }) => item);
 
-      return {
-        title: normalizeWebsiteCopy(category.title!),
-        slug: category.slug,
-        href: category.slug ? `/menu/${category.slug}` : undefined,
-        ...(category.description ? { description: normalizeWebsiteCopy(category.description) } : {}),
-        items: categoryItems,
-      };
-    })
-    .filter((category) => category.items.length > 0);
+    return {
+      title: category.title!.trim(),
+      slug: category.slug,
+      href: category.slug ? `/menu/${category.slug}` : undefined,
+      ...(category.description ? { description: category.description.trim() } : {}),
+      hubSpan: category.hubSpan === 6 ? 6 : 4,
+      items: categoryItems,
+    } satisfies MenuCategory;
+  });
+}
+
+// ─── Meat options ("Choose Your Meat") ───────────────────────────────────────
+
+const MEAT_OPTIONS_QUERY = /* groq */ `
+  *[_type == "meatOption" && isAvailable != false && defined(name)] | order(coalesce(order, 0) asc, name asc) {
+    name,
+    description
+  }
+`;
+
+export async function getSanityMeatOptions(): Promise<MeatOption[]> {
+  const docs = await sanityClient.fetch<Array<{ name?: string; description?: string }>>(MEAT_OPTIONS_QUERY);
+  return (docs ?? [])
+    .filter((doc) => doc.name?.trim())
+    .map((doc) => ({ name: doc.name!.trim(), description: doc.description?.trim() ?? '' }));
 }
 
 type SanityMarkDef = {
@@ -751,10 +718,10 @@ function normalizeBlogPost(post: SanityBlogPost): BlogPost {
           ]
         : [],
     ctaBanner: {
-      title: 'Get in touch',
-      subtitle: 'Replace this banner copy from the Figma file.',
-      ctaText: 'Start the assessment',
-      ctaHref: '/form',
+      title: 'Hungry? Order From El Ranchero',
+      subtitle: 'Explore our menu, then order for pickup from Wahiawa or Kapolei.',
+      ctaText: PRIMARY_CTA_LABEL,
+      ctaHref: PRIMARY_CTA_HREF,
     },
     body,
     contentBlocks,
@@ -852,13 +819,12 @@ export async function getSanityBlogPostSlugs(): Promise<string[]> {
 // ─── Testimonials ─────────────────────────────────────────────────────────────
 
 const TESTIMONIALS_QUERY = /* groq */ `
-  *[_type == "testimonial" && defined(quote) && defined(name)] | order(order asc, name asc) {
+  *[_type == "testimonial" && defined(quote) && defined(name)] | order(coalesce(order, 0) asc, name asc) {
     _id,
     quote,
     name,
-    age,
     location,
-    tenure,
+    platform,
     order
   }
 `;
@@ -867,21 +833,19 @@ type SanityTestimonial = {
   _id: string;
   quote?: string;
   name?: string;
-  age?: number;
   location?: string;
-  tenure?: string;
+  platform?: string;
   order?: number;
 };
 
 function normalizeTestimonial(doc: SanityTestimonial): Testimonial | null {
-  if (!doc?._id || !doc.quote?.trim() || !doc.name?.trim() || !doc.tenure?.trim()) return null;
+  if (!doc?._id || !doc.quote?.trim() || !doc.name?.trim()) return null;
   return {
     _id: doc._id,
     quote: doc.quote.trim(),
     name: doc.name.trim(),
-    age: typeof doc.age === 'number' ? doc.age : undefined,
     location: doc.location?.trim() || undefined,
-    tenure: doc.tenure.trim(),
+    platform: doc.platform === 'yelp' ? 'yelp' : 'google',
     order: typeof doc.order === 'number' ? doc.order : 0,
   };
 }

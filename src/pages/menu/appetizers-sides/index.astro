@@ -1,0 +1,83 @@
+---
+/**
+ * Appetizers & Sides — copy from pages-content/Menu Pages/_ menu_appetizers-sides - Appetizers & Sides.docx.
+ * Composes shared widgets only. Photos are grey placeholders until the
+ * client photography pass.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import Text from '~/components/ui/Text.astro';
+import Locations from '~/components/widgets/Locations.astro';
+import MenuCategories from '~/components/widgets/MenuCategories.astro';
+import Note from '~/components/widgets/Note.astro';
+import { PRIMARY_CTA_HREF } from '~/config/cta';
+import { getMenuSections } from '~/lib/content';
+import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
+
+const metadata = {
+  title: 'Appetizers & Sides in Wahiawa & Kapolei | El Ranchero',
+  description:
+    "Explore freshly made guacamole, Chorizo Queso, Bean Dip, pico de gallo, rice, beans and more at El Ranchero in Wahiawa and Kapolei.",
+  ignoreTitleTemplate: true,
+};
+
+const sections = await getMenuSections('appetizers-sides');
+
+const addOns = ['Meat', 'Pico de gallo', 'Guacamole', 'Sour cream', 'Cheese (tacos only)'];
+
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    title="Appetizers & Sides in Wahiawa & Kapolei"
+    content="Looking for something to enjoy alongside your favorite Mexican dish? Explore the appetizers and sides at Taqueria El Ranchero.<br /><br />Choose from freshly made Guacamole, Chorizo Queso or Bean Dip, or add a side of pico de gallo, queso sauce, rice or beans to your meal."
+    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
+  />
+
+  <MenuItemsSection id="appetizers" tone="page" title="Explore Our Appetizers" items={sections.appetizers} />
+  <MenuItemsSection id="sides" tone="card" title="Explore Our Sides" intro="Looking for something extra to go with your meal? El Ranchero offers the following sides." items={sections.sides} />
+
+  <TextSplit id="add-ons" heading="Add-Ons for Your Order">
+    <div class="flex flex-col gap-6">
+      <Text variant="body-lg" color="default">
+        Want to customize your meal? Depending on the dish, El Ranchero’s listed add-on options include:
+      </Text>
+      <ul class="flex list-disc flex-col gap-2 pl-5 marker:text-accent">
+        {addOns.map((addOn) => (
+          <li>
+            <Text as="span" color="default">{addOn}</Text>
+          </li>
+        ))}
+      </ul>
+      <Text color="default">
+        Available add-ons depend on the menu item. Check the options offered when placing your order.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <Locations
+    id="order"
+    variant="order"
+    eyebrow=""
+    title="Order From Your Nearest El Ranchero"
+    subtitle="Both El Ranchero locations serve the same appetizers and sides menu. Choose your preferred restaurant to check available takeout options and order through DoorDash."
+    locations={orderLocations}
+    footnote={locationsFootnote}
+  />
+
+  <MenuCategories
+    id="more-menu"
+    tone="page"
+    title="Explore More of Our Menu"
+    subtitle="Looking for something else? Explore more of Taqueria El Ranchero’s menu, from Mexican breakfast and burritos to tacos, entrées, drinks and more."
+    excludeHref="/menu/appetizers-sides"
+    ctaText="View Full Menu"
+    ctaHref="/menu"
+  />
+
+  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
+</PageLayout>

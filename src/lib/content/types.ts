@@ -7,70 +7,39 @@ export interface ContentImage {
 
 export interface HomepageImages {
   hero?: ContentImage;
-  localSourcing?: ContentImage;
-  locations?: ContentImage;
+  breakfast?: ContentImage;
+  catering?: ContentImage;
+  privateEvents?: ContentImage;
 }
 
 export interface AboutImages {
   hero?: ContentImage;
-  story?: ContentImage;
-  sustainability?: ContentImage;
-  vendors?: ContentImage;
+  madeFreshDaily?: ContentImage;
+  murals?: ContentImage;
+  givingBack?: ContentImage;
 }
 
 export interface CateringImages {
   menu?: ContentImage;
-  corporate?: ContentImage;
-  officeLunch?: ContentImage;
-  meetings?: ContentImage;
-  events?: ContentImage;
-  largeGroups?: ContentImage;
 }
 
 export interface LocationImages {
   directory?: ContentImage;
-  kailua?: ContentImage;
-  kahala?: ContentImage;
-  kaneohe?: ContentImage;
+  wahiawa?: ContentImage;
   kapolei?: ContentImage;
-  mililani?: ContentImage;
-  pearlridge?: ContentImage;
-}
-
-export interface IngredientsImages {
-  hero?: ContentImage;
-  freshLocalProduce?: ContentImage;
 }
 
 export interface MenuPagesImages {
-  // Menu Hub
   menuHubHero?: ContentImage;
-  // Salads
-  saladsHero?: ContentImage;
-  saladsIngredients?: ContentImage;
-  // Wraps & Subs
-  wrapsHero?: ContentImage;
-  wrapsIngredients?: ContentImage;
-  // Soups
-  soupsHero?: ContentImage;
-  soupsIngredients?: ContentImage;
-  // Drinks
+  breakfastHero?: ContentImage;
+  burritosHero?: ContentImage;
+  tacosHero?: ContentImage;
+  entreesHero?: ContentImage;
+  quesadillasNachosHero?: ContentImage;
+  specialsHero?: ContentImage;
+  appetizersSidesHero?: ContentImage;
+  kidsHero?: ContentImage;
   drinksHero?: ContentImage;
-  drinksIngredients?: ContentImage;
-  // Vegan
-  veganIngredients?: ContentImage;
-  // Vegetarian
-  vegetarianHero?: ContentImage;
-  vegetarianIngredients?: ContentImage;
-  // Healthy Options
-  healthyOptionsHero?: ContentImage;
-  healthyOptionsIngredients?: ContentImage;
-  // Kids
-  kidsIngredients?: ContentImage;
-  // Design Your Own
-  designYourOwnHero?: ContentImage;
-  designYourOwnBuild?: ContentImage;
-  designYourOwnQuality?: ContentImage;
 }
 
 // ─── Navigation ───────────────────────────────────────────────────────────────
@@ -136,7 +105,10 @@ export interface NavigationContent {
 export interface MenuItem {
   title: string;
   slug?: string;
-  description?: string;
+  /** One paragraph, or several. */
+  description?: string | string[];
+  /** Which group on the category page the dish belongs to (see menuSections.ts). */
+  section?: string;
   badge?: string;
   note?: string;
   image?: ContentImage;
@@ -147,7 +119,14 @@ export interface MenuCategory {
   slug?: string;
   href?: string;
   description?: string;
+  /** Desktop column span (out of 12) of the card on the Menu hub. */
+  hubSpan?: 4 | 6;
   items: MenuItem[];
+}
+
+export interface MeatOption {
+  name: string;
+  description: string;
 }
 
 // ─── Shared CMS sections (blog articles) ───────────────────────────────────────
@@ -408,8 +387,8 @@ export interface Testimonial {
   _id: string;
   quote: string;
   name: string;
-  age?: number;
+  /** Shown under the name, e.g. "Wahiawa". */
   location?: string;
-  tenure: string;
+  platform: 'google' | 'yelp';
   order: number;
 }

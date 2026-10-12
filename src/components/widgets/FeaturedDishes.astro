@@ -11,13 +11,17 @@ import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
 
 export interface FeaturedDish {
   title: string;
-  description: string;
+  /** One paragraph, or several. */
+  description: string | string[];
+  /** Makes the whole tile a link to the matching menu page. */
+  href?: string;
 }
 
 export interface Props {
   eyebrow?: string;
   title?: string;
-  subtitle?: string;
+  /** One paragraph, or several. */
+  subtitle?: string | string[];
   ctaText?: string;
   ctaHref?: string;
   dishes?: FeaturedDish[];
@@ -47,6 +51,9 @@ const {
   id,
 } = Astro.props;
 
+const paragraphs = (value?: string | string[]) =>
+  (value === undefined ? [] : Array.isArray(value) ? value : [value]).filter(Boolean);
+const subtitleParagraphs = paragraphs(subtitle);
 ---
 
 <section
@@ -55,32 +62,49 @@ const {
 >
 
 
-  <div class="relative z-[1] mx-auto flex w-full max-w-container flex-col gap-10 px-5 pb-10 pt-16 sm:px-8 md:gap-16 md:px-16 md:pb-16 md:pt-[120px]">
+  <div class="relative z-[1] mx-auto flex w-full max-w-container flex-col gap-10 px-5 py-16 sm:px-8 md:gap-16 md:px-16 md:py-[120px]">
     <div class="flex w-full min-w-0 flex-col items-start justify-between gap-6 md:flex-row md:items-center">
       <div class="flex min-w-0 max-w-[822px] flex-1 flex-col items-start gap-6">
         {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
         {title && <Heading variant="h2">{title}</Heading>}
-        {subtitle && (
-          <Text variant="body-lg" color="inherit" class="text-heading">{subtitle}</Text>
-        )}
+        {subtitleParagraphs.map((paragraph) => (
+          <Text variant="body-lg" color="inherit" class="text-heading">{paragraph}</Text>
+        ))}
       </div>
       {ctaText && (
         <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} class="shrink-0" />
       )}
     </div>
 
-    <div class="grid w-full grid-cols-1 gap-8 md:grid-cols-3">
+    {/* md+: two shared rows (photo area / text panel). Each tile spans both via subgrid, so every
+        text panel is as tall as the tallest one, whatever the amount of copy. */}
+    <div class="grid w-full grid-cols-1 gap-8 md:grid-cols-3 md:grid-rows-[minmax(280px,1fr)_auto] md:gap-y-0">
       {
-        dishes.map((dish) => (
-          <article class="relative flex w-full flex-col overflow-hidden" style="aspect-ratio: 457 / 514">
+        dishes.map((dish) => {
+          const Tile = dish.href ? 'a' : 'article';
+          return (
+          <Tile
+            href={dish.href}
+            class:list={[
+              'relative flex min-h-[420px] w-full flex-col overflow-hidden md:row-span-2 md:grid md:min-h-0 md:grid-rows-subgrid',
+              dish.href && 'group',
+            ]}
+          >
             <!-- TODO: replace with <Image> when asset is ready -->
-            <HeroImagePlaceholder fill class="absolute inset-0" label={`${dish.title} placeholder`} />
-            <div class="relative z-[1] flex w-full flex-col items-center justify-center gap-2 bg-black/30 px-4 py-6 text-center backdrop-blur-[5px]">
+            <HeroImagePlaceholder
+              fill
+              class="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
+              label={`${dish.title} placeholder`}
+            />
+            <div class="relative z-[1] mt-auto flex w-full flex-col items-start justify-start gap-2 md:row-start-2 md:mt-0 bg-black/50 px-6 py-6 text-left backdrop-blur-[5px]">
               <Heading variant="h3" color="white">{dish.title}</Heading>
-              <Text color="inherit" class="text-contrast">{dish.description}</Text>
+              {paragraphs(dish.description).map((paragraph) => (
+                <Text color="inherit" class="text-contrast">{paragraph}</Text>
+              ))}
             </div>
-          </article>
-        ))
+          </Tile>
+          );
+        })
       }
     </div>
   </div>

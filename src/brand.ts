@@ -16,9 +16,11 @@ export const brand = {
   fonts: {
     /** Headings, buttons, eyebrows, ticker, quotes. */
     heading: {
-      name: 'Cinzel',
-      cssVariable: '--font-cinzel',
+      name: 'Fraunces',
+      cssVariable: '--font-fraunces',
       provider: 'google' as const,
+      /** Weight used by h1–h4, eyebrows and display type. */
+      displayWeight: '600',
       weights: ['400', '500', '600', '700'] as string[],
       styles: ['normal'] as string[],
       subsets: ['latin'] as string[],
@@ -26,8 +28,8 @@ export const brand = {
     },
     /** Body copy and UI text. */
     body: {
-      name: 'Plus Jakarta Sans',
-      cssVariable: '--font-plus-jakarta-sans',
+      name: 'Figtree',
+      cssVariable: '--font-figtree',
       provider: 'google' as const,
       weights: ['400', '500', '600', '700'] as string[],
       styles: ['normal'] as string[],
@@ -80,22 +82,23 @@ export const brand = {
   type: {
     /**
      * Style Guide 110:2377 (desktop). No mobile type in the file —
-     * mobile sizes are an optical scale (not a flat %), so Cinzel
+     * mobile sizes are an optical scale (not a flat %), so Fraunces
      * still has a clear h1 > h2 > h3 step on a 390px screen.
-     * Faces: headings, button, tag/accent/quote = Cinzel; body = Plus Jakarta Sans.
+     * Faces: headings, tag/accent/quote = Fraunces; body and buttons = Figtree.
      */
-    h1: { size: '72px', mobile: '40px', lineHeight: '1', tracking: '0' },
-    h2: { size: '52px', mobile: '28px', lineHeight: '1', tracking: '0' },
-    h3: { size: '26px', mobile: '22px', lineHeight: '1', tracking: '0' },
+    h1: { size: '72px', mobile: '40px', lineHeight: '1.05', tracking: '-0.01em' },
+    h2: { size: '52px', mobile: '28px', lineHeight: '1.1', tracking: '-0.01em' },
+    h3: { size: '26px', mobile: '22px', lineHeight: '1.2', tracking: '0' },
     /** Extra — not in the Style Guide. */
-    h4: { size: '24px', mobile: '18px', lineHeight: '1', tracking: '0' },
-    body: { size: '14px', mobile: '14px', lineHeight: '1.3', tracking: '-0.01em' },
-    bodyLg: { size: '16px', mobile: '15px', lineHeight: '1.3', tracking: '-0.01em' },
-    button: { size: '14px', mobile: '14px', lineHeight: '1', tracking: '0' },
-    /** Figma `tag`; bumped slightly for retained cursive section labels. */
-    eyebrow: { size: '19px', mobile: '19px', lineHeight: '1', tracking: '0' },
-    small: { size: '12px', mobile: '12px', lineHeight: '1.3', tracking: '-0.01em' },
-    caption: { size: '11px', mobile: '11px', lineHeight: '1.3', tracking: '0' },
+    h4: { size: '24px', mobile: '18px', lineHeight: '1.2', tracking: '0' },
+    /** Roomier than the Style Guide (14/1.3, -1%): Figtree reads best at 16px / 1.6 with no negative tracking. */
+    body: { size: '16px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
+    bodyLg: { size: '18px', mobile: '17px', lineHeight: '1.6', tracking: '0' },
+    button: { size: '14px', mobile: '14px', lineHeight: '1', tracking: '0.04em' },
+    /** Figma `tag`; Fraunces display weight. */
+    eyebrow: { size: '16px', mobile: '15px', lineHeight: '1.2', tracking: '0.02em' },
+    small: { size: '14px', mobile: '14px', lineHeight: '1.55', tracking: '0' },
+    caption: { size: '12px', mobile: '12px', lineHeight: '1.4', tracking: '0' },
     /** Footer column titles — extra, not in the Style Guide. */
     label: { size: '18px', mobile: '16px', lineHeight: '1', tracking: '0.06em' },
     /** Figma `accent`. */
@@ -176,6 +179,12 @@ function ctaButtonVars(c: Brand['colors']): string {
   return [primary, secondary, ghostLight, ghostDark].join('');
 }
 
+/** Defines the font's CSS variable (loaded from Google Fonts in Layout.astro). */
+function fontFamilyVar(font: Brand['fonts']['heading'] | Brand['fonts']['body']): string {
+  const stack = [`'${font.name}'`, ...font.fallbacks].join(', ');
+  return `${font.cssVariable}: ${stack};`;
+}
+
 function rootVars(b: Brand): string {
   const { colors: c, fonts: f, radius: r, type: t } = b;
   const accent = rgb(c.accent);
@@ -184,12 +193,16 @@ function rootVars(b: Brand): string {
   const muted = rgb(c.muted);
 
   return `
+    ${fontFamilyVar(f.heading)}
+    ${fontFamilyVar(f.body)}
     --aw-font-sans: var(${f.body.cssVariable});
     --aw-font-serif: var(${f.heading.cssVariable});
     --aw-font-heading: var(${f.heading.cssVariable});
     --aw-font-script: var(${f.heading.cssVariable});
     --aw-font-rough: var(${f.heading.cssVariable});
+    --aw-weight-heading: ${f.heading.displayWeight};
 
+    --aw-tracking-heading: ${t.h2.tracking};
     --aw-text-h1: ${t.h1.size};
     --aw-text-h1-mobile: ${t.h1.mobile};
     --aw-leading-h1: ${t.h1.lineHeight};
@@ -210,6 +223,7 @@ function rootVars(b: Brand): string {
     --aw-text-body-lg-mobile: ${t.bodyLg.mobile};
     --aw-tracking-body-lg: ${t.bodyLg.tracking};
     --aw-text-button: ${t.button.size};
+    --aw-tracking-button: ${t.button.tracking};
     --aw-text-eyebrow: ${t.eyebrow.size};
     --aw-text-eyebrow-mobile: ${t.eyebrow.mobile};
     --aw-tracking-eyebrow: ${t.eyebrow.tracking};
@@ -383,6 +397,14 @@ export function brandStylesheet(b: Brand = brand): string {
     color: snow;
   }
 }`;
+}
+
+/** Google Fonts stylesheet URL for the heading + body families (no font files kept in the repo). */
+export function brandGoogleFontsHref(): string {
+  const { heading, body } = brand.fonts;
+  const family = (font: Brand['fonts']['heading'] | Brand['fonts']['body']) =>
+    `family=${font.name.replace(/ /g, '+')}:wght@${[...font.weights].sort().join(';')}`;
+  return `https://fonts.googleapis.com/css2?${family(heading)}&${family(body)}&display=swap`;
 }
 
 /** Astro Fonts API entries — used by astro.config.ts and Layout.astro. */

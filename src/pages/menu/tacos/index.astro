@@ -1,0 +1,72 @@
+---
+/**
+ * Tacos & Birria — copy from pages-content/Menu Pages/_ menu_tacos - Tacos & Birria.docx.
+ * Composes shared widgets only. Photos are grey placeholders until the
+ * client photography pass.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
+import OptionsTable from '~/components/widgets/OptionsTable.astro';
+import Locations from '~/components/widgets/Locations.astro';
+import MenuCategories from '~/components/widgets/MenuCategories.astro';
+import Note from '~/components/widgets/Note.astro';
+import { PRIMARY_CTA_HREF } from '~/config/cta';
+import { getMenuSections, getMeatOptions } from '~/lib/content';
+import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
+
+const metadata = {
+  title: 'Tacos & Birria Tacos in Wahiawa & Kapolei | El Ranchero',
+  description:
+    "Explore tacos, birria tacos and Mulitas de Birria at El Ranchero in Wahiawa and Kapolei. Choose from meat, veggie and seafood taco options.",
+  ignoreTitleTemplate: true,
+};
+
+const sections = await getMenuSections('tacos');
+const meatOptions = await getMeatOptions();
+
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    title="Tacos & Birria in Wahiawa & Kapolei"
+    content="Explore the taco menu at Taqueria El Ranchero, inspired by the taquerias of Northern California. Choose from our traditional Taco with onion, cilantro and salsa, or explore options with beans, cheese, seafood and more.<br /><br />Looking for birria tacos? We also serve Tacos de Birria and Mulitas de Birria at both our Wahiawa and Kapolei restaurants."
+    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
+  />
+
+  <MenuItemsSection id="taco-menu" tone="page" title="Explore Our Tacos" intro="From a traditional Taco to veggie and seafood options, explore the different tacos available at El Ranchero." items={sections.main} />
+  <MenuItemsSection id="birria" tone="card" title="Birria Tacos & Mulitas de Birria" intro="Looking for birria? Explore our birria options, each listed as a three-piece order on our menu." items={sections.birria} />
+
+  <OptionsTable
+    id="choose-your-meat"
+    tone="page"
+    heading="Choose Your Meat"
+    intro="For tacos that offer a choice of meat, El Ranchero’s menu includes the following options:"
+    note="These choices apply to tacos listed with a choice of meat. The Seafood Taco offers a choice of shrimp or fish."
+    rows={meatOptions}
+  />
+
+  <Locations
+    id="order"
+    variant="order"
+    eyebrow=""
+    title="Order From Your Nearest El Ranchero"
+    subtitle="Both El Ranchero locations serve the same taco and birria menu. Choose your preferred restaurant to check available takeout options through DoorDash."
+    locations={orderLocations}
+    footnote={locationsFootnote}
+  />
+
+  <MenuCategories
+    id="more-menu"
+    tone="page"
+    title="Explore More of Our Menu"
+    subtitle="Looking for something else? Explore more of Taqueria El Ranchero’s menu, from Mexican breakfast and burritos to entrées, appetizers, drinks and more."
+    excludeHref="/menu/tacos"
+    ctaText="View Full Menu"
+    ctaHref="/menu"
+  />
+
+  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
+</PageLayout>

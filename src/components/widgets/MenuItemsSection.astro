@@ -1,7 +1,9 @@
 ---
 /**
- * MenuItemsSection — restaurant menu list for location pages and category pages.
- * Stays a vertical list so 4 items and 20 items use the same rhythm.
+ * MenuItemsSection — restaurant menu item grid for category pages.
+ * One group of dishes under a heading: photo placeholder, name, description.
+ * Use one section per group (e.g. "Signature Margaritas", "Aguas Frescas & Other Drinks").
+ * Cards are flex columns, so every card in a row has the same height.
  */
 import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
@@ -12,7 +14,8 @@ import type { ContentImage } from '~/lib/content/types';
 
 export interface MenuItem {
   title: string;
-  description?: string;
+  /** One paragraph, or several. */
+  description?: string | string[];
   badge?: string;
   note?: string;
   image?: ContentImage;
@@ -21,38 +24,48 @@ export interface MenuItem {
 export interface Props {
   eyebrow?: string;
   title: string;
-  intro?: string;
+  /** One paragraph, or several. */
+  intro?: string | string[];
   items?: MenuItem[];
+  /** Small note under the grid (e.g. "Menu items and availability may change."). */
+  footnote?: string;
+  /** Section background: page (default) or card (tinted). */
+  tone?: 'page' | 'card';
+  /** Desktop columns: 3 (default) or 4. */
+  columns?: 3 | 4;
   ctaText?: string;
   ctaHref?: string;
   id?: string;
 }
 
-const { eyebrow, title, intro, items = [], ctaText, ctaHref, id } = Astro.props;
+const { eyebrow, title, intro, items = [], footnote, tone = 'page', columns = 3, ctaText, ctaHref, id } = Astro.props;
+
+const paragraphs = (value?: string | string[]) => (value === undefined ? [] : Array.isArray(value) ? value : [value]);
 ---
 
-<section {...id ? { id } : {}} class="not-prose relative w-full scroll-mt-24 overflow-hidden bg-page md:scroll-mt-32">
-  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-  </div>
-
+<section
+  {...id ? { id } : {}}
+  class:list={[
+    'not-prose relative w-full scroll-mt-24 overflow-hidden md:scroll-mt-32',
+    tone === 'card' ? 'bg-card' : 'bg-page',
+  ]}
+>
   <div class="relative z-[1] mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
     <div class="mb-10 flex max-w-4xl flex-col gap-6 md:mb-14">
       {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
       <Heading variant="h2">{title}</Heading>
-      {
-        intro && (
-          <Text variant="body-lg" color="default">
-            {intro}
-          </Text>
-        )
-      }
+      {paragraphs(intro).map((paragraph) => (
+        <Text variant="body-lg" color="default">
+          {paragraph}
+        </Text>
+      ))}
     </div>
 
     {
       items.length > 0 && (
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div class:list={['grid grid-cols-1 gap-4 md:grid-cols-2', columns === 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-3']}>
           {items.map((item) => (
-            <article class="flex h-full flex-col overflow-hidden bg-card">
+            <article class:list={['flex h-full flex-col overflow-hidden', tone === 'card' ? 'bg-page' : 'bg-card']}>
               <div class="relative w-full bg-section-grey" style="aspect-ratio: 4 / 3;">
                 {item.image?.src ? (
                   <Image
@@ -79,20 +92,30 @@ const { eyebrow, title, intro, items = [], ctaText, ctaHref, id } = Astro.props;
               </div>
               <div class="flex flex-1 flex-col gap-3 px-5 py-5">
                 <div class="flex items-center justify-between gap-3">
-                  <h3 class="font-rough text-h4 font-normal leading-none text-heading">{item.title}</h3>
+                  <h3 class="font-rough text-h4 font-normal leading-tight text-heading">{item.title}</h3>
                   {item.note && (
                     <span class="shrink-0 text-right font-sans text-[11px] leading-snug tracking-[0.02em] text-section-dark">
                       {item.note}
                     </span>
                   )}
                 </div>
-                {item.description && (
-                  <p class="font-sans text-body leading-[1.45] tracking-[-0.01em] text-muted">{item.description}</p>
-                )}
+                {paragraphs(item.description).map((paragraph) => (
+                  <Text variant="body" color="default">
+                    {paragraph}
+                  </Text>
+                ))}
               </div>
             </article>
           ))}
         </div>
+      )
+    }
+
+    {
+      footnote && (
+        <Text variant="small" color="muted" class="mt-8">
+          {footnote}
+        </Text>
       )
     }
 

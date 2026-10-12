@@ -1,0 +1,66 @@
+---
+/**
+ * InstagramFeed — social feed band: heading + intro + "view on Instagram" button
+ * above a feed area. Pass a feed embed via the default slot; without one, grey
+ * tiles hold the space until the embed (Behold, Elfsight, …) is chosen.
+ */
+import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
+
+export interface Props {
+  eyebrow?: string;
+  heading: string;
+  text?: string;
+  ctaText: string;
+  ctaHref: string;
+  /** Accessible label for the feed area. */
+  feedLabel?: string;
+  tone?: 'page' | 'card';
+  id?: string;
+}
+
+const { eyebrow, heading, text, ctaText, ctaHref, feedLabel = 'Instagram feed', tone = 'page', id } = Astro.props;
+const hasFeed = Astro.slots.has('default');
+const feedHtml = hasFeed ? await Astro.slots.render('default') : '';
+---
+
+<section {...id ? { id } : {}} class:list={['not-prose w-full', tone === 'card' ? 'bg-card' : 'bg-page']}>
+  <div class="mx-auto flex w-full max-w-container flex-col gap-12 px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
+    <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between md:gap-[120px]">
+      <div class="flex max-w-[640px] flex-col gap-4">
+        {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
+        <Heading variant="h2">{heading}</Heading>
+        {
+          text && (
+            <Text variant="body" color="default">
+              {text}
+            </Text>
+          )
+        }
+      </div>
+      <Button
+        variant="primary"
+        text={ctaText}
+        href={ctaHref}
+        target="_blank"
+        hideNote={true}
+        class="self-start md:shrink-0"
+      />
+    </div>
+
+    {
+      hasFeed ? (
+        <div aria-label={feedLabel} set:html={feedHtml} />
+      ) : (
+        /* TODO: replace with the @rancheroevents Instagram embed when the feed provider is chosen */
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6" aria-hidden="true">
+          {Array.from({ length: 6 }).map(() => (
+            <HeroImagePlaceholder fill label="Instagram post placeholder" style="aspect-ratio: 1 / 1;" />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

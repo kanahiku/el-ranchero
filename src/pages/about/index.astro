@@ -1,138 +1,144 @@
 ---
+/**
+ * About / Our Story — copy from pages-content/_ about - Our Story.docx.
+ * Composes shared widgets only. Photos are grey placeholders until the
+ * client photography pass (see "Image and Visual Recommendations" in the doc).
+ */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
 import TextSplit from '~/components/widgets/TextSplit.astro';
-import CTABanner from '~/components/widgets/CTABanner.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
-import { getSanityAboutImages } from '~/lib/content/sanity';
-
-const aboutImages = await getSanityAboutImages();
 
 const metadata = {
-  title: 'About El Ranchero | Our Story & Local Sourcing on Oahu',
+  title: 'Our Story | Taqueria El Ranchero in Oʻahu',
   description:
-    'Learn about El Ranchero. Founded in Kailua in 2006, we serve fresh, locally sourced food across six Oahu locations. Read our story.',
+    'Learn about Taqueria El Ranchero’s Northern California taqueria influence, ranchero-style dishes, daily preparation, and two Oʻahu locations.',
   ignoreTitleTemplate: true,
 };
+
+const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
 ---
 
 <PageLayout metadata={metadata}>
-  {/* ── Page hero ─────────────────────────────────────────── */}
+  {/* ── Hero — placeholder: restaurant exterior (Exterior Daytime 001) ── */}
   <Hero2
     variant="split-dark"
     overlapHeader={false}
-    title="About El Ranchero"
-    content="Kailua-born since 2006. Six locations across Oahu. Twenty years of fresh, locally sourced food made with ingredients you can trust."
-    image={aboutImages.hero}
-    imageFit="contain"
-    actions={[
-      { variant: 'primary', text: 'View Menu', href: '/menu' },
-      { variant: 'ghost-dark', text: 'Find a Location', href: '/locations' },
-    ]}
+    title="About Taqueria El Ranchero"
+    content="At Taqueria El Ranchero, we bring Northern California-inspired Mexican taqueria cooking to Oʻahu. Our approach centers on ranchero-style food, fresh daily preparation and meals made for everyday dining.<br /><br />From our original restaurant in Wahiawa to our newer location in Kapolei, we focus on the straightforward cooking that defines our taqueria style."
   />
 
-  {/* ── 1. Our Mission ────────────────────────────────────── */}
-  <TextSplit heading="Our Mission">
+  {/* ── Our Story ─────────────────────────────────────────── */}
+  <TextSplit id="our-story" heading="Our Story">
     <div class="flex flex-col gap-6">
-      <blockquote class="border-l-4 border-accent pl-6">
-        <Text variant="body-lg" color="default" class="italic">
-          "El Ranchero was established to serve fresh, locally grown food of the highest quality at affordable prices.
-          We remain dedicated to supporting local farmers and fishermen while providing our customers with fresh and
-          delicious ingredients."
-        </Text>
-      </blockquote>
-      <Text variant="body" color="muted">
-        That commitment has guided every decision we have made since May 2006 — from the produce we source to the
-        dressings we make from scratch every morning.
+      <Text variant="body-lg" color="default">
+        Taqueria El Ranchero takes its inspiration from the Mexican taquerias of Northern California, where familiar
+        dishes and simple preparation are central to the experience.
+      </Text>
+      <Text variant="body" color="default">
+        Our first restaurant opened in Wahiawa, serving the surrounding neighborhood and people traveling through
+        Central Oʻahu. We later expanded to Kapolei at Ka Makana Aliʻi, bringing the same menu to a full-service dining
+        setting.
+      </Text>
+      <Text variant="body" color="default">
+        Today, both restaurants share the same approach to food. Whether you’re visiting our
+        <a href="/locations/wahiawa" class={linkClass}>Wahiawa location</a> or dining with us in
+        <a href="/locations/kapolei" class={linkClass}>Kapolei</a>, you’ll find the tacos, burritos and ranchero-style
+        dishes that define El Ranchero.
       </Text>
     </div>
   </TextSplit>
 
-  {/* ── 2. Our Story ──────────────────────────────────────── */}
-  <TextSplit
-    heading="Our Story"
-    withImage
-    image={aboutImages.story}
-    imageAspect="4 / 5"
-    class="bg-card"
-  >
+  {/* ── Ranchero Style ────────────────────────────────────── */}
+  <TextSplit id="ranchero-style" heading="Ranchero Style" class="bg-card">
     <div class="flex flex-col gap-6">
       <Text variant="body-lg" color="default">
-        El Ranchero opened its first location at Kailua Shopping Center in May 2006. From day one, the goal was
-        straightforward: give the community a place to eat food that is genuinely good for you, made with ingredients
-        you can trust, at prices that make that easy to do every day.
+        The word ranchero refers to ranch-style cooking. For us, that means straightforward meals built around familiar
+        ingredients such as chicken, beef, pork, rice and beans.
       </Text>
       <Text variant="body" color="default">
-        Twenty years later, that original promise still runs the kitchen. What started as a single neighborhood spot has
-        grown into six locations across Oahu — each one serving the same scratch-made dressings, the same never-frozen
-        local ahi, and the same produce sourced as close to home as possible.
+        Our food follows a Northern California taqueria approach rather than Tex-Mex or fusion cooking. We focus on
+        recognizable dishes prepared with traditional combinations of meats, vegetables, tortillas and salsa.
       </Text>
       <Text variant="body" color="default">
-        In 2024, the Star Advertisers Peoples Choice Awards named us <strong>First Place, Hawaiis Best</strong>.
-        We are proud of it — and more proud that it came from the community we have been serving since the beginning.
-      </Text>
-      <Text variant="body-lg" color="muted" class="text-sm italic">
-        {/* TODO: Founder story — additional details coming soon */}
-        Founder story coming soon.
+        That approach runs throughout our menu, from everyday tacos and burritos to our signature
+        <a href="/menu/entrees" class={linkClass}>Molcajete</a>, which brings grilled meats and vegetables together in
+        a sizzling volcanic stone mortar.
       </Text>
     </div>
   </TextSplit>
 
-  {/* ── 3. Sustainability — image left / text right ──────────── */}
-  <TextSplit
-    heading="Sustainability"
-    withImage
-    image={aboutImages.sustainability}
-    imageReverse
-    imageAspect="4 / 3"
-  >
+  {/* ── Made Fresh Daily — placeholder: morning grill-preparation photo ── */}
+  <TextSplit id="made-fresh-daily" heading="Made Fresh Daily" withImage imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
-        The most straightforward thing we do for sustainability is buy local — on a standing weekly order, not as a
-        trend. Hauula tomatoes come in every week from a single Oahu farm. Our produce comes from island growers
-        wherever the season and supply hold up. The ahi on your plate was never frozen and came from Hawaii waters.
+      <Text variant="body-lg" color="default">Fresh preparation is part of our routine at El Ranchero.</Text>
+      <Text variant="body" color="default">
+        Each morning, our kitchen teams grill meats over an open-fire grill and prepare fresh vegetables and herbs. Our
+        salsas are made in-house, ready to accompany the dishes served throughout the day.
       </Text>
       <Text variant="body" color="default">
-        Keeping the supply chain short means less transport, less cold-chain energy, and money that stays in the state.
-        It also means the food is fresher when it reaches your bowl.
+        When you place an order, we assemble your food using ingredients prepared earlier that day. This allows us to
+        serve tacos, burritos and other menu favorites efficiently while keeping daily preparation at the center of how
+        we cook.
       </Text>
-      {/* TODO: Packaging — details to be confirmed and added here */}
-      <Text variant="body" color="muted" class="text-sm italic"> Packaging details coming soon. </Text>
-      <div>
-        <Button variant="primary" text="See Our Ingredients" href="/ingredients" hideNote={true} />
+    </div>
+  </TextSplit>
+
+  {/* ── Local Partners ────────────────────────────────────── */}
+  <TextSplit id="local-partners" heading="Local Partners" class="bg-card">
+    <div class="flex flex-col gap-6">
+      <Text variant="body-lg" color="default">
+        Our daily preparation starts with ingredients supplied through local food distributors.
+      </Text>
+      <Text variant="body" color="default">
+        We receive meats through a local distributor and work with a Hawaiʻi produce supplier for vegetables and other
+        produce. From there, our kitchen teams prepare the ingredients used in our menu each day.
+      </Text>
+      <Text variant="body" color="default">
+        These supplier relationships support our approach to serving freshly prepared food at both El Ranchero
+        locations.
+      </Text>
+    </div>
+  </TextSplit>
+
+  {/* ── The Murals — placeholder: chalk-art mural (Artwork Reference 023) ── */}
+  <TextSplit id="the-murals" heading="The Murals" withImage imageReverse imageAspect="4 / 3">
+    <div class="flex flex-col gap-6">
+      <Text variant="body-lg" color="default">
+        The chalk-art murals at El Ranchero are a visual connection between our two restaurants.
+      </Text>
+      <Text variant="body" color="default">
+        Our Wahiawa location has a rustic, neighborhood taqueria atmosphere, while Kapolei offers a sit-down dining
+        experience with table service and outdoor seating. Each restaurant has its own character, but the murals bring
+        a recognizable part of El Ranchero into both spaces.
+      </Text>
+      <Text variant="body" color="default">
+        They’re part of the setting guests experience when they visit us for a meal or spend an evening at the
+        restaurant.
+      </Text>
+    </div>
+  </TextSplit>
+
+  {/* ── Giving Back — placeholder: restaurant interior (Night Interiors and Exteriors 003) ── */}
+  <TextSplit id="giving-back" heading="Giving Back" withImage imageAspect="4 / 3" class="bg-card">
+    <div class="flex flex-col gap-6">
+      <Text variant="body-lg" color="default">
+        Our connection to Oʻahu goes beyond the food we serve. El Ranchero is also a gathering place for the island’s
+        Latino community, with music and events that welcome everyone.
+      </Text>
+      <Text variant="body" color="default">
+        Our regular programming includes karaoke, Latin Night and live concerts featuring Mexican bands. These
+        gatherings bring people together around music and shared cultural experiences.
+      </Text>
+      <Text variant="body" color="default">
+        You can explore our <a href="/events" class={linkClass}>weekly events and upcoming performances</a> to see
+        what’s happening at El Ranchero.
+      </Text>
+      <div class="flex flex-col gap-3 pt-2 sm:flex-row">
+        <Button variant="primary" text="Explore Our Menu" href="/menu" hideNote={true} />
+        <Button variant="ghost" tone="light" text="Find a Location" href="/locations" hideNote={true} />
       </div>
     </div>
   </TextSplit>
-
-  {/* ── 4. Our Vendors — text left / image right ─────────── */}
-  <TextSplit
-    heading="Our Vendors"
-    withImage
-    image={aboutImages.vendors}
-    imageAspect="4 / 3"
-    class="bg-section-grey"
-  >
-    <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
-        Every delivery of local ahi arrives with a lot number and the name of the catch vessel on the paperwork. We know
-        where the fish came from. That traceability is non-negotiable.
-      </Text>
-      <Text variant="body" color="default">
-        Our other key suppliers — produce, proteins, and pantry — are all confirmed and operating on standing orders.
-        We are not publishing names yet, but the sourcing page covers what is on your plate and where it comes from.
-      </Text>
-      <div>
-        <Button variant="primary" text="See Our Ingredients" href="/ingredients" hideNote={true} />
-      </div>
-    </div>
-  </TextSplit>
-
-  {/* ── Find a Location CTA ───────────────────────────────── */}
-  <CTABanner
-    title="Find a Location"
-    subtitle="Six neighborhood restaurants across Oahu. Come see us."
-    ctaText="Find a Location"
-    ctaHref="/locations"
-  />
 </PageLayout>

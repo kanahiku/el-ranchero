@@ -67,6 +67,30 @@
         "html": "string (set:html shorthand)"
       },
       "notes": "Style Guide 110:2377: body-lg=16 / body=14 / small=12 Host Grotesk, tracking -1%. button=14px Norca-Rough. color=white is text/contrast cream. Default color is muted (cacao); color=default is text/default cacao-brown."
+    },
+    {
+      "id": "A-05",
+      "name": "Bullet list",
+      "figmaNames": ["Bullet list", "List"],
+      "shape": "Plain list of short points with an accent dot marker, body type",
+      "component": "BulletList",
+      "import": "~/components/ui/BulletList.astro",
+      "props": {
+        "items": "string[]"
+      },
+      "notes": "Catering occasions and 'planning your order' lists."
+    },
+    {
+      "id": "A-06",
+      "name": "Bullet list",
+      "figmaNames": ["Bullet list", "List"],
+      "shape": "Plain list of short points with an accent dot marker, body type",
+      "component": "BulletList",
+      "import": "~/components/ui/BulletList.astro",
+      "props": {
+        "items": "string[]"
+      },
+      "notes": "Catering occasions and 'planning your order' lists."
     }
   ],
   "patterns": [
@@ -535,7 +559,7 @@
       "id": "P-45",
       "name": "Locations",
       "figmaNames": ["Six spots across Oahu", "Locations section", "59:155"],
-      "shape": "bg-page cream. 2-col: left = eyebrow+h2+body-lg+primary CTA then 2×2 blueberry location cards (name+address row + blueberry-light view-store button with pin icon) / right = square photo placeholder.",
+      "shape": "bg-page cream. 2-col: left = eyebrow+h2+body-lg+primary CTA then 2×2 blueberry location cards (name+address row + blueberry-light view-store button with pin icon) / right = square photo placeholder. variant=\"detailed\": photo + address + copy + hours + actions card per location. variant=\"order\": photo-less name / address / order-button cards + HTML footnote (menu pages).",
       "component": "Locations",
       "import": "~/components/widgets/Locations.astro",
       "props": {
@@ -694,19 +718,6 @@
       "notes": "Hub on /locations. Reuse on location subpages with excludeHref so the current store drops out. Card chrome matches homepage Locations (P-45). Do not list hours here."
     },
     {
-      "id": "P-54",
-      "name": "Catering sub-page nav",
-      "figmaNames": ["More Catering Options", "Catering cross-links"],
-      "shape": "Sage-grey band. Eyebrow + h3 heading + wrapping pill-link row, one pill per catering occasion. Suppresses current page via excludeHref.",
-      "component": "CateringSubNav",
-      "import": "~/components/widgets/CateringSubNav.astro",
-      "props": {
-        "excludeHref": "href of the current sub-page to omit from the list",
-        "id": "section anchor"
-      },
-      "notes": "Appears on all 7 catering sub-pages (corporate, office-lunches, meetings, events, parties, schools, large-groups). Always placed before FAQs."
-    },
-    {
       "id": "P-53",
       "name": "Store visit",
       "figmaNames": ["Location, Hours, and Contact", "Store details", "Google Maps"],
@@ -719,6 +730,42 @@
         "id": "section anchor"
       },
       "notes": "Used on location subpages. Hours live here, not in LocationDirectory. Pass mapsEmbedSrc on the store when the brief includes an embed URL."
+    },
+    {
+      "id": "P-56",
+      "name": "Options table",
+      "figmaNames": ["Choose Your Meat", "Options table"],
+      "shape": "Maroon-header table on cream rows. layout=split (left h2 + intro + footnote + link groups / right table) or stacked (heading block above full-width table, optional CTA). Cells can be links. tone=page|card.",
+      "component": "OptionsTable",
+      "import": "~/components/widgets/OptionsTable.astro",
+      "notes": "Choose Your Meat on menu pages (src/data/menu.ts meatOptions); weekly schedule, event details and More Events tables on /events/* (src/data/events.ts)."
+    },
+    {
+      "id": "P-57",
+      "name": "Note band",
+      "figmaNames": ["Food allergy information", "Notice band"],
+      "shape": "Full-width notice: top rule, h4 heading left, body right. tone=page|card.",
+      "component": "Note",
+      "import": "~/components/widgets/Note.astro",
+      "notes": "Food allergy notice at the end of every menu page (allergyNotice in src/data/menu.ts)."
+    },
+    {
+      "id": "P-58",
+      "name": "Instagram feed",
+      "figmaNames": ["Instagram feed", "Social feed"],
+      "shape": "Heading + intro + 'view on Instagram' button row above a 3-col feed area (grey tiles until an embed is slotted in).",
+      "component": "InstagramFeed",
+      "import": "~/components/widgets/InstagramFeed.astro",
+      "notes": "@rancheroevents feed on /events. Pass the embed via the default slot once the provider is chosen."
+    },
+    {
+      "id": "P-59",
+      "name": "Location maps",
+      "figmaNames": ["Catering in Wahiawa & Kapolei", "Location maps"],
+      "shape": "h2 + intro, then one card per restaurant side by side: name, address, visit button, embedded Google map. Optional footnote. tone=page|card.",
+      "component": "LocationMaps",
+      "import": "~/components/widgets/LocationMaps.astro",
+      "notes": "Catering page. Stores come from src/data/locations.ts."
     }
   ]
 }

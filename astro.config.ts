@@ -40,7 +40,6 @@ export default defineConfig({
 
   redirects: {
     '/our-locations': '/locations',
-    '/work-with-us': '/careers',
     '/terms-of-service': '/terms',
   },
 

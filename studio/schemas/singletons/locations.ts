@@ -24,13 +24,9 @@ export const locationsContent = defineType({
   type: 'document',
   icon: ImageIcon,
   fields: [
-    imageField('directoryImage', 'Locations directory hero image', 'Hero image for the main locations page.'),
-    imageField('kailuaImage', 'Kailua hero image', 'Hero image for the Kailua location page.'),
-    imageField('kahalaImage', 'Kahala hero image', 'Hero image for the Kahala location page.'),
-    imageField('kaneoheImage', 'Kaneohe hero image', 'Hero image for the Kaneohe location page.'),
+    imageField('directoryImage', 'Locations hub hero image', 'Hero image for the main Locations page.'),
+    imageField('wahiawaImage', 'Wahiawa hero image', 'Hero image for the Wahiawa location page.'),
     imageField('kapoleiImage', 'Kapolei hero image', 'Hero image for the Kapolei location page.'),
-    imageField('mililaniImage', 'Mililani hero image', 'Hero image for the Mililani location page.'),
-    imageField('pearlridgeImage', 'Pearlridge hero image', 'Hero image for the Pearlridge location page.'),
   ],
   preview: {
     select: { media: 'directoryImage' },

@@ -19,9 +19,11 @@
  */
 
 import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
 import googleIcon from '~/assets/images/google-icon.png';
 import yelpIcon from '~/assets/images/yelp-icon.png';
-import { sanityClient } from '~/lib/sanity/client';
+import { getTestimonials } from '~/lib/content';
 
 export type ReviewPlatform = 'google' | 'yelp';
 
@@ -35,32 +37,44 @@ export interface TestimonialItem {
 export interface Props {
   eyebrow?: string;
   heading?: string;
+  /** Optional line under the heading. */
+  subtitle?: string;
+  /** Optional small note under the cards. */
+  footnote?: string;
+  /** Optional buttons under the cards (e.g. "Read Google reviews"). External links open in a new tab. */
+  actions?: { text: string; href: string }[];
   /** Pass testimonials explicitly to skip the Sanity fetch (e.g. in Storybook/tests). */
   testimonials?: TestimonialItem[];
   id?: string;
 }
 
-const { eyebrow = 'Reviews', heading = 'Loved across the island.', testimonials: propTestimonials, id } = Astro.props;
+const {
+  eyebrow = 'Reviews',
+  heading = 'Loved across the island.',
+  subtitle,
+  footnote,
+  actions = [],
+  testimonials: propTestimonials,
+  id,
+} = Astro.props;
 
-// Fetch from Sanity; fall back to prop overrides if provided.
-let testimonials: TestimonialItem[] = propTestimonials ?? [];
+// Testimonials are managed in Sanity; props override them (Storybook/tests).
+const testimonials: TestimonialItem[] =
+  propTestimonials ??
+  (await getTestimonials()).map(({ quote, name, location, platform }) => ({
+    quote,
+    name,
+    location: location ?? '',
+    platform,
+  }));
 
-if (!propTestimonials) {
-  try {
-    const raw = await sanityClient.fetch<TestimonialItem[]>(
-      `*[_type == "testimonial"] | order(order asc, name asc) {
-        quote, name, location, platform
-      }`
-    );
-    if (raw && raw.length > 0) testimonials = raw;
-  } catch (e) {
-    // Sanity unreachable at build time — silently use empty array
-    console.warn('[Testimonials] Sanity fetch failed:', (e as Error).message);
-  }
-}
-
-// Duplicate for seamless loop
-const doubled = [...testimonials, ...testimonials];
+// Seamless loop: the track shows two identical halves and slides by exactly one half.
+// Each half must be wider than the widest screen (~2400px of 462px cards), so short
+// lists (a few reviews) are repeated until it is.
+const CARD_PITCH = 462;
+const repeatsPerHalf = testimonials.length ? Math.max(1, Math.ceil(2400 / (testimonials.length * CARD_PITCH))) : 0;
+const half = Array.from({ length: repeatsPerHalf }, () => testimonials).flat();
+const doubled = [...half, ...half];
 ---
 
 <section {...id ? { id } : {}} class="not-prose relative w-full overflow-hidden bg-page py-16 md:py-[120px]">
@@ -69,6 +83,13 @@ const doubled = [...testimonials, ...testimonials];
     <div class="flex flex-col items-center gap-6 text-center">
       {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
       {heading && <Heading variant="h2">{heading}</Heading>}
+      {
+        subtitle && (
+          <Text variant="body-lg" color="default" class="max-w-2xl">
+            {subtitle}
+          </Text>
+        )
+      }
     </div>
   </div>
 
@@ -139,6 +160,32 @@ const doubled = [...testimonials, ...testimonials];
       }
     </div>
   </div>
+
+  {
+    (footnote || actions.length > 0) && (
+      <div class="mx-auto mt-10 flex w-full max-w-container flex-col items-center gap-6 px-5 text-center sm:px-8 md:mt-14 md:px-16">
+        {footnote && (
+          <Text variant="small" color="muted" class="max-w-2xl">
+            {footnote}
+          </Text>
+        )}
+        {actions.length > 0 && (
+          <div class="flex flex-col items-center gap-3 sm:flex-row">
+            {actions.map((action) => (
+              <Button
+                variant="ghost"
+                tone="light"
+                text={action.text}
+                href={action.href}
+                target={/^https?:/.test(action.href) ? '_blank' : undefined}
+                hideNote={true}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
 </section>
 
 <style>

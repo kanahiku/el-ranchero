@@ -127,15 +127,24 @@ const textareaId = textarea?.name ?? 'message';
     return typeof value === 'string' ? value.trim() : '';
   }
 
+  /** Fields posted as their own JSON keys — everything else is folded into the message. */
+  const DEDICATED_FIELDS = new Set(['name', 'email', 'phone', 'message', 'website', 'disclaimer', 'cf-turnstile-response']);
+
+  function fieldLabel(form: HTMLFormElement, el: HTMLInputElement | HTMLSelectElement) {
+    const label = el.id ? form.querySelector<HTMLLabelElement>(`label[for="${el.id}"]`) : null;
+    return label?.textContent?.trim() || el.name;
+  }
+
   function composeMessage(form: HTMLFormElement, data: FormData) {
-    const zip = asText(data.get('zip'));
-    const topicField = form.querySelector<HTMLSelectElement>('[name="topic"]');
-    const topicValue = asText(data.get('topic'));
-    const topicLabel = topicField?.selectedOptions[0]?.text?.trim() || topicValue;
-    const message = asText(data.get('message'));
     const lines: string[] = [];
-    if (zip) lines.push(`ZIP: ${zip}`);
-    if (topicLabel) lines.push(`Topic: ${topicLabel}`);
+    form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[name], select[name]').forEach((el) => {
+      if (DEDICATED_FIELDS.has(el.name)) return;
+      const value = el instanceof HTMLSelectElement ? el.selectedOptions[0]?.text?.trim() : asText(data.get(el.name));
+      // An unselected <select> reports its placeholder option; skip it.
+      if (!value || (el instanceof HTMLSelectElement && !el.value)) return;
+      lines.push(`${fieldLabel(form, el)}: ${value}`);
+    });
+    const message = asText(data.get('message'));
     if (message) lines.push(message);
     return lines.join('\n\n') || 'Contact form submission';
   }

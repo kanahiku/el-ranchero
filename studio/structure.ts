@@ -7,7 +7,6 @@ const SINGLETONS: Record<string, string> = {
   aboutContent: 'singleton-about',
   cateringContent: 'singleton-catering',
   locationsContent: 'singleton-locations',
-  ingredientsContent: 'singleton-ingredients',
   menuPagesContent: 'singleton-menu-pages',
 };
 
@@ -40,10 +39,6 @@ export const structure = (S: StructureBuilder) =>
         .child(S.document().schemaType('locationsContent').documentId('singleton-locations').title('Locations')),
 
       S.listItem()
-        .title('Ingredients')
-        .child(S.document().schemaType('ingredientsContent').documentId('singleton-ingredients').title('Ingredients')),
-
-      S.listItem()
         .title('Menu Pages')
         .child(S.document().schemaType('menuPagesContent').documentId('singleton-menu-pages').title('Menu Pages')),
 
@@ -73,6 +68,14 @@ export const structure = (S: StructureBuilder) =>
                   S.documentTypeList('menuItem')
                     .title('Menu items')
                     .defaultOrdering([{ field: 'title', direction: 'asc' }])
+                ),
+              S.listItem()
+                .title('Meat options ("Choose Your Meat")')
+                .schemaType('meatOption')
+                .child(
+                  S.documentTypeList('meatOption')
+                    .title('Meat options')
+                    .defaultOrdering([{ field: 'order', direction: 'asc' }])
                 ),
             ])
         ),

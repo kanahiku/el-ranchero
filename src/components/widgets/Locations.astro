@@ -15,12 +15,30 @@ import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
 import { storeLocations } from '~/data/locations';
 import type { ContentImage } from '~/lib/content/types';
 
+export interface LocationAction {
+  text: string;
+  href: string;
+  variant?: 'primary' | 'ghost';
+}
+
 export interface Location {
   name: string;
   shopName: string;
   addressLine1: string;
   addressLine2: string;
   href?: string;
+  /** Detailed variant — card heading when it differs from `name` (e.g. an SEO heading). */
+  heading?: string;
+  /** Detailed variant — short line above the heading (e.g. "Our Original Neighborhood Taqueria"). */
+  tagline?: string;
+  /** Detailed variant — body paragraphs. */
+  description?: string[];
+  /** Detailed variant — hours lines, e.g. "Kitchen: 7 AM–10 PM daily". */
+  hours?: string[];
+  /** Detailed variant — buttons pinned to the bottom of the card. */
+  actions?: LocationAction[];
+  /** Detailed variant — photo for this location. Grey placeholder when omitted. */
+  image?: ContentImage;
 }
 
 export interface Props {
@@ -31,6 +49,14 @@ export interface Props {
   ctaHref?: string;
   locations?: Location[];
   image?: ContentImage;
+  /**
+   * compact  — Figma 59:155: header + 2×2 name/address cards beside one photo.
+   * detailed — header, then a card per location (photo, address, copy, hours, actions).
+   * order    — header, then a photo-less card per location (name, address, order buttons).
+   */
+  variant?: 'compact' | 'detailed' | 'order';
+  /** Order variant — HTML line under the cards (e.g. a link to the Locations page). */
+  footnote?: string;
   id?: string;
 }
 
@@ -40,7 +66,7 @@ const {
   subtitle = 'Dine in, grab and go, or order ahead. There\u2019s an El Ranchero closer than you think.',
   ctaText = 'view all locations',
   ctaHref = '/locations',
-  locations = storeLocations.slice(0, 4).map((store) => ({
+  locations = storeLocations.slice(0, 4).map((store): Location => ({
     name: store.name,
     shopName: store.shopName,
     addressLine1: store.addressLine1,
@@ -48,12 +74,184 @@ const {
     href: store.href,
   })),
   image,
+  variant = 'compact',
+  footnote,
   id,
 } = Astro.props;
+
+const isDetailed = variant === 'detailed';
+const isOrder = variant === 'order';
 ---
 
 <section {...id ? { id } : {}} class="not-prose relative w-full overflow-hidden bg-section-grey">
   <div class="relative z-[1] mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
+    {isOrder ? (
+      <div class="flex flex-col gap-10 md:gap-16">
+        <div class="flex max-w-[822px] flex-col items-start gap-6">
+          {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
+          {title && <Heading variant="h2">{title}</Heading>}
+          {
+            subtitle && (
+              <Text variant="body-lg" color="default">
+                {subtitle}
+              </Text>
+            )
+          }
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          {
+            locations.map((loc) => (
+              <article class="flex h-full flex-col gap-6 bg-section-dark p-6 text-contrast md:p-8">
+                <div class="flex flex-col gap-3">
+                  <Heading variant="h3" color="white" as="h3">
+                    {loc.heading ?? loc.name}
+                  </Heading>
+                  <address class="not-italic">
+                    <Text variant="body" color="white" as="span" class="block">
+                      {loc.addressLine1}
+                    </Text>
+                    {loc.addressLine2 && (
+                      <Text variant="body" color="white" as="span" class="block">
+                        {loc.addressLine2}
+                      </Text>
+                    )}
+                  </address>
+                </div>
+                {loc.actions && loc.actions.length > 0 && (
+                  <div class="mt-auto flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                    {loc.actions.map((action) => (
+                      <Button
+                        variant={action.variant ?? 'primary'}
+                        tone="dark"
+                        text={action.text}
+                        href={action.href}
+                        hideNote={true}
+                        target={/^https?:/.test(action.href) ? '_blank' : undefined}
+                        class="w-full sm:w-auto"
+                      />
+                    ))}
+                  </div>
+                )}
+              </article>
+            ))
+          }
+        </div>
+
+        {footnote && <Text variant="body" color="default" html={footnote} />}
+      </div>
+    ) : isDetailed ? (
+      <div class="flex flex-col gap-10 md:gap-16">
+        {/* Header block */}
+        <div class="flex max-w-[822px] flex-col items-start gap-6">
+          {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
+          {title && <Heading variant="h2">{title}</Heading>}
+          {
+            subtitle && (
+              <Text variant="body-lg" color="default">
+                {subtitle}
+              </Text>
+            )
+          }
+        </div>
+
+        {/* One detailed card per location */}
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          {
+            locations.map((loc) => (
+              <article class="flex h-full flex-col bg-section-dark text-contrast">
+                <div class="relative w-full shrink-0 overflow-hidden" style="aspect-ratio: 4 / 3;">
+                  {loc.image ? (
+                    <Image
+                      {...loc.image}
+                      class="absolute inset-0 h-full w-full object-cover"
+                      widths={[400, 640, 828, 1080]}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      loading="lazy"
+                      width={720}
+                      height={540}
+                      layout="cover"
+                      format="webp"
+                    />
+                  ) : (
+                    <>
+                      {/* TODO: replace with <Image> when asset is ready */}
+                      <HeroImagePlaceholder
+                        fill
+                        class="absolute inset-0"
+                        label={`${loc.name} location photo placeholder`}
+                      />
+                    </>
+                  )}
+                </div>
+
+                <div class="flex flex-1 flex-col gap-6 px-6 pb-6 pt-8 md:px-8 md:pb-8">
+                  <div class="flex flex-col gap-3">
+                    {loc.tagline && <Heading variant="eyebrow" color="white" class="text-contrast/70">{loc.tagline}</Heading>}
+                    <Heading variant="h3" color="white" as="h3">
+                      {loc.heading ?? loc.name}
+                    </Heading>
+                    <address class="not-italic">
+                      <Text variant="body" color="white" as="span" class="block">
+                        {loc.addressLine1}
+                      </Text>
+                      {loc.addressLine2 && (
+                        <Text variant="body" color="white" as="span" class="block">
+                          {loc.addressLine2}
+                        </Text>
+                      )}
+                      {loc.shopName && (
+                        <Text variant="body" color="white" as="span" class="block text-contrast/70">
+                          {loc.shopName}
+                        </Text>
+                      )}
+                    </address>
+                  </div>
+
+                  {loc.description && loc.description.length > 0 && (
+                    <div class="flex flex-col gap-3">
+                      {loc.description.map((paragraph) => (
+                        <Text variant="body" color="white">
+                          {paragraph}
+                        </Text>
+                      ))}
+                    </div>
+                  )}
+
+                  {loc.hours && loc.hours.length > 0 && (
+                    <ul class="flex flex-col gap-1">
+                      {loc.hours.map((line) => (
+                        <li>
+                          <Text variant="body" color="white" as="span">
+                            {line}
+                          </Text>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {loc.actions && loc.actions.length > 0 && (
+                    <div class="mt-auto flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap">
+                      {loc.actions.map((action) => (
+                        <Button
+                          variant={action.variant ?? 'primary'}
+                          tone="dark"
+                          text={action.text}
+                          href={action.href}
+                          hideNote={true}
+                          target={/^https?:/.test(action.href) ? '_blank' : undefined}
+                          class="w-full sm:w-auto"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    ) : (
     <div class="flex flex-col gap-8 md:flex-row md:gap-8">
       {/* Left column — header + location cards */}
       <div class="flex min-w-0 flex-1 flex-col gap-16">
@@ -145,5 +343,6 @@ const {
         }
       </div>
     </div>
+    )}
   </div>
 </section>

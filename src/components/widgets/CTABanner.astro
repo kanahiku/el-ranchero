@@ -24,6 +24,8 @@ export interface Props {
   eyebrow?: string;
   title: string;
   subtitle?: string;
+  /** Override the default Order Catering / Order Now / Find a Location buttons (Order Now stays centered). */
+  actions?: { text: string; href: string; variant?: 'primary' | 'ghost' }[];
   id?: string;
 
   /** @deprecated Legacy template props — accepted but ignored. */
@@ -46,19 +48,20 @@ const {
   eyebrow,
   title,
   subtitle,
+  actions,
   id,
 } = Astro.props;
 
-const conversionLinks = [
-  { text: 'Find a location', href: LOCATION_CTA_HREF, variant: 'ghost' as const },
-  { text: 'Order Online', href: PRIMARY_CTA_HREF, variant: 'primary' as const },
+const conversionLinks = actions ?? [
   { text: 'Order Catering', href: CATERING_CTA_HREF, variant: 'ghost' as const },
+  { text: 'Order Now', href: PRIMARY_CTA_HREF, variant: 'primary' as const },
+  { text: 'Find a Location', href: LOCATION_CTA_HREF, variant: 'ghost' as const },
 ];
 ---
 
 <section
   {...id ? { id } : {}}
-  class="not-prose relative w-full overflow-hidden bg-section-dark py-20 md:py-32 lg:py-40"
+  class="not-prose relative w-full overflow-hidden bg-section-dark py-16 md:py-[120px]"
 >
 
   <div class="relative z-[1] mx-auto flex w-full max-w-container flex-col items-center gap-8 px-5 text-center sm:px-8 md:px-16">
@@ -73,7 +76,7 @@ const conversionLinks = [
     <div class="flex w-full flex-col items-center gap-6">
       {/* ── Eyebrow ─────────────────────────────────────────── */}
       {eyebrow && (
-        <p class="font-script text-[var(--aw-text-eyebrow)] leading-none text-contrast/50">{eyebrow}</p>
+        <p class="type-eyebrow leading-none text-contrast/50">{eyebrow}</p>
       )}
 
       {/* ── Display headline — h2 scale (semantic: not a page title) ─── */}
@@ -96,10 +99,11 @@ const conversionLinks = [
       <div class="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
         {conversionLinks.map((link) => (
           <Button
-            variant={link.variant}
+            variant={link.variant ?? 'primary'}
             tone="dark"
             text={link.text}
             href={link.href}
+            target={/^https?:/.test(link.href) ? '_blank' : undefined}
             hideNote={true}
           />
         ))}
