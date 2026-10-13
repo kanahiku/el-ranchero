@@ -1,35 +1,38 @@
 import { ImageIcon } from '@sanity/icons';
-import { defineField, defineType } from 'sanity';
+import { defineType } from 'sanity';
+import { imageField } from '../lib/imageField';
 
-const imageField = (name: string, title: string, description?: string) =>
-  defineField({
-    name,
-    title,
-    description,
-    type: 'image',
-    options: { hotspot: true },
-    fields: [
-      defineField({
-        name: 'alt',
-        title: 'Alt text',
-        type: 'string',
-        validation: (r) => r.required().warning('Describe the image for accessibility and SEO.'),
-      }),
-    ],
-  });
+const favorites = (prefix: 'wahiawa' | 'kapolei', group: string) => [
+  imageField(`${prefix}TacosImage`, 'Favorites — Tacos', 'Card photo (4:3).', group),
+  imageField(`${prefix}BurritoImage`, 'Favorites — California Burrito', 'Card photo (4:3).', group),
+  imageField(`${prefix}BirriaImage`, 'Favorites — Birria', 'Card photo (4:3).', group),
+  imageField(`${prefix}QuesadillasImage`, 'Favorites — Quesadillas', 'Card photo (4:3).', group),
+  imageField(`${prefix}MexicanPlatesImage`, 'Favorites — Mexican Plates', 'Card photo (4:3).', group),
+];
 
 export const locationsContent = defineType({
   name: 'locationsContent',
   title: 'Locations',
   type: 'document',
   icon: ImageIcon,
+  groups: [
+    { name: 'hub', title: 'Locations hub' },
+    { name: 'wahiawa', title: 'Wahiawa page' },
+    { name: 'kapolei', title: 'Kapolei page' },
+  ],
   fields: [
-    imageField('directoryImage', 'Locations hub hero image', 'Hero image for the main Locations page.'),
-    imageField('wahiawaImage', 'Wahiawa hero image', 'Hero image for the Wahiawa location page.'),
-    imageField('kapoleiImage', 'Kapolei hero image', 'Hero image for the Kapolei location page.'),
+    imageField('hubHeroImage', 'Hero image', 'Hero photo for the main Locations page (portrait, 619×740).', 'hub'),
+    imageField('hubWahiawaImage', 'Wahiawa card photo', 'Photo on the Wahiawa card (4:3).', 'hub'),
+    imageField('hubKapoleiImage', 'Kapolei card photo', 'Photo on the Kapolei card (4:3).', 'hub'),
+
+    imageField('wahiawaHeroImage', 'Hero image', 'Hero photo for the Wahiawa page (portrait, 619×740).', 'wahiawa'),
+    ...favorites('wahiawa', 'wahiawa'),
+
+    imageField('kapoleiHeroImage', 'Hero image', 'Hero photo for the Kapolei page (portrait, 619×740).', 'kapolei'),
+    ...favorites('kapolei', 'kapolei'),
   ],
   preview: {
-    select: { media: 'directoryImage' },
+    select: { media: 'hubHeroImage' },
     prepare({ media }) {
       return {
         title: 'Locations',

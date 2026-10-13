@@ -1,7 +1,8 @@
 ---
 /**
  * Taco Tuesday — copy from pages-content/Events/_events_taco-tuesday - Taco Tuesday.docx.
- * Composes shared widgets only. Photos are grey placeholders until the client photography pass.
+ * Composes shared widgets only. Photos come from the Sanity "Events" singleton
+ * (`eventsContent`); a missing photo renders the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -18,6 +19,9 @@ import {
   moreEventsColumns,
   moreEventsRows,
 } from '~/data/events';
+import { getEventsImages } from '~/lib/content';
+
+const images = await getEventsImages();
 
 const metadata = {
   title: 'Taco Tuesday on Oʻahu | Taqueria El Ranchero',
@@ -31,6 +35,7 @@ const metadata = {
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.tacoTuesdayHero}
     title="Taco Tuesday at Taqueria El Ranchero"
     content="Tuesdays are for tacos at Taqueria El Ranchero!<br /><br />With meats grilled fresh every morning, homemade salsas, and classic taqueria-style favorites, we’ve got plenty of reasons to make tacos part of your Tuesday plans.<br /><br />Bring your appetite, pick your favorites, and check out what’s happening for Taco Tuesday this week."
     actions={[{ variant: 'primary', text: 'Check Taco Tuesday Updates', href: EVENTS_INSTAGRAM_HREF, target: '_blank' }]}

@@ -1,8 +1,8 @@
 ---
 /**
  * Locations hub — copy from pages-content/Locations/_ locations - Locations Hub.docx.
- * Composes shared widgets only. Location photos are grey placeholders until the
- * client photography pass.
+ * Composes shared widgets only. Photos come from the Sanity "Locations" singleton
+ * (`locationsContent`); a missing photo renders the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -12,6 +12,9 @@ import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
 import { CATERING_CTA_HREF } from '~/config/cta';
 import { findStore, storeDirectionsHref } from '~/data/locations';
+import { getLocationImages } from '~/lib/content';
+
+const images = await getLocationImages();
 
 const wahiawa = findStore('wahiawa');
 const kapolei = findStore('kapolei');
@@ -31,6 +34,7 @@ const kitchenHours = ['Kitchen Hours', 'Daily: 7:00 AM – 10:00 PM'];
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.hubHero}
     title="Find Taqueria El Ranchero in Wahiawa & Kapolei"
     content="Looking for Taqueria El Ranchero near you? Visit us at either of our two Oʻahu restaurants, in Wahiawa and Kapolei.<br /><br />Both locations serve the same Ranchero-style Mexican menu, with tacos, burritos, breakfast favorites and more. Each restaurant has its own atmosphere, so choose the location that works best for your visit."
   />
@@ -45,6 +49,7 @@ const kitchenHours = ['Kitchen Hours', 'Daily: 7:00 AM – 10:00 PM'];
     locations={[
       {
         name: 'Wahiawa',
+        image: images.hubWahiawa,
         tagline: 'Our Original Neighborhood Taqueria',
         heading: 'Taqueria El Ranchero Wahiawa',
         shopName: 'Wahiawa Shopping Center',
@@ -64,6 +69,7 @@ const kitchenHours = ['Kitchen Hours', 'Daily: 7:00 AM – 10:00 PM'];
       },
       {
         name: 'Kapolei',
+        image: images.hubKapolei,
         tagline: 'Sit Down and Stay Awhile at Ka Makana Aliʻi',
         heading: 'Taqueria El Ranchero Kapolei',
         shopName: 'Ka Makana Aliʻi',
@@ -105,7 +111,7 @@ const kitchenHours = ['Kitchen Hours', 'Daily: 7:00 AM – 10:00 PM'];
       <Button variant="primary" text="Explore Our Catering Options" href={CATERING_CTA_HREF} hideNote={true} class="self-start" />
       <Text
         color="default"
-        html={`For private gatherings at our Kapolei restaurant, you can also learn more about the <a class="text-accent underline underline-offset-4" href="/events/event-space-rental">available event space</a> on the <a class="text-accent underline underline-offset-4" href="${kapolei.href}">Kapolei location page</a>.`}
+        html={`For private gatherings at our Kapolei restaurant, you can also learn more about the <a class="text-accent underline underline-offset-4" href="/events/event-space-rental">available event space</a> on our <a class="text-accent underline underline-offset-4" href="/events/event-space-rental">Event Space Rental page</a>.`}
       />
     </div>
   </TextSplit>

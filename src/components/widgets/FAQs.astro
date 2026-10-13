@@ -129,7 +129,7 @@ const toggleActive = 'group-open:border-accent group-open:text-accent';
         {items.map(({ title: itemTitle, description }, index) => (
           <details class:list={['group py-1', index > 0 && `border-t ${itemBorder}`]} name="faq-accordion">
             <summary class="flex items-center justify-between gap-4 cursor-pointer py-4 list-none select-none">
-              <span class={`text-[16px] md:text-[18px] font-sans font-medium leading-snug pr-4 ${questionColor}`}>
+              <span class={`text-[16px] font-sans font-medium leading-snug pr-4 ${questionColor}`}>
                 {itemTitle}
               </span>
               <span class={`flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full border transition-colors duration-200 ${toggleBase} ${toggleActive}`}>

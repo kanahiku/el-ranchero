@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity';
 import { TagIcon } from '@sanity/icons';
+import { imageField } from '../lib/imageField';
 
 export const menuCategory = defineType({
   name: 'menuCategory',
@@ -27,6 +28,12 @@ export const menuCategory = defineType({
       type: 'text',
       rows: 3,
     }),
+    imageField('image', 'Card photo', 'Photo on the category card on the Menu page. Wide cards are 16:9, regular cards 4:3.'),
+    imageField(
+      'exploreMoreImage',
+      'Card photo — "Explore More" (4:3)',
+      'Photo on the category card in the "Explore More of Our Menu" grid at the bottom of other menu pages. Falls back to the card photo.'
+    ),
     defineField({
       name: 'order',
       title: 'Display order',

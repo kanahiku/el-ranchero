@@ -1,8 +1,9 @@
 ---
 /**
  * Kids Menu — copy from pages-content/Menu Pages/_ menu_kids - Kids Menu.docx.
- * Composes shared widgets only. Photos are grey placeholders until the
- * client photography pass.
+ * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
+ * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
+ * the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -11,7 +12,7 @@ import Locations from '~/components/widgets/Locations.astro';
 import MenuCategories from '~/components/widgets/MenuCategories.astro';
 import Note from '~/components/widgets/Note.astro';
 import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMenuSections } from '~/lib/content';
+import { getMenuSections, getMenuPagesImages } from '~/lib/content';
 import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
 
 const metadata = {
@@ -22,6 +23,7 @@ const metadata = {
 };
 
 const sections = await getMenuSections('kids');
+const images = await getMenuPagesImages();
 
 ---
 
@@ -29,6 +31,7 @@ const sections = await getMenuSections('kids');
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.kidsHero}
     title="Kids Menu in Wahiawa & Kapolei"
     content="Dining with kids? Taqueria El Ranchero has three Kids Menu choices, each listed with its own simple combination of food and sides.<br /><br />Find the Kids Menu at our Wahiawa and Kapolei locations, and check ordering availability at your preferred restaurant."
     actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}

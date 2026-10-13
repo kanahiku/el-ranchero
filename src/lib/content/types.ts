@@ -8,6 +8,11 @@ export interface ContentImage {
 export interface HomepageImages {
   hero?: ContentImage;
   breakfast?: ContentImage;
+  molcajete?: ContentImage;
+  tacosBirria?: ContentImage;
+  burritos?: ContentImage;
+  wahiawa?: ContentImage;
+  kapolei?: ContentImage;
   catering?: ContentImage;
   privateEvents?: ContentImage;
 }
@@ -20,17 +25,47 @@ export interface AboutImages {
 }
 
 export interface CateringImages {
-  menu?: ContentImage;
+  hero?: ContentImage;
+  favoriteTacos?: ContentImage;
+  favoriteBurritos?: ContentImage;
+  favoriteMexican?: ContentImage;
+  favoriteSides?: ContentImage;
+}
+
+/** Card photos for the "Favorites" grid on a location page. */
+export interface LocationFavoriteImages {
+  tacos?: ContentImage;
+  burrito?: ContentImage;
+  birria?: ContentImage;
+  quesadillas?: ContentImage;
+  mexicanPlates?: ContentImage;
 }
 
 export interface LocationImages {
-  directory?: ContentImage;
-  wahiawa?: ContentImage;
-  kapolei?: ContentImage;
+  hubHero?: ContentImage;
+  hubWahiawa?: ContentImage;
+  hubKapolei?: ContentImage;
+  wahiawaHero?: ContentImage;
+  kapoleiHero?: ContentImage;
+  wahiawaFavorites: LocationFavoriteImages;
+  kapoleiFavorites: LocationFavoriteImages;
+}
+
+export interface EventsImages {
+  hubHero?: ContentImage;
+  tacoTuesdayHero?: ContentImage;
+  karaokeHero?: ContentImage;
+  latinNightHero?: ContentImage;
+  concertsHero?: ContentImage;
+  spaceRentalHero?: ContentImage;
 }
 
 export interface MenuPagesImages {
   menuHubHero?: ContentImage;
+  breakfastEveryDay?: ContentImage;
+  featuredMolcajete?: ContentImage;
+  featuredTaco?: ContentImage;
+  featuredCaliforniaBurrito?: ContentImage;
   breakfastHero?: ContentImage;
   burritosHero?: ContentImage;
   tacosHero?: ContentImage;
@@ -40,6 +75,8 @@ export interface MenuPagesImages {
   appetizersSidesHero?: ContentImage;
   kidsHero?: ContentImage;
   drinksHero?: ContentImage;
+  breakfastTakeout?: ContentImage;
+  entreesMolcajete?: ContentImage;
 }
 
 // ─── Navigation ───────────────────────────────────────────────────────────────
@@ -121,6 +158,10 @@ export interface MenuCategory {
   description?: string;
   /** Desktop column span (out of 12) of the card on the Menu hub. */
   hubSpan?: 4 | 6;
+  /** Card photo on the Menu hub. */
+  image?: ContentImage;
+  /** 4:3 card photo for the "Explore More of Our Menu" grid on category pages. */
+  exploreMoreImage?: ContentImage;
   items: MenuItem[];
 }
 

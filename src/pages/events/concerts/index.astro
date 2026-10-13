@@ -1,7 +1,8 @@
 ---
 /**
  * Live Concerts — copy from pages-content/Events/_events_concerts - Live Concerts.docx.
- * Composes shared widgets only. Photos are grey placeholders until the client photography pass.
+ * Composes shared widgets only. Photos come from the Sanity "Events" singleton
+ * (`eventsContent`); a missing photo renders the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -18,6 +19,9 @@ import {
   moreEventsColumns,
   moreEventsRows,
 } from '~/data/events';
+import { getEventsImages } from '~/lib/content';
+
+const images = await getEventsImages();
 
 const metadata = {
   title: 'Live Mexican Band Concerts on Oʻahu | El Ranchero',
@@ -31,6 +35,7 @@ const metadata = {
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.concertsHero}
     title="Live Mexican Band Concerts at El Ranchero"
     content="Some nights deserve a bigger stage.<br /><br />About three times a year, Taqueria El Ranchero brings professional, well-known Mexican bands to Oʻahu for special concerts. These are full-party nights built around the music, the crowd and getting together.<br /><br />Every show is its own event. Keep an eye on the next announcement for the artist, date, location and entry details."
     actions={[{ variant: 'primary', text: 'See the Latest Concert Announcements', href: EVENTS_INSTAGRAM_HREF, target: '_blank' }]}
@@ -42,8 +47,7 @@ const metadata = {
         Big concert nights don’t happen every weekend, so the next confirmed show deserves its own announcement.
       </Text>
       <Text color="default">
-        Check {EVENTS_INSTAGRAM_HANDLE} for the next artist, date, hosting venue and event information. Only confirmed shows should appear here as upcoming.
-      </Text>
+        Check {EVENTS_INSTAGRAM_HANDLE} for the next artist, date, hosting venue and event information.      </Text>
       <Button variant="primary" text={`Check ${EVENTS_INSTAGRAM_HANDLE} for the Next Show`} href={EVENTS_INSTAGRAM_HREF} target="_blank" hideNote={true} class="self-start" />
     </div>
   </TextSplit>
@@ -54,7 +58,7 @@ const metadata = {
         El Ranchero’s headline concerts feature professional Mexican bands and a full party atmosphere, rather than the regular weekly music schedule.
       </Text>
       <Text color="default">
-        Concert nights have been described as running roughly from 9:30 p.m. to 2 a.m. Actual event times, location and entry arrangements must be checked for each show.
+        Concert nights typically run from about 9:30 p.m. to 2 a.m. Check each show’s announcement for exact times, location and entry details.
       </Text>
     </div>
   </TextSplit>

@@ -1,22 +1,6 @@
 import { ImageIcon } from '@sanity/icons';
-import { defineField, defineType } from 'sanity';
-
-const imageField = (name: string, title: string, description?: string) =>
-  defineField({
-    name,
-    title,
-    description,
-    type: 'image',
-    options: { hotspot: true },
-    fields: [
-      defineField({
-        name: 'alt',
-        title: 'Alt text',
-        type: 'string',
-        validation: (r) => r.required().warning('Describe the image for accessibility and SEO.'),
-      }),
-    ],
-  });
+import { defineType } from 'sanity';
+import { imageField } from '../lib/imageField';
 
 export const cateringContent = defineType({
   name: 'cateringContent',
@@ -24,10 +8,14 @@ export const cateringContent = defineType({
   type: 'document',
   icon: ImageIcon,
   fields: [
-    imageField('menuImage', 'Catering page hero image', 'Hero image for the catering page.'),
+    imageField('heroImage', 'Hero image', 'Hero photo for the Catering page (portrait, 619×740).'),
+    imageField('favoriteTacosImage', 'Catering Favorites — Tacos', 'Card photo (4:3).'),
+    imageField('favoriteBurritosImage', 'Catering Favorites — Burritos', 'Card photo (4:3).'),
+    imageField('favoriteMexicanImage', 'Catering Favorites — Mexican Favorites', 'Card photo (4:3).'),
+    imageField('favoriteSidesImage', 'Catering Favorites — Sides & More', 'Card photo (4:3).'),
   ],
   preview: {
-    select: { media: 'menuImage' },
+    select: { media: 'heroImage' },
     prepare({ media }) {
       return {
         title: 'Catering',

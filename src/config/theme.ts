@@ -39,7 +39,7 @@ export const THEME = {
       classes: {
         headline: {
           title: 'text-[26px] md:text-[40px] font-normal leading-[120%] text-heading',
-          subtitle: 'text-[16px] md:text-[17px] font-normal leading-[160%] text-muted',
+          subtitle: 'text-[16px] font-normal leading-[160%] text-muted',
         },
       },
     },

@@ -10,7 +10,8 @@
  *
  * Cards are flex columns with the body flex-1, so descriptions of any length
  * keep every card in a row the same height.
- * Photos are grey placeholders until the client photography pass.
+ * Photos come from the Sanity menu category (`image` on the hub, `exploreMoreImage`
+ * on category pages). A category without a photo shows the grey placeholder.
  */
 import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
@@ -59,7 +60,9 @@ const categories = cmsCategories
       label: category.title,
       href: category.href!,
       description: category.description ?? '',
-      img: category.items.find((item) => item.image?.src)?.image,
+      img: isHub
+        ? (category.image ?? category.exploreMoreImage)
+        : (category.exploreMoreImage ?? category.image),
       colSpan: isHub && wide ? 'md:col-span-6' : 'md:col-span-4',
       aspect: isHub && wide ? '16 / 9' : '4 / 3',
     };
@@ -101,8 +104,10 @@ const categories = cmsCategories
                 <Image
                   src={cat.img.src}
                   alt={cat.img.alt || ''}
+                  widths={[400, 640, 900]}
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   width={900}
-                  height={675}
+                  height={cat.aspect === '16 / 9' ? 506 : 675}
                   layout="cover"
                   loading="lazy"
                   decoding="async"

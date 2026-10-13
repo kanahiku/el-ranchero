@@ -1,22 +1,6 @@
 import { ImageIcon } from '@sanity/icons';
-import { defineField, defineType } from 'sanity';
-
-const imageField = (name: string, title: string, description?: string) =>
-  defineField({
-    name,
-    title,
-    description,
-    type: 'image',
-    options: { hotspot: true },
-    fields: [
-      defineField({
-        name: 'alt',
-        title: 'Alt text',
-        type: 'string',
-        validation: (r) => r.required().warning('Describe the image for accessibility and SEO.'),
-      }),
-    ],
-  });
+import { defineType } from 'sanity';
+import { imageField } from '../lib/imageField';
 
 export const aboutContent = defineType({
   name: 'aboutContent',

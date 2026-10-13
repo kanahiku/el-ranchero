@@ -55,7 +55,7 @@ export const storeLocations: StoreLocation[] = [
     addressLine2: 'Wahiawa, HI 96786',
     phoneDisplay: '(808) 621-8226',
     phoneHref: 'tel:+18086218226',
-    hours: 'Monday-Sunday: 9:00 AM-8:30 PM',
+    hours: 'Kitchen: 7:00 AM – 10:00 PM daily · Breakfast: 7:00 AM – 12:00 PM daily',
     href: '/locations/wahiawa',
     mapsEmbedSrc:
       'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d118807.78334032193!2d-157.9185514!3d21.4785894!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c005df2e6157385%3A0x308420cdf244ff60!2sTaqueria%20El%20Ranchero!5e0!3m2!1sen!2sph!4v1786723483970!5m2!1sen!2sph',
@@ -75,7 +75,7 @@ export const storeLocations: StoreLocation[] = [
     addressLine2: 'Kapolei, HI 96707',
     phoneDisplay: '(808) 693-8226',
     phoneHref: 'tel:+18086938226',
-    hours: 'Monday-Sunday: 10:00 AM-9:00 PM',
+    hours: 'Kitchen: 7:00 AM – 10:00 PM daily · Breakfast: 7:00 AM – 12:00 PM daily',
     href: '/locations/kapolei',
     mapsEmbedSrc:
       'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14865.750352758614!2d-158.0501425!3d21.3332283!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c006312335dd9e7%3A0x38722efab8df9697!2sTaqueria%20El%20Ranchero!5e0!3m2!1sen!2sph!4v1786671802597!5m2!1sen!2sph',

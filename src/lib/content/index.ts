@@ -1,5 +1,24 @@
-import type { BlogPost, NavigationContent, Testimonial, MenuCategory, MenuItem, MeatOption } from './types';
+import type {
+  BlogPost,
+  NavigationContent,
+  Testimonial,
+  MenuCategory,
+  MenuItem,
+  MeatOption,
+  HomepageImages,
+  AboutImages,
+  CateringImages,
+  LocationImages,
+  EventsImages,
+  MenuPagesImages,
+} from './types';
 import {
+  getSanityHomepageImages,
+  getSanityAboutImages,
+  getSanityCateringImages,
+  getSanityLocationImages,
+  getSanityEventsImages,
+  getSanityMenuPagesImages,
   getSanityBlogPost,
   getSanityBlogPosts,
   getSanityBlogPostSlugs,
@@ -190,6 +209,35 @@ export async function getTestimonials(): Promise<Testimonial[]> {
     return [];
   }
 }
+
+// ─── Page images ─────────────────────────────────────────────────────────────
+// Photos live in Sanity (one singleton per page). A missing image or an
+// unreachable dataset leaves the slot empty so the grey placeholder renders.
+
+async function imagesOrEmpty<T>(label: string, load: () => Promise<T>, empty: T): Promise<T> {
+  try {
+    return await load();
+  } catch (error) {
+    console.warn(`Sanity ${label} images unavailable; using placeholders.`, error);
+    return empty;
+  }
+}
+
+export const getHomepageImages = (): Promise<HomepageImages> =>
+  imagesOrEmpty('homepage', getSanityHomepageImages, {});
+
+export const getAboutImages = (): Promise<AboutImages> => imagesOrEmpty('about', getSanityAboutImages, {});
+
+export const getCateringImages = (): Promise<CateringImages> =>
+  imagesOrEmpty('catering', getSanityCateringImages, {});
+
+export const getLocationImages = (): Promise<LocationImages> =>
+  imagesOrEmpty('locations', getSanityLocationImages, { wahiawaFavorites: {}, kapoleiFavorites: {} });
+
+export const getEventsImages = (): Promise<EventsImages> => imagesOrEmpty('events', getSanityEventsImages, {});
+
+export const getMenuPagesImages = (): Promise<MenuPagesImages> =>
+  imagesOrEmpty('menu pages', getSanityMenuPagesImages, {});
 
 // ─── Menu ────────────────────────────────────────────────────────────────────
 // Sanity is the source of truth (categories, dishes, "Choose Your Meat").

@@ -1,8 +1,8 @@
 ---
 /**
  * Homepage — copy from pages-content/_ homepage.docx.
- * Composes shared widgets only. Photos are grey placeholders until the
- * client photography pass (see the "Image and Visual Placement" notes in the doc).
+ * Composes shared widgets only. Photos come from the Sanity "Homepage"
+ * singleton (`homepageContent`); a missing photo renders the grey placeholder.
  */
 import Layout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -16,6 +16,9 @@ import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
 import { PRIMARY_CTA_HREF, CATERING_CTA_HREF, LOCATION_CTA_HREF } from '~/config/cta';
+import { getHomepageImages } from '~/lib/content';
+
+const images = await getHomepageImages();
 
 const metadata = {
   title: 'Mexican Restaurant in Wahiawa & Kapolei | El Ranchero',
@@ -39,6 +42,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
   <Hero2
     id="home-hero"
     variant="overlay"
+    image={images.hero}
     overlapHeader={false}
     title="Hawaii’s Original Taqueria"
     subtitle="Experience Northern California-inspired Mexican food at Taqueria El Ranchero in Wahiawa and Kapolei, Oʻahu. From traditional tacos and burritos to ranchero-style entrées, our food is prepared fresh daily using grilled meats and homemade salsas.<br /><br />Whether you’re stopping in for breakfast or picking up dinner, explore our menu and find your nearest location."
@@ -70,6 +74,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     id="breakfast"
     heading="Mexican Breakfast, Every Day From 7 AM"
     withImage
+    image={images.breakfast}
     imageAspect="4 / 3"
     class="bg-card"
   >
@@ -106,12 +111,14 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     dishes={[
       {
         title: 'Molcajete: Our Signature Dish',
+        image: images.molcajete,
         description:
           'Savor the rich flavors of our signature Molcajete dish, a culinary masterpiece featuring grilled meats, vibrant vegetables, and savory sauces, all served sizzling in a traditional volcanic stone mortar for an authentic and unforgettable dining experience. Served with beans, rice and corn or flour tortillas.',
         href: '/menu/entrees',
       },
       {
         title: 'Tacos & Birria',
+        image: images.tacosBirria,
         description: [
           'Our traditional Taco comes with your choice of meat, onion, cilantro and salsa. Choose from meats such as carne asada, carnitas or al pastor.',
           'We also serve Tacos de Birria and Mulitas de Birria, with three pieces per order.',
@@ -120,6 +127,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
       },
       {
         title: 'Burritos',
+        image: images.burritos,
         description: [
           'Try our Burrito Grande with your choice of meat, beans, rice, cheese, pico de gallo, guacamole and sour cream.',
           'Our California Burrito offers another option, combining your choice of meat with cheese, fries, guacamole and sour cream.',
@@ -193,6 +201,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     locations={[
       {
         name: 'Wahiawa',
+        image: images.wahiawa,
         heading: 'Wahiawa Mexican Restaurant',
         shopName: 'Wahiawa Shopping Center',
         addressLine1: '823 California Ave, Unit A5, Wahiawa, HI 96786',
@@ -213,6 +222,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
       },
       {
         name: 'Kapolei',
+        image: images.kapolei,
         heading: 'Kapolei Mexican Restaurant at Ka Makana Aliʻi',
         shopName: 'Ka Makana Aliʻi',
         addressLine1: '91-5431 Kapolei Pkwy #501, Kapolei, HI 96707',
@@ -239,6 +249,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     id="catering"
     heading="Mexican Catering for Gatherings on Oʻahu"
     withImage
+    image={images.catering}
     imageAspect="4 / 3"
   >
     <div class="flex flex-col gap-6">
@@ -261,6 +272,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     id="private-events"
     heading="Host Your Private Event at El Ranchero Kapolei"
     withImage
+    image={images.privateEvents}
     imageReverse
     imageAspect="4 / 3"
     class="bg-card"

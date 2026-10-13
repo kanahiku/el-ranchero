@@ -1,8 +1,9 @@
 ---
 /**
  * Appetizers & Sides — copy from pages-content/Menu Pages/_ menu_appetizers-sides - Appetizers & Sides.docx.
- * Composes shared widgets only. Photos are grey placeholders until the
- * client photography pass.
+ * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
+ * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
+ * the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -13,7 +14,7 @@ import Locations from '~/components/widgets/Locations.astro';
 import MenuCategories from '~/components/widgets/MenuCategories.astro';
 import Note from '~/components/widgets/Note.astro';
 import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMenuSections } from '~/lib/content';
+import { getMenuSections, getMenuPagesImages } from '~/lib/content';
 import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
 
 const metadata = {
@@ -26,6 +27,7 @@ const metadata = {
 const sections = await getMenuSections('appetizers-sides');
 
 const addOns = ['Meat', 'Pico de gallo', 'Guacamole', 'Sour cream', 'Cheese (tacos only)'];
+const images = await getMenuPagesImages();
 
 ---
 
@@ -33,6 +35,7 @@ const addOns = ['Meat', 'Pico de gallo', 'Guacamole', 'Sour cream', 'Cheese (tac
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.appetizersSidesHero}
     title="Appetizers & Sides in Wahiawa & Kapolei"
     content="Looking for something to enjoy alongside your favorite Mexican dish? Explore the appetizers and sides at Taqueria El Ranchero.<br /><br />Choose from freshly made Guacamole, Chorizo Queso or Bean Dip, or add a side of pico de gallo, queso sauce, rice or beans to your meal."
     actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}

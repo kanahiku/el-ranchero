@@ -8,9 +8,13 @@ import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
 import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
+import Image from '~/components/common/Image.astro';
+import type { ContentImage } from '~/lib/content/types';
 
 export interface FeaturedDish {
   title: string;
+  /** Tile photo (Sanity). Grey placeholder when omitted. */
+  image?: ContentImage;
   /** One paragraph, or several. */
   description: string | string[];
   /** Makes the whole tile a link to the matching menu page. */
@@ -90,13 +94,26 @@ const subtitleParagraphs = paragraphs(subtitle);
               dish.href && 'group',
             ]}
           >
-            <!-- TODO: replace with <Image> when asset is ready -->
-            <HeroImagePlaceholder
-              fill
-              class="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
-              label={`${dish.title} placeholder`}
-            />
-            <div class="relative z-[1] mt-auto flex w-full flex-col items-start justify-start gap-2 md:row-start-2 md:mt-0 bg-black/50 px-6 py-6 text-left backdrop-blur-[5px]">
+            {dish.image ? (
+              <Image
+                {...dish.image}
+                class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                widths={[400, 640, 832]}
+                sizes="(max-width: 768px) 100vw, 33vw"
+                loading="lazy"
+                width={832}
+                height={1104}
+                layout="cover"
+                format="webp"
+              />
+            ) : (
+              <HeroImagePlaceholder
+                fill
+                class="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
+                label={`${dish.title} placeholder`}
+              />
+            )}
+            <div class="relative z-[1] mt-auto flex w-full flex-col items-start justify-start gap-2 md:row-start-2 md:mt-0 bg-section-dark px-6 py-6 text-left">
               <Heading variant="h3" color="white">{dish.title}</Heading>
               {paragraphs(dish.description).map((paragraph) => (
                 <Text color="inherit" class="text-contrast">{paragraph}</Text>

@@ -12,6 +12,9 @@ import TextSplit from '~/components/widgets/TextSplit.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
 import { EVENTS_INSTAGRAM_HANDLE, EVENTS_INSTAGRAM_HREF, eventPages, locationLinks } from '~/data/events';
+import { getEventsImages } from '~/lib/content';
+
+const images = await getEventsImages();
 
 const metadata = {
   title: 'Latin Nights, Karaoke & Events on Oʻahu | El Ranchero',
@@ -32,6 +35,7 @@ const weeklyRows = [
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.hubHero}
     title="Live Music, Latin Nights & Events on Oʻahu"
     content={`At El Ranchero, the night doesn’t end with dinner. It’s where Oʻahu’s Latino community comes together for music, tacos, and a good time. And everyone’s welcome to join in.<br /><br />Make Tuesdays about tacos, grab the mic at free Wednesday karaoke, see what Friday’s promoters have planned, or dance the night away at Saturday Latin Night. We also bring Mexican bands to Oʻahu for special concert nights.<br /><br />There’s always something happening, so follow ${EVENTS_INSTAGRAM_HANDLE} for the latest event details, times, and locations.`}
     actions={[{ variant: 'primary', text: `Follow ${EVENTS_INSTAGRAM_HANDLE}`, href: EVENTS_INSTAGRAM_HREF, target: '_blank' }]}

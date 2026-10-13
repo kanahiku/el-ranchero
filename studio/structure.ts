@@ -7,6 +7,7 @@ const SINGLETONS: Record<string, string> = {
   aboutContent: 'singleton-about',
   cateringContent: 'singleton-catering',
   locationsContent: 'singleton-locations',
+  eventsContent: 'singleton-events',
   menuPagesContent: 'singleton-menu-pages',
 };
 
@@ -37,6 +38,10 @@ export const structure = (S: StructureBuilder) =>
       S.listItem()
         .title('Locations')
         .child(S.document().schemaType('locationsContent').documentId('singleton-locations').title('Locations')),
+
+      S.listItem()
+        .title('Events')
+        .child(S.document().schemaType('eventsContent').documentId('singleton-events').title('Events')),
 
       S.listItem()
         .title('Menu Pages')

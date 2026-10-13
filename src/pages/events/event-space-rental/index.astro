@@ -4,7 +4,8 @@
  * The inquiry form posts through the site contact worker. The doc says the form recipient,
  * booking phone and approved workflow are still to be confirmed — the "Call About the Space"
  * button is intentionally omitted until the booking phone is verified.
- * Composes shared widgets only. Photos are grey placeholders until the client photography pass.
+ * Composes shared widgets only. Photos come from the Sanity "Events" singleton
+ * (`eventsContent`); a missing photo renders the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -14,6 +15,9 @@ import CTABanner from '~/components/widgets/CTABanner.astro';
 import Text from '~/components/ui/Text.astro';
 import Form from '~/components/ui/Form.astro';
 import { moreEventsColumns, moreEventsRows } from '~/data/events';
+import { getEventsImages } from '~/lib/content';
+
+const images = await getEventsImages();
 
 const metadata = {
   title: 'Event Space Rental in Kapolei | Taqueria El Ranchero',
@@ -47,6 +51,7 @@ const inquiryInputs = [
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.spaceRentalHero}
     title="Event Space Rental at El Ranchero Kapolei"
     content="Bring your people together somewhere that already knows how to welcome a crowd.<br /><br />Taqueria El Ranchero’s Kapolei location at Ka Makana Aliʻi has venue space available to rent for private events, from work gatherings to family celebrations.<br /><br />Tell us what you’re planning and ask about the space for your occasion."
     actions={[{ variant: 'primary', text: 'Request Event Space Information', href: '#inquiry' }]}

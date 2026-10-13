@@ -10,6 +10,7 @@ import type {
   AboutImages,
   CateringImages,
   LocationImages,
+  EventsImages,
   MenuPagesImages,
   NavigationContent,
   NavLink,
@@ -66,156 +67,188 @@ function normalizeWebsiteCopy(value: string): string {
     .normalize('NFC');
 }
 
-// ─── Homepage ────────────────────────────────────────────────────────────────
+// ─── Page images ─────────────────────────────────────────────────────────────
+// One singleton per page group (`homepageContent`, `aboutContent`, …). Each holds
+// named image fields; a field with no image resolves to `undefined` so the widget
+// shows its grey placeholder.
 
-type FetchedHomepageImages = {
-  heroImage?: FetchedImage | null;
-  breakfastImage?: FetchedImage | null;
-  cateringImage?: FetchedImage | null;
-  privateEventsImage?: FetchedImage | null;
-};
-
-const HOMEPAGE_IMAGES_QUERY = /* groq */ `
-  *[_type == "homepageContent" && _id == "singleton-homepage"][0] {
-    ${IMAGE_PROJECTION('heroImage', 'Taqueria El Ranchero')},
-    ${IMAGE_PROJECTION('breakfastImage', 'Mexican breakfast at El Ranchero')},
-    ${IMAGE_PROJECTION('cateringImage', 'El Ranchero Mexican catering')},
-    ${IMAGE_PROJECTION('privateEventsImage', 'El Ranchero Kapolei event space')}
-  }
-`;
+/** Fetch `fields` (schema field name → fallback alt) from one singleton document. */
+async function fetchSingletonImages<K extends string>(
+  type: string,
+  id: string,
+  fields: Record<K, string>
+): Promise<Record<K, ContentImage | undefined>> {
+  const projection = Object.entries<string>(fields)
+    .map(([field, alt]) => IMAGE_PROJECTION(field, alt))
+    .join(',\n');
+  const doc = await sanityClient.fetch<Record<string, FetchedImage | null> | null>(
+    `*[_type == "${type}" && _id == "${id}"][0] { ${projection} }`
+  );
+  return Object.fromEntries(
+    (Object.keys(fields) as K[]).map((field) => [field, resolveContentImage(doc?.[field])])
+  ) as Record<K, ContentImage | undefined>;
+}
 
 export async function getSanityHomepageImages(): Promise<HomepageImages> {
-  const doc = await sanityClient.fetch<FetchedHomepageImages | null>(HOMEPAGE_IMAGES_QUERY);
+  const i = await fetchSingletonImages('homepageContent', 'singleton-homepage', {
+    heroImage: 'Taqueria El Ranchero',
+    breakfastImage: 'Mexican breakfast at El Ranchero',
+    molcajeteImage: 'Molcajete at El Ranchero',
+    tacosBirriaImage: 'Tacos de birria at El Ranchero',
+    burritosImage: 'Burritos at El Ranchero',
+    wahiawaImage: 'El Ranchero Wahiawa',
+    kapoleiImage: 'El Ranchero Kapolei',
+    cateringImage: 'El Ranchero Mexican catering',
+    privateEventsImage: 'El Ranchero Kapolei event space',
+  });
 
   return {
-    hero: resolveContentImage(doc?.heroImage),
-    breakfast: resolveContentImage(doc?.breakfastImage),
-    catering: resolveContentImage(doc?.cateringImage),
-    privateEvents: resolveContentImage(doc?.privateEventsImage),
+    hero: i.heroImage,
+    breakfast: i.breakfastImage,
+    molcajete: i.molcajeteImage,
+    tacosBirria: i.tacosBirriaImage,
+    burritos: i.burritosImage,
+    wahiawa: i.wahiawaImage,
+    kapolei: i.kapoleiImage,
+    catering: i.cateringImage,
+    privateEvents: i.privateEventsImage,
   };
 }
-
-// ─── About ───────────────────────────────────────────────────────────────────
-
-type FetchedAboutImages = {
-  heroImage?: FetchedImage | null;
-  madeFreshDailyImage?: FetchedImage | null;
-  muralsImage?: FetchedImage | null;
-  givingBackImage?: FetchedImage | null;
-};
-
-const ABOUT_IMAGES_QUERY = /* groq */ `
-  *[_type == "aboutContent" && _id == "singleton-about"][0] {
-    ${IMAGE_PROJECTION('heroImage', 'About Taqueria El Ranchero')},
-    ${IMAGE_PROJECTION('madeFreshDailyImage', 'Food prepared fresh daily at El Ranchero')},
-    ${IMAGE_PROJECTION('muralsImage', 'Murals at El Ranchero')},
-    ${IMAGE_PROJECTION('givingBackImage', 'El Ranchero giving back to the community')}
-  }
-`;
 
 export async function getSanityAboutImages(): Promise<AboutImages> {
-  const doc = await sanityClient.fetch<FetchedAboutImages | null>(ABOUT_IMAGES_QUERY);
+  const i = await fetchSingletonImages('aboutContent', 'singleton-about', {
+    heroImage: 'About Taqueria El Ranchero',
+    madeFreshDailyImage: 'Food prepared fresh daily at El Ranchero',
+    muralsImage: 'Murals at El Ranchero',
+    givingBackImage: 'El Ranchero giving back to the community',
+  });
 
   return {
-    hero: resolveContentImage(doc?.heroImage),
-    madeFreshDaily: resolveContentImage(doc?.madeFreshDailyImage),
-    murals: resolveContentImage(doc?.muralsImage),
-    givingBack: resolveContentImage(doc?.givingBackImage),
+    hero: i.heroImage,
+    madeFreshDaily: i.madeFreshDailyImage,
+    murals: i.muralsImage,
+    givingBack: i.givingBackImage,
   };
 }
-
-// ─── Catering ────────────────────────────────────────────────────────────────
-
-type FetchedCateringImages = {
-  menuImage?: FetchedImage | null;
-};
-
-const CATERING_IMAGES_QUERY = /* groq */ `
-  *[_type == "cateringContent" && _id == "singleton-catering"][0] {
-    ${IMAGE_PROJECTION('menuImage', 'El Ranchero catering')}
-  }
-`;
 
 export async function getSanityCateringImages(): Promise<CateringImages> {
-  const doc = await sanityClient.fetch<FetchedCateringImages | null>(CATERING_IMAGES_QUERY);
+  const i = await fetchSingletonImages('cateringContent', 'singleton-catering', {
+    heroImage: 'El Ranchero catering',
+    favoriteTacosImage: 'Tacos for catering from El Ranchero',
+    favoriteBurritosImage: 'Burritos for catering from El Ranchero',
+    favoriteMexicanImage: 'Mexican favorites for catering from El Ranchero',
+    favoriteSidesImage: 'Sides for catering from El Ranchero',
+  });
 
   return {
-    menu: resolveContentImage(doc?.menuImage),
+    hero: i.heroImage,
+    favoriteTacos: i.favoriteTacosImage,
+    favoriteBurritos: i.favoriteBurritosImage,
+    favoriteMexican: i.favoriteMexicanImage,
+    favoriteSides: i.favoriteSidesImage,
   };
 }
-
-// ─── Locations ───────────────────────────────────────────────────────────────
-
-type FetchedLocationImages = {
-  directoryImage?: FetchedImage | null;
-  wahiawaImage?: FetchedImage | null;
-  kapoleiImage?: FetchedImage | null;
-};
-
-const LOCATIONS_IMAGES_QUERY = /* groq */ `
-  *[_type == "locationsContent" && _id == "singleton-locations"][0] {
-    ${IMAGE_PROJECTION('directoryImage', 'El Ranchero locations on Oahu')},
-    ${IMAGE_PROJECTION('wahiawaImage', 'El Ranchero Wahiawa')},
-    ${IMAGE_PROJECTION('kapoleiImage', 'El Ranchero Kapolei')}
-  }
-`;
 
 export async function getSanityLocationImages(): Promise<LocationImages> {
-  const doc = await sanityClient.fetch<FetchedLocationImages | null>(LOCATIONS_IMAGES_QUERY);
+  const favoriteFields = (prefix: 'wahiawa' | 'kapolei', place: string) => ({
+    [`${prefix}TacosImage`]: `Tacos at El Ranchero ${place}`,
+    [`${prefix}BurritoImage`]: `Burrito at El Ranchero ${place}`,
+    [`${prefix}BirriaImage`]: `Birria at El Ranchero ${place}`,
+    [`${prefix}QuesadillasImage`]: `Quesadilla at El Ranchero ${place}`,
+    [`${prefix}MexicanPlatesImage`]: `Mexican plate at El Ranchero ${place}`,
+  });
+
+  const i = await fetchSingletonImages('locationsContent', 'singleton-locations', {
+    hubHeroImage: 'El Ranchero locations on Oahu',
+    hubWahiawaImage: 'El Ranchero Wahiawa',
+    hubKapoleiImage: 'El Ranchero Kapolei',
+    wahiawaHeroImage: 'El Ranchero Wahiawa',
+    kapoleiHeroImage: 'El Ranchero Kapolei',
+    ...favoriteFields('wahiawa', 'Wahiawa'),
+    ...favoriteFields('kapolei', 'Kapolei'),
+  });
+
+  const byField = i as Record<string, ContentImage | undefined>;
+  const favorites = (prefix: 'wahiawa' | 'kapolei'): LocationImages['wahiawaFavorites'] => ({
+    tacos: byField[`${prefix}TacosImage`],
+    burrito: byField[`${prefix}BurritoImage`],
+    birria: byField[`${prefix}BirriaImage`],
+    quesadillas: byField[`${prefix}QuesadillasImage`],
+    mexicanPlates: byField[`${prefix}MexicanPlatesImage`],
+  });
 
   return {
-    directory: resolveContentImage(doc?.directoryImage),
-    wahiawa: resolveContentImage(doc?.wahiawaImage),
-    kapolei: resolveContentImage(doc?.kapoleiImage),
+    hubHero: i.hubHeroImage,
+    hubWahiawa: i.hubWahiawaImage,
+    hubKapolei: i.hubKapoleiImage,
+    wahiawaHero: i.wahiawaHeroImage,
+    kapoleiHero: i.kapoleiHeroImage,
+    wahiawaFavorites: favorites('wahiawa'),
+    kapoleiFavorites: favorites('kapolei'),
   };
 }
 
-// ─── Menu Pages ──────────────────────────────────────────────────────────────
+export async function getSanityEventsImages(): Promise<EventsImages> {
+  const i = await fetchSingletonImages('eventsContent', 'singleton-events', {
+    hubHeroImage: 'Events at El Ranchero',
+    tacoTuesdayHeroImage: 'Taco Tuesday at El Ranchero',
+    karaokeHeroImage: 'Karaoke Wednesday at El Ranchero',
+    latinNightHeroImage: 'Saturday Latin Night at El Ranchero',
+    concertsHeroImage: 'Live concerts at El Ranchero',
+    spaceRentalHeroImage: 'Event space at El Ranchero Kapolei',
+  });
 
-type FetchedMenuPagesImages = {
-  menuHubHeroImage?: FetchedImage | null;
-  breakfastHeroImage?: FetchedImage | null;
-  burritosHeroImage?: FetchedImage | null;
-  tacosHeroImage?: FetchedImage | null;
-  entreesHeroImage?: FetchedImage | null;
-  quesadillasNachosHeroImage?: FetchedImage | null;
-  specialsHeroImage?: FetchedImage | null;
-  appetizersSidesHeroImage?: FetchedImage | null;
-  kidsHeroImage?: FetchedImage | null;
-  drinksHeroImage?: FetchedImage | null;
-};
-
-const MENU_PAGES_IMAGES_QUERY = /* groq */ `
-  *[_type == "menuPagesContent" && _id == "singleton-menu-pages"][0] {
-    ${IMAGE_PROJECTION('menuHubHeroImage', 'El Ranchero menu')},
-    ${IMAGE_PROJECTION('breakfastHeroImage', 'Breakfast at El Ranchero')},
-    ${IMAGE_PROJECTION('burritosHeroImage', 'Burritos at El Ranchero')},
-    ${IMAGE_PROJECTION('tacosHeroImage', 'Tacos & Birria at El Ranchero')},
-    ${IMAGE_PROJECTION('entreesHeroImage', 'Entrees & Fajitas at El Ranchero')},
-    ${IMAGE_PROJECTION('quesadillasNachosHeroImage', 'Quesadillas & Nachos at El Ranchero')},
-    ${IMAGE_PROJECTION('specialsHeroImage', 'Specials at El Ranchero')},
-    ${IMAGE_PROJECTION('appetizersSidesHeroImage', 'Appetizers & Sides at El Ranchero')},
-    ${IMAGE_PROJECTION('kidsHeroImage', 'Kids Menu at El Ranchero')},
-    ${IMAGE_PROJECTION('drinksHeroImage', 'Drinks & Margaritas at El Ranchero')}
-  }
-`;
+  return {
+    hubHero: i.hubHeroImage,
+    tacoTuesdayHero: i.tacoTuesdayHeroImage,
+    karaokeHero: i.karaokeHeroImage,
+    latinNightHero: i.latinNightHeroImage,
+    concertsHero: i.concertsHeroImage,
+    spaceRentalHero: i.spaceRentalHeroImage,
+  };
+}
 
 export async function getSanityMenuPagesImages(): Promise<MenuPagesImages> {
-  const doc = await sanityClient.fetch<FetchedMenuPagesImages | null>(MENU_PAGES_IMAGES_QUERY);
+  const i = await fetchSingletonImages('menuPagesContent', 'singleton-menu-pages', {
+    menuHubHeroImage: 'El Ranchero menu',
+    breakfastEveryDayImage: 'Breakfast at El Ranchero',
+    featuredMolcajeteImage: 'Molcajete at El Ranchero',
+    featuredTacoImage: 'Tacos at El Ranchero',
+    featuredCaliforniaBurritoImage: 'California Burrito at El Ranchero',
+    breakfastHeroImage: 'Breakfast at El Ranchero',
+    burritosHeroImage: 'Burritos at El Ranchero',
+    tacosHeroImage: 'Tacos & Birria at El Ranchero',
+    entreesHeroImage: 'Entrees & Fajitas at El Ranchero',
+    quesadillasNachosHeroImage: 'Quesadillas & Nachos at El Ranchero',
+    specialsHeroImage: 'Specials at El Ranchero',
+    appetizersSidesHeroImage: 'Appetizers & Sides at El Ranchero',
+    kidsHeroImage: 'Kids Menu at El Ranchero',
+    drinksHeroImage: 'Drinks & Margaritas at El Ranchero',
+    breakfastTakeoutImage: 'Breakfast at El Ranchero',
+    entreesMolcajeteImage: 'Molcajete at El Ranchero',
+  });
 
   return {
-    menuHubHero: resolveContentImage(doc?.menuHubHeroImage),
-    breakfastHero: resolveContentImage(doc?.breakfastHeroImage),
-    burritosHero: resolveContentImage(doc?.burritosHeroImage),
-    tacosHero: resolveContentImage(doc?.tacosHeroImage),
-    entreesHero: resolveContentImage(doc?.entreesHeroImage),
-    quesadillasNachosHero: resolveContentImage(doc?.quesadillasNachosHeroImage),
-    specialsHero: resolveContentImage(doc?.specialsHeroImage),
-    appetizersSidesHero: resolveContentImage(doc?.appetizersSidesHeroImage),
-    kidsHero: resolveContentImage(doc?.kidsHeroImage),
-    drinksHero: resolveContentImage(doc?.drinksHeroImage),
+    menuHubHero: i.menuHubHeroImage,
+    breakfastEveryDay: i.breakfastEveryDayImage,
+    featuredMolcajete: i.featuredMolcajeteImage,
+    featuredTaco: i.featuredTacoImage,
+    featuredCaliforniaBurrito: i.featuredCaliforniaBurritoImage,
+    breakfastHero: i.breakfastHeroImage,
+    burritosHero: i.burritosHeroImage,
+    tacosHero: i.tacosHeroImage,
+    entreesHero: i.entreesHeroImage,
+    quesadillasNachosHero: i.quesadillasNachosHeroImage,
+    specialsHero: i.specialsHeroImage,
+    appetizersSidesHero: i.appetizersSidesHeroImage,
+    kidsHero: i.kidsHeroImage,
+    drinksHero: i.drinksHeroImage,
+    breakfastTakeout: i.breakfastTakeoutImage,
+    entreesMolcajete: i.entreesMolcajeteImage,
   };
 }
+
+// ─── Navigation ──────────────────────────────────────────────────────────────
 
 type FetchedNavSubLink = {
   text?: string;
@@ -370,6 +403,8 @@ type FetchedMenuCategory = {
   description?: string;
   order?: number;
   hubSpan?: number;
+  image?: FetchedImage | null;
+  exploreMoreImage?: FetchedImage | null;
 };
 
 type FetchedMenuItem = {
@@ -396,7 +431,9 @@ const MENU_QUERY = /* groq */ `
       "slug": slug.current,
       description,
       "order": coalesce(order, 0),
-      hubSpan
+      hubSpan,
+      ${IMAGE_PROJECTION('image', 'Menu category')},
+      ${IMAGE_PROJECTION('exploreMoreImage', 'Menu category')}
     },
     "items": *[_type == "menuItem" && isAvailable != false && defined(title)] | order(title asc) {
       _id,
@@ -465,12 +502,25 @@ export async function getSanityMenuCategories(): Promise<MenuCategory[]> {
       .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
       .map(({ order: _order, ...item }) => item);
 
+    const title = category.title!.trim();
+    const image = resolveContentImage(category.image);
+    const exploreMoreImage = resolveContentImage(category.exploreMoreImage);
+
     return {
-      title: category.title!.trim(),
+      title,
       slug: category.slug,
       href: category.slug ? `/menu/${category.slug}` : undefined,
       ...(category.description ? { description: category.description.trim() } : {}),
       hubSpan: category.hubSpan === 6 ? 6 : 4,
+      ...(image ? { image: { ...image, alt: image.alt === 'Menu category' ? title : image.alt } } : {}),
+      ...(exploreMoreImage
+        ? {
+            exploreMoreImage: {
+              ...exploreMoreImage,
+              alt: exploreMoreImage.alt === 'Menu category' ? title : exploreMoreImage.alt,
+            },
+          }
+        : {}),
       items: categoryItems,
     } satisfies MenuCategory;
   });

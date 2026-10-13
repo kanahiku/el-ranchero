@@ -1,8 +1,9 @@
 ---
 /**
  * Menu hub — copy from pages-content/Menu Pages/_ menu - Menu Hub.docx.
- * Composes shared widgets only. Photos are grey placeholders until the
- * client photography pass.
+ * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
+ * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
+ * the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -14,7 +15,7 @@ import Locations from '~/components/widgets/Locations.astro';
 import Note from '~/components/widgets/Note.astro';
 import Text from '~/components/ui/Text.astro';
 import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMeatOptions } from '~/lib/content';
+import { getMeatOptions, getMenuPagesImages } from '~/lib/content';
 import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
 
 const metadata = {
@@ -25,12 +26,15 @@ const metadata = {
 };
 
 const meatOptions = await getMeatOptions();
+const images = await getMenuPagesImages();
+
 ---
 
 <PageLayout metadata={metadata}>
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.menuHubHero}
     title="Mexican Food Menu in Wahiawa & Kapolei"
     content="Explore the Mexican food menu at Taqueria El Ranchero, inspired by the taquerias of Northern California. From tacos and burritos to our signature Molcajete, our dishes reflect the straightforward cooking and fresh daily preparation behind El Ranchero.<br /><br />Both our Wahiawa and Kapolei restaurants serve the same menu. Browse by category below, then choose your location when you’re ready to order."
     actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
@@ -46,6 +50,7 @@ const meatOptions = await getMeatOptions();
     id="breakfast"
     heading="Breakfast Every Day, Starting at 7 AM"
     withImage
+    image={images.breakfastEveryDay}
     imageAspect="4 / 3"
     class="bg-card"
   >
@@ -72,6 +77,7 @@ const meatOptions = await getMeatOptions();
     dishes={[
       {
         title: 'Molcajete',
+        image: images.featuredMolcajete,
         href: '/menu/entrees',
         description: [
           'Our signature Molcajete brings grilled meats, vegetables and savory sauces together in a traditional volcanic stone mortar.',
@@ -81,6 +87,7 @@ const meatOptions = await getMeatOptions();
       },
       {
         title: 'Taco',
+        image: images.featuredTaco,
         href: '/menu/tacos',
         description: [
           'Our Taco comes with your choice of meat, onion, cilantro and salsa. You can choose from the meat options listed below.',
@@ -89,6 +96,7 @@ const meatOptions = await getMeatOptions();
       },
       {
         title: 'California Burrito',
+        image: images.featuredCaliforniaBurrito,
         href: '/menu/burritos',
         description: [
           'Our California Burrito combines your choice of meat with cheese, fries, guacamole and sour cream.',

@@ -1,8 +1,8 @@
 ---
 /**
  * Kapolei location — copy from pages-content/Locations/Location - Kapolei.docx.
- * Composes shared widgets only. The storefront photo is a grey placeholder
- * until the client photography pass ("keep existing storefront image").
+ * Composes shared widgets only. Photos come from the Sanity "Locations" singleton
+ * (`locationsContent`); a missing photo renders the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -16,13 +16,17 @@ import Button from '~/components/ui/Button.astro';
 import { CATERING_CTA_HREF } from '~/config/cta';
 import { EVENTS_INSTAGRAM_HANDLE, EVENTS_INSTAGRAM_HREF } from '~/data/events';
 import { findStore, storeDirectionsHref } from '~/data/locations';
+import { getLocationImages } from '~/lib/content';
+
+const images = await getLocationImages();
+const favoriteImages = images.kapoleiFavorites;
 
 const store = findStore('kapolei');
 if (!store) throw new Error('Missing Kapolei store');
 const directionsHref = storeDirectionsHref(store);
 
 const metadata = {
-  title: 'Mexican Restaurant in Kapolei, HI | Taqueria El Ranchero',
+  title: 'Mexican Restaurant at Ka Makana Aliʻi, Kapolei | El Ranchero',
   description:
     'Visit Taqueria El Ranchero in Kapolei for tacos, burritos, Mexican breakfast and more at Ka Makana Aliʻi. View the menu or order on DoorDash.',
   ignoreTitleTemplate: true,
@@ -31,22 +35,27 @@ const metadata = {
 const favorites = [
   {
     title: 'Tacos',
-    description: 'Go classic or try something different with available meat, seafood and vegetarian options.',
+    image: favoriteImages.tacos,
+    description: 'Go classic or try something different with available meat, seafood and veggie options.',
   },
   {
     title: 'California Burrito',
+    image: favoriteImages.burrito,
     description: 'A filling burrito favorite for when you want something hearty.',
   },
   {
     title: 'Birria',
+    image: favoriteImages.birria,
     description: 'Look for savory birria among the Mexican favorites available on the Kapolei menu.',
   },
   {
     title: 'Quesadillas',
+    image: favoriteImages.quesadillas,
     description: 'A simple favorite with available fillings and options to make it your own.',
   },
   {
     title: 'Mexican Plates',
+    image: favoriteImages.mexicanPlates,
     description: 'Sit down to a full meal with available dishes such as enchiladas, carne asada, fajitas and other Mexican favorites.',
   },
 ];
@@ -60,7 +69,7 @@ const faqs = [
   {
     title: 'What are Taqueria El Ranchero Kapolei\'s hours?',
     description:
-      'The Kapolei location is open Monday through Sunday from 10:00 AM to 9:00 PM.',
+      'The Kapolei kitchen is open daily from 7:00 AM to 10:00 PM, with breakfast served from 7:00 AM to 12:00 PM.',
   },
   {
     title: 'Can I order Taqueria El Ranchero Kapolei online?',
@@ -89,7 +98,8 @@ const faqs = [
   <Hero2
     variant="split-dark"
     overlapHeader={false}
-    title="Mexican Restaurant in Kapolei, HI"
+    image={images.kapoleiHero}
+    title="Mexican Restaurant in Kapolei at Ka Makana Aliʻi"
     content='Looking for Mexican food in Kapolei? Visit Taqueria El Ranchero at Ka Makana Aliʻi for Ranchero-style tacos, burritos, Mexican breakfast favorites and more.<br /><br />Stop by for breakfast, lunch or dinner, explore our menu before your visit, or order online through DoorDash.'
     actions={[
       { variant: 'primary', text: 'View the Menu', href: '/menu' },

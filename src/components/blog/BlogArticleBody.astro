@@ -25,7 +25,7 @@ const blocks = usePortableBody ? [] : getArticleBlocks(post);
 const unmatchedImages = usePortableBody ? [] : getUnmatchedInlineImages(post);
 const contentBlocks = post.contentBlocks ?? [];
 
-const paragraphClass = 'text-[16px] md:text-[17px] font-normal leading-[160%] text-muted';
+const paragraphClass = 'text-[16px] font-normal leading-[160%] text-muted';
 const headingClass =
   'text-[26px] md:text-[40px] font-normal leading-[110%] tracking-tighter font-heading text-heading mb-5';
 
@@ -39,7 +39,7 @@ function reviewSources(section: ServiceSection): ReviewSource[] {
   return ['google', 'yelp'];
 }
 
-const h3Class = 'text-[16px] md:text-[18px] font-sans font-medium leading-[130%] text-heading mb-3 mt-8';
+const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading mb-3 mt-8';
 ---
 
 <div class="min-w-0">
@@ -304,7 +304,7 @@ const h3Class = 'text-[16px] md:text-[18px] font-sans font-medium leading-[130%]
                     {index + 1}
                   </div>
                   <div class="min-w-0">
-                    <h3 class="text-[16px] md:text-[18px] font-sans font-medium leading-[130%] text-heading mb-0.5">
+                    <h3 class="text-[16px] font-sans font-medium leading-[130%] text-heading mb-0.5">
                       {step.title}
                     </h3>
                     <p class="text-[14px] md:text-[15px] font-normal leading-[160%] text-muted">{step.description}</p>
@@ -345,14 +345,14 @@ const h3Class = 'text-[16px] md:text-[18px] font-sans font-medium leading-[130%]
             <div class="space-y-8">
               {section.items.map((card) => (
                 <div>
-                  <h3 class="text-[16px] md:text-[18px] font-sans font-medium leading-[130%] text-heading mb-3">
+                  <h3 class="text-[16px] font-sans font-medium leading-[130%] text-heading mb-3">
                     {card.title}
                   </h3>
                   <ul class="space-y-2">
                     {card.items.map((item) => (
                       <li class="flex items-start gap-3">
                         <Icon name="tabler:check" class="mt-0.5 shrink-0 w-5 h-5 text-primary" aria-hidden="true" />
-                        <span class="text-[16px] md:text-[17px] font-normal leading-[160%] text-muted">{item}</span>
+                        <span class="text-[16px] font-normal leading-[160%] text-muted">{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -383,7 +383,7 @@ const h3Class = 'text-[16px] md:text-[18px] font-sans font-medium leading-[130%]
               {section.items.map((item) => (
                 <blockquote class="border-l-4 border-accent pl-5">
                   <p class={`${paragraphClass} italic`}>“{item.quote}”</p>
-                  <footer class="mt-3 text-[16px] md:text-[18px] font-sans font-medium text-heading">{item.name}</footer>
+                  <footer class="mt-3 text-[16px] font-sans font-medium text-heading">{item.name}</footer>
                 </blockquote>
               ))}
             </div>

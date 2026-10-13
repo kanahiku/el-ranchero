@@ -93,7 +93,7 @@ export const brand = {
     h4: { size: '24px', mobile: '18px', lineHeight: '1.2', tracking: '0' },
     /** Roomier than the Style Guide (14/1.3, -1%): Figtree reads best at 16px / 1.6 with no negative tracking. */
     body: { size: '16px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
-    bodyLg: { size: '18px', mobile: '17px', lineHeight: '1.6', tracking: '0' },
+    bodyLg: { size: '16px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
     button: { size: '14px', mobile: '14px', lineHeight: '1', tracking: '0.04em' },
     /** Figma `tag`; Fraunces display weight. */
     eyebrow: { size: '16px', mobile: '15px', lineHeight: '1.2', tracking: '0.02em' },

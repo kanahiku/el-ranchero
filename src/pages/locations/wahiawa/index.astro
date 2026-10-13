@@ -1,8 +1,8 @@
 ---
 /**
  * Wahiawa location — copy from pages-content/Locations/Location - Wahiawa.docx.
- * Composes shared widgets only. The storefront photo is a grey placeholder
- * until the client photography pass ("keep existing storefront image").
+ * Composes shared widgets only. Photos come from the Sanity "Locations" singleton
+ * (`locationsContent`); a missing photo renders the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -15,6 +15,10 @@ import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
 import { CATERING_CTA_HREF } from '~/config/cta';
 import { findStore, storeDirectionsHref } from '~/data/locations';
+import { getLocationImages } from '~/lib/content';
+
+const images = await getLocationImages();
+const favoriteImages = images.wahiawaFavorites;
 
 const store = findStore('wahiawa');
 if (!store) throw new Error('Missing Wahiawa store');
@@ -30,22 +34,27 @@ const metadata = {
 const favorites = [
   {
     title: 'Tacos',
-    description: 'Choose from available meat, seafood and vegetarian options for a taco order that fits what you are craving.',
+    image: favoriteImages.tacos,
+    description: 'Choose from available meat, seafood and veggie options for a taco order that fits what you are craving.',
   },
   {
     title: 'California Burrito',
+    image: favoriteImages.burrito,
     description: 'Go for something hearty with one of El Ranchero’s popular burrito options.',
   },
   {
     title: 'Birria',
+    image: favoriteImages.birria,
     description: 'Look for savory birria among the Mexican dishes available on the current Wahiawa menu.',
   },
   {
     title: 'Quesadillas',
+    image: favoriteImages.quesadillas,
     description: 'Keep it simple or choose from available fillings and options to make it your own.',
   },
   {
     title: 'Mexican Plates',
+    image: favoriteImages.mexicanPlates,
     description: 'Sit down to a full meal with available Mexican plates and other El Ranchero favorites.',
   },
 ];
@@ -59,7 +68,7 @@ const faqs = [
   {
     title: 'What are Taqueria El Ranchero Wahiawa\'s hours?',
     description:
-      'The Wahiawa location is open Monday through Sunday from 9:00 AM to 8:30 PM.',
+      'The Wahiawa kitchen is open daily from 7:00 AM to 10:00 PM, with breakfast served from 7:00 AM to 12:00 PM.',
   },
   {
     title: 'Can I order Taqueria El Ranchero Wahiawa online?',
@@ -98,6 +107,7 @@ const faqs = [
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.wahiawaHero}
     title="Mexican Restaurant in Wahiawa, HI"
     content='Craving Mexican food in Wahiawa? Visit Taqueria El Ranchero on California Avenue for Ranchero-style tacos, burritos, Mexican breakfast favorites and more.<br /><br />Stop by for a meal, explore our menu before your visit or order online through DoorDash.'
     actions={[

@@ -1,7 +1,8 @@
 ---
 /**
  * Karaoke Wednesday — copy from pages-content/Events/_events_karaoke-wednesday - Karaoke Wednesday.docx.
- * Composes shared widgets only. Photos are grey placeholders until the client photography pass.
+ * Composes shared widgets only. Photos come from the Sanity "Events" singleton
+ * (`eventsContent`); a missing photo renders the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -17,6 +18,9 @@ import {
   moreEventsColumns,
   moreEventsRows,
 } from '~/data/events';
+import { getEventsImages } from '~/lib/content';
+
+const images = await getEventsImages();
 
 const metadata = {
   title: 'Free Karaoke Wednesdays on Oʻahu | El Ranchero',
@@ -30,6 +34,7 @@ const metadata = {
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.karaokeHero}
     title="Free Karaoke Wednesday at El Ranchero"
     content="Your favorite song deserves a microphone!<br /><br />Every Wednesday, Taqueria El Ranchero turns up the music for a night of free karaoke at both our Wahiawa and Kapolei locations.<br /><br />Sing in Spanish, English, or whatever music you love. There’s no set theme, no required genre, and everyone’s welcome to join the fun."
     actions={[{ variant: 'primary', text: 'Check Karaoke Wednesday Updates', href: EVENTS_INSTAGRAM_HREF, target: '_blank' }]}

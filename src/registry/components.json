@@ -680,7 +680,7 @@
         "ctaHref": "button href",
         "steps": "BuildStep[] — { title, description }"
       },
-      "notes": "Used on Design Your Own Salad. Pass steps from the page. Default image is own-salad.png; override with the image slot."
+      "notes": "Used on Design Your Own Salad. Pass steps from the page. Image comes from Sanity via the image prop."
     },
     {
       "id": "P-51",

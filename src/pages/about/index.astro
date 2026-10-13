@@ -1,14 +1,17 @@
 ---
 /**
  * About / Our Story — copy from pages-content/_ about - Our Story.docx.
- * Composes shared widgets only. Photos are grey placeholders until the
- * client photography pass (see "Image and Visual Recommendations" in the doc).
+ * Composes shared widgets only. Photos come from the Sanity "About" singleton
+ * (`aboutContent`); a missing photo renders the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
 import TextSplit from '~/components/widgets/TextSplit.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
+import { getAboutImages } from '~/lib/content';
+
+const images = await getAboutImages();
 
 const metadata = {
   title: 'Our Story | Taqueria El Ranchero in Oʻahu',
@@ -21,9 +24,10 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
 ---
 
 <PageLayout metadata={metadata}>
-  {/* ── Hero — placeholder: restaurant exterior (Exterior Daytime 001) ── */}
+  {/* ── Hero — Kapolei restaurant exterior ── */}
   <Hero2
     variant="split-dark"
+    image={images.hero}
     overlapHeader={false}
     title="About Taqueria El Ranchero"
     content="At Taqueria El Ranchero, we bring Northern California-inspired Mexican taqueria cooking to Oʻahu. Our approach centers on ranchero-style food, fresh daily preparation and meals made for everyday dining.<br /><br />From our original restaurant in Wahiawa to our newer location in Kapolei, we focus on the straightforward cooking that defines our taqueria style."
@@ -69,8 +73,8 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     </div>
   </TextSplit>
 
-  {/* ── Made Fresh Daily — placeholder: morning grill-preparation photo ── */}
-  <TextSplit id="made-fresh-daily" heading="Made Fresh Daily" withImage imageAspect="4 / 3">
+  {/* ── Made Fresh Daily — open-fire grill ── */}
+  <TextSplit id="made-fresh-daily" heading="Made Fresh Daily" withImage image={images.madeFreshDaily} imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
       <Text variant="body-lg" color="default">Fresh preparation is part of our routine at El Ranchero.</Text>
       <Text variant="body" color="default">
@@ -102,8 +106,8 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     </div>
   </TextSplit>
 
-  {/* ── The Murals — placeholder: chalk-art mural (Artwork Reference 023) ── */}
-  <TextSplit id="the-murals" heading="The Murals" withImage imageReverse imageAspect="4 / 3">
+  {/* ── The Murals — chalk-art mural (photo still needed from the client) ── */}
+  <TextSplit id="the-murals" heading="The Murals" withImage image={images.murals} imageReverse imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
       <Text variant="body-lg" color="default">
         The chalk-art murals at El Ranchero are a visual connection between our two restaurants.
@@ -120,8 +124,8 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     </div>
   </TextSplit>
 
-  {/* ── Giving Back — placeholder: restaurant interior (Night Interiors and Exteriors 003) ── */}
-  <TextSplit id="giving-back" heading="Giving Back" withImage imageAspect="4 / 3" class="bg-card">
+  {/* ── Community gathering place — restaurant interior ── */}
+  <TextSplit id="community" heading="A Gathering Place for the Community" withImage image={images.givingBack} imageAspect="4 / 3" class="bg-card">
     <div class="flex flex-col gap-6">
       <Text variant="body-lg" color="default">
         Our connection to Oʻahu goes beyond the food we serve. El Ranchero is also a gathering place for the island’s

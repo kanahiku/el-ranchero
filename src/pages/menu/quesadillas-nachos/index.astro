@@ -1,8 +1,9 @@
 ---
 /**
  * Quesadillas & Nachos — copy from pages-content/Menu Pages/_ menu_quesadillas-nachos - Quesadillas & Nachos.docx.
- * Composes shared widgets only. Photos are grey placeholders until the
- * client photography pass.
+ * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
+ * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
+ * the grey placeholder.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -12,7 +13,7 @@ import Locations from '~/components/widgets/Locations.astro';
 import MenuCategories from '~/components/widgets/MenuCategories.astro';
 import Note from '~/components/widgets/Note.astro';
 import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMenuSections, getMeatOptions } from '~/lib/content';
+import { getMenuSections, getMeatOptions, getMenuPagesImages } from '~/lib/content';
 import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
 
 const metadata = {
@@ -24,6 +25,7 @@ const metadata = {
 
 const sections = await getMenuSections('quesadillas-nachos');
 const meatOptions = await getMeatOptions();
+const images = await getMenuPagesImages();
 
 ---
 
@@ -31,6 +33,7 @@ const meatOptions = await getMeatOptions();
   <Hero2
     variant="split-dark"
     overlapHeader={false}
+    image={images.quesadillasNachosHero}
     title="Quesadillas & Nachos in Wahiawa & Kapolei"
     content="Looking for a cheesy quesadilla or a plate of loaded nachos? Explore the Quesadillas & Nachos menu at Taqueria El Ranchero.<br /><br />Choose from a classic cheese quesadilla, meat and veggie options, or nachos topped with your choice of meat, beans, cheese and more. All six menu items are available at our Wahiawa and Kapolei restaurants."
     actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
