@@ -1,5 +1,5 @@
 import type { NavigationContent } from '~/lib/content/types';
-import { CONTACT, PRIMARY_CTA_LABEL, PRIMARY_CTA_HREF, SOCIAL } from '~/config';
+import { CONTACT, FOOTER_CTA_HREF, PRIMARY_CTA_LABEL, SOCIAL } from '~/config';
 import { cateringOptionPages } from '~/data/catering';
 
 export const navigationData: NavigationContent = {
@@ -53,7 +53,7 @@ export const navigationData: NavigationContent = {
         ],
       },
     ],
-    actions: [{ variant: 'primary', text: PRIMARY_CTA_LABEL, href: PRIMARY_CTA_HREF }],
+    actions: [{ variant: 'primary', text: PRIMARY_CTA_LABEL, href: FOOTER_CTA_HREF }],
   },
 
   footer: {

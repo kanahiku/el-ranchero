@@ -22,19 +22,16 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
 ---
 
 <Layout metadata={metadata}>
-  <Hero2>
-    <Fragment slot="title">Privacy Policy</Fragment>
-    <Fragment slot="subtitle">
-      Taqueria El Ranchero provides this notice to explain the website features through which visitors may share
-      information or interact with third-party services.
-    </Fragment>
-    <Fragment slot="bg">
-      <SectionBg variant="hero" />
-    </Fragment>
-  </Hero2>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    hideImage
+    title="Privacy Policy"
+    content="Taqueria El Ranchero provides this notice to explain the website features through which visitors may share information or interact with third-party services."
+  />
 
   <WidgetWrapper containerClass="max-w-container mx-auto">
-    <div class="max-w-3xl space-y-10 md:space-y-14">
+    <div class="mx-auto w-full max-w-3xl space-y-10 text-left md:space-y-14">
       <section>
         <h2 class={headingClass}>Information You Provide Through Forms</h2>
         <div class={`${bodyClass} space-y-5`}>

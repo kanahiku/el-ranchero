@@ -92,10 +92,8 @@ const isLocalOverlayImage =
         isTitle && 'min-h-[320px] md:h-[450px] md:min-h-[450px]',
         isPage && 'min-h-[480px] md:min-h-[629px]',
         isPhotoOverlay && 'min-h-[520px] md:h-[760px]',
-        isSplitDark &&
-          (hideImage
-            ? 'bg-section-dark min-h-[460px] md:min-h-[560px]'
-            : 'bg-section-dark min-h-[560px] md:min-h-[740px]'),
+        isSplitDark && 'bg-section-dark',
+        showSplitDarkImage && 'min-h-[560px] md:min-h-[740px]',
       ]}
       {...(id ? { id } : {})}
     >
@@ -156,7 +154,9 @@ const isLocalOverlayImage =
         class:list={[
           'relative z-[2] flex flex-1 flex-col w-full mx-auto max-w-container',
           isSplitDark
-            ? 'px-5 sm:px-8 md:pl-16 md:pr-0 py-0'
+            ? hideImage
+              ? 'px-5 py-0 sm:px-8 md:px-16'
+              : 'px-5 sm:px-8 md:pl-16 md:pr-0 py-0'
             : isPhotoOverlay
               ? 'px-5 py-10 sm:px-8 md:px-16 md:py-16'
               : 'px-5 py-6 sm:px-8 md:px-16 lg:py-8',
@@ -252,14 +252,30 @@ const isLocalOverlayImage =
             {/* left: text column */}
             <div
               class:list={[
-                'flex shrink-0 flex-col items-start justify-center gap-6 pb-10 pt-6 lg:py-24 lg:pr-16',
-                showSplitDarkImage ? 'lg:w-[55%]' : 'lg:w-full lg:max-w-[760px]',
+                'flex shrink-0 flex-col justify-center gap-6 pb-10 pt-6 lg:py-24',
+                showSplitDarkImage
+                  ? 'items-start lg:w-[55%] lg:pr-16'
+                  : 'w-full items-center text-center',
               ]}
             >
               {tagline && <Heading variant="eyebrow" color="inherit" class="text-contrast/55" html={tagline} />}
-              {title && <h1 class="font-rough text-h1 font-normal leading-[1.05] text-contrast" set:html={title} />}
+              {title && (
+                <h1
+                  class:list={[
+                    'font-rough text-h1 font-normal leading-[1.05] text-contrast',
+                    !showSplitDarkImage && 'max-w-[920px] text-center',
+                  ]}
+                  set:html={title}
+                />
+              )}
               {content && (
-                <div class="font-sans text-body-lg text-contrast/85 max-w-[520px]" set:html={content} />
+                <div
+                  class:list={[
+                    'font-sans text-body-lg text-contrast/85',
+                    showSplitDarkImage ? 'max-w-[520px]' : 'mx-auto max-w-[720px] text-center',
+                  ]}
+                  set:html={content}
+                />
               )}
               {actions &&
                 (Array.isArray(actions) ? (

@@ -5,8 +5,8 @@
  */
 import Layout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
-import TextSplit from '~/components/widgets/TextSplit.astro';
 import Contact from '~/components/widgets/Contact.astro';
+import Heading from '~/components/ui/Heading.astro';
 import Button from '~/components/ui/Button.astro';
 import Text from '~/components/ui/Text.astro';
 import { findStore, storeDirectionsHref } from '~/data/locations';
@@ -17,6 +17,8 @@ const kapolei = findStore('kapolei');
 if (!wahiawa || !kapolei) throw new Error('Missing store data');
 
 const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
+const labelClass = 'font-semibold text-heading';
+const actionClass = 'whitespace-nowrap !px-4 !py-3 sm:!px-5';
 
 const metadata = {
   title: 'Contact Taqueria El Ranchero | Wahiawa & Kapolei',
@@ -25,8 +27,25 @@ const metadata = {
   ignoreTitleTemplate: true,
 };
 
-const kitchenHours = 'Kitchen Hours: Daily, 7:00 AM to 10:00 PM';
-const barHours = 'Bar Hours: Sunday to Thursday until midnight; Friday and Saturday until 2:00 AM';
+const kitchenHours = 'Daily, 7:00 AM to 10:00 PM';
+const barHours = 'Sunday to Thursday until midnight; Friday and Saturday until 2:00 AM';
+
+const stores = [
+  {
+    store: wahiawa,
+    intro: 'Our original taqueria is located in Wahiawa Shopping Center on California Avenue.',
+    address: '823 California Ave, Unit A5, Wahiawa, HI 96786',
+    directionsLabel: 'Get Directions to Wahiawa',
+    visitLabel: 'See our Wahiawa location',
+  },
+  {
+    store: kapolei,
+    intro: 'Find us at Ka Makana Aliʻi in Kapolei, where we offer sit-down dining and outdoor seating.',
+    address: '91-5431 Kapolei Pkwy #501, Kapolei, HI 96707',
+    directionsLabel: 'Get Directions to Kapolei',
+    visitLabel: 'See our Kapolei location',
+  },
+];
 ---
 
 <Layout metadata={metadata}>
@@ -37,56 +56,6 @@ const barHours = 'Bar Hours: Sunday to Thursday until midnight; Friday and Satur
     title="Contact Taqueria El Ranchero"
     content="Have a question about visiting us or want to share feedback? Find the contact details, hours, and directions for our Wahiawa and Kapolei restaurants below, or send us a message using the contact form."
   />
-
-  <TextSplit id="locations" heading="Visit or Call Our Locations">
-    <div class="flex flex-col gap-10">
-      <div class="flex flex-col gap-4">
-        <Text color="default" class="font-heading text-[22px] text-heading">Wahiawa</Text>
-        <Text color="default">
-          Our original taqueria is located in Wahiawa Shopping Center on California Avenue.
-        </Text>
-        <Text color="default">Address: 823 California Ave, Unit A5, Wahiawa, HI 96786</Text>
-        <Text color="default">
-          Phone: <a class={linkClass} href={wahiawa.phoneHref}>{wahiawa.phoneDisplay}</a>
-        </Text>
-        <Text color="default">{kitchenHours}</Text>
-        <Text color="default">{barHours}</Text>
-        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          <Button
-            variant="primary"
-            text="Get Directions to Wahiawa"
-            href={storeDirectionsHref(wahiawa)}
-            target="_blank"
-            hideNote={true}
-          />
-          <Button variant="ghost" tone="light" text="See our Wahiawa location" href={wahiawa.href} hideNote={true} />
-        </div>
-      </div>
-
-      <div class="flex flex-col gap-4">
-        <Text color="default" class="font-heading text-[22px] text-heading">Kapolei</Text>
-        <Text color="default">
-          Find us at Ka Makana Aliʻi in Kapolei, where we offer sit-down dining and outdoor seating.
-        </Text>
-        <Text color="default">Address: 91-5431 Kapolei Pkwy #501, Kapolei, HI 96707</Text>
-        <Text color="default">
-          Phone: <a class={linkClass} href={kapolei.phoneHref}>{kapolei.phoneDisplay}</a>
-        </Text>
-        <Text color="default">{kitchenHours}</Text>
-        <Text color="default">{barHours}</Text>
-        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          <Button
-            variant="primary"
-            text="Get Directions to Kapolei"
-            href={storeDirectionsHref(kapolei)}
-            target="_blank"
-            hideNote={true}
-          />
-          <Button variant="ghost" tone="light" text="See our Kapolei location" href={kapolei.href} hideNote={true} />
-        </div>
-      </div>
-    </div>
-  </TextSplit>
 
   <Contact
     id="contact-form"
@@ -114,5 +83,53 @@ const barHours = 'Bar Hours: Sunday to Thursday until midnight; Friday and Satur
       },
     ]}
     textarea={{ label: 'Message', name: 'message', placeholder: 'How can we help?' }}
-  />
+  >
+    <div slot="aside" class="flex flex-col gap-8">
+      <Heading variant="h2">Visit or Call Our Locations</Heading>
+      {
+        stores.map(({ store, intro, address, directionsLabel, visitLabel }) => (
+          <div class="flex flex-col gap-5 border-t border-heading/15 pt-6">
+            <Text color="default" class="font-heading text-[22px] text-heading">
+              {store.name}
+            </Text>
+            <Text color="default">{intro}</Text>
+            <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 font-sans text-body text-default">
+              <dt class={labelClass}>Address</dt>
+              <dd>{address}</dd>
+              <dt class={labelClass}>Phone</dt>
+              <dd>
+                <a class={linkClass} href={store.phoneHref}>
+                  {store.phoneDisplay}
+                </a>
+              </dd>
+              <dt class={labelClass}>Kitchen Hours</dt>
+              <dd>{kitchenHours}</dd>
+              <dt class={labelClass}>Bar Hours</dt>
+              <dd>{barHours}</dd>
+            </dl>
+            <div class="flex flex-row flex-wrap gap-2 sm:gap-3">
+              <Button
+                variant="primary"
+                text="Get Directions"
+                aria-label={directionsLabel}
+                href={storeDirectionsHref(store)}
+                target="_blank"
+                hideNote={true}
+                class={actionClass}
+              />
+              <Button
+                variant="ghost"
+                tone="light"
+                text="View Location"
+                aria-label={visitLabel}
+                href={store.href}
+                hideNote={true}
+                class={actionClass}
+              />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </Contact>
 </Layout>

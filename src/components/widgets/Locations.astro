@@ -57,6 +57,10 @@ export interface Props {
   variant?: 'compact' | 'detailed' | 'order';
   /** Order variant — HTML line under the cards (e.g. a link to the Locations page). */
   footnote?: string;
+  /** Detailed variant — short note under the location cards. */
+  note?: string;
+  /** Detailed variant — header alignment. */
+  headerAlign?: 'start' | 'center';
   id?: string;
 }
 
@@ -76,6 +80,8 @@ const {
   image,
   variant = 'compact',
   footnote,
+  note,
+  headerAlign = 'start',
   id,
 } = Astro.props;
 
@@ -143,7 +149,12 @@ const isOrder = variant === 'order';
     ) : isDetailed ? (
       <div class="flex flex-col gap-10 md:gap-16">
         {/* Header block */}
-        <div class="flex max-w-[822px] flex-col items-start gap-6">
+        <div
+          class:list={[
+            'flex max-w-[822px] flex-col gap-6',
+            headerAlign === 'center' ? 'mx-auto items-center text-center' : 'items-start',
+          ]}
+        >
           {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
           {title && <Heading variant="h2">{title}</Heading>}
           {
@@ -250,6 +261,14 @@ const isOrder = variant === 'order';
             ))
           }
         </div>
+
+        {
+          note && (
+            <Text variant="body" color="default" class="mx-auto max-w-3xl text-center">
+              {note}
+            </Text>
+          )
+        }
       </div>
     ) : (
     <div class="flex flex-col gap-8 md:flex-row md:gap-8">
