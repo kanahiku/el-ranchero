@@ -44,6 +44,7 @@ export const brand = {
     accentHover: '#991B1B', // red-800
     heading: '#09090B', // near-black
     muted: '#78350F', // brown
+    blogText: '#3A3A3A', // blog article body
     eyebrow: '#78350F', // brown
     page: '#FFFFFF', // white page
     sectionGrey: '#FEF3C7', // warm cream band
@@ -247,6 +248,7 @@ function rootVars(b: Brand): string {
     --aw-color-text-heading: ${heading};
     --aw-color-text-default: ${heading};
     --aw-color-text-muted: ${muted};
+    --aw-color-text-blog: ${rgb(c.blogText)};
     --aw-color-text-eyebrow: ${rgb(c.eyebrow)};
     --aw-color-text-contrast: ${rgb(c.cream)};
     --aw-color-bg-page: ${rgb(c.page)};

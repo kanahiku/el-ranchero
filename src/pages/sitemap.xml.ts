@@ -1,7 +1,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
-import { getPublicContentPaths } from '~/lib/content';
+import { getSitemapEntries } from '~/lib/content';
 import { canonicalSiteOrigin, isIndexableHost } from '~/lib/indexing';
 
 function escapeXml(value: string) {
@@ -19,7 +19,8 @@ const emptySitemap = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 export const GET: APIRoute = async ({ request }) => {
-  if (!isIndexableHost(request.headers.get('host'))) {
+  const isDev = import.meta.env.DEV;
+  if (!isDev && !isIndexableHost(request.headers.get('host'))) {
     return new Response(emptySitemap, {
       status: 200,
       headers: {
@@ -31,11 +32,12 @@ export const GET: APIRoute = async ({ request }) => {
   }
 
   const origin = canonicalSiteOrigin();
-  const paths = [...new Set(await getPublicContentPaths())];
-  const urls = paths
-    .map((path) => {
-      const loc = `${origin}${path === '/' ? '/' : path}`;
-      return `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    <changefreq>weekly</changefreq>\n  </url>`;
+  const entries = await getSitemapEntries();
+  const urls = entries
+    .map((entry) => {
+      const loc = `${origin}${entry.path === '/' ? '/' : entry.path}`;
+      const lastmodTag = entry.lastmod ? `\n    <lastmod>${entry.lastmod}</lastmod>` : '';
+      return `  <url>\n    <loc>${escapeXml(loc)}</loc>${lastmodTag}\n  </url>`;
     })
     .join('\n');
 
@@ -49,7 +51,7 @@ ${urls}
     status: 200,
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=60, s-maxage=300',
+      'Cache-Control': 'public, max-age=0, must-revalidate',
     },
   });
 };

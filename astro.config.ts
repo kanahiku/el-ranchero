@@ -5,7 +5,6 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 import { unified } from '@astrojs/markdown-remark';
 
-import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
@@ -41,6 +40,8 @@ export default defineConfig({
   redirects: {
     '/our-locations': '/locations',
     '/terms-of-service': '/terms',
+    '/sitemap-index.xml': '/sitemap.xml',
+    '/sitemap-0.xml': '/sitemap.xml',
   },
 
   // Hover/tap only. Prefetching every nav + footer URL on load contended with
@@ -61,9 +62,6 @@ export default defineConfig({
   })),
 
   integrations: [
-    sitemap({
-      filter: (page) => !page.includes('/404'),
-    }),
     mdx(),
     icon({
       include: {

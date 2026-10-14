@@ -30,6 +30,14 @@ export interface CateringImages {
   favoriteBurritos?: ContentImage;
   favoriteMexican?: ContentImage;
   favoriteSides?: ContentImage;
+  tacoBarHero?: ContentImage;
+  tacoBarPackages?: ContentImage;
+  corporateHero?: ContentImage;
+  corporateLunch?: ContentImage;
+  partyHero?: ContentImage;
+  partyFamily?: ContentImage;
+  largeGroupHero?: ContentImage;
+  largeGroupFood?: ContentImage;
 }
 
 /** Card photos for the "Favorites" grid on a location page. */
@@ -45,6 +53,8 @@ export interface LocationImages {
   hubHero?: ContentImage;
   hubWahiawa?: ContentImage;
   hubKapolei?: ContentImage;
+  orderOnlineWahiawa?: ContentImage;
+  orderOnlineKapolei?: ContentImage;
   wahiawaHero?: ContentImage;
   kapoleiHero?: ContentImage;
   wahiawaFavorites: LocationFavoriteImages;
@@ -367,7 +377,9 @@ export type BlogContentBlock =
   | BlogContentImage
   | BlogContentList
   | BlogContentTable
-  | BlogContentCallout;
+  | BlogContentCallout
+  | BlogContentButton
+  | BlogContentFaq;
 
 export interface BlogContentParagraph {
   _type: 'paragraph';
@@ -420,6 +432,27 @@ export interface BlogContentCallout {
   _key: string;
   calloutType: 'tip' | 'info' | 'warning' | 'note';
   text: string;
+}
+
+export interface BlogContentButton {
+  _type: 'button';
+  _key: string;
+  text: string;
+  href: string;
+  variant?: 'ghost-light' | 'primary';
+}
+
+export interface BlogContentFaqItem {
+  _key?: string;
+  question: string;
+  answer: string;
+}
+
+export interface BlogContentFaq {
+  _type: 'faq';
+  _key: string;
+  title?: string;
+  items: BlogContentFaqItem[];
 }
 
 // ─── Testimonials ─────────────────────────────────────────────────────────────

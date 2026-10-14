@@ -13,8 +13,8 @@ import { getPublicContentPaths } from '~/lib/content';
  * Filter: !(_id in path("drafts.**"))
  * Projection: {_id,_type,"slug": slug.current}
  *
- * On publish, this refreshes cached HTML (ISR) so new blog posts
- * go live without a Vercel rebuild.
+ * On publish, this refreshes cached HTML (ISR) and /sitemap.xml so new
+ * blogs and page edits go live without a Vercel rebuild.
  */
 
 function secretsEqual(provided: string, expected: string) {
@@ -72,7 +72,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const origin = new URL(request.url).origin;
-  const paths = [...new Set(await getPublicContentPaths())];
+  const paths = [...new Set([...(await getPublicContentPaths()), '/sitemap.xml'])];
 
   const results = await Promise.all(
     paths.map(async (path) => {

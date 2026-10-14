@@ -1,32 +1,38 @@
 ---
+/**
+ * Accessibility Statement — copy from the Drive doc "/accessibility - Accessibility Statement".
+ */
 import Layout from '~/layouts/PageLayout.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import SectionBg from '~/components/ui/SectionBg.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
 import CTABanner from '~/components/widgets/CTABanner.astro';
-import { CONTACT } from '~/config/contact';
-import { PRIMARY_CTA_LABEL } from '~/config/cta';
-import { siteHost } from '~/config/site';
+import { findStore } from '~/data/locations';
 
-const host = siteHost();
+const wahiawa = findStore('wahiawa');
+const kapolei = findStore('kapolei');
+if (!wahiawa || !kapolei) throw new Error('Missing store data');
 
 const metadata = {
-  title: `Accessibility Statement | ${CONTACT.businessName}`,
-  description: `Accessibility statement for ${host}, including our WCAG 2.1 AA approach and how to request help accessing the site.`,
+  title: 'Accessibility Statement | Taqueria El Ranchero',
+  description:
+    'Learn how to report an accessibility issue on the Taqueria El Ranchero website and contact our Wahiawa or Kapolei restaurants.',
   ignoreTitleTemplate: true,
 };
 
 const headingClass =
   'text-[22px] md:text-[26px] font-normal leading-[130%] tracking-tight font-heading text-heading mb-4';
 const bodyClass = 'text-[16px] font-normal leading-[160%] text-muted';
-const listClass = `${bodyClass} mt-4 space-y-1 list-disc pl-5`;
-const linkClass = 'btn-link';
+const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
 ---
 
 <Layout metadata={metadata}>
   <Hero2>
     <Fragment slot="title">Accessibility Statement</Fragment>
-    <Fragment slot="subtitle">Last reviewed: September 8, 2026</Fragment>
+    <Fragment slot="subtitle">
+      At Taqueria El Ranchero, we want visitors to be able to find the information they need about our restaurants and
+      use our website's main features.
+    </Fragment>
     <Fragment slot="bg">
       <SectionBg variant="hero" />
     </Fragment>
@@ -35,46 +41,35 @@ const linkClass = 'btn-link';
   <WidgetWrapper containerClass="max-w-container mx-auto">
     <div class="max-w-3xl space-y-10 md:space-y-14">
       <section>
-        <h2 class={headingClass}>Our commitment</h2>
-        <p class={bodyClass}>
-          {CONTACT.businessName} is committed to improving the accessibility and usability of {host} for all
-          visitors, including people who use assistive technology. Accessibility is an ongoing effort, and we continue
-          to make improvements to the site over time.
-        </p>
+        <h2 class={headingClass}>Report an Accessibility Issue</h2>
+        <div class={`${bodyClass} space-y-5`}>
+          <p>
+            If you have difficulty accessing a page, reading information or using a website feature, please let us know
+            through our <a class={linkClass} href="/contact">Contact page</a>. Sharing the page address and a brief
+            description of what happened can help us understand the issue.
+          </p>
+          <p>
+            You may also call either restaurant if you need help with information that is difficult to access online.
+          </p>
+        </div>
       </section>
 
       <section>
-        <h2 class={headingClass}>Our approach</h2>
-        <p class={bodyClass}>
-          As we build and maintain this website, our team works toward the Web Content Accessibility Guidelines (WCAG)
-          2.1 Level AA as a reference standard. We do not claim full conformance. Steps we take include:
-        </p>
-        <ul class={listClass}>
-          <li>Writing descriptive text for images that carry meaning</li>
-          <li>Using clear headings and page structure so content is easier to navigate</li>
-          <li>Aiming for readable text sizes and sufficient contrast</li>
-          <li>Supporting keyboard navigation where possible</li>
-          <li>Labeling form fields so they are easier to complete</li>
-          <li>Respecting reduced motion settings in your browser or operating system</li>
-        </ul>
+        <h2 class={headingClass}>Contact Our Locations</h2>
+        <div class={`${bodyClass} space-y-5`}>
+          <p>
+            Wahiawa: <a class={linkClass} href={wahiawa.phoneHref}>{wahiawa.phoneDisplay}</a><br />
+            Kapolei: <a class={linkClass} href={kapolei.phoneHref}>{kapolei.phoneDisplay}</a>
+          </p>
+          <p>Both restaurants also accept orders by phone.</p>
+        </div>
       </section>
 
       <section>
-        <h2 class={headingClass}>If you need help</h2>
+        <h2 class={headingClass}>Third-Party Websites</h2>
         <p class={bodyClass}>
-          If you have difficulty accessing any part of this website, or if you would like information in a different
-          format, please contact us at
-          <a class={linkClass} href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> or
-          <a class={linkClass} href={CONTACT.phone.href}>{CONTACT.phone.display}</a>. Please tell us the page you were
-          on and what you were trying to do.
-        </p>
-      </section>
-
-      <section>
-        <h2 class={headingClass}>Feedback</h2>
-        <p class={bodyClass}>
-          We welcome feedback on the accessibility of this website. Please send suggestions to
-          <a class={linkClass} href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.
+          Some links on our website lead to third-party services, including DoorDash for online ordering. Accessibility
+          features and limitations on those services are managed by their respective providers.
         </p>
       </section>
     </div>
@@ -84,8 +79,8 @@ const linkClass = 'btn-link';
   </WidgetWrapper>
 
   <CTABanner
-    title="Questions?"
-    subtitle={`If you have questions about this site or about working with ${CONTACT.businessName}, contact us.`}
-    ctaText={PRIMARY_CTA_LABEL}
+    title="Report an Accessibility Issue"
+    subtitle="If a page or feature is difficult to use, contact us and include the page address and a short description of what happened."
+    actions={[{ variant: 'primary', text: 'Contact Us', href: '/contact' }]}
   />
 </Layout>

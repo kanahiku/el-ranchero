@@ -138,6 +138,14 @@ export async function getSanityCateringImages(): Promise<CateringImages> {
     favoriteBurritosImage: 'Burritos for catering from El Ranchero',
     favoriteMexicanImage: 'Mexican favorites for catering from El Ranchero',
     favoriteSidesImage: 'Sides for catering from El Ranchero',
+    tacoBarHeroImage: 'Taco bar catering from El Ranchero',
+    tacoBarPackagesImage: 'El Ranchero taco bar packages',
+    corporateHeroImage: 'Corporate catering from El Ranchero',
+    corporateLunchImage: 'Office lunch catering from El Ranchero',
+    partyHeroImage: 'Party catering from El Ranchero',
+    partyFamilyImage: 'Family party catering from El Ranchero',
+    largeGroupHeroImage: 'Large group catering from El Ranchero',
+    largeGroupFoodImage: 'Food for a large group from El Ranchero',
   });
 
   return {
@@ -146,6 +154,14 @@ export async function getSanityCateringImages(): Promise<CateringImages> {
     favoriteBurritos: i.favoriteBurritosImage,
     favoriteMexican: i.favoriteMexicanImage,
     favoriteSides: i.favoriteSidesImage,
+    tacoBarHero: i.tacoBarHeroImage,
+    tacoBarPackages: i.tacoBarPackagesImage,
+    corporateHero: i.corporateHeroImage,
+    corporateLunch: i.corporateLunchImage,
+    partyHero: i.partyHeroImage,
+    partyFamily: i.partyFamilyImage,
+    largeGroupHero: i.largeGroupHeroImage,
+    largeGroupFood: i.largeGroupFoodImage,
   };
 }
 
@@ -162,6 +178,8 @@ export async function getSanityLocationImages(): Promise<LocationImages> {
     hubHeroImage: 'El Ranchero locations on Oahu',
     hubWahiawaImage: 'El Ranchero Wahiawa',
     hubKapoleiImage: 'El Ranchero Kapolei',
+    orderOnlineWahiawaImage: 'Taqueria El Ranchero Wahiawa storefront',
+    orderOnlineKapoleiImage: 'Taqueria El Ranchero Kapolei storefront',
     wahiawaHeroImage: 'El Ranchero Wahiawa',
     kapoleiHeroImage: 'El Ranchero Kapolei',
     ...favoriteFields('wahiawa', 'Wahiawa'),
@@ -181,6 +199,8 @@ export async function getSanityLocationImages(): Promise<LocationImages> {
     hubHero: i.hubHeroImage,
     hubWahiawa: i.hubWahiawaImage,
     hubKapolei: i.hubKapoleiImage,
+    orderOnlineWahiawa: i.orderOnlineWahiawaImage,
+    orderOnlineKapolei: i.orderOnlineKapoleiImage,
     wahiawaHero: i.wahiawaHeroImage,
     kapoleiHero: i.kapoleiHeroImage,
     wahiawaFavorites: favorites('wahiawa'),
@@ -386,7 +406,9 @@ export async function getSanityNavigationContent(): Promise<NavigationContent> {
         ...action,
         ...(action.text ? { text: normalizeWebsiteCopy(action.text) } : {}),
       })),
-      ...(nav.header?.phone ? { phone: { ...nav.header.phone, text: normalizeWebsiteCopy(nav.header.phone.text) } } : {}),
+      ...(nav.header?.phone
+        ? { phone: { ...nav.header.phone, text: normalizeWebsiteCopy(nav.header.phone.text) } }
+        : {}),
     },
     footer: normalizeFooter(nav.footer),
   };
@@ -574,12 +596,20 @@ type SanityPortableBlock = {
   // callout fields (projected as calloutType from the "type" Sanity field)
   calloutType?: string;
   text?: string;
+  // button fields
+  href?: string;
+  variant?: 'ghost-light' | 'primary';
+  // FAQ fields
+  title?: string;
+  items?: Array<{ _key?: string; question?: string; answer?: string }>;
 } & SanityImageFields;
 
 type SanityBlogPost = Omit<BlogPost, 'image' | 'relatedPages' | 'body' | 'contentBlocks'> & {
   image?: ContentImage;
   relatedPages?: string[] | null;
   body?: SanityPortableBlock[] | null;
+  metaTitle?: string;
+  metaDescription?: string;
 };
 
 function portableBlockText(block: SanityPortableBlock): string {
@@ -641,6 +671,40 @@ function portableTextToContentBlocks(body: SanityPortableBlock[] | null | undefi
   body.forEach((block, index) => {
     const key = block._key || `block-${index}`;
 
+    // ── CTA button ────────────────────────────────────────────────────────────
+    if (block._type === 'ctaButton' || block._type === 'button') {
+      flushList();
+      if (!block.text?.trim() || !block.href?.trim()) return;
+      result.push({
+        _type: 'button',
+        _key: key,
+        text: block.text.trim(),
+        href: block.href.trim(),
+        variant: block.variant === 'ghost-light' ? 'ghost-light' : 'primary',
+      });
+      return;
+    }
+
+    // ── FAQ section ───────────────────────────────────────────────────────────
+    if (block._type === 'faq') {
+      flushList();
+      const items = (block.items ?? [])
+        .filter((item) => item.question?.trim() && item.answer?.trim())
+        .map((item) => ({
+          _key: item._key,
+          question: item.question!.trim(),
+          answer: item.answer!.trim(),
+        }));
+      if (!items.length) return;
+      result.push({
+        _type: 'faq',
+        _key: key,
+        ...(block.title?.trim() ? { title: block.title.trim() } : {}),
+        items,
+      });
+      return;
+    }
+
     // ── Image ─────────────────────────────────────────────────────────────────
     if (block._type === 'image') {
       flushList();
@@ -660,14 +724,19 @@ function portableTextToContentBlocks(body: SanityPortableBlock[] | null | undefi
     // ── Table ─────────────────────────────────────────────────────────────────
     if (block._type === 'table') {
       flushList();
-      const headerRow = (block.headerRow ?? []).filter(Boolean);
+      let headerRow = (block.headerRow ?? []).filter(Boolean);
+      let rows = block.rows ?? [];
+      if (headerRow.length < 2 && rows[0]?.cells && rows[0].cells.length >= 2) {
+        headerRow = rows[0].cells;
+        rows = rows.slice(1);
+      }
       if (headerRow.length < 2) return;
       result.push({
         _type: 'table',
         _key: key,
         ...(block.caption ? { caption: block.caption } : {}),
         headerRow,
-        rows: (block.rows ?? []).map((row, ri) => ({
+        rows: rows.map((row, ri) => ({
           _key: row._key || `row-${ri}`,
           cells: row.cells ?? [],
         })),
@@ -744,6 +813,8 @@ function normalizeBlogPost(post: SanityBlogPost): BlogPost {
   const contentBlocks = portableTextToContentBlocks(post.body);
   const body = portableTextToParagraphs(post.body);
   const excerpt = post.excerpt || body[0] || '';
+  const metaTitle = post.metaTitle || post.meta?.title || post.title;
+  const metaDescription = post.metaDescription || post.meta?.description || excerpt;
   return {
     title: post.title,
     slug: post.slug,
@@ -753,8 +824,8 @@ function normalizeBlogPost(post: SanityBlogPost): BlogPost {
     image: resolveContentImage(post.image as FetchedImage | undefined),
     relatedPages: (post.relatedPages ?? []).map((key) => key.replace(/^\/+/, '')).filter(Boolean),
     meta: {
-      title: post.title,
-      description: excerpt,
+      title: metaTitle,
+      description: metaDescription,
     },
     heroParagraphs: body.slice(0, 2),
     sections:
@@ -781,6 +852,8 @@ function normalizeBlogPost(post: SanityBlogPost): BlogPost {
 const BLOG_POST_CARD_PROJECTION = /* groq */ `
   title,
   "slug": slug.current,
+  "metaTitle": coalesce(metaTitle, meta.title, title, ""),
+  "metaDescription": coalesce(metaDescription, meta.description, excerpt, ""),
   excerpt,
   publishDate,
   author,
@@ -819,6 +892,19 @@ const BLOG_POST_PROJECTION = /* groq */ `
       caption,
       headerRow,
       "rows": rows[] { _key, cells }
+    },
+    _type == "ctaButton" => {
+      _type,
+      _key,
+      text,
+      href,
+      variant
+    },
+    _type == "faq" => {
+      _type,
+      _key,
+      title,
+      "items": items[] { _key, question, answer }
     }
   }
 `;
@@ -858,8 +944,40 @@ export async function getSanityBlogPostsRelatedTo(pageSlug: string): Promise<Blo
 }
 
 const BLOG_POST_SLUGS_QUERY = /* groq */ `
-  *[_type == "blogPost" && defined(slug.current)].slug.current
+  *[_type == "blogPost" && !(_id in path("drafts.**")) && defined(slug.current)].slug.current
 `;
+
+export interface SitemapContentEntry {
+  path: string;
+  lastmod?: string;
+}
+
+const SITEMAP_BLOG_POSTS_QUERY = /* groq */ `
+  *[_type == "blogPost" && !(_id in path("drafts.**")) && defined(slug.current)]{
+    "slug": slug.current,
+    _updatedAt,
+    publishDate
+  }
+`;
+
+/** Published blog URLs for the sitemap. Drafts stay out; lastmod follows the latest publish edit. */
+export async function getSanitySitemapContent(): Promise<SitemapContentEntry[]> {
+  const blogs = await sanityClient.fetch<Array<{ slug: string; _updatedAt?: string; publishDate?: string }>>(
+    SITEMAP_BLOG_POSTS_QUERY
+  );
+
+  const entries: SitemapContentEntry[] = [];
+  for (const post of blogs ?? []) {
+    if (!post?.slug) continue;
+    const cleanSlug = post.slug.replace(/^\/+/, '');
+    const dateStr = post._updatedAt || post.publishDate;
+    entries.push({
+      path: `/blog/${cleanSlug}`,
+      lastmod: dateStr ? dateStr.slice(0, 10) : undefined,
+    });
+  }
+  return entries;
+}
 
 export async function getSanityBlogPostSlugs(): Promise<string[]> {
   const slugs = await sanityClient.fetch<string[]>(BLOG_POST_SLUGS_QUERY);

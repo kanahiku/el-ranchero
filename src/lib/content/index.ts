@@ -22,6 +22,7 @@ import {
   getSanityBlogPost,
   getSanityBlogPosts,
   getSanityBlogPostSlugs,
+  getSanitySitemapContent,
   getSanityTestimonials,
   getSanityNavigationContent,
   getSanityMenuCategories,
@@ -29,7 +30,6 @@ import {
 } from './sanity';
 import { blogPosts as localBlogPosts } from '../../data/pages/blogPosts';
 import { navigationData } from '../../data/navigation';
-import { interiorPaths } from '../../data/pages/interior';
 import { meatOptions as fallbackMeatOptions, menuCategoryLinks } from '../../data/menu';
 import { menuItemSeed } from '../../data/menu-seed';
 import { MENU_SECTION_KEYS, type MenuSectionKey } from './menuSections';
@@ -101,20 +101,56 @@ export async function getBlogPostSlugs(): Promise<string[]> {
   return [...new Set([...localSlugs, ...sanitySlugs])];
 }
 
-const STATIC_PATHS = [
-  '/',
-  '/blog',
-  '/reviews',
-  '/privacy-policy',
-  '/terms',
-  '/accessibility',
-  '/contact',
-  ...interiorPaths,
-];
+const pageModules = import.meta.glob('/src/pages/**/*.astro');
+
+function getDiscoveredStaticPaths(): string[] {
+  const paths: string[] = [];
+  for (const file of Object.keys(pageModules)) {
+    if (file.includes('/[') || file.endsWith('/404.astro') || file.includes('/api/')) continue;
+    let route = file
+      .replace(/^.*\/src\/pages/, '')
+      .replace(/\/index\.astro$/, '')
+      .replace(/\.astro$/, '');
+    if (route === '') route = '/';
+    paths.push(route);
+  }
+  return paths;
+}
+
+export interface SitemapEntry {
+  path: string;
+  lastmod?: string;
+}
+
+/**
+ * Every indexable URL. Static routes come from the page files, so a new page
+ * is listed without a manual edit. Published blogs are added from Sanity with
+ * lastmod, and unpublished drafts are left out.
+ */
+export async function getSitemapEntries(): Promise<SitemapEntry[]> {
+  const [sanityEntries, staticPaths] = await Promise.all([
+    getSanitySitemapContent().catch(() => []),
+    Promise.resolve(getDiscoveredStaticPaths()),
+  ]);
+
+  const map = new Map<string, string | undefined>();
+  for (const path of staticPaths) map.set(path, undefined);
+
+  for (const post of localBlogPosts) {
+    const path = `/blog/${post.slug.replace(/^\/+/, '')}`;
+    if (!map.has(path)) map.set(path, post.publishDate?.slice(0, 10));
+  }
+
+  for (const entry of sanityEntries) {
+    map.set(entry.path, entry.lastmod);
+  }
+
+  return [...map.entries()].map(([path, lastmod]) => ({ path, lastmod }));
+}
 
 export async function getPublicContentPaths(): Promise<string[]> {
-  const postSlugs = await getBlogPostSlugs();
-  return [...STATIC_PATHS, ...postSlugs.map((slug) => `/blog/${slug.replace(/^\/+/, '')}`)];
+  const entries = await getSitemapEntries();
+  return entries.map((entry) => entry.path);
 }
 
 export function getBlogPermalink(slug: string): string {

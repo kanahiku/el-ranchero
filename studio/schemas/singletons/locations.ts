@@ -24,6 +24,18 @@ export const locationsContent = defineType({
     imageField('hubHeroImage', 'Hero image', 'Hero photo for the main Locations page (portrait, 619×740).', 'hub'),
     imageField('hubWahiawaImage', 'Wahiawa card photo', 'Photo on the Wahiawa card (4:3).', 'hub'),
     imageField('hubKapoleiImage', 'Kapolei card photo', 'Photo on the Kapolei card (4:3).', 'hub'),
+    imageField(
+      'orderOnlineWahiawaImage',
+      'Order Online — Wahiawa',
+      'Wahiawa storefront on the Order Online page (4:3).',
+      'hub'
+    ),
+    imageField(
+      'orderOnlineKapoleiImage',
+      'Order Online — Kapolei',
+      'Kapolei storefront on the Order Online page (4:3).',
+      'hub'
+    ),
 
     imageField('wahiawaHeroImage', 'Hero image', 'Hero photo for the Wahiawa page (portrait, 619×740).', 'wahiawa'),
     ...favorites('wahiawa', 'wahiawa'),

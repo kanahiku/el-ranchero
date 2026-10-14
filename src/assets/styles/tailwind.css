@@ -20,6 +20,7 @@
   --color-accent-hover: var(--aw-color-accent-hover);
   --color-default: var(--aw-color-text-default);
   --color-muted: var(--aw-color-text-muted);
+  --color-blog: var(--aw-color-text-blog);
   --color-heading: var(--aw-color-text-heading);
   --color-eyebrow: var(--aw-color-text-eyebrow);
   --color-page: var(--aw-color-bg-page);
@@ -475,6 +476,10 @@
 
 @utility text-muted {
   color: var(--aw-color-text-muted);
+}
+
+@utility text-blog {
+  color: var(--aw-color-text-blog);
 }
 
 @utility text-headline-light {

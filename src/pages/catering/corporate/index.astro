@@ -1,0 +1,140 @@
+---
+/**
+ * Corporate & Office Catering — copy from the Drive doc
+ * "/catering/corporate - Corporate & Office Catering".
+ * Photos come from the Sanity "Catering" singleton.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import Button from '~/components/ui/Button.astro';
+import Text from '~/components/ui/Text.astro';
+import { getCateringImages } from '~/lib/content';
+import { CATERING_REQUEST_HREF, cateringOptionPages } from '~/data/catering';
+
+const images = await getCateringImages();
+const currentHref = '/catering/corporate';
+const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
+
+const metadata = {
+  title: 'Corporate & Office Catering | Taqueria El Ranchero',
+  description:
+    'Planning an office lunch or workplace meeting? Ask about corporate catering from Taqueria El Ranchero and share your event details with our team.',
+  ignoreTitleTemplate: true,
+};
+
+const faqs = [
+  {
+    title: 'Can we order catering for a small office lunch?',
+    description:
+      "Yes. We handle smaller office orders as well as larger group gatherings. Let us know how many people you're feeding so we can discuss the options available for your team.",
+  },
+  {
+    title: 'Can we request a taco bar for a company event?',
+    description:
+      "We offer taco bar catering packages. Tell us about your event and estimated guest count, and we'll help you confirm the available packages and what's included.",
+  },
+  {
+    title: 'Is pickup or delivery available for office catering?',
+    description:
+      "Let us know where your workplace event is taking place and whether you'd prefer pickup or delivery. We'll confirm which fulfillment arrangements are available for your request.",
+  },
+];
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    image={images.corporateHero}
+    title="Corporate & Office Catering from Taqueria El Ranchero"
+    content="Planning lunch for your team or food for an upcoming workplace gathering?<br /><br />We cater office orders and group events, whether you're feeding a small team or bringing coworkers together for a larger company meal.<br /><br />Tell us what you're planning, and we'll help you review the catering options available for your group."
+    actions={[{ variant: 'primary', text: 'Request Office Catering', href: CATERING_REQUEST_HREF }]}
+  />
+
+  <TextSplit
+    id="office-lunch"
+    heading="Office Lunch Catering"
+    withImage
+    image={images.corporateLunch}
+    imageAspect="4 / 3"
+    class="bg-card"
+  >
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        A team lunch is a good opportunity to share a meal without leaving everyone to figure out their own food plans.
+      </Text>
+      <Text color="default">
+        Whether it's a regular staff lunch, an employee appreciation meal, or a team celebration, we can help you discuss available catering selections.
+      </Text>
+      <Text color="default">
+        Interested in tacos? Ask us about our <a class={linkClass} href="/catering/taco-bar">Taco Bar Catering</a> packages. We'll confirm the current package options and what's included.
+      </Text>
+      <Text color="default">
+        Let us know how many people you're feeding and when you'd like to have lunch. We'll help you review the options for your group.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <TextSplit id="meetings" heading="Catering for Meetings & Workplace Gatherings">
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        Have a staff meeting, training session, or company gathering on the calendar? We can discuss catering options for your event and help you work through the food details.
+      </Text>
+      <Text color="default">
+        Let us know when your team plans to eat, how many people will attend, and whether you have any food preferences or dietary requests. We'll confirm the available selections and arrangements for your gathering.
+      </Text>
+      <Text color="default">
+        If you're also looking for a place to host a company event, you can ask about our <a class={linkClass} href="/events/event-space-rental">Kapolei Event Space Rental</a>. Venue rental is a separate offering from catering.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <TextSplit id="workday" heading="Catering That Fits Your Workday" class="bg-card">
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        Office lunches and meetings don't always follow the same schedule. Your team might have a short lunch break, a meeting with a set agenda, or employees taking breaks at different times.
+      </Text>
+      <Text color="default">
+        Let us know how your workday is structured and when your team plans to eat. We'll help you review the catering options and arrangements available so you can choose what makes sense for your workplace.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <TextSplit id="more-catering" heading="More Catering Options at El Ranchero">
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        Planning something outside the usual workday? Take a look at our other catering options:
+      </Text>
+      <ul class="flex flex-col gap-3">
+        {
+          cateringOptionPages.map((option) => (
+            <li class="flex items-start gap-3 font-sans text-body text-default">
+              <span class="mt-[0.45em] size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+              {option.href === currentHref ? (
+                <span>{option.label} — You're here</span>
+              ) : (
+                <a class={linkClass} href={option.href}>
+                  {option.label}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <div>
+        <Button variant="primary" text="View all catering options" href="/catering" hideNote={true} />
+      </div>
+    </div>
+  </TextSplit>
+
+  <FAQs id="faqs" isDark title="Corporate & Office Catering FAQs" items={faqs} />
+
+  <CTABanner
+    title="Ready to Plan Your Office Catering?"
+    subtitle="Have a team lunch or workplace gathering coming up? Tell us when you're planning to eat, how many people you're feeding, and what you have in mind. We'll help you review the catering options and next steps."
+    actions={[{ variant: 'primary', text: 'Request Office Catering', href: CATERING_REQUEST_HREF }]}
+  />
+</PageLayout>

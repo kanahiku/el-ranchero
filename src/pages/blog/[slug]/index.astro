@@ -60,7 +60,7 @@ const metadata = {
           <h1 class="text-[42px] md:text-[56px] font-normal leading-[105%] tracking-tighter font-heading text-heading mb-4">
             {post.title}
           </h1>
-          <p class="text-[14px] md:text-[15px] font-medium text-muted mb-8">
+          <p class="text-[14px] md:text-[15px] font-medium text-blog mb-8">
             <time datetime={post.publishDate}>{getFormattedDate(publishDate)}</time>
             {post.author ? ` · ${post.author}` : ''}
           </p>
@@ -71,7 +71,7 @@ const metadata = {
             leadParagraphs.length > 0 && (
               <div class="space-y-5">
                 {leadParagraphs.map((paragraph) => (
-                  <p class="text-[16px] font-normal leading-[160%] text-muted">{paragraph}</p>
+                  <p class="text-[16px] font-normal leading-[160%] text-blog">{paragraph}</p>
                 ))}
               </div>
             )

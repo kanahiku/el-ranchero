@@ -1,17 +1,32 @@
 ---
+/**
+ * Contact — copy from the Drive doc "/contact - Contact".
+ * The message form stays on this page. Location details come from the store list.
+ */
 import Layout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
 import Contact from '~/components/widgets/Contact.astro';
-import { CONTACT } from '~/config/contact';
+import Button from '~/components/ui/Button.astro';
+import Text from '~/components/ui/Text.astro';
+import { findStore, storeDirectionsHref } from '~/data/locations';
 import { contactHelpOptions } from '~/data/pages/contact';
-import { site } from '~/config/site';
-import { CATERING_CTA_HREF } from '~/config/cta';
+
+const wahiawa = findStore('wahiawa');
+const kapolei = findStore('kapolei');
+if (!wahiawa || !kapolei) throw new Error('Missing store data');
+
+const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
 
 const metadata = {
-  title: `Contact | ${site.name}`,
-  description: `Get in touch with ${CONTACT.businessName} — catering, locations, and general questions.`,
+  title: 'Contact Taqueria El Ranchero | Wahiawa & Kapolei',
+  description:
+    'Contact Taqueria El Ranchero in Wahiawa or Kapolei. Find phone numbers, hours, addresses, directions, and our contact form.',
   ignoreTitleTemplate: true,
 };
+
+const kitchenHours = 'Kitchen Hours: Daily, 7:00 AM to 10:00 PM';
+const barHours = 'Bar Hours: Sunday to Thursday until midnight; Friday and Saturday until 2:00 AM';
 ---
 
 <Layout metadata={metadata}>
@@ -19,17 +34,64 @@ const metadata = {
     variant="split-dark"
     overlapHeader={false}
     hideImage
-    title="Get in Touch"
-    content="Questions about an order, catering, or a store? Send a note and we will follow up soon."
-    actions={[
-      { variant: 'primary', text: 'Email Us', href: `mailto:${CONTACT.email}` },
-      { variant: 'ghost-dark', text: 'Order Catering', href: CATERING_CTA_HREF },
-    ]}
+    title="Contact Taqueria El Ranchero"
+    content="Have a question about visiting us or want to share feedback? Find the contact details, hours, and directions for our Wahiawa and Kapolei restaurants below, or send us a message using the contact form."
   />
 
+  <TextSplit id="locations" heading="Visit or Call Our Locations">
+    <div class="flex flex-col gap-10">
+      <div class="flex flex-col gap-4">
+        <Text color="default" class="font-heading text-[22px] text-heading">Wahiawa</Text>
+        <Text color="default">
+          Our original taqueria is located in Wahiawa Shopping Center on California Avenue.
+        </Text>
+        <Text color="default">Address: 823 California Ave, Unit A5, Wahiawa, HI 96786</Text>
+        <Text color="default">
+          Phone: <a class={linkClass} href={wahiawa.phoneHref}>{wahiawa.phoneDisplay}</a>
+        </Text>
+        <Text color="default">{kitchenHours}</Text>
+        <Text color="default">{barHours}</Text>
+        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Button
+            variant="primary"
+            text="Get Directions to Wahiawa"
+            href={storeDirectionsHref(wahiawa)}
+            target="_blank"
+            hideNote={true}
+          />
+          <Button variant="ghost" tone="light" text="See our Wahiawa location" href={wahiawa.href} hideNote={true} />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <Text color="default" class="font-heading text-[22px] text-heading">Kapolei</Text>
+        <Text color="default">
+          Find us at Ka Makana Aliʻi in Kapolei, where we offer sit-down dining and outdoor seating.
+        </Text>
+        <Text color="default">Address: 91-5431 Kapolei Pkwy #501, Kapolei, HI 96707</Text>
+        <Text color="default">
+          Phone: <a class={linkClass} href={kapolei.phoneHref}>{kapolei.phoneDisplay}</a>
+        </Text>
+        <Text color="default">{kitchenHours}</Text>
+        <Text color="default">{barHours}</Text>
+        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Button
+            variant="primary"
+            text="Get Directions to Kapolei"
+            href={storeDirectionsHref(kapolei)}
+            target="_blank"
+            hideNote={true}
+          />
+          <Button variant="ghost" tone="light" text="See our Kapolei location" href={kapolei.href} hideNote={true} />
+        </div>
+      </div>
+    </div>
+  </TextSplit>
+
   <Contact
-    title="Send a message"
-    subtitle={`Tell us what you need and the right person from El Ranchero will get back to you.`}
+    id="contact-form"
+    title="Send Us a Message"
+    subtitle={`Have a general question or feedback? Fill out the contact form below to get in touch with our team.<br /><br />For food catering inquiries, visit our <a class="${linkClass}" href="/catering">Catering page</a>. If you're interested in hosting a private event at our Kapolei location, see our <a class="${linkClass}" href="/events/event-space-rental">Event Space Rental page</a>.`}
     button="Send message"
     inputs={[
       { type: 'text', name: 'name', label: 'Name', autocomplete: 'name', placeholder: 'Your name', required: true },
@@ -41,7 +103,7 @@ const metadata = {
         placeholder: 'you@email.com',
         required: true,
       },
-      { type: 'tel', name: 'phone', label: 'Phone', autocomplete: 'tel', placeholder: CONTACT.phone.display },
+      { type: 'tel', name: 'phone', label: 'Phone', autocomplete: 'tel', placeholder: 'Your phone' },
       {
         type: 'select',
         name: 'topic',

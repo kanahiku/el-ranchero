@@ -1,0 +1,136 @@
+---
+/**
+ * Large Group Catering — copy from the Drive doc
+ * "/catering/large-groups - Large Group Catering".
+ * Photos come from the Sanity "Catering" singleton.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import Button from '~/components/ui/Button.astro';
+import Text from '~/components/ui/Text.astro';
+import { getCateringImages } from '~/lib/content';
+import { CATERING_REQUEST_HREF, cateringOptionPages } from '~/data/catering';
+
+const images = await getCateringImages();
+const currentHref = '/catering/large-groups';
+const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
+
+const metadata = {
+  title: 'Large Group Catering on Oʻahu | Taqueria El Ranchero',
+  description:
+    "Planning food for a large gathering? We've catered events of about 250 guests. Ask Taqueria El Ranchero about our group catering options.",
+  ignoreTitleTemplate: true,
+};
+
+const faqs = [
+  {
+    title: 'Is 250 guests your maximum catering capacity?',
+    description:
+      "About 250 guests is the largest group we've catered to date, but we haven't established a fixed maximum. Share your estimated guest count, and we'll help you determine whether we can accommodate your event.",
+  },
+  {
+    title: 'Can we request taco bar catering for a large group?',
+    description:
+      "We offer taco bar catering packages. Tell us how many people you're feeding, and we'll confirm the package options and arrangements available for your gathering.",
+  },
+  {
+    title: 'Does large group catering include an event venue?',
+    description:
+      'Catering and venue rental are separate offerings. We have <a class="text-accent underline underline-offset-4" href="/events/event-space-rental">event space available for rental at our Kapolei location</a>, but the venue\'s capacity, availability, and rental arrangements must be confirmed independently.',
+  },
+];
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    image={images.largeGroupHero}
+    title="Large Group Catering from Taqueria El Ranchero"
+    content="Feeding a large crowd? We've catered gatherings of about 250 guests, and we'd love to hear what you're planning.<br /><br />Whether you're organizing a community celebration, a company event, or a big family reunion, we can help you explore our available catering options.<br /><br />Tell us about your gathering, and we'll help you determine what arrangements may be possible."
+    actions={[{ variant: 'primary', text: 'Request Large Group Catering', href: CATERING_REQUEST_HREF }]}
+  />
+
+  <TextSplit id="crowd" heading="Feeding a Bigger Crowd">
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        When you're planning food for a large gathering, the number of guests is only part of the picture. Will everyone be sitting down to eat at the same time? Or will people be arriving and eating throughout the event?
+      </Text>
+      <Text color="default">
+        These details can make a difference when choosing a catering arrangement. Tell us how your gathering is planned, and we'll help you review the options available for your group.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <TextSplit
+    id="food"
+    heading="Choosing Food for a Large Group"
+    withImage
+    image={images.largeGroupFood}
+    imageAspect="4 / 3"
+    class="bg-card"
+  >
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        From tacos to other Ranchero-style Mexican favorites, our food brings the flavors of our taqueria to group gatherings.
+      </Text>
+      <Text color="default">
+        We offer <a class={linkClass} href="/catering/taco-bar">Taco Bar Catering</a> packages, which may be worth considering for your event. Let us know what you have in mind, and we'll help you confirm the available catering selections, package details, and arrangements.
+      </Text>
+      <Text color="default">
+        You can also browse <a class={linkClass} href="/menu">our restaurant menu</a> for inspiration. Catering options may differ from what we serve at our restaurants.
+      </Text>
+    </div>
+  </TextSplit>
+
+  <TextSplit id="space" heading="Need a Space for Your Gathering?">
+    <div class="flex flex-col gap-6">
+      <Text color="default">Still looking for a place to host your event?</Text>
+      <Text color="default">
+        We also offer <a class={linkClass} href="/events/event-space-rental">Event Space Rental at our Kapolei location</a> for private gatherings. If you're considering both catering and venue rental, let us know. We'll help you find out how to inquire about each offering.
+      </Text>
+      <Text color="default">
+        Venue availability, guest capacity, and rental arrangements need to be confirmed separately from your catering order.
+      </Text>
+      <div>
+        <Button variant="primary" text="Explore Event Space Rental" href="/events/event-space-rental" hideNote={true} />
+      </div>
+    </div>
+  </TextSplit>
+
+  <TextSplit id="more-catering" heading="More Catering Options at El Ranchero" class="bg-card">
+    <div class="flex flex-col gap-6">
+      <Text color="default">Have a different type of gathering in mind? Take a look at our catering options:</Text>
+      <ul class="flex flex-col gap-3">
+        {
+          cateringOptionPages.map((option) => (
+            <li class="flex items-start gap-3 font-sans text-body text-default">
+              <span class="mt-[0.45em] size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+              {option.href === currentHref ? (
+                <span>{option.label} — You're here</span>
+              ) : (
+                <a class={linkClass} href={option.href}>
+                  {option.label}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <div>
+        <Button variant="primary" text="View all catering options" href="/catering" hideNote={true} />
+      </div>
+    </div>
+  </TextSplit>
+
+  <FAQs id="faqs" isDark title="Large Group Catering FAQs" items={faqs} />
+
+  <CTABanner
+    title="Ready to Plan Your Large Group Catering?"
+    subtitle="Planning a meal for a big gathering? Tell us about your event, approximately how many people you're expecting, and how you envision serving the food. We'll help you review the available catering options and next steps."
+    actions={[{ variant: 'primary', text: 'Request Large Group Catering', href: CATERING_REQUEST_HREF }]}
+  />
+</PageLayout>

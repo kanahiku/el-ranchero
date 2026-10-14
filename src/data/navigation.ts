@@ -1,5 +1,6 @@
 import type { NavigationContent } from '~/lib/content/types';
 import { CONTACT, PRIMARY_CTA_LABEL, PRIMARY_CTA_HREF, SOCIAL } from '~/config';
+import { cateringOptionPages } from '~/data/catering';
 
 export const navigationData: NavigationContent = {
   header: {
@@ -22,6 +23,7 @@ export const navigationData: NavigationContent = {
       {
         text: 'catering',
         href: '/catering',
+        links: cateringOptionPages.map((page) => ({ text: page.nav, href: page.href })),
       },
       {
         text: 'events',
@@ -82,7 +84,8 @@ export const navigationData: NavigationContent = {
         links: [
           { text: 'Our Story', href: '/about' },
           { text: 'Catering', href: '/catering' },
-          { text: 'Order Online', href: PRIMARY_CTA_HREF },
+          ...cateringOptionPages.map((page) => ({ text: page.label, href: page.href })),
+          { text: 'Order Online', href: '/order-online' },
           { text: 'Blog', href: '/blog' },
           { text: 'Contact', href: '/contact' },
         ],

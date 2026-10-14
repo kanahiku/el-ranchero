@@ -21,9 +21,21 @@ import Button from '~/components/ui/Button.astro';
 import Form from '~/components/ui/Form.astro';
 import BulletList from '~/components/ui/BulletList.astro';
 import { storeLocations } from '~/data/locations';
+import { cateringOptionPages } from '~/data/catering';
 import { getCateringImages } from '~/lib/content';
 
 const images = await getCateringImages();
+
+const cateringOptionLinks = cateringOptionPages
+  .map(
+    (page) =>
+      `<a class="text-accent underline underline-offset-4" href="${page.href}">${page.label}</a>`
+  )
+  .reduce((sentence, link, index, links) => {
+    if (index === 0) return link;
+    const separator = index === links.length - 1 ? ', and ' : ', ';
+    return `${sentence}${separator}${link}`;
+  }, '');
 
 const metadata = {
   title: 'Mexican Catering in Wahiawa & Kapolei | Taqueria El Ranchero',
@@ -304,6 +316,10 @@ const faqs = [
       <Text color="default">
         Keep in mind that catering selections may differ from the regular restaurant menu. Submit a catering request to confirm what is currently available for your group.
       </Text>
+      <Text
+        color="default"
+        html={`Looking for a specific catering option? See ${cateringOptionLinks}.`}
+      />
       <Button variant="primary" text="Explore Our Menu" href="/menu" hideNote={true} />
     </div>
   </TextSplit>

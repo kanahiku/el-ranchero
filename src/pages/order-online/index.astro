@@ -1,0 +1,99 @@
+---
+/**
+ * Order Online — copy from the Drive doc "/order-online - Order Online".
+ * Takeout buttons open each restaurant's DoorDash menu. Storefront photos
+ * come from the Sanity "Locations" singleton.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import Locations from '~/components/widgets/Locations.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import Button from '~/components/ui/Button.astro';
+import Text from '~/components/ui/Text.astro';
+import { findStore } from '~/data/locations';
+import { getLocationImages } from '~/lib/content';
+
+const images = await getLocationImages();
+const wahiawa = findStore('wahiawa');
+const kapolei = findStore('kapolei');
+if (!wahiawa || !kapolei) throw new Error('Missing store data');
+
+const metadata = {
+  title: 'Order Mexican Food Online | Taqueria El Ranchero',
+  description:
+    'Order Mexican food from Taqueria El Ranchero in Wahiawa or Kapolei. Browse our takeout menus and choose your location to get started.',
+  ignoreTitleTemplate: true,
+};
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    hideImage
+    title="Order Online from Taqueria El Ranchero"
+    content="Craving tacos, burritos, or your favorite El Ranchero meal?<br /><br />Choose our Wahiawa or Kapolei location to browse the takeout menu and place your order."
+  />
+
+  <Locations
+    id="choose-location"
+    variant="detailed"
+    eyebrow=""
+    title="Choose Your El Ranchero Location"
+    subtitle=""
+    locations={[
+      {
+        name: 'Wahiawa',
+        heading: 'Wahiawa',
+        image: images.orderOnlineWahiawa,
+        shopName: '',
+        addressLine1: '823 California Ave, Unit A5',
+        addressLine2: 'Wahiawa, HI 96786',
+        description: [
+          "Ordering from Wahiawa? Browse our available takeout selections and choose what you're craving.",
+        ],
+        actions: [
+          { text: 'Wahiawa Takeout Menu', href: wahiawa.orderPickupHref, variant: 'primary' },
+          { text: 'Visit Our Wahiawa Location', href: wahiawa.href, variant: 'ghost' },
+        ],
+      },
+      {
+        name: 'Kapolei',
+        heading: 'Kapolei',
+        image: images.orderOnlineKapolei,
+        shopName: '',
+        addressLine1: '91-5431 Kapolei Pkwy #501',
+        addressLine2: 'Kapolei, HI 96707',
+        description: [
+          'Ordering from Kapolei? Check out our available takeout selections and find your next El Ranchero meal.',
+        ],
+        actions: [
+          { text: 'Kapolei Takeout Menu', href: kapolei.orderPickupHref, variant: 'primary' },
+          { text: 'Visit Our Kapolei Location', href: kapolei.href, variant: 'ghost' },
+        ],
+      },
+    ]}
+  />
+
+  <TextSplit id="order-by-phone" heading="Prefer to Order by Phone?">
+    <div class="flex flex-col gap-6">
+      <Text color="default">
+        Online orders open on our ordering partner's website. Menus, prices and availability may change.
+      </Text>
+      <Text color="default">
+        We also accept phone orders. Give your preferred restaurant a call, and our team can help you place your order.
+      </Text>
+      <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <Button variant="primary" text="Call Wahiawa — (808) 621-8226" href={wahiawa.phoneHref} hideNote={true} />
+        <Button variant="primary" text="Call Kapolei — (808) 693-8226" href={kapolei.phoneHref} hideNote={true} />
+      </div>
+    </div>
+  </TextSplit>
+
+  <CTABanner
+    title="Explore Our Menu"
+    subtitle="Want to see more of what we serve? Browse our restaurant menu for tacos, burritos, Mexican breakfast, and more."
+    actions={[{ variant: 'primary', text: 'Explore Our Menu', href: '/menu' }]}
+  />
+</PageLayout>

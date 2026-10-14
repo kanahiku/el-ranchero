@@ -38,6 +38,23 @@ export const blogPost = defineType({
       validation: (r) => r.required().max(280),
     }),
     defineField({
+      name: 'metaTitle',
+      title: 'Meta Title',
+      type: 'string',
+      group: 'content',
+      description: 'SEO title tag for browser tabs and search engines. Falls back to the post title.',
+      validation: (r) => r.max(70),
+    }),
+    defineField({
+      name: 'metaDescription',
+      title: 'Meta Description',
+      type: 'text',
+      rows: 3,
+      group: 'content',
+      description: 'SEO description for search results. Falls back to the excerpt.',
+      validation: (r) => r.max(170),
+    }),
+    defineField({
       name: 'publishDate',
       title: 'Publish date',
       type: 'datetime',
@@ -111,8 +128,7 @@ export const blogPost = defineType({
                     name: 'href',
                     title: 'URL',
                     type: 'string',
-                    validation: (r) =>
-                      r.uri({ scheme: ['http', 'https', 'mailto', 'tel'], allowRelative: true }),
+                    validation: (r) => r.uri({ scheme: ['http', 'https', 'mailto', 'tel'], allowRelative: true }),
                   }),
                   defineField({
                     name: 'blank',
@@ -229,6 +245,96 @@ export const blogPost = defineType({
             prepare({ type, text }: { type?: string; text?: string }) {
               const emoji: Record<string, string> = { tip: '💡', info: 'ℹ️', warning: '⚠️', note: '📝' };
               return { title: `${emoji[type ?? ''] ?? '📝'} ${text?.substring(0, 60) ?? 'Empty callout'}` };
+            },
+          },
+        }),
+        defineArrayMember({
+          type: 'object',
+          name: 'ctaButton',
+          title: 'CTA button',
+          fields: [
+            defineField({
+              name: 'text',
+              title: 'Button text',
+              type: 'string',
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'href',
+              title: 'Link',
+              type: 'string',
+              description: 'Internal path such as /menu or a full URL.',
+              validation: (r) => r.required().uri({ scheme: ['http', 'https', 'mailto', 'tel'], allowRelative: true }),
+            }),
+            defineField({
+              name: 'variant',
+              title: 'Style',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Primary', value: 'primary' },
+                  { title: 'Outline', value: 'ghost-light' },
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'primary',
+            }),
+          ],
+          preview: {
+            select: { title: 'text', subtitle: 'href' },
+            prepare({ title, subtitle }: { title?: string; subtitle?: string }) {
+              return { title: title || 'CTA button', subtitle };
+            },
+          },
+        }),
+        defineArrayMember({
+          type: 'object',
+          name: 'faq',
+          title: 'FAQ section',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Section title',
+              type: 'string',
+              initialValue: 'Frequently Asked Questions',
+            }),
+            defineField({
+              name: 'items',
+              title: 'Questions and answers',
+              type: 'array',
+              validation: (r) => r.required().min(1),
+              of: [
+                {
+                  type: 'object',
+                  name: 'blogFaqItem',
+                  fields: [
+                    defineField({
+                      name: 'question',
+                      title: 'Question',
+                      type: 'string',
+                      validation: (r) => r.required(),
+                    }),
+                    defineField({
+                      name: 'answer',
+                      title: 'Answer',
+                      type: 'text',
+                      rows: 4,
+                      validation: (r) => r.required(),
+                    }),
+                  ],
+                  preview: { select: { title: 'question' } },
+                },
+              ],
+            }),
+          ],
+          preview: {
+            select: { title: 'title', items: 'items' },
+            prepare({ title, items }: { title?: string; items?: unknown[] }) {
+              const count = Array.isArray(items) ? items.length : 0;
+              return {
+                title: title || 'Frequently Asked Questions',
+                subtitle: `${count} question${count === 1 ? '' : 's'}`,
+              };
             },
           },
         }),

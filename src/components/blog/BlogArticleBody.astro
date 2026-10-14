@@ -25,7 +25,7 @@ const blocks = usePortableBody ? [] : getArticleBlocks(post);
 const unmatchedImages = usePortableBody ? [] : getUnmatchedInlineImages(post);
 const contentBlocks = post.contentBlocks ?? [];
 
-const paragraphClass = 'text-[16px] font-normal leading-[160%] text-muted';
+const paragraphClass = 'text-[16px] font-normal leading-[160%] text-blog';
 const headingClass =
   'text-[26px] md:text-[40px] font-normal leading-[110%] tracking-tighter font-heading text-heading mb-5';
 
@@ -40,6 +40,14 @@ function reviewSources(section: ServiceSection): ReviewSource[] {
 }
 
 const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading mb-3 mt-8';
+
+function formatTableCell(cell: string): string {
+  return cell
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
 ---
 
 <div class="min-w-0">
@@ -71,9 +79,7 @@ const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading m
               {block.items.map((item, idx) => (
                 <li class:list={[paragraphClass, 'flex items-start gap-3']}>
                   {isOrdered ? (
-                    <span class="shrink-0 font-medium text-heading tabular-nums min-w-[1.5rem]">
-                      {idx + 1}.
-                    </span>
+                    <span class="shrink-0 font-medium text-heading tabular-nums min-w-[1.5rem]">{idx + 1}.</span>
                   ) : (
                     <span class="mt-[0.45em] shrink-0 w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true" />
                   )}
@@ -88,13 +94,16 @@ const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading m
           const colCount = block.headerRow.length;
           return (
             <figure class="mt-8 overflow-x-auto">
-              <table class="w-full border-separate border-spacing-0 text-left font-sans text-[14px] md:text-[15px]" style={`min-width: ${colCount * 160}px`}>
+              <table
+                class="w-full border-separate border-spacing-0 text-left font-sans text-[14px] md:text-[15px]"
+                style={`min-width: ${colCount * 160}px`}
+              >
                 <thead>
                   <tr>
                     {block.headerRow.map((header, hi) => (
                       <th
                         class:list={[
-                          'bg-card-dark text-white font-medium leading-[160%] px-4 py-3 border-r border-accent last:border-r-0',
+                          'bg-card-dark text-white font-bold leading-[160%] px-4 py-3 border-r border-accent last:border-r-0',
                           hi === 0 && 'rounded-tl-lg',
                           hi === block.headerRow.length - 1 && 'rounded-tr-lg text-white border-r-0',
                         ]}
@@ -117,14 +126,12 @@ const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading m
                             <CellTag
                               class:list={[
                                 'align-top bg-card-light leading-[160%] px-4 py-4 border-r border-accent last:border-r-0',
-                                isFirstCol
-                                  ? 'font-medium text-heading'
-                                  : 'font-normal text-muted',
+                                isFirstCol ? 'font-medium text-blog' : 'font-normal text-blog',
                                 isLast && isFirstCol && 'rounded-bl-lg',
                                 isLast && isLastCol && 'rounded-br-lg',
                               ]}
                             >
-                              {cell}
+                              <span set:html={formatTableCell(cell)} />
                             </CellTag>
                           );
                         })}
@@ -134,7 +141,7 @@ const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading m
                 </tbody>
               </table>
               {block.caption && (
-                <figcaption class="mt-2 text-[13px] text-muted/70 text-center">{block.caption}</figcaption>
+                <figcaption class="mt-2 text-[13px] text-blog/70 text-center">{block.caption}</figcaption>
               )}
             </figure>
           );
@@ -142,15 +149,63 @@ const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading m
 
         if (block._type === 'callout') {
           const calloutConfig = {
-            tip:     { icon: 'tabler:bulb',           border: 'border-accent',    bg: 'bg-card-light' },
-            info:    { icon: 'tabler:info-circle',     border: 'border-blue-400',  bg: 'bg-blue-50' },
-            warning: { icon: 'tabler:alert-triangle',  border: 'border-orange-400', bg: 'bg-orange-50' },
-            note:    { icon: 'tabler:note',            border: 'border-gray-300',  bg: 'bg-section-grey' },
+            tip: { icon: 'tabler:bulb', border: 'border-accent', bg: 'bg-card-light' },
+            info: { icon: 'tabler:info-circle', border: 'border-blue-400', bg: 'bg-blue-50' },
+            warning: { icon: 'tabler:alert-triangle', border: 'border-orange-400', bg: 'bg-orange-50' },
+            note: { icon: 'tabler:note', border: 'border-gray-300', bg: 'bg-section-grey' },
           }[block.calloutType] ?? { icon: 'tabler:note', border: 'border-gray-300', bg: 'bg-section-grey' };
           return (
-            <div class:list={['mt-6 flex gap-4 rounded-lg p-4 md:p-5 border-l-4', calloutConfig.border, calloutConfig.bg]}>
+            <div
+              class:list={['mt-6 flex gap-4 rounded-lg p-4 md:p-5 border-l-4', calloutConfig.border, calloutConfig.bg]}
+            >
               <Icon name={calloutConfig.icon} class="shrink-0 w-5 h-5 mt-0.5 text-heading/60" aria-hidden="true" />
               <p class={paragraphClass}>{block.text}</p>
+            </div>
+          );
+        }
+
+        if (block._type === 'button') {
+          return (
+            <p class="mt-6">
+              <Button variant={block.variant || 'primary'} text={block.text} href={block.href} hideNote={true} />
+            </p>
+          );
+        }
+
+        if (block._type === 'faq') {
+          return (
+            <div class="mt-10 mb-8">
+              <h2 class={headingClass}>{block.title || 'Frequently Asked Questions'}</h2>
+              <div class="space-y-0">
+                {block.items.map((item, index) => (
+                  <details class:list={['group py-1', index > 0 && 'border-t border-default/15']} name="blog-faq">
+                    <summary class="flex cursor-pointer list-none select-none items-center justify-between gap-4 py-4">
+                      <span class="pr-4 font-sans text-[16px] font-medium leading-snug text-heading md:text-[18px]">
+                        {item.question}
+                      </span>
+                      <span class="flex size-6 shrink-0 items-center justify-center rounded-full border border-default/30 text-heading transition-colors duration-200 group-open:border-accent group-open:text-accent">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="size-3.5 transition-transform duration-300 group-open:rotate-45"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                          aria-hidden="true"
+                        >
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                      </span>
+                    </summary>
+                    <div class="pb-5 pr-10">
+                      <p
+                        class="text-[15px] font-normal leading-[160%] text-blog md:text-[16px]"
+                        set:html={item.answer}
+                      />
+                    </div>
+                  </details>
+                ))}
+              </div>
             </div>
           );
         }
@@ -166,252 +221,237 @@ const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading m
 
   {
     !usePortableBody &&
-    blocks.map(({ section, headingId, showHeading, images }) => (
-      <section class:list={['mt-10 md:mt-14', headingId && 'scroll-mt-28']} {...(headingId ? { id: headingId } : {})}>
-        {showHeading && section.heading && (
-          <h2 class={headingClass}>
-            {section.heading}
-          </h2>
-        )}
+      blocks.map(({ section, headingId, showHeading, images }) => (
+        <section class:list={['mt-10 md:mt-14', headingId && 'scroll-mt-28']} {...(headingId ? { id: headingId } : {})}>
+          {showHeading && section.heading && <h2 class={headingClass}>{section.heading}</h2>}
 
-        {section._type === 'editorialSection' && (
-          <div class="space-y-5">
-            {section.paragraphs.map((paragraph) => (
-              <p class={paragraphClass}>{paragraph}</p>
-            ))}
-          </div>
-        )}
-
-        {section._type === 'splitContentSection' && (
-          <>
+          {section._type === 'editorialSection' && (
             <div class="space-y-5">
               {section.paragraphs.map((paragraph) => (
                 <p class={paragraphClass}>{paragraph}</p>
               ))}
             </div>
-            {section.image?.src && <BlogArticleImage image={section.image} />}
-            {section.ctaText && (
-              <p class="mt-6">
-                <Button variant="ghost" tone="light" text={section.ctaText} href={section.ctaHref || '/form'} />
-              </p>
-            )}
-            {section.linkText && section.linkHref && (
-              <p class="mt-4">
-                <a
-                  href={section.linkHref}
-                  class="btn-link"
-                >
-                  {section.linkText}
-                </a>
-              </p>
-            )}
-          </>
-        )}
+          )}
 
-        {section._type === 'comparisonTableSection' && (
-          <>
-            {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
-            {section.column3 ? (
-              <div class="overflow-x-auto">
-                <table class="w-full min-w-[720px] border-separate border-spacing-0 text-left font-sans">
-                  <thead>
-                    <tr>
-                      <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 rounded-tl-lg border-r border-accent">
-                        {section.featureLabel}
-                      </th>
-                      <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 border-r border-accent">
-                        {section.column1}
-                      </th>
-                      <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 border-r border-accent">
-                        {section.column2}
-                      </th>
-                      <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 rounded-tr-lg">
-                        {section.column3}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {section.rows.map((row, rowIndex) => {
-                      const isLast = rowIndex === section.rows.length - 1;
-                      return (
-                        <tr>
-                          <th
-                            class:list={[
-                              'align-top bg-card-light text-heading font-sans font-medium text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5 border-r border-accent',
-                              isLast && 'rounded-bl-lg',
-                            ]}
-                          >
-                            {row.feature}
-                          </th>
-                          <td class="align-top bg-card-light text-muted font-sans font-normal text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5 border-r border-accent">
-                            {row.cell1}
-                          </td>
-                          <td class="align-top bg-card-light text-muted font-sans font-normal text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5 border-r border-accent">
-                            {row.cell2}
-                          </td>
-                          <td
-                            class:list={[
-                              'align-top bg-card-light text-muted font-sans font-normal text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5',
-                              isLast && 'rounded-br-lg',
-                            ]}
-                          >
-                            {row.cell3}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+          {section._type === 'splitContentSection' && (
+            <>
+              <div class="space-y-5">
+                {section.paragraphs.map((paragraph) => (
+                  <p class={paragraphClass}>{paragraph}</p>
+                ))}
               </div>
-            ) : (
-              <ComparisonTable
-                featureLabel={section.featureLabel}
-                columns={[section.column1, section.column2]}
-                rows={section.rows.map((row) => ({
-                  feature: row.feature,
-                  left: row.cell1,
-                  right: row.cell2,
-                }))}
-              />
-            )}
-          </>
-        )}
+              {section.image?.src && <BlogArticleImage image={section.image} />}
+              {section.ctaText && (
+                <p class="mt-6">
+                  <Button variant="ghost" tone="light" text={section.ctaText} href={section.ctaHref || '/form'} />
+                </p>
+              )}
+              {section.linkText && section.linkHref && (
+                <p class="mt-4">
+                  <a href={section.linkHref} class="btn-link">
+                    {section.linkText}
+                  </a>
+                </p>
+              )}
+            </>
+          )}
 
-        {section._type === 'iconPointsSection' && (
-          <>
-            {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
-            <div class="space-y-6">
-              {section.items.map((item) => (
-                <IconPoint
-                  title={item.title}
-                  description={item.description}
-                  icon={item.icon || 'tabler:point'}
-                  variant="light"
-                  orientation="inline"
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {section._type === 'timelineSection' && (
-          <>
-            {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
-            <ol class="space-y-6">
-              {section.steps.map((step, index) => (
-                <li class="flex items-start gap-4">
-                  <div class="shrink-0 w-9 h-9 rounded-full bg-card-dark flex items-center justify-center font-heading font-normal text-[15px] text-white mt-0.5">
-                    {index + 1}
-                  </div>
-                  <div class="min-w-0">
-                    <h3 class="text-[16px] font-sans font-medium leading-[130%] text-heading mb-0.5">
-                      {step.title}
-                    </h3>
-                    <p class="text-[14px] md:text-[15px] font-normal leading-[160%] text-muted">{step.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </>
-        )}
-
-        {section._type === 'infoCardsSection' && (
-          <>
-            {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
-            <div class="space-y-6">
-              {section.items.map((item) => (
-                <IconPoint
-                  title={item.title}
-                  description={item.description}
-                  icon={item.icon || 'tabler:point'}
-                  variant="light"
-                  orientation="inline"
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {section._type === 'linkedCardsSection' && (
-          <>
-            {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
-            <ServiceDirectory items={section.items} variant="light" />
-          </>
-        )}
-
-        {section._type === 'bulletCardsSection' && (
-          <>
-            {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
-            <div class="space-y-8">
-              {section.items.map((card) => (
-                <div>
-                  <h3 class="text-[16px] font-sans font-medium leading-[130%] text-heading mb-3">
-                    {card.title}
-                  </h3>
-                  <ul class="space-y-2">
-                    {card.items.map((item) => (
-                      <li class="flex items-start gap-3">
-                        <Icon name="tabler:check" class="mt-0.5 shrink-0 w-5 h-5 text-primary" aria-hidden="true" />
-                        <span class="text-[16px] font-normal leading-[160%] text-muted">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
+          {section._type === 'comparisonTableSection' && (
+            <>
+              {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+              {section.column3 ? (
+                <div class="overflow-x-auto">
+                  <table class="w-full min-w-[720px] border-separate border-spacing-0 text-left font-sans">
+                    <thead>
+                      <tr>
+                        <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 rounded-tl-lg border-r border-accent">
+                          {section.featureLabel}
+                        </th>
+                        <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 border-r border-accent">
+                          {section.column1}
+                        </th>
+                        <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 border-r border-accent">
+                          {section.column2}
+                        </th>
+                        <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 rounded-tr-lg">
+                          {section.column3}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {section.rows.map((row, rowIndex) => {
+                        const isLast = rowIndex === section.rows.length - 1;
+                        return (
+                          <tr>
+                            <th
+                              class:list={[
+                                'align-top bg-card-light text-blog font-sans font-medium text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5 border-r border-accent',
+                                isLast && 'rounded-bl-lg',
+                              ]}
+                            >
+                              {row.feature}
+                            </th>
+                            <td class="align-top bg-card-light text-blog font-sans font-normal text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5 border-r border-accent">
+                              {row.cell1}
+                            </td>
+                            <td class="align-top bg-card-light text-blog font-sans font-normal text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5 border-r border-accent">
+                              {row.cell2}
+                            </td>
+                            <td
+                              class:list={[
+                                'align-top bg-card-light text-blog font-sans font-normal text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5',
+                                isLast && 'rounded-br-lg',
+                              ]}
+                            >
+                              {row.cell3}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-              ))}
-            </div>
-          </>
-        )}
+              ) : (
+                <ComparisonTable
+                  featureLabel={section.featureLabel}
+                  columns={[section.column1, section.column2]}
+                  rows={section.rows.map((row) => ({
+                    feature: row.feature,
+                    left: row.cell1,
+                    right: row.cell2,
+                  }))}
+                />
+              )}
+            </>
+          )}
 
-        {section._type === 'checklistSection' && (
-          <>
-            {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
-            <ul class="space-y-4">
-              {section.items.map((item) => (
-                <li class="flex items-start gap-3">
-                  <Icon name="tabler:check" class="mt-0.5 shrink-0 w-5 h-5 text-primary" aria-hidden="true" />
-                  <span class={paragraphClass}>{item.text}</span>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
+          {section._type === 'iconPointsSection' && (
+            <>
+              {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+              <div class="space-y-6">
+                {section.items.map((item) => (
+                  <IconPoint
+                    title={item.title}
+                    description={item.description}
+                    icon={item.icon || 'tabler:point'}
+                    variant="light"
+                    orientation="inline"
+                  />
+                ))}
+              </div>
+            </>
+          )}
 
-        {section._type === 'quoteCardsSection' && (
-          <>
-            {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
-            <div class="space-y-6">
-              {section.items.map((item) => (
-                <blockquote class="border-l-4 border-accent pl-5">
-                  <p class={`${paragraphClass} italic`}>“{item.quote}”</p>
-                  <footer class="mt-3 text-[16px] font-sans font-medium text-heading">{item.name}</footer>
-                </blockquote>
-              ))}
-            </div>
-          </>
-        )}
+          {section._type === 'timelineSection' && (
+            <>
+              {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+              <ol class="space-y-6">
+                {section.steps.map((step, index) => (
+                  <li class="flex items-start gap-4">
+                    <div class="shrink-0 w-9 h-9 rounded-full bg-card-dark flex items-center justify-center font-heading font-normal text-[15px] text-white mt-0.5">
+                      {index + 1}
+                    </div>
+                    <div class="min-w-0">
+                      <h3 class="text-[16px] font-sans font-medium leading-[130%] text-heading mb-0.5">{step.title}</h3>
+                      <p class="text-[14px] md:text-[15px] font-normal leading-[160%] text-blog">{step.description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
 
-        {(section._type === 'yelpReviewsSection' || section._type === 'liveReviewsSection') && (
-          <ReviewsGrid
-            showHeader={false}
-            showCta={false}
-            sources={reviewSources(section)}
-            variant="light"
-            isDark={false}
-          />
-        )}
+          {section._type === 'infoCardsSection' && (
+            <>
+              {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+              <div class="space-y-6">
+                {section.items.map((item) => (
+                  <IconPoint
+                    title={item.title}
+                    description={item.description}
+                    icon={item.icon || 'tabler:point'}
+                    variant="light"
+                    orientation="inline"
+                  />
+                ))}
+              </div>
+            </>
+          )}
 
-        {images.map((imageBlock) => (
-          <BlogArticleImage image={imageBlock.image} caption={imageBlock.caption} />
-        ))}
-      </section>
-    ))
+          {section._type === 'linkedCardsSection' && (
+            <>
+              {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+              <ServiceDirectory items={section.items} variant="light" />
+            </>
+          )}
+
+          {section._type === 'bulletCardsSection' && (
+            <>
+              {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+              <div class="space-y-8">
+                {section.items.map((card) => (
+                  <div>
+                    <h3 class="text-[16px] font-sans font-medium leading-[130%] text-heading mb-3">{card.title}</h3>
+                    <ul class="space-y-2">
+                      {card.items.map((item) => (
+                        <li class="flex items-start gap-3">
+                          <Icon name="tabler:check" class="mt-0.5 shrink-0 w-5 h-5 text-primary" aria-hidden="true" />
+                          <span class="text-[16px] font-normal leading-[160%] text-blog">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {section._type === 'checklistSection' && (
+            <>
+              {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+              <ul class="space-y-4">
+                {section.items.map((item) => (
+                  <li class="flex items-start gap-3">
+                    <Icon name="tabler:check" class="mt-0.5 shrink-0 w-5 h-5 text-primary" aria-hidden="true" />
+                    <span class={paragraphClass}>{item.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {section._type === 'quoteCardsSection' && (
+            <>
+              {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+              <div class="space-y-6">
+                {section.items.map((item) => (
+                  <blockquote class="border-l-4 border-accent pl-5">
+                    <p class={`${paragraphClass} italic`}>“{item.quote}”</p>
+                    <footer class="mt-3 text-[16px] font-sans font-medium text-heading">{item.name}</footer>
+                  </blockquote>
+                ))}
+              </div>
+            </>
+          )}
+
+          {(section._type === 'yelpReviewsSection' || section._type === 'liveReviewsSection') && (
+            <ReviewsGrid
+              showHeader={false}
+              showCta={false}
+              sources={reviewSources(section)}
+              variant="light"
+              isDark={false}
+            />
+          )}
+
+          {images.map((imageBlock) => (
+            <BlogArticleImage image={imageBlock.image} caption={imageBlock.caption} />
+          ))}
+        </section>
+      ))
   }
 
-  {
-    unmatchedImages.map((imageBlock) => (
-      <BlogArticleImage image={imageBlock.image} caption={imageBlock.caption} />
-    ))
-  }
+  {unmatchedImages.map((imageBlock) => <BlogArticleImage image={imageBlock.image} caption={imageBlock.caption} />)}
 </div>
 
 <style>
@@ -420,20 +460,29 @@ const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading m
    * Scoped Tailwind classes dont apply to dynamically injected markup,
    * so we target these with plain CSS inside the article wrapper.
    */
-  div :global(a) {
+  div :global(a:not(.btn-primary):not(.btn-ghost-light):not(.btn-ghost-dark):not(.btn-secondary):not(.btn-link)) {
     color: var(--aw-color-btn-link);
     font-weight: 600;
     text-decoration: none;
     text-underline-offset: 2px;
     transition: color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  div :global(a:hover) {
+  div :global(a:not(.btn-primary):not(.btn-ghost-light):not(.btn-ghost-dark):not(.btn-secondary):not(.btn-link):hover) {
     color: var(--aw-color-btn-link-hover);
     text-decoration: underline;
   }
+  div :global(a.btn-ghost-light:hover),
+  div :global(a.btn-primary:hover) {
+    color: white;
+    text-decoration: none;
+  }
+  div :global(td strong),
+  div :global(th strong) {
+    font-weight: 700;
+  }
   div :global(strong) {
     font-weight: 600;
-    color: var(--aw-color-text-heading);
+    color: var(--aw-color-text-blog);
   }
   div :global(code) {
     background-color: rgb(237 217 116 / 50%);
@@ -441,5 +490,8 @@ const h3Class = 'text-[16px] font-sans font-medium leading-[130%] text-heading m
     border-radius: 0.25rem;
     font-size: 0.875em;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+  div :global(details > summary::-webkit-details-marker) {
+    display: none;
   }
 </style>
