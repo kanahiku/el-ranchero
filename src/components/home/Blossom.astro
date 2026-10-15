@@ -1,0 +1,19 @@
+---
+/** Chunky round-petal flower (Figma "Shape / Blossom" 2029:879). Decorative. */
+interface Props {
+  class?: string;
+  fill?: string;
+  center?: string;
+}
+
+const { class: className, fill = 'var(--v3-gold)', center = 'var(--v3-red)' } = Astro.props;
+const petals = Array.from({ length: 8 }, (_, i) => {
+  const a = (Math.PI * 2 * i) / 8;
+  return { cx: 100 + 52 * Math.cos(a), cy: 100 + 52 * Math.sin(a) };
+});
+---
+
+<svg class={className} viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+  {petals.map(({ cx, cy }) => <circle cx={cx.toFixed(2)} cy={cy.toFixed(2)} r="40" fill={fill} />)}
+  <circle cx="100" cy="100" r="34" fill={center}></circle>
+</svg>

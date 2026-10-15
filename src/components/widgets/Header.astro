@@ -26,6 +26,8 @@ export interface Props {
   position?: string;
   /** Render only the glass nav bar, for use inside an overlay hero. */
   embedded?: boolean;
+  /** `poster` = Variant 3 dark header (default). `default` = previous white header. */
+  theme?: 'default' | 'poster';
 }
 
 const {
@@ -38,7 +40,10 @@ const {
   showToggleTheme = false,
   showRssFeed = false,
   embedded = false,
+  theme = 'poster',
 } = Astro.props;
+
+const isPoster = theme === 'poster';
 
 const extraActions = (actions ?? []).filter(
   (action) => action.href !== phone?.href && !String(action.href ?? '').startsWith('tel:')
@@ -47,16 +52,19 @@ const phoneAction = phone
   ? { variant: 'primary' as const, text: phone.text, href: phone.href, icon: 'tabler:phone' }
   : undefined;
 const phoneLabel = phone ? `Call ${phone.text}` : '';
-const phoneBoxClass =
-  'inline-flex items-center justify-center shrink-0 size-9 rounded-md bg-accent text-black border-2 border-accent hover:bg-accent-hover hover:border-accent-hover transition duration-200';
+const phoneBoxClass = isPoster
+  ? 'inline-flex items-center justify-center shrink-0 size-9 rounded-md border-2 border-[var(--v3-gold)] bg-[var(--v3-gold)] text-[var(--v3-ink)] transition duration-200 hover:brightness-95'
+  : 'inline-flex items-center justify-center shrink-0 size-9 rounded-md bg-accent text-black border-2 border-accent hover:bg-accent-hover hover:border-accent-hover transition duration-200';
 const socialLinks = SOCIAL.nav;
-const socialIconClass =
-  'inline-flex size-9 items-center justify-center text-heading/75 transition-colors hover:text-accent';
+const socialIconClass = isPoster
+  ? 'inline-flex size-9 items-center justify-center text-[var(--v3-cream)] transition-colors hover:text-[var(--v3-gold)]'
+  : 'inline-flex size-9 items-center justify-center text-heading/75 transition-colors hover:text-accent';
 
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
-const mobileLinkClass =
-  'flex items-center px-3 py-3 font-sans text-[18px] font-semibold capitalize leading-none text-heading transition-colors hover:bg-section-grey/40';
+const mobileLinkClass = isPoster
+  ? 'flex items-center px-3 py-3 font-sans text-[18px] font-semibold capitalize leading-none text-[var(--v3-cream)] transition-colors hover:bg-white/5'
+  : 'flex items-center px-3 py-3 font-sans text-[18px] font-semibold capitalize leading-none text-heading transition-colors hover:bg-section-grey/40';
 const mobileNestedLinkClass =
   'flex items-center gap-3 px-3 py-2.5 text-heading transition-colors hover:bg-section-grey/40';
 const mobilePanelClass =
@@ -124,7 +132,13 @@ const mobilePanelClass =
       </header>
     ) : (
       <header
-        class:list={[{ sticky: isSticky, relative: !isSticky }, 'header-theme top-0 z-40 flex-none mx-auto w-full border-b border-secondary/30 bg-header shadow-header']}
+        class:list={[
+          { sticky: isSticky, relative: !isSticky },
+          isPoster
+            ? 'header-theme top-0 z-40 mx-auto w-full flex-none border-b border-[color:color-mix(in_srgb,var(--v3-cream)_18%,transparent)] bg-[var(--v3-ink)] text-[var(--v3-cream)]'
+            : 'header-theme top-0 z-40 flex-none mx-auto w-full border-b border-secondary/30 bg-header shadow-header',
+        ]}
+        {...(isPoster ? { 'data-theme': 'poster' } : {})}
         {...(isSticky ? { 'data-aw-sticky-header': true } : {})}
         {...(id ? { id } : {})}
       >
@@ -135,7 +149,7 @@ const mobilePanelClass =
           ]}
         >
           <a class="flex shrink-0 items-center md:hidden" href={getHomePermalink()} aria-label="El Ranchero home">
-            <Logo />
+            <Logo variant={isPoster ? 'poster' : 'default'} class={isPoster ? 'h-11' : undefined} />
           </a>
           <div class="flex items-center gap-2 md:hidden">
             {phone && (
@@ -143,12 +157,16 @@ const mobilePanelClass =
                 <Icon name="tabler:phone" class="size-4" aria-hidden="true" />
               </a>
             )}
-            <ToggleMenu class="flex size-12 flex-col items-center justify-center bg-heading/5 text-heading cursor-pointer group" />
+            <ToggleMenu
+              class={isPoster
+                ? 'group flex size-12 cursor-pointer flex-col items-center justify-center text-[var(--v3-cream)]'
+                : 'flex size-12 flex-col items-center justify-center bg-heading/5 text-heading cursor-pointer group'}
+            />
           </div>
 
           <div class="hidden md:flex md:flex-1 md:basis-0 md:items-center">
             <a class="flex shrink-0 items-center" href={getHomePermalink()} aria-label="El Ranchero home">
-              <Logo />
+              <Logo variant={isPoster ? 'poster' : 'default'} class={isPoster ? 'h-14' : undefined} />
             </a>
           </div>
 
@@ -163,9 +181,15 @@ const mobilePanelClass =
                 <Icon name="tabler:rss" class="w-5 h-5" />
               </a>
             )}
-            {extraActions.map((btnProps) => (
-              <Button {...btnProps} hideNote class="whitespace-nowrap" />
-            ))}
+            {extraActions.map((btnProps) =>
+              isPoster ? (
+                <a class="v3-btn v3-btn-gold whitespace-nowrap" href={btnProps.href}>
+                  {btnProps.text}
+                </a>
+              ) : (
+                <Button {...btnProps} hideNote class="whitespace-nowrap" />
+              )
+            )}
             {socialLinks.length > 0 && (
               <ul class="flex items-center gap-1" aria-label="Social media">
                 {socialLinks.map(({ href, ariaLabel, icon }) => (
@@ -181,7 +205,7 @@ const mobilePanelClass =
 
         </div>
 
-        <div class={mobilePanelClass} data-mobile-panel>
+        <div class:list={[mobilePanelClass, isPoster && 'v3-mobile-panel']} data-mobile-panel>
           <nav aria-label="Mobile navigation">
             <ul class="flex flex-col">
               {links.map(({ text, href, links: childLinks, columns }) => {
@@ -198,7 +222,10 @@ const mobilePanelClass =
                           </a>
                           {/* Chevron-only toggle zone — tapping this toggles the accordion */}
                           <span
-                            class="mobile-chevron-toggle flex size-10 shrink-0 items-center justify-center text-heading/50"
+                            class:list={[
+                              'mobile-chevron-toggle flex size-10 shrink-0 items-center justify-center',
+                              isPoster ? 'text-[var(--v3-cream)]/60' : 'text-heading/50',
+                            ]}
                             aria-hidden="true"
                           >
                             <svg
@@ -259,9 +286,15 @@ const mobilePanelClass =
           {(phoneAction || extraActions.length > 0) && (
             <div class="mt-2 flex flex-col gap-2 border-t border-heading/10 pt-3">
               {phoneAction && <Button {...phoneAction} hideNote class="w-full justify-center" />}
-              {extraActions.map((btnProps) => (
-                <Button {...btnProps} hideNote class="w-full justify-center" />
-              ))}
+              {extraActions.map((btnProps) =>
+                isPoster ? (
+                  <a class="v3-btn v3-btn-gold w-full justify-center" href={btnProps.href}>
+                    {btnProps.text}
+                  </a>
+                ) : (
+                  <Button {...btnProps} hideNote class="w-full justify-center" />
+                )
+              )}
             </div>
           )}
           {socialLinks.length > 0 && (

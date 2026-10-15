@@ -1,24 +1,28 @@
 ---
 /**
- * Homepage — copy from pages-content/_ homepage.docx.
- * Composes shared widgets only. Photos come from the Sanity "Homepage"
- * singleton (`homepageContent`); a missing photo renders the grey placeholder.
+ * Homepage — Variant 3 poster layout (Figma 2024:570).
+ * Copy from pages-content/_ homepage.docx; script kickers are Figma decoration
+ * and hidden from assistive tech. Photos come from the Sanity "Homepage"
+ * singleton (`homepageContent`).
  */
+import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import TextSplit from '~/components/widgets/TextSplit.astro';
-import FeaturedDishes from '~/components/widgets/FeaturedDishes.astro';
-import ScheduleSection from '~/components/widgets/ScheduleSection.astro';
-import Locations from '~/components/widgets/Locations.astro';
-import Testimonials from '~/components/widgets/Testimonials.astro';
-import CTABanner from '~/components/widgets/CTABanner.astro';
-import Heading from '~/components/ui/Heading.astro';
-import Text from '~/components/ui/Text.astro';
-import Button from '~/components/ui/Button.astro';
+import PosterButton from '~/components/home/PosterButton.astro';
+import HomePhoto from '~/components/home/HomePhoto.astro';
+import Lanterns from '~/components/home/Lanterns.astro';
+import Starburst from '~/components/home/Starburst.astro';
+import Blossom from '~/components/home/Blossom.astro';
+import IconBanner from '~/assets/images/v3/icon-banner.svg';
+import IconKaraoke from '~/assets/images/v3/icon-karaoke.svg';
+import IconDj from '~/assets/images/v3/icon-dj.svg';
+import IconDrink from '~/assets/images/v3/icon-drink.svg';
+import Calavera from '~/assets/images/v3/calavera.svg';
+import CalaveraSmall from '~/assets/images/v3/calavera2.svg';
 import { PRIMARY_CTA_HREF, CATERING_CTA_HREF, LOCATION_CTA_HREF } from '~/config/cta';
-import { getHomepageImages } from '~/lib/content';
+import { getHomepageImages, getTestimonials, formatTestimonialAttribution } from '~/lib/content';
 
 const images = await getHomepageImages();
+const reviews = (await getTestimonials()).slice(0, 3);
 
 const metadata = {
   title: 'Mexican Restaurant in Wahiawa & Kapolei | El Ranchero',
@@ -27,286 +31,426 @@ const metadata = {
   ignoreTitleTemplate: true,
 };
 
-const heroStats = [
-  // TODO: founding year is pending client confirmation (see homepage doc).
-  { value: '2015', label: 'Established on Oʻahu' },
-  { value: '2', label: 'Oʻahu Locations' },
-  { value: 'Daily', label: 'Fresh Food Preparation' },
+const ticker = ['Tacos', 'Burritos', 'Birria', 'Molcajete', 'Breakfast', 'Margaritas'];
+
+const weekly = [
+  {
+    day: 'Tuesday',
+    icon: IconBanner,
+    name: 'Taco Tuesday',
+    description:
+      'Make tacos part of your Tuesday plans. Explore our regular taco menu and check the latest event announcements for current specials.',
+  },
+  {
+    day: 'Wednesday',
+    icon: IconKaraoke,
+    name: 'Free Karaoke Wednesday',
+    description: 'Join us for karaoke hosted by local DJs. Sing in Spanish or English, with no set music theme.',
+  },
+  {
+    day: 'Friday',
+    icon: IconDj,
+    name: 'Friday DJ & Promoter Events',
+    description:
+      'Many Fridays feature entertainment hosted by local promoters or DJs. Check the current schedule for upcoming events and performers.',
+  },
+  {
+    day: 'Saturday',
+    icon: IconDrink,
+    name: 'Saturday Latin Night',
+    description:
+      'Enjoy music from across Latin America and an evening centered on the Latino community. Everyone is welcome.',
+  },
 ];
 
-const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
+const locations = [
+  {
+    number: '01',
+    name: 'Wahiawa',
+    image: images.wahiawa,
+    heading: 'Wahiawa Mexican Restaurant',
+    shopName: 'Wahiawa Shopping Center',
+    address: '823 California Ave, Unit A5, Wahiawa, HI 96786',
+    description: [
+      'Our original Wahiawa restaurant is located in Wahiawa Shopping Center. With its rustic neighborhood atmosphere, it serves local regulars and military personnel, along with travelers heading toward the North Shore.',
+      'Stop by for a breakfast burrito in the morning or order tacos for takeout later in the day.',
+    ],
+    view: { text: 'View Wahiawa Location', href: '/locations/wahiawa' },
+    order: {
+      text: 'Order Wahiawa Takeout',
+      href: 'https://www.doordash.com/store/taqueria-el-ranchero-wahiawa-276575/',
+    },
+  },
+  {
+    number: '02',
+    name: 'Kapolei',
+    image: images.kapolei,
+    heading: 'Kapolei Mexican Restaurant at Ka Makana Aliʻi',
+    shopName: 'Ka Makana Aliʻi',
+    address: '91-5431 Kapolei Pkwy #501, Kapolei, HI 96707',
+    description: [
+      'Located at Ka Makana Aliʻi, our Kapolei restaurant offers a sit-down dining experience with servers and outdoor seating.',
+      'It’s an option for family meals or a restaurant stop while visiting the shopping center. The location also has space available for private events.',
+    ],
+    view: { text: 'View Kapolei Location', href: '/locations/kapolei' },
+    order: {
+      text: 'Order Kapolei Takeout',
+      href: 'https://www.doordash.com/store/taqueria-el-ranchero-kapolei-2390257/',
+    },
+  },
+];
+
+const hours = ['Kitchen: 7 AM–10 PM daily', 'Breakfast: 7 AM–12 PM daily'];
 ---
 
 <Layout metadata={metadata}>
-  {/* ── 1. Hero ───────────────────────────────────────────── */}
-  <Hero2
-    id="home-hero"
-    variant="overlay"
-    image={images.hero}
-    overlapHeader={false}
-    title="Hawaii’s Original Taqueria"
-    subtitle="Experience Northern California-inspired Mexican food at Taqueria El Ranchero in Wahiawa and Kapolei, Oʻahu. From traditional tacos and burritos to ranchero-style entrées, our food is prepared fresh daily using grilled meats and homemade salsas.<br /><br />Whether you’re stopping in for breakfast or picking up dinner, explore our menu and find your nearest location."
-    actions={[
-      { variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF },
-      { variant: 'ghost', text: 'View Our Menu', href: '/menu' },
-    ]}
-  >
-    <Fragment slot="stats">
-      <ul class="grid grid-cols-3 gap-4 text-center text-contrast md:gap-8">
-        {
-          heroStats.map((stat) => (
-            <li class="flex flex-col items-center gap-1">
-              <Heading variant="h3" color="white" as="p">
-                {stat.value}
-              </Heading>
-              <Text variant="small" color="white" as="span">
-                {stat.label}
-              </Text>
-            </li>
-          ))
-        }
-      </ul>
-    </Fragment>
-  </Hero2>
+  <div class="home-v3">
+    {/* ── 1. Hero ───────────────────────────────────────────── */}
+    <section id="home-hero" class="v3-hero" aria-labelledby="home-hero-title">
+      <HomePhoto image={images.hero} class="v3-hero-media" sizes="100vw" loading="eager" fetchpriority="high" />
+      <div class="v3-hero-shade" aria-hidden="true"></div>
+      <Lanterns class="v3-lanterns" />
 
-  {/* ── 2. Breakfast ──────────────────────────────────────── */}
-  <TextSplit
-    id="breakfast"
-    heading="Mexican Breakfast, Every Day From 7 AM"
-    withImage
-    image={images.breakfast}
-    imageAspect="4 / 3"
-    class="bg-card"
-  >
-    <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
-        Start your morning with a Mexican breakfast at El Ranchero. Our breakfast menu is available daily from 7 AM to
-        12 PM at both locations.
-      </Text>
-      <Text variant="body" color="default">
-        For breakfast on the go, try our Breakfast Burrito with your choice of bacon, ham, chorizo or veggie, filled
-        with eggs, beans, cheese, potatoes, tomato, onion and jalapeño.
-      </Text>
-      <Text variant="body" color="default">
-        Prefer a sit-down breakfast? Explore our Chilaquiles, Huevos Rancheros or Huevos con Chorizo, served with
-        traditional Mexican flavors and accompaniments.
-      </Text>
-      <div>
-        <Button variant="primary" text="Explore Our Breakfast Menu" href="/menu/breakfast" hideNote={true} />
+      <p class="v3-hero-note" aria-hidden="true">← our signature<br />Molcajete, sizzling!</p>
+
+      <div class="v3-badge" aria-hidden="true">
+        <Starburst />
+        <span><small>desde</small><strong>2015</strong></span>
+      </div>
+
+      <div class="v3-wrap v3-hero-copy">
+        <h1 id="home-hero-title">
+          <span class="v3-script-note block">Hawaii’s Original</span>
+          <span class="v3-hero-title block">Taqueria</span>
+        </h1>
+      </div>
+
+      <div class="v3-wrap v3-hero-foot">
+        <div class="flex flex-col gap-4">
+          <p>
+            Experience Northern California-inspired Mexican food at Taqueria El Ranchero in Wahiawa and Kapolei, Oʻahu.
+            From traditional tacos and burritos to ranchero-style entrées, our food is prepared fresh daily using
+            grilled meats and homemade salsas.
+          </p>
+          <p>
+            Whether you’re stopping in for breakfast or picking up dinner, explore our menu and find your nearest
+            location.
+          </p>
+          <div class="v3-actions">
+            <PosterButton text="Order Now" href={PRIMARY_CTA_HREF} tone="gold" />
+            <PosterButton text="View Our Menu" href="/menu" tone="outline" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ── Ticker ────────────────────────────────────────────── */}
+    <div class="v3-ticker-clip" aria-hidden="true">
+      <div class="v3-ticker-band">
+        <div class="v3-ticker">
+          {
+            [...ticker, ...ticker, ...ticker, ...ticker].map((item) => (
+              <>
+                <span>{item}</span>
+                <i>★</i>
+              </>
+            ))
+          }
+        </div>
       </div>
     </div>
-  </TextSplit>
 
-  {/* ── 3. Menu favorites ─────────────────────────────────── */}
-  <FeaturedDishes
-    id="favorites"
-    eyebrow=""
-    title="Discover Our Mexican Food Favorites"
-    subtitle={[
-      'Our menu takes inspiration from the taquerias of San Francisco, where straightforward cooking and freshly prepared ingredients are central to the food.',
-      'Meats are grilled over an open-fire grill each morning, while our salsas are made in-house. Choose from traditional Mexican dishes, including these menu favorites.',
-    ]}
-    ctaText="Explore Full Menu"
-    ctaHref="/menu"
-    dishes={[
-      {
-        title: 'Molcajete: Our Signature Dish',
-        image: images.molcajete,
-        description:
-          'Savor the rich flavors of our signature Molcajete dish, a culinary masterpiece featuring grilled meats, vibrant vegetables, and savory sauces, all served sizzling in a traditional volcanic stone mortar for an authentic and unforgettable dining experience. Served with beans, rice and corn or flour tortillas.',
-        href: '/menu/entrees',
-      },
-      {
-        title: 'Tacos & Birria',
-        image: images.tacosBirria,
-        description: [
-          'Our traditional Taco comes with your choice of meat, onion, cilantro and salsa. Choose from meats such as carne asada, carnitas or al pastor.',
-          'We also serve Tacos de Birria and Mulitas de Birria, with three pieces per order.',
-        ],
-        href: '/menu/tacos',
-      },
-      {
-        title: 'Burritos',
-        image: images.burritos,
-        description: [
-          'Try our Burrito Grande with your choice of meat, beans, rice, cheese, pico de gallo, guacamole and sour cream.',
-          'Our California Burrito offers another option, combining your choice of meat with cheese, fries, guacamole and sour cream.',
-        ],
-        href: '/menu/burritos',
-      },
-    ]}
-  />
+    {/* ── 2. Breakfast ──────────────────────────────────────── */}
+    <section id="breakfast" class="v3-paper" aria-labelledby="breakfast-title">
+      <div class="v3-wrap v3-split">
+        <div class="v3-breakfast-art" aria-hidden="true">
+          <p class="v3-kicker v3-breakfast-kicker">Buenos días!</p>
+          <p class="v3-giant">7AM</p>
+          <Blossom class="v3-blossom" />
+          <HomePhoto image={images.breakfast} class="v3-tilt-photo" sizes="(min-width: 768px) 42vw, 82vw" />
+          <p class="v3-hand">to noon, every day ↓</p>
+        </div>
+        <div class="flex flex-col items-start gap-5">
+          <h2 id="breakfast-title" class="v3-display v3-split-title">Mexican Breakfast, Every Day From 7 AM</h2>
+          <p class="v3-body v3-lead">
+            Start your morning with a Mexican breakfast at El Ranchero. Our breakfast menu is available daily from 7 AM
+            to 12 PM at both locations.
+          </p>
+          <p class="v3-body">
+            For breakfast on the go, try our Breakfast Burrito with your choice of bacon, ham, chorizo or veggie, filled
+            with eggs, beans, cheese, potatoes, tomato, onion and jalapeño.
+          </p>
+          <p class="v3-body">
+            Prefer a sit-down breakfast? Explore our Chilaquiles, Huevos Rancheros or Huevos con Chorizo, served with
+            traditional Mexican flavors and accompaniments.
+          </p>
+          <PosterButton text="Explore Our Breakfast Menu" href="/menu/breakfast" tone="red" class="mt-2" />
+        </div>
+      </div>
+    </section>
 
-  {/* ── 4. Weekly events ──────────────────────────────────── */}
-  <div class="bg-card">
-    <ScheduleSection
-      id="weekly-events"
-      heading="Weekly Events at El Ranchero"
-      body="Food is only part of the El Ranchero experience. Our restaurants also bring people together through music and community events inspired by Latin American culture."
-      days={[
-        {
-          day: 'Tuesday',
-          events: [
-            {
-              name: 'Taco Tuesday',
-              description:
-                'Make tacos part of your Tuesday plans. Explore our regular taco menu and check the latest event announcements for current specials.',
-            },
-          ],
-        },
-        {
-          day: 'Wednesday',
-          events: [
-            {
-              name: 'Free Karaoke Wednesday',
-              description: 'Join us for karaoke hosted by local DJs. Sing in Spanish or English, with no set music theme.',
-            },
-          ],
-        },
-        {
-          day: 'Friday',
-          events: [
-            {
-              name: 'Friday DJ & Promoter Events',
-              description:
-                'Many Fridays feature entertainment hosted by local promoters or DJs. Check the current schedule for upcoming events and performers.',
-            },
-          ],
-        },
-        {
-          day: 'Saturday',
-          events: [
-            {
-              name: 'Saturday Latin Night',
-              description:
-                'Enjoy music from across Latin America and an evening centered on the Latino community. Everyone is welcome.',
-            },
-          ],
-        },
-      ]}
-      footnote={`El Ranchero also hosts live concerts featuring professional Mexican bands. See the <a href="/events/concerts" class="${linkClass}">Live Concerts</a> page for upcoming performances.`}
-      ctaText="View All Events"
-      ctaHref="/events"
-    />
+    {/* ── 3. Menu favorites ─────────────────────────────────── */}
+    <section id="favorites" class="v3-block v3-favorites" aria-labelledby="favorites-title">
+      <div class="v3-wrap">
+        <div class="v3-section-head">
+          <div class="flex flex-col gap-3">
+            <p class="v3-kicker text-[var(--v3-gold)]" aria-hidden="true">la casa recomienda</p>
+            <h2 id="favorites-title">Discover Our Mexican Food Favorites</h2>
+          </div>
+          <div class="v3-favorites-intro flex flex-col gap-3">
+            <p class="v3-body">
+              Our menu takes inspiration from the taquerias of San Francisco, where straightforward cooking and freshly
+              prepared ingredients are central to the food.
+            </p>
+            <p class="v3-body">
+              Meats are grilled over an open-fire grill each morning, while our salsas are made in-house. Choose from
+              traditional Mexican dishes, including these menu favorites.
+            </p>
+          </div>
+        </div>
+
+        <div class="v3-collage">
+          <article class="v3-tile">
+            <HomePhoto image={images.molcajete} sizes="(min-width: 1200px) 650px, (min-width: 768px) 55vw, 100vw" />
+            <div class="v3-tile-shade" aria-hidden="true"></div>
+            <p class="v3-kicker" aria-hidden="true">the signature</p>
+            <h3><a class="v3-tile-link" href="/menu/entrees">Molcajete: Our Signature Dish</a></h3>
+            <p>
+              Savor the rich flavors of our signature Molcajete dish, a culinary masterpiece featuring grilled meats,
+              vibrant vegetables, and savory sauces, all served sizzling in a traditional volcanic stone mortar for an
+              authentic and unforgettable dining experience. Served with beans, rice and corn or flour tortillas.
+            </p>
+          </article>
+
+          <div class="v3-stack">
+            <article class="v3-tile">
+              <HomePhoto image={images.tacosBirria} sizes="(min-width: 1200px) 500px, (min-width: 768px) 45vw, 100vw" />
+              <div class="v3-tile-shade" aria-hidden="true"></div>
+              <h3><a class="v3-tile-link" href="/menu/tacos">Tacos &amp; Birria</a></h3>
+              <p>
+                Our traditional Taco comes with your choice of meat, onion, cilantro and salsa. Choose from meats such
+                as carne asada, carnitas or al pastor.
+              </p>
+              <p>We also serve Tacos de Birria and Mulitas de Birria, with three pieces per order.</p>
+            </article>
+            <article class="v3-tile">
+              <HomePhoto image={images.burritos} sizes="(min-width: 1200px) 500px, (min-width: 768px) 45vw, 100vw" />
+              <div class="v3-tile-shade" aria-hidden="true"></div>
+              <h3><a class="v3-tile-link" href="/menu/burritos">Burritos</a></h3>
+              <p>
+                Try our Burrito Grande with your choice of meat, beans, rice, cheese, pico de gallo, guacamole and sour
+                cream.
+              </p>
+              <p>
+                Our California Burrito offers another option, combining your choice of meat with cheese, fries,
+                guacamole and sour cream.
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <div class="mt-10 flex justify-center">
+          <PosterButton text="Explore Full Menu" href="/menu" tone="gold" />
+        </div>
+      </div>
+    </section>
+
+    {/* ── 4. Weekly events ──────────────────────────────────── */}
+    <section id="weekly-events" class="v3-band" aria-labelledby="weekly-events-title">
+      <div class="v3-scallop" aria-hidden="true"></div>
+      <div class="v3-wrap v3-wrap-narrow">
+        <p class="v3-kicker" aria-hidden="true">the weekly lineup</p>
+        <h2 id="weekly-events-title">Weekly Events at El Ranchero</h2>
+        <p class="v3-body">
+          Food is only part of the El Ranchero experience. Our restaurants also bring people together through music and
+          community events inspired by Latin American culture.
+        </p>
+
+        <ul class="mt-10">
+          {
+            weekly.map(({ day, icon: GigIcon, name, description }) => (
+              <li class="v3-gig">
+                <b>{day}</b>
+                <div>
+                  <strong>{name}</strong>
+                  <p>{description}</p>
+                </div>
+                <GigIcon class="v3-gig-icon" aria-hidden="true" />
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="v3-band-foot">
+          <p class="v3-band-note">
+            El Ranchero also hosts live concerts featuring professional Mexican bands. See the{' '}
+            <a href="/events/concerts" class="v3-link">Live Concerts</a> page for upcoming performances.
+          </p>
+          <PosterButton text="View All Events" href="/events" tone="dark" />
+        </div>
+      </div>
+    </section>
+
+    {/* ── 5. Locations ──────────────────────────────────────── */}
+    <section id="locations" class="v3-locations v3-paper" aria-labelledby="locations-title">
+      <div class="v3-wrap">
+        <div class="v3-location-head">
+          <div class="flex flex-col gap-3">
+            <p class="v3-kicker" aria-hidden="true">ven a visitarnos</p>
+            <h2 id="locations-title">Two Mexican Restaurant Locations on Oʻahu</h2>
+          </div>
+          <p class="v3-body max-w-[460px]">
+            Visit Taqueria El Ranchero in Wahiawa or Kapolei. Both locations serve the same menu, with different dining
+            environments to suit your plans.
+          </p>
+        </div>
+
+        <div class="v3-location-grid">
+          {
+            locations.map((loc) => (
+              <article class="v3-card">
+                <div class="v3-card-photo">
+                  <HomePhoto
+                    image={loc.image}
+                    sizes="(min-width: 1280px) 580px, (min-width: 768px) calc(50vw - 74px), calc(100vw - 40px)"
+                  />
+                  <div class="v3-tile-shade" aria-hidden="true" />
+                  <div class="v3-card-title">
+                    <span aria-hidden="true">{loc.number}</span>
+                    <p class="v3-card-name">{loc.name}</p>
+                  </div>
+                </div>
+                <div class="v3-card-body">
+                  <h3 class="v3-card-heading">{loc.heading}</h3>
+                  <p class="v3-meta">
+                    <Icon name="tabler:map-pin" class="v3-meta-icon" aria-hidden="true" />
+                    <span>
+                      {loc.shopName}
+                      <br />
+                      {loc.address}
+                    </span>
+                  </p>
+                  <p class="v3-meta">
+                    <Icon name="tabler:clock" class="v3-meta-icon" aria-hidden="true" />
+                    <span>
+                      {hours[0]}
+                      <br />
+                      {hours[1]}
+                    </span>
+                  </p>
+                  {loc.description.map((line) => (
+                    <p>{line}</p>
+                  ))}
+                  <div class="v3-actions mt-2">
+                    <PosterButton text={loc.view.text} href={loc.view.href} tone="gold" />
+                    <PosterButton text={loc.order.text} href={loc.order.href} tone="outline" />
+                  </div>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ── 6 + 7. Catering & private events ──────────────────── */}
+    <section class="v3-panels" aria-label="Catering and private events">
+      <div class="v3-wrap v3-panel-grid">
+        <article id="catering" class="v3-panel" aria-labelledby="catering-title">
+          <HomePhoto
+            image={images.catering}
+            class="v3-panel-photo"
+            sizes="(min-width: 1280px) 560px, (min-width: 768px) calc(50vw - 84px), calc(100vw - 72px)"
+          />
+          <div class="v3-panel-body">
+            <p class="v3-kicker" aria-hidden="true">para la fiesta</p>
+            <h2 id="catering-title" class="v3-panel-title">Mexican Catering for Gatherings on Oʻahu</h2>
+            <p class="v3-lead-sm">
+              Planning an office lunch or a family celebration? Taqueria El Ranchero offers Mexican catering, including
+              taco bar packages for group gatherings.
+            </p>
+            <p>
+              Our catering experience includes small office orders and events serving approximately 250 guests. Contact
+              our catering team to discuss your event, group size and available arrangements.
+            </p>
+            <PosterButton text="Explore Our Catering Options" href={CATERING_CTA_HREF} tone="gold" class="mt-2" />
+          </div>
+        </article>
+
+        <article id="private-events" class="v3-panel" aria-labelledby="private-events-title">
+          <HomePhoto
+            image={images.privateEvents}
+            class="v3-panel-photo"
+            sizes="(min-width: 1280px) 560px, (min-width: 768px) calc(50vw - 84px), calc(100vw - 72px)"
+          />
+          <div class="v3-panel-body">
+            <p class="v3-kicker" aria-hidden="true">tu evento, tu escenario</p>
+            <h2 id="private-events-title" class="v3-panel-title">Host Your Private Event at El Ranchero Kapolei</h2>
+            <p class="v3-lead-sm">
+              Looking for a place to host a celebration or company gathering? Our Kapolei restaurant offers a rentable
+              event space with a stage, TVs, microphones and speakers.
+            </p>
+            <p>
+              The venue can accommodate different types of private gatherings, including baby showers and wedding
+              receptions, subject to booking arrangements.
+            </p>
+            <p>Contact our team to discuss your event and learn more about the space.</p>
+            <PosterButton text="Explore Event Space Rental" href="/events/event-space-rental" tone="red" class="mt-2" />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    {/* ── 8. Reviews — fetched from Sanity ──────────────────── */}
+    {
+      reviews.length > 0 && (
+        <section id="reviews" class="v3-reviews" aria-labelledby="reviews-title">
+          <CalaveraSmall class="v3-calavera v3-calavera-l" aria-hidden="true" />
+          <Calavera class="v3-calavera v3-calavera-r" aria-hidden="true" />
+          <div class="v3-wrap">
+            <p class="v3-kicker" aria-hidden="true">
+              lo que dice la gente
+            </p>
+            <h2 id="reviews-title">Customers Are Raving</h2>
+            <ul class="v3-review-grid">
+              {reviews.map((review) => (
+                <li>
+                  <figure class="v3-quote">
+                    <p class="stars" aria-hidden="true">
+                      ★★★★★
+                    </p>
+                    <blockquote>
+                      <q>{review.quote}</q>
+                    </blockquote>
+                    <figcaption>
+                      <cite>{formatTestimonialAttribution(review)}</cite>
+                    </figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )
+    }
+
+    {/* ── 9. Closing CTA ────────────────────────────────────── */}
+    <section id="visit" class="v3-close" aria-labelledby="visit-title">
+      <HomePhoto image={images.hero} sizes="100vw" />
+      <div class="v3-close-shade" aria-hidden="true"></div>
+      <div class="v3-wrap">
+        <p class="v3-kicker" aria-hidden="true">¡nos vemos pronto!</p>
+        <h2 id="visit-title">Visit or Order From Taqueria El Ranchero</h2>
+        <p class="v3-body">
+          Explore our Mexican food menu, choose your nearest restaurant or contact our team about catering for your next
+          gathering.
+        </p>
+        <div class="v3-actions">
+          <PosterButton text="Order Catering" href={CATERING_CTA_HREF} tone="outline" />
+          <PosterButton text="Order Now" href={PRIMARY_CTA_HREF} tone="gold" />
+          <PosterButton text="Find a Location" href={LOCATION_CTA_HREF} tone="outline" />
+        </div>
+      </div>
+    </section>
   </div>
-
-  {/* ── 5. Locations ──────────────────────────────────────── */}
-  <Locations
-    id="locations"
-    variant="detailed"
-    eyebrow=""
-    title="Two Mexican Restaurant Locations on Oʻahu"
-    subtitle="Visit Taqueria El Ranchero in Wahiawa or Kapolei. Both locations serve the same menu, with different dining environments to suit your plans."
-    ctaText=""
-    locations={[
-      {
-        name: 'Wahiawa',
-        image: images.wahiawa,
-        heading: 'Wahiawa Mexican Restaurant',
-        shopName: 'Wahiawa Shopping Center',
-        addressLine1: '823 California Ave, Unit A5, Wahiawa, HI 96786',
-        addressLine2: '',
-        description: [
-          'Our original Wahiawa restaurant is located in Wahiawa Shopping Center. With its rustic neighborhood atmosphere, it serves local regulars and military personnel, along with travelers heading toward the North Shore.',
-          'Stop by for a breakfast burrito in the morning or order tacos for takeout later in the day.',
-        ],
-        hours: ['Kitchen: 7 AM–10 PM daily', 'Breakfast: 7 AM–12 PM daily'],
-        actions: [
-          { text: 'View Wahiawa Location', href: '/locations/wahiawa', variant: 'primary' },
-          {
-            text: 'Order Wahiawa Takeout',
-            href: 'https://www.doordash.com/store/taqueria-el-ranchero-wahiawa-276575/',
-            variant: 'ghost',
-          },
-        ],
-      },
-      {
-        name: 'Kapolei',
-        image: images.kapolei,
-        heading: 'Kapolei Mexican Restaurant at Ka Makana Aliʻi',
-        shopName: 'Ka Makana Aliʻi',
-        addressLine1: '91-5431 Kapolei Pkwy #501, Kapolei, HI 96707',
-        addressLine2: '',
-        description: [
-          'Located at Ka Makana Aliʻi, our Kapolei restaurant offers a sit-down dining experience with servers and outdoor seating.',
-          'It’s an option for family meals or a restaurant stop while visiting the shopping center. The location also has space available for private events.',
-        ],
-        hours: ['Kitchen: 7 AM–10 PM daily', 'Breakfast: 7 AM–12 PM daily'],
-        actions: [
-          { text: 'View Kapolei Location', href: '/locations/kapolei', variant: 'primary' },
-          {
-            text: 'Order Kapolei Takeout',
-            href: 'https://www.doordash.com/store/taqueria-el-ranchero-kapolei-2390257/',
-            variant: 'ghost',
-          },
-        ],
-      },
-    ]}
-  />
-
-  {/* ── 6. Catering ───────────────────────────────────────── */}
-  <TextSplit
-    id="catering"
-    heading="Mexican Catering for Gatherings on Oʻahu"
-    withImage
-    image={images.catering}
-    imageAspect="4 / 3"
-  >
-    <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
-        Planning an office lunch or a family celebration? Taqueria El Ranchero offers Mexican catering, including taco
-        bar packages for group gatherings.
-      </Text>
-      <Text variant="body" color="default">
-        Our catering experience includes small office orders and events serving approximately 250 guests. Contact our
-        catering team to discuss your event, group size and available arrangements.
-      </Text>
-      <div>
-        <Button variant="primary" text="Explore Our Catering Options" href={CATERING_CTA_HREF} hideNote={true} />
-      </div>
-    </div>
-  </TextSplit>
-
-  {/* ── 7. Private events ─────────────────────────────────── */}
-  <TextSplit
-    id="private-events"
-    heading="Host Your Private Event at El Ranchero Kapolei"
-    withImage
-    image={images.privateEvents}
-    imageReverse
-    imageAspect="4 / 3"
-    class="bg-card"
-  >
-    <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
-        Looking for a place to host a celebration or company gathering? Our Kapolei restaurant offers a rentable event
-        space with a stage, TVs, microphones and speakers.
-      </Text>
-      <Text variant="body" color="default">
-        The venue can accommodate different types of private gatherings, including baby showers and wedding receptions,
-        subject to booking arrangements.
-      </Text>
-      <Text variant="body" color="default">
-        Contact our team to discuss your event and learn more about the space.
-      </Text>
-      <div>
-        <Button variant="primary" text="Explore Event Space Rental" href="/events/event-space-rental" hideNote={true} />
-      </div>
-    </div>
-  </TextSplit>
-
-  {/* ── 8. Reviews — fetched from Sanity ──────────────────── */}
-  <Testimonials id="reviews" heading="Customers Are Raving" />
-
-  {/* ── 9. Closing CTA ────────────────────────────────────── */}
-  <CTABanner
-    id="visit"
-    title="Visit or Order From Taqueria El Ranchero"
-    subtitle="Explore our Mexican food menu, choose your nearest restaurant or contact our team about catering for your next gathering."
-    actions={[
-      { text: 'Order Catering', href: CATERING_CTA_HREF, variant: 'ghost' },
-      { text: 'Order Now', href: PRIMARY_CTA_HREF, variant: 'primary' },
-      { text: 'Find a Location', href: LOCATION_CTA_HREF, variant: 'ghost' },
-    ]}
-  />
 </Layout>

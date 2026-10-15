@@ -1,22 +1,26 @@
 ---
 import { twMerge } from 'tailwind-merge';
 import logo from '~/assets/images/logo.png?url';
+import posterLogo from '~/assets/images/v3/logo.svg?url';
 import { CONTACT } from '~/config/contact';
 
 interface Props {
   class?: string;
   width?: number;
   height?: number;
+  /** `poster` = Variant 3 red lockup for dark backgrounds. */
+  variant?: 'default' | 'poster';
 }
 
-const { class: className, width = 185, height = 62 } = Astro.props;
+const { class: className, width, height, variant = 'default' } = Astro.props;
+const isPoster = variant === 'poster';
 ---
 
 <img
-  src={logo}
+  src={isPoster ? posterLogo : logo}
   alt={CONTACT.businessName}
-  width={width}
-  height={height}
+  width={width ?? (isPoster ? 307 : 185)}
+  height={height ?? (isPoster ? 92 : 62)}
   class={twMerge('block h-12 w-auto shrink-0', className)}
   decoding="async"
 />

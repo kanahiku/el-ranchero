@@ -409,6 +409,60 @@ export function brandGoogleFontsHref(): string {
   return `https://fonts.googleapis.com/css2?${family(heading)}&${family(body)}&display=swap`;
 }
 
+/**
+ * Variant 3 poster theme (Figma 2024:570). Header, footer and homepage use
+ * these `--v3-*` variables; other page bodies still use `brand` above.
+ */
+export const homeV3 = {
+  fonts: {
+    display: 'Sancreek',
+    script: 'Caveat Brush',
+    sans: 'Host Grotesk',
+  },
+  colors: {
+    ink: '#17110e',
+    paper: '#fbf3e2',
+    cream: '#f5e8cf',
+    creamSoft: '#eadbc2',
+    creamMuted: '#e8d9bf',
+    gold: '#f2b33d',
+    red: '#c8322a',
+    brown: '#3b2e26',
+    panel: '#241a15',
+    muted: '#cdbda4',
+    blush: '#f1d3cc',
+    legal: '#8e7e6a',
+  },
+} as const;
+
+/** `--v3-*` variables set on <html>. Hex values stay in this file. */
+export function homeV3InlineStyle(): string {
+  const { colors: c, fonts: f } = homeV3;
+  return [
+    `--v3-ink:${c.ink}`,
+    `--v3-paper:${c.paper}`,
+    `--v3-cream:${c.cream}`,
+    `--v3-cream-soft:${c.creamSoft}`,
+    `--v3-cream-muted:${c.creamMuted}`,
+    `--v3-gold:${c.gold}`,
+    `--v3-red:${c.red}`,
+    `--v3-brown:${c.brown}`,
+    `--v3-panel:${c.panel}`,
+    `--v3-muted:${c.muted}`,
+    `--v3-blush:${c.blush}`,
+    `--v3-legal:${c.legal}`,
+    `--v3-display:'${f.display}',serif`,
+    `--v3-script:'${f.script}',cursive`,
+    `--v3-sans:'${f.sans}',sans-serif`,
+  ].join(';');
+}
+
+/** Poster fonts (Sancreek, Caveat Brush, Host Grotesk). */
+export function homeV3FontsHref(): string {
+  const { display, script, sans } = homeV3.fonts;
+  return `https://fonts.googleapis.com/css2?family=${display}&family=${script.replace(/ /g, '+')}&family=${sans.replace(/ /g, '+')}:wght@400;500;600;700&display=swap`;
+}
+
 /** Astro Fonts API entries — used by astro.config.ts and Layout.astro. */
 export function brandFontConfig() {
   const { heading, body } = brand.fonts;

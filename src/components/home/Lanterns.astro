@@ -1,0 +1,44 @@
+---
+/** Paper lantern garland (Figma "Deco / Lantern Garland" 2029:734). Decorative. */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const tones = ['var(--v3-red)', 'var(--v3-gold)', 'var(--v3-cream)', 'var(--v3-red)', 'var(--v3-gold)'];
+// Three swags of 480 units; on each swag y = 18 + 128·t·(1−t).
+const lanterns = Array.from({ length: 12 }, (_, i) => {
+  const x = 60 + i * 120;
+  const t = (x % 480) / 480;
+  const y = 18 + 128 * t * (1 - t);
+  return { x, y, fill: tones[i % tones.length], h: 34 + (i % 3) * 6 };
+});
+---
+
+<svg
+  class={className}
+  viewBox="0 0 1440 150"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path
+    d="M0 18 Q240 82 480 18 Q720 82 960 18 Q1200 82 1440 18"
+    fill="none"
+    stroke="var(--v3-cream)"
+    stroke-opacity="0.55"
+    stroke-width="2"
+  />
+  {
+    lanterns.map(({ x, y, fill, h }) => (
+      <g transform={`translate(${x} ${y})`}>
+        <line x1="0" y1="0" x2="0" y2="10" stroke="var(--v3-cream)" stroke-opacity="0.55" stroke-width="2" />
+        <rect x="-5" y="9" width="10" height="4" fill="var(--v3-ink)" />
+        <rect x="-15" y="13" width="30" height={h} rx="14" fill={fill} />
+        <rect x="-5" y={13 + h} width="10" height="4" fill="var(--v3-ink)" />
+        <line x1="-8" y1={22} x2="8" y2={22} stroke="var(--v3-ink)" stroke-opacity="0.25" />
+        <line x1="-10" y1={13 + h / 2} x2="10" y2={13 + h / 2} stroke="var(--v3-ink)" stroke-opacity="0.25" />
+      </g>
+    ))
+  }
+</svg>

@@ -1,0 +1,19 @@
+---
+interface Props {
+  href: string;
+  text: string;
+  tone?: 'gold' | 'red' | 'dark' | 'outline';
+  class?: string;
+}
+
+const { href, text, tone = 'gold', class: className } = Astro.props;
+const external = /^https?:\/\//.test(href);
+---
+
+<a
+  class:list={['v3-btn', `v3-btn-${tone}`, className]}
+  href={href}
+  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+>
+  {text}
+</a>

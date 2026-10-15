@@ -1,0 +1,59 @@
+---
+import Image from '~/components/common/Image.astro';
+import type { ContentImage } from '~/lib/content/types';
+
+interface Props {
+  image?: ContentImage;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  sizes?: string;
+}
+
+const { image, class: className, loading = 'lazy', fetchpriority, sizes = '100vw' } = Astro.props;
+
+const getSanityDimensions = (src?: string): { width: number; height: number } => {
+  const fallback = { width: 1400, height: 900 };
+  if (!src) return fallback;
+
+  try {
+    const url = new URL(src);
+    const crop = url.searchParams.get('rect')?.split(',').map(Number);
+    if (crop?.length === 4 && crop[2] > 0 && crop[3] > 0) {
+      return { width: crop[2], height: crop[3] };
+    }
+
+    const match = url.pathname.match(/-(\d+)x(\d+)\.[a-z]+$/i);
+    if (match) return { width: Number(match[1]), height: Number(match[2]) };
+  } catch {
+    // Non-URL sources use the stable fallback dimensions.
+  }
+
+  return fallback;
+};
+
+const sourceDimensions = getSanityDimensions(image?.src);
+const width = Math.min(sourceDimensions.width, 1600);
+const height = Math.round((width * sourceDimensions.height) / sourceDimensions.width);
+const candidateWidths = [320, 480, 640, 768, 960, 1200, 1600].filter((candidate) => candidate < width);
+const widths = [...candidateWidths, width];
+---
+
+<div class:list={['v3-photo', className]}>
+  {
+    image?.src && (
+      <Image
+        src={image.src}
+        alt={image.alt}
+        width={width}
+        height={height}
+        layout="cover"
+        widths={widths}
+        sizes={sizes}
+        loading={loading}
+        decoding="async"
+        {...(fetchpriority ? { fetchpriority } : {})}
+      />
+    )
+  }
+</div>

@@ -18,8 +18,9 @@ import Intersect from '~/components/common/Intersect.astro';
 import { ClientRouter } from 'astro:transitions';
 
 import type { MetaData as MetaDataType } from '~/types';
-import { brandGoogleFontsHref } from '~/brand';
+import { brandGoogleFontsHref, homeV3FontsHref, homeV3InlineStyle } from '~/brand';
 import PageBg from '~/components/ui/PageBg.astro';
+import '~/assets/styles/home-v3.css';
 
 export interface Props {
   metadata?: MetaDataType;
@@ -28,10 +29,11 @@ export interface Props {
 const { metadata = {} } = Astro.props;
 const { language, textDirection } = I18N;
 const googleFontsHref = brandGoogleFontsHref();
+const posterFontsHref = homeV3FontsHref();
 ---
 
 <!doctype html>
-<html lang={language} dir={textDirection} class="min-h-dvh bg-wash-end">
+<html lang={language} dir={textDirection} class="min-h-dvh bg-wash-end" style={homeV3InlineStyle()}>
   <head>
     <GoogleTagManager placement="head" />
     <CommonMeta />
@@ -39,6 +41,7 @@ const googleFontsHref = brandGoogleFontsHref();
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href={googleFontsHref} />
+    <link rel="stylesheet" href={posterFontsHref} />
     <CustomStyles />
     <ApplyColorMode />
     <Metadata {...metadata} />
