@@ -1,0 +1,55 @@
+---
+description: Poster (Figma Variant 3) redesign of interior pages — content, layout, banner, cards, colour bands, artwork and verification. Learned on /menu; apply to every upcoming page.
+alwaysApply: true
+---
+
+# Poster interior pages (`redesign` branch)
+
+Reference build: `src/pages/menu/index.astro` + interior rules in `src/assets/styles/home-v3.css`. Homepage (`src/pages/index.astro`) is approved — do not change it. Copy the menu patterns; do not re-invent them.
+
+## Content (hard rule)
+
+- Copy must match the current page 100%, word for word. Restyle only.
+- Never add kickers, labels, eyebrows, numbers ("01", "Los favoritos", "la carta") that the page does not already have.
+- Photos come from Sanity (`HomePhoto` with a `sizes` value). This overrides the grey placeholder rule in `images.mdc` for poster pages.
+
+## Layout and type
+
+- Wrap pages in `<div class="v3-interior">`; sections use `.v3-section` + `.v3-wrap` (same padding everywhere).
+- Section headings use `.v3-ihead` (never `.v3-section-head` — it collides with the homepage row layout). Align left, or centre for centred bands. Never mixed.
+- Card titles stay small: `clamp(24px, 2.2vw, 30px)`. Section h2 `clamp(40px, 5vw, 64px)`.
+- Card grids are two cards per row from `768px` (`repeat(2, minmax(0, 1fr))`). Put that rule after any one-column base rule so it is not overridden. Menu category item grids and Explore More use `.v3-card-grid`: three cards per row from `768px`. Locations and catering stay two per row.
+- A section with only a heading, paragraphs, and a button (no photo) is centred: add `v3-center` on the section. Photo splits stay left-aligned.
+- Cards on paper need an edge: hairline brown border, `3px` radius, soft shadow `0 8px 20px` ink 10%. No hard black offset shadow (looks generated).
+- Buttons stay content-width: parent `align-items: flex-start`.
+
+## Banner (`.v3-menu-hero` pattern)
+
+- Content inside `.v3-wrap`, not full width. Photo fills full banner height on the right.
+- Heading at most 3 lines; force breaks with `<br />` if needed.
+- `Lanterns` at section level, full width, `top: 0`, banner `overflow: hidden` (inside the wrap they look cut).
+- Nothing on the banner photo: no starburst, flower or skull.
+- Mobile copy padding-top ~84px (not 118px).
+
+## Colour bands
+
+Alternate ink, paper (grid), red (`.v3-red-band`) and gold. Red suits a list section (cream heading, gold names). Gold suits a short centred notice (`.v3-allergy` card, calaveras either side). Scallops (`.v3-scallop`, `.v3-scallop-red`) on the section below an ink or red band — one or two per page.
+
+## Artwork
+
+Inventory and placements: `src/assets/images/v3/ARTWORK.md` — read it first, update its Placements table after.
+
+- Corners and empty heading space only; never behind copy or on banner photos. `.v3-art` hides below `md`.
+- Most sections get none. Do not repeat a piece in neighbouring sections.
+- Line art needs a contrasting backing shape: cream line art goes on a red/ink `Blossom` cropped at the corner, never on bare paper.
+- Match Figma direction (eagle faces left: `scaleX(-1)`). A piece "growing from the top" is `scaleY(-1)` only — no extra `rotate()`.
+- Eagle sits on the blossom's left edge, half over the band.
+- A paper section's top corner uses the red `Blossom` plus agave (`v3-art-bloom-explore`, `v3-art-agave`). Do not put the cactus there.
+- The cactus (`v3-art-cactus` only) peeks from the bottom-right of a paper section, the way it does on Menu's Order section.
+
+## Verify before reporting
+
+1. Desktop 1440 and mobile 390 screenshots of every changed section (headless Chrome, `localhost:4321`).
+2. Re-check copy against the original page.
+3. `./node_modules/.bin/prettier --write` the changed files, then `npm run build`.
+4. Do not commit unless asked.

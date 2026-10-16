@@ -1,75 +1,68 @@
 ---
 /**
  * Quesadillas & Nachos — copy from pages-content/Menu Pages/_ menu_quesadillas-nachos - Quesadillas & Nachos.docx.
- * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
- * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
- * the grey placeholder.
+ * Poster layout. Photos come from Sanity.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
-import OptionsTable from '~/components/widgets/OptionsTable.astro';
-import Locations from '~/components/widgets/Locations.astro';
-import MenuCategories from '~/components/widgets/MenuCategories.astro';
-import Note from '~/components/widgets/Note.astro';
-import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMenuSections, getMeatOptions, getMenuPagesImages } from '~/lib/content';
-import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
+import MenuHero from '~/components/menu/MenuHero.astro';
+import MenuItemGrid from '~/components/menu/MenuItemGrid.astro';
+import MenuMeatBand from '~/components/menu/MenuMeatBand.astro';
+import MenuOrder from '~/components/menu/MenuOrder.astro';
+import MenuMore from '~/components/menu/MenuMore.astro';
+import MenuAllergy from '~/components/menu/MenuAllergy.astro';
+import { getMeatOptions, getMenuPagesImages, getMenuSections } from '~/lib/content';
 
 const metadata = {
   title: 'Quesadillas & Nachos in Wahiawa & Kapolei | El Ranchero',
   description:
-    "Explore cheese, meat and veggie quesadillas, plus nachos with your choice of meat at El Ranchero in Wahiawa and Kapolei. View our menu and order online.",
+    'Explore cheese, meat and veggie quesadillas, plus nachos with your choice of meat at El Ranchero in Wahiawa and Kapolei. View our menu and order online.',
   ignoreTitleTemplate: true,
 };
 
 const sections = await getMenuSections('quesadillas-nachos');
 const meatOptions = await getMeatOptions();
 const images = await getMenuPagesImages();
-
 ---
 
 <PageLayout metadata={metadata}>
-  <Hero2
-    variant="split-dark"
-    overlapHeader={false}
-    image={images.quesadillasNachosHero}
-    title="Quesadillas & Nachos in Wahiawa & Kapolei"
-    content="Looking for a cheesy quesadilla or a plate of loaded nachos? Explore the Quesadillas & Nachos menu at Taqueria El Ranchero.<br /><br />Choose from a classic cheese quesadilla, meat and veggie options, or nachos topped with your choice of meat, beans, cheese and more. All six menu items are available at our Wahiawa and Kapolei restaurants."
-    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
-  />
-
-  <MenuItemsSection id="quesadillas" tone="page" title="Explore Our Quesadillas" intro="From a simple cheese quesadilla to options with grilled vegetables or your choice of meat, find the quesadilla you’re looking for." items={sections.quesadillas} />
-  <MenuItemsSection id="nachos" tone="card" title="Explore Our Nachos" intro="Choose between our classic Nachos or Nachos Grande, both made with your choice of meat." items={sections.nachos} />
-
-  <OptionsTable
-    id="choose-your-meat"
-    tone="page"
-    heading="Choose Your Meat"
-    intro="Several of our quesadilla and nacho options allow you to choose your preferred meat. El Ranchero’s menu includes:"
-    note="Meat selections apply to the Meat Quesadilla, Quesadilla Grande, Nachos and Nachos Grande. The regular Quesadilla contains cheese only, while the Veggie Quesadilla includes grilled vegetables."
-    rows={meatOptions}
-  />
-
-  <Locations
-    id="order"
-    variant="order"
-    eyebrow=""
-    title="Order From Your Nearest El Ranchero"
-    subtitle="Both El Ranchero locations serve the same quesadilla and nacho menu. Choose your preferred restaurant to check available takeout options and order through DoorDash."
-    locations={orderLocations}
-    footnote={locationsFootnote}
-  />
-
-  <MenuCategories
-    id="more-menu"
-    tone="page"
-    title="Explore More of Our Menu"
-    subtitle="Looking for something else? Explore more of Taqueria El Ranchero’s menu, from Mexican breakfast and burritos to tacos, entrées, appetizers, drinks and more."
-    excludeHref="/menu/quesadillas-nachos"
-    ctaText="View Full Menu"
-    ctaHref="/menu"
-  />
-
-  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
+  <div class="v3-interior">
+    <MenuHero
+      titleId="quesadillas-title"
+      lines={['Quesadillas &', 'Nachos in', 'Wahiawa & Kapolei']}
+      image={images.quesadillasNachosHero}
+      paragraphs={[
+        'Looking for a cheesy quesadilla or a plate of loaded nachos? Explore the Quesadillas & Nachos menu at Taqueria El Ranchero.',
+        'Choose from a classic cheese quesadilla, meat and veggie options, or nachos topped with your choice of meat, beans, cheese and more. All six menu items are available at our Wahiawa and Kapolei restaurants.',
+      ]}
+    />
+    <MenuItemGrid
+      id="quesadillas"
+      title="Explore Our Quesadillas"
+      intro="From a simple cheese quesadilla to options with grilled vegetables or your choice of meat, find the quesadilla you’re looking for."
+      items={sections.quesadillas}
+    />
+    <MenuItemGrid
+      id="nachos"
+      tone="ink"
+      title="Explore Our Nachos"
+      intro="Choose between our classic Nachos or Nachos Grande, both made with your choice of meat."
+      items={sections.nachos}
+    />
+    <MenuMeatBand
+      title="Choose Your Meat"
+      intro="Several of our quesadilla and nacho options allow you to choose your preferred meat. El Ranchero’s menu includes:"
+      note="Meat selections apply to the Meat Quesadilla, Quesadilla Grande, Nachos and Nachos Grande. The regular Quesadilla contains cheese only, while the Veggie Quesadilla includes grilled vegetables."
+      rows={meatOptions}
+    />
+    <MenuOrder
+      scallop
+      scallopRed
+      subtitle="Both El Ranchero locations serve the same quesadilla and nacho menu. Choose your preferred restaurant to check available takeout options and order through DoorDash."
+    />
+    <MenuMore
+      excludeHref="/menu/quesadillas-nachos"
+      subtitle="Looking for something else? Explore more of Taqueria El Ranchero’s menu, from Mexican breakfast and burritos to tacos, entrées, appetizers, drinks and more."
+    />
+    <MenuAllergy />
+  </div>
 </PageLayout>

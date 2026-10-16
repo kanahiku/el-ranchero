@@ -4,33 +4,28 @@
  * The request form posts through the site contact worker (recipient to be confirmed with the client).
  * The doc lists (808) 621-9000 as the catering phone; the Wahiawa / Kapolei location pages use their own numbers.
  * The optional catering photo gallery is omitted until real catering photography exists.
- * Composes shared widgets only. Photos come from the Sanity "Catering" singleton
- * (`cateringContent`); a missing photo renders the grey placeholder.
+ * Poster layout. Photos come from the Sanity "Catering" singleton.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import TextSplit from '~/components/widgets/TextSplit.astro';
-import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
-import Testimonials from '~/components/widgets/Testimonials.astro';
-import BuildSteps from '~/components/widgets/BuildSteps.astro';
-import LocationMaps from '~/components/widgets/LocationMaps.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import CTABanner from '~/components/widgets/CTABanner.astro';
-import Text from '~/components/ui/Text.astro';
-import Button from '~/components/ui/Button.astro';
+import PosterButton from '~/components/home/PosterButton.astro';
+import HomePhoto from '~/components/home/HomePhoto.astro';
+import Lanterns from '~/components/home/Lanterns.astro';
+import Blossom from '~/components/home/Blossom.astro';
+import ArtAgave from '~/assets/images/v3/art-agave.svg';
+import ArtCactus from '~/assets/images/v3/art-cactus.svg';
+import ArtEagle from '~/assets/images/v3/art-eagle.svg';
+import ArtFlourish from '~/assets/images/v3/art-flourish.svg';
+import Calavera from '~/assets/images/v3/calavera.svg';
+import CalaveraSmall from '~/assets/images/v3/calavera2.svg';
 import Form from '~/components/ui/Form.astro';
-import BulletList from '~/components/ui/BulletList.astro';
-import { storeLocations } from '~/data/locations';
+import { storeLocations, storeMapEmbedSrc } from '~/data/locations';
 import { cateringOptionPages } from '~/data/catering';
 import { getCateringImages } from '~/lib/content';
 
 const images = await getCateringImages();
 
 const cateringOptionLinks = cateringOptionPages
-  .map(
-    (page) =>
-      `<a class="text-accent underline underline-offset-4" href="${page.href}">${page.label}</a>`
-  )
+  .map((page) => `<a href="${page.href}">${page.label}</a>`)
   .reduce((sentence, link, index, links) => {
     if (index === 0) return link;
     const separator = index === links.length - 1 ? ', and ' : ', ';
@@ -106,19 +101,16 @@ const reviews = [
     quote: 'Cold drinks, great food! Fast service and the food is hot and fresh.',
     name: 'Ali V.',
     location: 'Wahiawa',
-    platform: 'google' as const,
   },
   {
     quote: 'Great service and spacious atmosphere. The kids menu was a plus. I really enjoyed the quesadilla.',
     name: 'Lawanda M.',
     location: 'Kapolei',
-    platform: 'google' as const,
   },
   {
     quote: 'Outstanding food! Best Mexican I’ve had in Hawaii.',
     name: 'John S.',
     location: 'Kapolei',
-    platform: 'google' as const,
   },
 ];
 
@@ -194,7 +186,7 @@ const faqs = [
   {
     title: 'Is the catering menu the same as the restaurant menu?',
     description:
-      'Not necessarily. You can browse the <a class="text-accent underline underline-offset-4" href="/menu">El Ranchero menu</a> to explore the food served at our restaurants, but catering selections and availability may differ.',
+      'Not necessarily. You can browse the <a href="/menu">El Ranchero menu</a> to explore the food served at our restaurants, but catering selections and availability may differ.',
   },
   {
     title: 'Does El Ranchero offer catering from both Wahiawa and Kapolei?',
@@ -205,138 +197,326 @@ const faqs = [
 ---
 
 <PageLayout metadata={metadata}>
-  <Hero2
-    variant="split-dark"
-    overlapHeader={false}
-    image={images.hero}
-    title="Mexican Catering from Taqueria El Ranchero"
-    content="Bring Ranchero-style Mexican food to your next gathering with catering from Taqueria El Ranchero.<br /><br />Whether you are feeding coworkers, family, friends or a larger group, tell us what you are planning and our team can help you explore catering options for your event."
-    actions={[{ variant: 'primary', text: 'Request Catering', href: '#catering-form' }]}
-  />
-
-  <TextSplit id="catering-form" heading="Tell Us About Your Catering Needs" alignTop class="scroll-mt-24">
-    <div class="flex flex-col gap-8">
-      <div class="flex flex-col gap-6">
-        <Text color="default">Ready to start planning? Share a few details about your event using the form below.</Text>
-        <Text color="default">
-          Let us know your event date, approximately how many people you are feeding and anything else that can help our team understand what you are looking for.
-        </Text>
+  <div class="v3-interior">
+    <section class="v3-menu-hero" aria-labelledby="catering-title">
+      <Lanterns class="v3-menu-lanterns" />
+      <div class="v3-wrap v3-menu-hero-frame">
+        <div class="v3-menu-hero-copy">
+          <h1 id="catering-title" class="v3-display">
+            Mexican Catering<br />
+            from Taqueria<br />
+            El Ranchero
+          </h1>
+          <div class="v3-menu-copy flex flex-col items-start gap-4">
+            <p>Bring Ranchero-style Mexican food to your next gathering with catering from Taqueria El Ranchero.</p>
+            <p>
+              Whether you are feeding coworkers, family, friends or a larger group, tell us what you are planning and
+              our team can help you explore catering options for your event.
+            </p>
+            <PosterButton text="Request Catering" href="#catering-form" tone="gold" class="mt-4" />
+          </div>
+        </div>
+        <div class="v3-menu-hero-media">
+          <HomePhoto
+            image={images.hero}
+            class="v3-menu-hero-photo"
+            sizes="(min-width: 768px) 48vw, 100vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
       </div>
-      <Form
-        inputs={requestInputs}
-        textarea={{
-          name: 'message',
-          label: 'Tell us about your event, food preferences and any dietary needs',
-          rows: 5,
-        }}
-        button="Request Catering"
-      />
-      <div class="flex flex-col items-start gap-3">
-        <Text color="default">Prefer to speak with us directly?</Text>
-        <Button
-          variant="ghost"
-          tone="light"
-          text={`Call ${CATERING_PHONE_DISPLAY}`}
-          href={CATERING_PHONE_HREF}
-          hideNote={true}
-        />
+    </section>
+
+    <section
+      id="catering-form"
+      class="v3-section v3-paper v3-on-paper scroll-mt-24"
+      aria-labelledby="catering-form-title"
+    >
+      <Blossom class="v3-art v3-art-bloom-explore" fill="var(--v3-red)" center="var(--v3-red)" />
+      <ArtAgave class="v3-art v3-art-agave" aria-hidden="true" />
+      <div class="v3-wrap v3-form-split">
+        <div>
+          <div class="v3-ihead">
+            <h2 id="catering-form-title" class="v3-display">Tell Us About Your Catering Needs</h2>
+          </div>
+          <div class="v3-prose">
+            <p>Ready to start planning? Share a few details about your event using the form below.</p>
+            <p>
+              Let us know your event date, approximately how many people you are feeding and anything else that can help
+              our team understand what you are looking for.
+            </p>
+            <p>Prefer to speak with us directly?</p>
+            <PosterButton text={`Call ${CATERING_PHONE_DISPLAY}`} href={CATERING_PHONE_HREF} tone="outline" />
+          </div>
+        </div>
+        <div class="v3-form-panel">
+          <Form
+            inputs={requestInputs}
+            textarea={{
+              name: 'message',
+              label: 'Tell us about your event, food preferences and any dietary needs',
+              rows: 4,
+            }}
+            button="Request Catering"
+          />
+        </div>
       </div>
-    </div>
-  </TextSplit>
+    </section>
 
-  <MenuItemsSection
-    id="favorites"
-    tone="card"
-    columns={4}
-    title="Catering Favorites"
-    intro={[
-      'Planning food for a group? Bring some of the flavors people know from Taqueria El Ranchero to your next gathering.',
-      'Depending on your event and current catering availability, our team can help you explore options inspired by the food served at our restaurants.',
-    ]}
-    items={favorites}
-    footnote="Catering selections may differ from our regular restaurant menu. Submit a catering request to confirm current options, availability and pricing for your event."
-  />
+    <section id="favorites" class="v3-section" aria-labelledby="favorites-title">
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="favorites-title" class="v3-display">Catering Favorites</h2>
+          <p>
+            Planning food for a group? Bring some of the flavors people know from Taqueria El Ranchero to your next
+            gathering.
+          </p>
+          <p>
+            Depending on your event and current catering availability, our team can help you explore options inspired by
+            the food served at our restaurants.
+          </p>
+        </div>
+        <div class="v3-fav-grid">
+          {
+            favorites.map((item) => (
+              <article class="v3-menu-card">
+                <HomePhoto image={item.image} sizes="(min-width: 768px) 50vw, 100vw" />
+                <div class="v3-menu-card-body">
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+        <p class="v3-note">
+          Catering selections may differ from our regular restaurant menu. Submit a catering request to confirm current
+          options, availability and pricing for your event.
+        </p>
+      </div>
+    </section>
 
-  <TextSplit id="occasions" heading="Bring Ranchero Style to Your Next Gathering">
-    <div class="flex flex-col gap-6">
-      <Text color="default">Good food gives people one more reason to gather around the table.</Text>
-      <Text color="default">El Ranchero catering can be a fit for a range of group occasions, including:</Text>
-      <BulletList items={occasions} />
-      <Text color="default">
-        Tell us what you are planning and our team can help you explore catering options for your date and group.
-      </Text>
-    </div>
-  </TextSplit>
+    <section id="occasions" class="v3-section v3-red-band" aria-labelledby="occasions-title">
+      <Blossom class="v3-art v3-art-bloom" fill="var(--v3-ink)" center="var(--v3-ink)" />
+      <ArtEagle class="v3-art v3-art-eagle" aria-hidden="true" />
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="occasions-title" class="v3-display">Bring Ranchero Style to Your Next Gathering</h2>
+          <p>Good food gives people one more reason to gather around the table.</p>
+          <p>El Ranchero catering can be a fit for a range of group occasions, including:</p>
+        </div>
+        <ul class="v3-occasion-list">
+          {occasions.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="v3-body">
+          Tell us what you are planning and our team can help you explore catering options for your date and group.
+        </p>
+      </div>
+    </section>
 
-  <TextSplit id="why-cater" heading="Why Cater with Taqueria El Ranchero?" class="bg-card">
-    <div class="flex flex-col gap-6">
-      <Text color="default">
-        Taqueria El Ranchero has been serving Oʻahu since 2015, beginning with our original Wahiawa location and later expanding to Kapolei.
-      </Text>
-      <Text color="default">
-        El Ranchero is a veteran-founded local business built around the taqueria experience and Ranchero-style Mexican food.
-      </Text>
-      <Text color="default">
-        The restaurant has also earned local recognition, including Gold for Best Mexican in HONOLULU Magazine’s 2023 Hale ʻAina Awards.
-      </Text>
-      <Text color="default">
-        When you are planning food for a group, catering gives you another way to bring El Ranchero flavors to the occasion.
-      </Text>
-    </div>
-  </TextSplit>
+    <section
+      id="why-cater"
+      class="v3-section v3-menu-breakfast v3-scalloped v3-center"
+      aria-labelledby="why-cater-title"
+    >
+      <div class="v3-scallop v3-scallop-red" aria-hidden="true"></div>
+      <ArtFlourish class="v3-art v3-art-flourish" aria-hidden="true" />
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="why-cater-title" class="v3-display">Why Cater with Taqueria El Ranchero?</h2>
+        </div>
+        <div class="v3-prose">
+          <p>
+            Taqueria El Ranchero has been serving Oʻahu since 2015, beginning with our original Wahiawa location and
+            later expanding to Kapolei.
+          </p>
+          <p>
+            El Ranchero is a veteran-founded local business built around the taqueria experience and Ranchero-style
+            Mexican food.
+          </p>
+          <p>
+            The restaurant has also earned local recognition, including Gold for Best Mexican in HONOLULU Magazine’s
+            2023 Hale ʻAina Awards.
+          </p>
+          <p>
+            When you are planning food for a group, catering gives you another way to bring El Ranchero flavors to the
+            occasion.
+          </p>
+        </div>
+      </div>
+    </section>
 
-  <Testimonials
-    id="reviews"
-    heading="What Guests Are Saying"
-    subtitle="See what guests have shared about their experiences at Taqueria El Ranchero."
-    testimonials={reviews}
-    footnote="Reviews above reflect guests’ restaurant experiences and are not presented as catering-specific testimonials."
-    actions={reviewLinks}
-  />
+    <section id="reviews" class="v3-section v3-reviews" aria-labelledby="reviews-title">
+      <CalaveraSmall class="v3-calavera v3-calavera-l" aria-hidden="true" />
+      <Calavera class="v3-calavera v3-calavera-r" aria-hidden="true" />
+      <div class="v3-wrap v3-center">
+        <div class="v3-ihead">
+          <h2 id="reviews-title" class="v3-display">What Guests Are Saying</h2>
+          <p>See what guests have shared about their experiences at Taqueria El Ranchero.</p>
+        </div>
+        <ul class="v3-review-grid">
+          {
+            reviews.map((review) => (
+              <li>
+                <figure class="v3-quote">
+                  <p class="stars" aria-label="5 out of 5 stars">
+                    ★★★★★
+                  </p>
+                  <blockquote>
+                    <q>{review.quote}</q>
+                  </blockquote>
+                  <figcaption>
+                    <cite>
+                      {review.name} · {review.location}
+                    </cite>
+                  </figcaption>
+                </figure>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="v3-note">
+          Reviews above reflect guests’ restaurant experiences and are not presented as catering-specific testimonials.
+        </p>
+        <div class="v3-link-row v3-link-row-center">
+          {reviewLinks.map((link) => <PosterButton text={link.text} href={link.href} tone="dark" />)}
+        </div>
+      </div>
+    </section>
 
-  <BuildSteps id="how-it-works" tone="card" hideImage title="How El Ranchero Catering Works" steps={steps} />
+    <section id="how-it-works" class="v3-section v3-paper" aria-labelledby="how-title">
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="how-title" class="v3-display">How El Ranchero Catering Works</h2>
+        </div>
+        <div class="v3-loc-grid">
+          {
+            steps.map((step) => (
+              <article class="v3-menu-card">
+                <div class="v3-menu-card-body">
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
-  <TextSplit id="planning" heading="Planning Your Catering Order">
-    <div class="flex flex-col gap-6">
-      <Text color="default">You do not need to have every detail figured out before reaching out.</Text>
-      <Text color="default">When submitting your catering request, it helps to include:</Text>
-      <BulletList items={planningChecklist} />
-      <Text color="default">
-        Providing these details helps our team better understand what you need and follow up with the right information.
-      </Text>
-    </div>
-  </TextSplit>
+    <section id="planning" class="v3-section v3-center" aria-labelledby="planning-title">
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="planning-title" class="v3-display">Planning Your Catering Order</h2>
+        </div>
+        <div class="v3-prose">
+          <p>You do not need to have every detail figured out before reaching out.</p>
+          <p>When submitting your catering request, it helps to include:</p>
+          <ul class="v3-plain-list">
+            {planningChecklist.map((item) => <li>{item}</li>)}
+          </ul>
+          <p>
+            Providing these details helps our team better understand what you need and follow up with the right
+            information.
+          </p>
+        </div>
+      </div>
+    </section>
 
-  <TextSplit id="explore-menu" heading="Explore the El Ranchero Menu" class="bg-card">
-    <div class="flex flex-col items-start gap-6">
-      <Text color="default">Want to get a feel for the food before planning your catering order?</Text>
-      <Text color="default">
-        Explore the <a class="text-accent underline underline-offset-4" href="/menu">Taqueria El Ranchero menu</a> to see the Ranchero-style Mexican dishes served at our restaurants.
-      </Text>
-      <Text color="default">
-        Keep in mind that catering selections may differ from the regular restaurant menu. Submit a catering request to confirm what is currently available for your group.
-      </Text>
-      <Text
-        color="default"
-        html={`Looking for a specific catering option? See ${cateringOptionLinks}.`}
-      />
-      <Button variant="primary" text="Explore Our Menu" href="/menu" hideNote={true} />
-    </div>
-  </TextSplit>
+    <section id="explore-menu" class="v3-section v3-paper v3-scalloped v3-center" aria-labelledby="explore-title">
+      <div class="v3-scallop" aria-hidden="true"></div>
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="explore-title" class="v3-display">Explore the El Ranchero Menu</h2>
+        </div>
+        <div class="v3-prose">
+          <p>Want to get a feel for the food before planning your catering order?</p>
+          <p>
+            Explore the <a href="/menu">Taqueria El Ranchero menu</a> to see the Ranchero-style Mexican dishes served at our
+            restaurants.
+          </p>
+          <p>
+            Keep in mind that catering selections may differ from the regular restaurant menu. Submit a catering request
+            to confirm what is currently available for your group.
+          </p>
+          <p set:html={`Looking for a specific catering option? See ${cateringOptionLinks}.`} />
+          <PosterButton text="Explore Our Menu" href="/menu" tone="gold" />
+        </div>
+      </div>
+    </section>
 
-  <LocationMaps
-    id="locations"
-    title="Catering in Wahiawa & Kapolei"
-    subtitle="Taqueria El Ranchero has two Oʻahu locations serving Wahiawa, Kapolei and surrounding communities."
-    stores={storeLocations}
-    footnote="Not sure which location to contact about your event? Submit your catering request with the event details and our team can help with the next steps."
-  />
+    <section id="locations" class="v3-section" aria-labelledby="catering-locations-title">
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="catering-locations-title" class="v3-display">Catering in Wahiawa & Kapolei</h2>
+          <p>Taqueria El Ranchero has two Oʻahu locations serving Wahiawa, Kapolei and surrounding communities.</p>
+        </div>
+        <div class="v3-loc-grid">
+          {
+            storeLocations.map((store) => (
+              <article class="v3-loc-card">
+                <div class="v3-loc-body">
+                  <h2>{store.name}</h2>
+                  <address class="v3-loc-address">
+                    <span>{store.addressLine1}</span>
+                    <span>{store.addressLine2}</span>
+                  </address>
+                  <div class="v3-loc-actions">
+                    <PosterButton text={`Visit Our ${store.name} Location`} href={store.href} tone="gold" />
+                  </div>
+                </div>
+                <iframe
+                  class="v3-map"
+                  title={`Map of Taqueria El Ranchero ${store.name}`}
+                  src={storeMapEmbedSrc(store)}
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  allowfullscreen
+                />
+              </article>
+            ))
+          }
+        </div>
+        <p class="v3-note">
+          Not sure which location to contact about your event? Submit your catering request with the event details and
+          our team can help with the next steps.
+        </p>
+      </div>
+    </section>
 
-  <FAQs id="faqs" isDark title="Catering FAQs" items={faqs} />
+    <section id="faqs" class="v3-section v3-paper v3-plain" aria-labelledby="faqs-title">
+      <ArtCactus class="v3-art v3-art-cactus" aria-hidden="true" />
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="faqs-title" class="v3-display">Catering FAQs</h2>
+        </div>
+        <div class="v3-faq">
+          {
+            faqs.map((item) => (
+              <details>
+                <summary>{item.title}</summary>
+                <div class="v3-body" set:html={item.description} />
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
-  <CTABanner
-    title="Ready to Plan Your Catering Order?"
-    subtitle="Tell us about your event, your group and what you have in mind. Submit the catering form and the El Ranchero team can help you explore the options available for your gathering."
-    actions={[{ variant: 'primary', text: 'Request Catering', href: '#catering-form' }]}
-  />
+    <section class="v3-section v3-center" aria-labelledby="catering-cta-title">
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="catering-cta-title" class="v3-display">Ready to Plan Your Catering Order?</h2>
+        </div>
+        <div class="v3-menu-copy flex max-w-3xl flex-col gap-4">
+          <p>
+            Tell us about your event, your group and what you have in mind. Submit the catering form and the El Ranchero
+            team can help you explore the options available for your gathering.
+          </p>
+          <PosterButton text="Request Catering" href="#catering-form" tone="gold" class="mt-4" />
+        </div>
+      </div>
+    </section>
+  </div>
 </PageLayout>

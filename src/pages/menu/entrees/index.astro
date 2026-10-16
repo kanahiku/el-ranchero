@@ -1,79 +1,72 @@
 ---
 /**
  * Entrees & Fajitas — copy from pages-content/Menu Pages/_ menu_entrees - Entrees & Fajitas.docx.
- * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
- * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
- * the grey placeholder.
+ * Poster layout. Photos come from Sanity.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
-import TextSplit from '~/components/widgets/TextSplit.astro';
-import Text from '~/components/ui/Text.astro';
-import Locations from '~/components/widgets/Locations.astro';
-import MenuCategories from '~/components/widgets/MenuCategories.astro';
-import Note from '~/components/widgets/Note.astro';
-import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMenuSections, getMenuPagesImages } from '~/lib/content';
-import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
+import MenuHero from '~/components/menu/MenuHero.astro';
+import MenuItemGrid from '~/components/menu/MenuItemGrid.astro';
+import MenuOrder from '~/components/menu/MenuOrder.astro';
+import MenuMore from '~/components/menu/MenuMore.astro';
+import MenuAllergy from '~/components/menu/MenuAllergy.astro';
+import HomePhoto from '~/components/home/HomePhoto.astro';
+import ArtFlourish from '~/assets/images/v3/art-flourish.svg';
+import { getMenuPagesImages, getMenuSections } from '~/lib/content';
 
 const metadata = {
   title: 'Entrees & Fajitas in Wahiawa & Kapolei | El Ranchero',
   description:
-    "Explore enchiladas, fajitas, carne asada, chile verde and our signature Molcajete at El Ranchero in Wahiawa and Kapolei.",
+    'Explore enchiladas, fajitas, carne asada, chile verde and our signature Molcajete at El Ranchero in Wahiawa and Kapolei.',
   ignoreTitleTemplate: true,
 };
 
 const sections = await getMenuSections('entrees');
 const images = await getMenuPagesImages();
-
 ---
 
 <PageLayout metadata={metadata}>
-  <Hero2
-    variant="split-dark"
-    overlapHeader={false}
-    image={images.entreesHero}
-    title="Mexican Entrees & Fajitas in Wahiawa & Kapolei"
-    content="Looking for a complete Mexican meal? Explore the entrées at Taqueria El Ranchero, from Chicken Enchiladas and fajitas to Carne Asada, Chile Verde and grilled vegetables.<br /><br />All our entrées are served with rice and beans. Whether you’re stopping by our Wahiawa or Kapolei restaurant, you’ll find choices for a sit-down meal, including our signature Molcajete, made for sharing."
-    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
-  />
-
-  <MenuItemsSection id="entree-menu" tone="page" title="Explore Our Entrees & Fajitas" intro="All our entrées are served with rice and beans." items={sections.main} />
-
-  <TextSplit id="molcajete" heading="Molcajete: Our Signature Dish" withImage image={images.entreesMolcajete} imageAspect="4 / 3" imageReverse class="bg-card">
-    <div class="flex flex-col gap-6">
-      <Text color="default">
-        Looking for a dish to share? El Ranchero’s signature Molcajete serves two to three people.
-      </Text>
-      <Text color="default">
-        Grilled meats, vegetables and savory sauces are brought together in a traditional volcanic stone mortar and served sizzling.
-      </Text>
-      <Text color="default">
-        The Molcajete comes with beans, rice and your choice of corn or flour tortillas, making it a great option when you want to share a meal at the table.
-      </Text>
-    </div>
-  </TextSplit>
-
-  <Locations
-    id="order"
-    variant="order"
-    eyebrow=""
-    title="Order From Your Nearest El Ranchero"
-    subtitle="Both El Ranchero locations serve the same entrée menu. Choose your preferred restaurant to check available takeout options and order through DoorDash."
-    locations={orderLocations}
-    footnote={locationsFootnote}
-  />
-
-  <MenuCategories
-    id="more-menu"
-    tone="page"
-    title="Explore More of Our Menu"
-    subtitle="Looking for something else? Explore more of Taqueria El Ranchero’s menu, from Mexican breakfast and burritos to tacos, appetizers, drinks and more."
-    excludeHref="/menu/entrees"
-    ctaText="View Full Menu"
-    ctaHref="/menu"
-  />
-
-  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
+  <div class="v3-interior">
+    <MenuHero
+      titleId="entrees-title"
+      lines={['Mexican Entrees', '& Fajitas in', 'Wahiawa & Kapolei']}
+      image={images.entreesHero}
+      paragraphs={[
+        'Looking for a complete Mexican meal? Explore the entrées at Taqueria El Ranchero, from Chicken Enchiladas and fajitas to Carne Asada, Chile Verde and grilled vegetables.',
+        'All our entrées are served with rice and beans. Whether you’re stopping by our Wahiawa or Kapolei restaurant, you’ll find choices for a sit-down meal, including our signature Molcajete, made for sharing.',
+      ]}
+    />
+    <MenuItemGrid
+      id="entree-menu"
+      title="Explore Our Entrees & Fajitas"
+      intro="All our entrées are served with rice and beans."
+      items={sections.main}
+    />
+    <section id="molcajete" class="v3-section v3-menu-breakfast" aria-labelledby="molcajete-title">
+      <ArtFlourish class="v3-art v3-art-flourish" aria-hidden="true" />
+      <div class="v3-wrap v3-menu-split v3-split-reverse">
+        <HomePhoto image={images.entreesMolcajete} class="v3-menu-split-photo" sizes="(min-width: 768px) 46vw, 100vw" />
+        <div class="v3-menu-copy flex flex-col items-start gap-4">
+          <h2 id="molcajete-title" class="v3-display">Molcajete: Our Signature Dish</h2>
+          <p>Looking for a dish to share? El Ranchero’s signature Molcajete serves two to three people.</p>
+          <p>
+            Grilled meats, vegetables and savory sauces are brought together in a traditional volcanic stone mortar and
+            served sizzling.
+          </p>
+          <p>
+            The Molcajete comes with beans, rice and your choice of corn or flour tortillas, making it a great option
+            when you want to share a meal at the table.
+          </p>
+        </div>
+      </div>
+    </section>
+    <MenuOrder
+      scallop
+      subtitle="Both El Ranchero locations serve the same entrée menu. Choose your preferred restaurant to check available takeout options and order through DoorDash."
+    />
+    <MenuMore
+      excludeHref="/menu/entrees"
+      subtitle="Looking for something else? Explore more of Taqueria El Ranchero’s menu, from Mexican breakfast and burritos to tacos, appetizers, drinks and more."
+    />
+    <MenuAllergy />
+  </div>
 </PageLayout>

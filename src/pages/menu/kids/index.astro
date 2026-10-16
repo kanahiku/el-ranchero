@@ -1,19 +1,15 @@
 ---
 /**
  * Kids Menu — copy from pages-content/Menu Pages/_ menu_kids - Kids Menu.docx.
- * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
- * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
- * the grey placeholder.
+ * Poster layout. Photos come from Sanity.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
-import Locations from '~/components/widgets/Locations.astro';
-import MenuCategories from '~/components/widgets/MenuCategories.astro';
-import Note from '~/components/widgets/Note.astro';
-import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMenuSections, getMenuPagesImages } from '~/lib/content';
-import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
+import MenuHero from '~/components/menu/MenuHero.astro';
+import MenuItemGrid from '~/components/menu/MenuItemGrid.astro';
+import MenuOrder from '~/components/menu/MenuOrder.astro';
+import MenuMore from '~/components/menu/MenuMore.astro';
+import MenuAllergy from '~/components/menu/MenuAllergy.astro';
+import { getMenuPagesImages, getMenuSections } from '~/lib/content';
 
 const metadata = {
   title: 'Kids Menu in Wahiawa & Kapolei | El Ranchero',
@@ -24,40 +20,31 @@ const metadata = {
 
 const sections = await getMenuSections('kids');
 const images = await getMenuPagesImages();
-
 ---
 
 <PageLayout metadata={metadata}>
-  <Hero2
-    variant="split-dark"
-    overlapHeader={false}
-    image={images.kidsHero}
-    title="Kids Menu in Wahiawa & Kapolei"
-    content="Dining with kids? Taqueria El Ranchero has three Kids Menu choices, each listed with its own simple combination of food and sides.<br /><br />Find the Kids Menu at our Wahiawa and Kapolei locations, and check ordering availability at your preferred restaurant."
-    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
-  />
-
-  <MenuItemsSection id="kids-menu" tone="page" title="Explore Our Kids Menu" items={sections.main} />
-
-  <Locations
-    id="order"
-    variant="order"
-    eyebrow=""
-    title="Order From Your Nearest El Ranchero"
-    subtitle="Both Taqueria El Ranchero restaurants use the same menu. Select your preferred location to check current availability and takeout options through DoorDash."
-    locations={orderLocations}
-    footnote={locationsFootnote}
-  />
-
-  <MenuCategories
-    id="more-menu"
-    tone="page"
-    title="Explore More of Our Menu"
-    subtitle="Find more Mexican food and drinks at Taqueria El Ranchero. Browse other sections of our menu."
-    excludeHref="/menu/kids"
-    ctaText="View Full Menu"
-    ctaHref="/menu"
-  />
-
-  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
+  <div class="v3-interior">
+    <MenuHero
+      titleId="kids-title"
+      lines={['Kids Menu', 'in Wahiawa &', 'Kapolei']}
+      image={images.kidsHero}
+      paragraphs={[
+        'Dining with kids? Taqueria El Ranchero has three Kids Menu choices, each listed with its own simple combination of food and sides.',
+        'Find the Kids Menu at our Wahiawa and Kapolei locations, and check ordering availability at your preferred restaurant.',
+      ]}
+    />
+    <MenuItemGrid id="kids-menu" title="Explore Our Kids Menu" items={sections.main} />
+    <MenuOrder
+      tone="ink"
+      subtitle="Both Taqueria El Ranchero restaurants use the same menu. Select your preferred location to check current availability and takeout options through DoorDash."
+    />
+    <MenuMore
+      excludeHref="/menu/kids"
+      tone="paper"
+      scallop
+      cactus
+      subtitle="Find more Mexican food and drinks at Taqueria El Ranchero. Browse other sections of our menu."
+    />
+    <MenuAllergy />
+  </div>
 </PageLayout>

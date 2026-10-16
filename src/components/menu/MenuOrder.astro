@@ -1,0 +1,52 @@
+---
+import PosterButton from '~/components/home/PosterButton.astro';
+import ArtCactus from '~/assets/images/v3/art-cactus.svg';
+import { locationsFootnote, orderLocations } from '~/data/menu';
+
+interface Props {
+  subtitle: string;
+  /** Paper keeps the dark location cards. Ink is for when the section above is already paper. */
+  tone?: 'paper' | 'ink';
+  scallop?: boolean;
+  scallopRed?: boolean;
+}
+
+const { subtitle, tone = 'paper', scallop = false, scallopRed = false } = Astro.props;
+---
+
+<section
+  id="order"
+  class:list={['v3-section', tone === 'paper' ? 'v3-paper' : 'v3-order-ink', scallop && 'v3-scalloped']}
+  aria-labelledby="order-title"
+>
+  {scallop && <div class:list={['v3-scallop', scallopRed && 'v3-scallop-red']} aria-hidden="true" />}
+  {tone === 'paper' && <ArtCactus class="v3-art v3-art-cactus" aria-hidden="true" />}
+  <div class="v3-wrap">
+    <div class="v3-ihead">
+      <h2 id="order-title" class="v3-display">Order From Your Nearest El Ranchero</h2>
+      <p>{subtitle}</p>
+    </div>
+    <div class="v3-menu-order-grid">
+      {
+        orderLocations.map((location) => (
+          <article class="v3-menu-order-card">
+            <h3>{location.name}</h3>
+            <p>
+              {location.addressLine1}
+              {location.addressLine2 ? (
+                <>
+                  <br />
+                  {location.addressLine2}
+                </>
+              ) : null}
+            </p>
+            {location.actions.map((action) => (
+              <PosterButton text={action.text} href={action.href} tone="gold" />
+            ))}
+          </article>
+        ))
+      }
+    </div>
+    <p class="v3-body mt-8" set:html={locationsFootnote} />
+  </div>
+</section>

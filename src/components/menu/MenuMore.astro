@@ -1,0 +1,51 @@
+---
+import PosterButton from '~/components/home/PosterButton.astro';
+import HomePhoto from '~/components/home/HomePhoto.astro';
+import ArtCactus from '~/assets/images/v3/art-cactus.svg';
+import { getMenuCategories } from '~/lib/content';
+
+interface Props {
+  excludeHref: string;
+  subtitle: string;
+  tone?: 'paper' | 'ink';
+  scallop?: boolean;
+  cactus?: boolean;
+}
+
+const { excludeHref, subtitle, tone = 'ink', scallop = false, cactus = false } = Astro.props;
+const categories = (await getMenuCategories()).filter((category) => category.href && category.href !== excludeHref);
+---
+
+<section
+  id="more-menu"
+  class:list={['v3-section', tone === 'paper' && 'v3-paper', scallop && 'v3-scalloped']}
+  aria-labelledby="more-menu-title"
+>
+  {scallop && <div class="v3-scallop" aria-hidden="true" />}
+  {cactus && <ArtCactus class="v3-art v3-art-cactus" aria-hidden="true" />}
+  <div class="v3-wrap">
+    <div class="v3-ihead">
+      <h2 id="more-menu-title" class="v3-display">Explore More of Our Menu</h2>
+      <p>{subtitle}</p>
+      <PosterButton text="View Full Menu" href="/menu" tone="gold" />
+    </div>
+    <div class="v3-card-grid">
+      {
+        categories.map((category) => (
+          <article class="v3-menu-card">
+            <HomePhoto
+              image={category.exploreMoreImage ?? category.image}
+              sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+            />
+            <div class="v3-menu-card-body">
+              <h3>
+                <a href={category.href}>{category.title}</a>
+              </h3>
+              {category.description && <p>{category.description}</p>}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

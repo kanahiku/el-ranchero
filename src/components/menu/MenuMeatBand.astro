@@ -1,0 +1,36 @@
+---
+import Blossom from '~/components/home/Blossom.astro';
+import ArtEagle from '~/assets/images/v3/art-eagle.svg';
+
+interface Props {
+  id?: string;
+  title: string;
+  intro: string;
+  note?: string;
+  rows: { name: string; description: string }[];
+}
+
+const { id = 'choose-your-meat', title, intro, note, rows } = Astro.props;
+---
+
+<section id={id} class="v3-section v3-red-band" aria-labelledby={`${id}-title`}>
+  <Blossom class="v3-art v3-art-bloom" fill="var(--v3-ink)" center="var(--v3-ink)" />
+  <ArtEagle class="v3-art v3-art-eagle" aria-hidden="true" />
+  <div class="v3-wrap">
+    <div class="v3-ihead">
+      <h2 id={`${id}-title`} class="v3-display">{title}</h2>
+      <p class="v3-body">{intro}</p>
+    </div>
+    <ul class="v3-meat-list">
+      {
+        rows.map((option) => (
+          <li>
+            <strong>{option.name}</strong>
+            <span>{option.description}</span>
+          </li>
+        ))
+      }
+    </ul>
+    {note && <p class="v3-body mt-6">{note}</p>}
+  </div>
+</section>

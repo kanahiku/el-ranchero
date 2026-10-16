@@ -1,15 +1,17 @@
 ---
 /**
  * Locations hub — copy from pages-content/Locations/_ locations - Locations Hub.docx.
- * Composes shared widgets only. Photos come from the Sanity "Locations" singleton
- * (`locationsContent`); a missing photo renders the grey placeholder.
+ * Poster layout. Photos come from the Sanity "Locations" singleton
+ * (`locationsContent`); a missing photo renders the grey photo frame.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import Locations from '~/components/widgets/Locations.astro';
-import TextSplit from '~/components/widgets/TextSplit.astro';
-import Text from '~/components/ui/Text.astro';
-import Button from '~/components/ui/Button.astro';
+import PosterButton from '~/components/home/PosterButton.astro';
+import HomePhoto from '~/components/home/HomePhoto.astro';
+import Lanterns from '~/components/home/Lanterns.astro';
+import ArtCactus from '~/assets/images/v3/art-cactus.svg';
+import ArtAgave from '~/assets/images/v3/art-agave.svg';
+import ArtFlourish from '~/assets/images/v3/art-flourish.svg';
+import Blossom from '~/components/home/Blossom.astro';
 import { CATERING_CTA_HREF } from '~/config/cta';
 import { findStore, storeDirectionsHref } from '~/data/locations';
 import { getLocationImages } from '~/lib/content';
@@ -28,91 +30,157 @@ const metadata = {
 };
 
 const kitchenHours = ['Kitchen Hours', 'Daily: 7:00 AM – 10:00 PM'];
+
+const stores = [
+  {
+    image: images.hubWahiawa,
+    tagline: 'Our Original Neighborhood Taqueria',
+    heading: 'Taqueria El Ranchero Wahiawa',
+    shopName: 'Wahiawa Shopping Center',
+    addressLine1: '823 California Ave, Unit A5',
+    addressLine2: 'Wahiawa, HI 96786',
+    description: [
+      'Visit our original location at Wahiawa Shopping Center on California Avenue.',
+      'With its rustic, neighborhood feel, our Wahiawa restaurant is a familiar stop for local regulars, military families and visitors traveling through Central Oʻahu toward the North Shore.',
+      'Stop in for tacos, a burrito or Mexican breakfast before heading out for the day.',
+    ],
+    actions: [
+      { text: 'View Wahiawa Location', href: wahiawa.href, tone: 'gold' as const },
+      { text: 'Get Directions to Wahiawa', href: storeDirectionsHref(wahiawa), tone: 'outline' as const },
+      { text: 'Order Wahiawa on DoorDash', href: wahiawa.orderPickupHref, tone: 'outline' as const },
+    ],
+  },
+  {
+    image: images.hubKapolei,
+    tagline: 'Sit Down and Stay Awhile at Ka Makana Aliʻi',
+    heading: 'Taqueria El Ranchero Kapolei',
+    shopName: 'Ka Makana Aliʻi',
+    addressLine1: '91-5431 Kapolei Pkwy #501',
+    addressLine2: 'Kapolei, HI 96707',
+    description: [
+      'Find our Kapolei restaurant at Ka Makana Aliʻi, a convenient stop while shopping or spending time in West Oʻahu.',
+      'The Kapolei location offers a sit-down restaurant experience with table service, outdoor seating and space for families and friends to enjoy a meal together.',
+      'Our Kapolei restaurant also has venue space available for private events and group gatherings.',
+    ],
+    actions: [
+      { text: 'View Kapolei Location', href: kapolei.href, tone: 'gold' as const },
+      { text: 'Get Directions to Kapolei', href: storeDirectionsHref(kapolei), tone: 'outline' as const },
+      { text: 'Order Kapolei on DoorDash', href: kapolei.orderPickupHref, tone: 'outline' as const },
+    ],
+  },
+];
 ---
 
 <PageLayout metadata={metadata}>
-  <Hero2
-    variant="split-dark"
-    overlapHeader={false}
-    image={images.hubHero}
-    title="Find Taqueria El Ranchero in Wahiawa & Kapolei"
-    content="Looking for Taqueria El Ranchero near you? Visit us at either of our two Oʻahu restaurants, in Wahiawa and Kapolei.<br /><br />Both locations serve the same Ranchero-style Mexican menu, with tacos, burritos, breakfast favorites and more. Each restaurant has its own atmosphere, so choose the location that works best for your visit."
-  />
+  <div class="v3-interior">
+    <section class="v3-menu-hero" aria-labelledby="locations-title">
+      <Lanterns class="v3-menu-lanterns" />
+      <div class="v3-wrap v3-menu-hero-frame">
+        <div class="v3-menu-hero-copy">
+          <h1 id="locations-title" class="v3-display">
+            Find Taqueria<br />
+            El Ranchero in<br />
+            Wahiawa & Kapolei
+          </h1>
+          <div class="v3-menu-copy flex flex-col gap-4">
+            <p>
+              Looking for Taqueria El Ranchero near you? Visit us at either of our two Oʻahu restaurants, in Wahiawa and
+              Kapolei.
+            </p>
+            <p>
+              Both locations serve the same Ranchero-style Mexican menu, with tacos, burritos, breakfast favorites and
+              more. Each restaurant has its own atmosphere, so choose the location that works best for your visit.
+            </p>
+          </div>
+        </div>
+        <div class="v3-menu-hero-media">
+          <HomePhoto
+            image={images.hubHero}
+            class="v3-menu-hero-photo"
+            sizes="(min-width: 768px) 48vw, 100vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+    </section>
 
-  <Locations
-    id="find-a-location"
-    variant="detailed"
-    eyebrow=""
-    title=""
-    subtitle=""
-    ctaText=""
-    locations={[
-      {
-        name: 'Wahiawa',
-        image: images.hubWahiawa,
-        tagline: 'Our Original Neighborhood Taqueria',
-        heading: 'Taqueria El Ranchero Wahiawa',
-        shopName: 'Wahiawa Shopping Center',
-        addressLine1: '823 California Ave, Unit A5',
-        addressLine2: 'Wahiawa, HI 96786',
-        description: [
-          'Visit our original location at Wahiawa Shopping Center on California Avenue.',
-          'With its rustic, neighborhood feel, our Wahiawa restaurant is a familiar stop for local regulars, military families and visitors traveling through Central Oʻahu toward the North Shore.',
-          'Stop in for tacos, a burrito or Mexican breakfast before heading out for the day.',
-        ],
-        hours: kitchenHours,
-        actions: [
-          { text: 'View Wahiawa Location', href: wahiawa.href, variant: 'primary' },
-          { text: 'Get Directions to Wahiawa', href: storeDirectionsHref(wahiawa), variant: 'ghost' },
-          { text: 'Order Wahiawa on DoorDash', href: wahiawa.orderPickupHref, variant: 'ghost' },
-        ],
-      },
-      {
-        name: 'Kapolei',
-        image: images.hubKapolei,
-        tagline: 'Sit Down and Stay Awhile at Ka Makana Aliʻi',
-        heading: 'Taqueria El Ranchero Kapolei',
-        shopName: 'Ka Makana Aliʻi',
-        addressLine1: '91-5431 Kapolei Pkwy #501',
-        addressLine2: 'Kapolei, HI 96707',
-        description: [
-          'Find our Kapolei restaurant at Ka Makana Aliʻi, a convenient stop while shopping or spending time in West Oʻahu.',
-          'The Kapolei location offers a sit-down restaurant experience with table service, outdoor seating and space for families and friends to enjoy a meal together.',
-          'Our Kapolei restaurant also has venue space available for private events and group gatherings.',
-        ],
-        hours: kitchenHours,
-        actions: [
-          { text: 'View Kapolei Location', href: kapolei.href, variant: 'primary' },
-          { text: 'Get Directions to Kapolei', href: storeDirectionsHref(kapolei), variant: 'ghost' },
-          { text: 'Order Kapolei on DoorDash', href: kapolei.orderPickupHref, variant: 'ghost' },
-        ],
-      },
-    ]}
-  />
+    <section id="find-a-location" class="v3-section v3-paper" aria-label="Wahiawa and Kapolei">
+      <Blossom class="v3-art v3-art-bloom-explore" fill="var(--v3-red)" center="var(--v3-red)" />
+      <ArtAgave class="v3-art v3-art-agave" aria-hidden="true" />
+      <div class="v3-wrap">
+        <div class="v3-loc-grid v3-on-paper">
+          {
+            stores.map((store) => (
+              <article class="v3-loc-card">
+                <HomePhoto image={store.image} sizes="(min-width: 768px) 46vw, 100vw" />
+                <div class="v3-loc-body">
+                  <p>{store.tagline}</p>
+                  <h2 class="v3-display">{store.heading}</h2>
+                  <p class="v3-loc-address">
+                    <strong>{store.shopName}</strong>
+                    <span>{store.addressLine1}</span>
+                    <span>{store.addressLine2}</span>
+                  </p>
+                  {store.description.map((paragraph) => (
+                    <p>{paragraph}</p>
+                  ))}
+                  <p class="v3-loc-hours">
+                    <strong>{kitchenHours[0]}</strong>
+                    <span>{kitchenHours[1]}</span>
+                  </p>
+                  <div class="v3-loc-actions">
+                    {store.actions.map((action) => (
+                      <PosterButton text={action.text} href={action.href} tone={action.tone} />
+                    ))}
+                  </div>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
-  <TextSplit id="same-menu" heading="The Same Mexican Menu at Both Locations">
-    <div class="flex flex-col gap-6">
-      <Text color="default">
-        Whichever restaurant you choose, you’ll find the same Taqueria El Ranchero menu, inspired by the taquerias of Northern California.
-      </Text>
-      <Text color="default">
-        Our ingredients are prepped fresh every morning, including meats grilled over an open-fire grill, fresh vegetables and homemade salsas. Meals are assembled to order.
-      </Text>
-      <Text color="default">Both restaurants also serve Mexican breakfast every day from 7:00 AM to 12:00 PM.</Text>
-      <Button variant="primary" text="Explore Our Full Menu" href="/menu" hideNote={true} class="self-start" />
-    </div>
-  </TextSplit>
+    <section id="same-menu" class="v3-section v3-menu-breakfast v3-center" aria-labelledby="same-menu-title">
+      <ArtFlourish class="v3-art v3-art-flourish" aria-hidden="true" />
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="same-menu-title" class="v3-display">The Same Mexican Menu at Both Locations</h2>
+        </div>
+        <div class="v3-menu-copy flex max-w-3xl flex-col gap-4">
+          <p>
+            Whichever restaurant you choose, you’ll find the same Taqueria El Ranchero menu, inspired by the taquerias
+            of Northern California.
+          </p>
+          <p>
+            Our ingredients are prepped fresh every morning, including meats grilled over an open-fire grill, fresh
+            vegetables and homemade salsas. Meals are assembled to order.
+          </p>
+          <p>Both restaurants also serve Mexican breakfast every day from 7:00 AM to 12:00 PM.</p>
+          <PosterButton text="Explore Our Full Menu" href="/menu" tone="gold" class="mt-4" />
+        </div>
+      </div>
+    </section>
 
-  <TextSplit id="group-meal" heading="Planning a Group Meal?" class="bg-card">
-    <div class="flex flex-col gap-6">
-      <Text color="default">
-        El Ranchero also offers Mexican catering for workplace meals, parties and other group gatherings.
-      </Text>
-      <Button variant="primary" text="Explore Our Catering Options" href={CATERING_CTA_HREF} hideNote={true} class="self-start" />
-      <Text
-        color="default"
-        html={`For private gatherings at our Kapolei restaurant, you can also learn more about the <a class="text-accent underline underline-offset-4" href="/events/event-space-rental">available event space</a> on our <a class="text-accent underline underline-offset-4" href="/events/event-space-rental">Event Space Rental page</a>.`}
-      />
-    </div>
-  </TextSplit>
+    <section id="group-meal" class="v3-section v3-paper v3-scalloped v3-center" aria-labelledby="group-meal-title">
+      <div class="v3-scallop" aria-hidden="true"></div>
+      <ArtCactus class="v3-art v3-art-cactus" aria-hidden="true" />
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="group-meal-title" class="v3-display">Planning a Group Meal?</h2>
+        </div>
+        <div class="v3-prose">
+          <p>El Ranchero also offers Mexican catering for workplace meals, parties and other group gatherings.</p>
+          <PosterButton text="Explore Our Catering Options" href={CATERING_CTA_HREF} tone="gold" />
+          <p>
+            For private gatherings at our Kapolei restaurant, you can also learn more about the <a
+              href="/events/event-space-rental">available event space</a
+            >
+            on our <a href="/events/event-space-rental">Event Space Rental page</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
 </PageLayout>

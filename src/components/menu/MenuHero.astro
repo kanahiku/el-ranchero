@@ -1,0 +1,40 @@
+---
+import PosterButton from '~/components/home/PosterButton.astro';
+import HomePhoto from '~/components/home/HomePhoto.astro';
+import Lanterns from '~/components/home/Lanterns.astro';
+import { PRIMARY_CTA_HREF } from '~/config/cta';
+import type { ContentImage } from '~/lib/content/types';
+
+interface Props {
+  titleId: string;
+  lines: string[];
+  paragraphs: string[];
+  lead?: string;
+  image?: ContentImage;
+}
+
+const { titleId, lines, paragraphs, lead, image } = Astro.props;
+---
+
+<section class="v3-menu-hero" aria-labelledby={titleId}>
+  <Lanterns class="v3-menu-lanterns" />
+  <div class="v3-wrap v3-menu-hero-frame">
+    <div class="v3-menu-hero-copy">
+      <h1 id={titleId} class="v3-display" set:html={lines.join('<br />')} />
+      <div class="v3-menu-copy flex flex-col items-start gap-4">
+        {lead && <p>{lead}</p>}
+        {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        <PosterButton text="Order Now" href={PRIMARY_CTA_HREF} tone="gold" class="mt-4" />
+      </div>
+    </div>
+    <div class="v3-menu-hero-media">
+      <HomePhoto
+        image={image}
+        class="v3-menu-hero-photo"
+        sizes="(min-width: 768px) 48vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+  </div>
+</section>

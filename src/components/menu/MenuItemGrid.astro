@@ -1,0 +1,74 @@
+---
+import HomePhoto from '~/components/home/HomePhoto.astro';
+import Blossom from '~/components/home/Blossom.astro';
+import ArtAgave from '~/assets/images/v3/art-agave.svg';
+import type { MenuItem } from '~/lib/content/types';
+
+interface Props {
+  id: string;
+  title: string;
+  intro?: string;
+  items?: MenuItem[];
+  /** Paper grid. Ink sections stay plain. */
+  tone?: 'paper' | 'ink';
+  /** Red blossom and agave. Only the first paper section on a page. */
+  flower?: boolean;
+  scallop?: boolean;
+  /** Scallop colour when the section above is red. */
+  scallopRed?: boolean;
+}
+
+const {
+  id,
+  title,
+  intro,
+  items = [],
+  tone = 'paper',
+  flower = tone === 'paper',
+  scallop = false,
+  scallopRed = false,
+} = Astro.props;
+const headingId = `${id}-title`;
+const lines = (value?: string | string[]) => (value === undefined ? [] : Array.isArray(value) ? value : [value]);
+---
+
+<section
+  id={id}
+  class:list={['v3-section', tone === 'paper' && 'v3-paper', scallop && 'v3-scalloped']}
+  aria-labelledby={headingId}
+>
+  {scallop && <div class:list={['v3-scallop', scallopRed && 'v3-scallop-red']} aria-hidden="true" />}
+  {
+    flower && (
+      <>
+        <Blossom class="v3-art v3-art-bloom-explore" fill="var(--v3-red)" center="var(--v3-red)" />
+        <ArtAgave class="v3-art v3-art-agave" aria-hidden="true" />
+      </>
+    )
+  }
+  <div class="v3-wrap">
+    <div class="v3-ihead">
+      <h2 id={headingId} class="v3-display">{title}</h2>
+      {intro && <p>{intro}</p>}
+    </div>
+    <div class="v3-card-grid">
+      {
+        items.map((item) => (
+          <article class="v3-menu-card">
+            <HomePhoto image={item.image} sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" />
+            <div class="v3-menu-card-body">
+              {item.badge && <p class="v3-item-badge">{item.badge}</p>}
+              <h3>
+                {item.title}
+                {item.note && <span class="v3-item-note">{item.note}</span>}
+              </h3>
+              {lines(item.description).map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

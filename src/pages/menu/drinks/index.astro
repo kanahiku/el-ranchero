@@ -1,21 +1,15 @@
 ---
 /**
  * Drinks & Margaritas — copy from pages-content/Menu Pages/_ menu_drinks - Drinks & Margaritas.docx.
- * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
- * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
- * the grey placeholder.
+ * Poster layout. Photos come from Sanity.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
-import TextSplit from '~/components/widgets/TextSplit.astro';
-import Text from '~/components/ui/Text.astro';
-import Locations from '~/components/widgets/Locations.astro';
-import MenuCategories from '~/components/widgets/MenuCategories.astro';
-import Note from '~/components/widgets/Note.astro';
-import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMenuSections, getMenuPagesImages } from '~/lib/content';
-import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
+import MenuHero from '~/components/menu/MenuHero.astro';
+import MenuItemGrid from '~/components/menu/MenuItemGrid.astro';
+import MenuOrder from '~/components/menu/MenuOrder.astro';
+import MenuMore from '~/components/menu/MenuMore.astro';
+import MenuAllergy from '~/components/menu/MenuAllergy.astro';
+import { getMenuPagesImages, getMenuSections } from '~/lib/content';
 
 const metadata = {
   title: 'Drinks & Margaritas in Wahiawa & Kapolei | El Ranchero',
@@ -26,52 +20,48 @@ const metadata = {
 
 const sections = await getMenuSections('drinks');
 const images = await getMenuPagesImages();
-
 ---
 
 <PageLayout metadata={metadata}>
-  <Hero2
-    variant="split-dark"
-    overlapHeader={false}
-    image={images.drinksHero}
-    title="Drinks & Margaritas in Wahiawa & Kapolei"
-    content="From margaritas and Micheladas to aguas frescas, Mexican sodas and coffee, there’s a drink to pair with your meal at Taqueria El Ranchero.<br /><br />Explore the beverages featured on our menu at our Wahiawa and Kapolei restaurants. For additional bar selections, ask your server for our complete Drinks Menu."
-    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
-  />
-
-  <MenuItemsSection id="margaritas" tone="page" title="Signature Margaritas" items={sections.margaritas} />
-  <MenuItemsSection id="other-drinks" tone="card" title="Aguas Frescas & Other Drinks" items={sections['other-drinks']} />
-
-  <TextSplit id="hours" heading="Bar & Kitchen Hours">
-    <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
-        Kitchen hours are 7 a.m. to 10 p.m. daily. Bar service is listed through midnight each day; Friday and Saturday closing times may be later. Please confirm late-night bar availability with your preferred location.
-      </Text>
-      <Text color="default">
-        For our complete Drinks Menu, including selections beyond those listed here, please ask your server.
-      </Text>
-    </div>
-  </TextSplit>
-
-  <Locations
-    id="order"
-    variant="order"
-    eyebrow=""
-    title="Order From Your Nearest El Ranchero"
-    subtitle="Both Taqueria El Ranchero restaurants use the same menu. Select your preferred location to check current availability and takeout options through DoorDash."
-    locations={orderLocations}
-    footnote={locationsFootnote}
-  />
-
-  <MenuCategories
-    id="more-menu"
-    tone="page"
-    title="Explore More of Our Menu"
-    subtitle="Find more Mexican food and drinks at Taqueria El Ranchero. Browse other sections of our menu."
-    excludeHref="/menu/drinks"
-    ctaText="View Full Menu"
-    ctaHref="/menu"
-  />
-
-  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
+  <div class="v3-interior">
+    <MenuHero
+      titleId="drinks-title"
+      lines={['Drinks &', 'Margaritas in', 'Wahiawa & Kapolei']}
+      image={images.drinksHero}
+      paragraphs={[
+        'From margaritas and Micheladas to aguas frescas, Mexican sodas and coffee, there’s a drink to pair with your meal at Taqueria El Ranchero.',
+        'Explore the beverages featured on our menu at our Wahiawa and Kapolei restaurants. For additional bar selections, ask your server for our complete Drinks Menu.',
+      ]}
+    />
+    <MenuItemGrid id="margaritas" title="Signature Margaritas" items={sections.margaritas} />
+    <MenuItemGrid id="other-drinks" tone="ink" title="Aguas Frescas & Other Drinks" items={sections['other-drinks']} />
+    <section id="hours" class="v3-section v3-paper v3-scalloped v3-center" aria-labelledby="hours-title">
+      <div class="v3-scallop" aria-hidden="true"></div>
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="hours-title" class="v3-display">Bar & Kitchen Hours</h2>
+        </div>
+        <div class="v3-prose">
+          <p>
+            Kitchen hours are 7 a.m. to 10 p.m. daily. Bar service is listed through midnight each day; Friday and
+            Saturday closing times may be later. Please confirm late-night bar availability with your preferred
+            location.
+          </p>
+          <p>For our complete Drinks Menu, including selections beyond those listed here, please ask your server.</p>
+        </div>
+      </div>
+    </section>
+    <MenuOrder
+      tone="ink"
+      subtitle="Both Taqueria El Ranchero restaurants use the same menu. Select your preferred location to check current availability and takeout options through DoorDash."
+    />
+    <MenuMore
+      excludeHref="/menu/drinks"
+      tone="paper"
+      scallop
+      cactus
+      subtitle="Find more Mexican food and drinks at Taqueria El Ranchero. Browse other sections of our menu."
+    />
+    <MenuAllergy />
+  </div>
 </PageLayout>

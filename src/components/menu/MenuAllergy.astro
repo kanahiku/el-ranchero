@@ -1,0 +1,14 @@
+---
+import Calavera from '~/assets/images/v3/calavera.svg';
+import CalaveraSmall from '~/assets/images/v3/calavera2.svg';
+import { allergyNotice } from '~/data/menu';
+---
+
+<section class="v3-allergy" aria-labelledby="allergy-title">
+  <CalaveraSmall class="v3-allergy-skull v3-allergy-skull-l" aria-hidden="true" />
+  <Calavera class="v3-allergy-skull v3-allergy-skull-r" aria-hidden="true" />
+  <div class="v3-allergy-card">
+    <h2 id="allergy-title" class="v3-display">{allergyNotice.title}</h2>
+    <p>{allergyNotice.description}</p>
+  </div>
+</section>

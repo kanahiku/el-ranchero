@@ -1,75 +1,70 @@
 ---
 /**
  * Specials — copy from pages-content/Menu Pages/_ menu_specials - Specials.docx.
- * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
- * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
- * the grey placeholder.
+ * Poster layout. Photos come from Sanity.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
-import OptionsTable from '~/components/widgets/OptionsTable.astro';
-import Locations from '~/components/widgets/Locations.astro';
-import MenuCategories from '~/components/widgets/MenuCategories.astro';
-import Note from '~/components/widgets/Note.astro';
-import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMenuSections, getMeatOptions, getMenuPagesImages } from '~/lib/content';
-import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
+import MenuHero from '~/components/menu/MenuHero.astro';
+import MenuItemGrid from '~/components/menu/MenuItemGrid.astro';
+import MenuMeatBand from '~/components/menu/MenuMeatBand.astro';
+import MenuOrder from '~/components/menu/MenuOrder.astro';
+import MenuMore from '~/components/menu/MenuMore.astro';
+import MenuAllergy from '~/components/menu/MenuAllergy.astro';
+import { getMeatOptions, getMenuPagesImages, getMenuSections } from '~/lib/content';
 
 const metadata = {
   title: 'Mexican Food Specials in Wahiawa & Kapolei | El Ranchero',
   description:
-    "Explore Mexican food specials at El Ranchero in Wahiawa and Kapolei, including tortas, tamales, California Fries and weekend-only pozole and menudo.",
+    'Explore Mexican food specials at El Ranchero in Wahiawa and Kapolei, including tortas, tamales, California Fries and weekend-only pozole and menudo.',
   ignoreTitleTemplate: true,
 };
 
 const sections = await getMenuSections('specials');
 const meatOptions = await getMeatOptions();
 const images = await getMenuPagesImages();
-
 ---
 
 <PageLayout metadata={metadata}>
-  <Hero2
-    variant="split-dark"
-    overlapHeader={false}
-    image={images.specialsHero}
-    title="Mexican Food Specials in Wahiawa & Kapolei"
-    content="Explore more of the Mexican food menu at Taqueria El Ranchero, from Tortas and California Fries to Tamales, Elote and seafood dishes.<br /><br />Our specials menu also includes traditional Mexican favorites available on Saturdays and Sundays, including Pozole, Menudo, Campechana and Chile Relleno. Browse the options below and check current availability when ordering from our Wahiawa or Kapolei restaurant."
-    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
-  />
-
-  <MenuItemsSection id="daily-specials" tone="page" title="Daily Specials" intro="Explore the dishes listed under Daily Specials on our menu, including Mexican-style sandwiches, savory snacks and other favorites." items={sections.daily} />
-
-  <OptionsTable
-    id="choose-your-meat"
-    tone="card"
-    heading="Meat Choices for Select Specials"
-    intro="The Sope, Torta and California Fries are listed with your choice of meat. El Ranchero’s general menu includes:"
-    note="Check which meat selections are available for your preferred dish when ordering."
-    rows={meatOptions}
-  />
-  <MenuItemsSection id="weekend-specials" tone="page" title="Weekend Specials — Saturday & Sunday Only" intro="Looking for Pozole, Menudo or another traditional Mexican weekend favorite? El Ranchero’s Weekend Specials are available Saturday and Sunday only. Explore the dishes below." items={sections.weekend} />
-
-  <Locations
-    id="order"
-    variant="order"
-    eyebrow=""
-    title="Order From Your Nearest El Ranchero"
-    subtitle="Explore our specials menu at either El Ranchero location. Choose your preferred restaurant to check current availability and takeout options through DoorDash."
-    locations={orderLocations}
-    footnote={locationsFootnote}
-  />
-
-  <MenuCategories
-    id="more-menu"
-    tone="page"
-    title="Explore More of Our Menu"
-    subtitle="Looking for something else? Explore more of Taqueria El Ranchero’s menu, from Mexican breakfast and burritos to tacos, entrées, appetizers, drinks and more."
-    excludeHref="/menu/specials"
-    ctaText="View Full Menu"
-    ctaHref="/menu"
-  />
-
-  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
+  <div class="v3-interior">
+    <MenuHero
+      titleId="specials-title"
+      lines={['Mexican Food', 'Specials in', 'Wahiawa & Kapolei']}
+      image={images.specialsHero}
+      paragraphs={[
+        'Explore more of the Mexican food menu at Taqueria El Ranchero, from Tortas and California Fries to Tamales, Elote and seafood dishes.',
+        'Our specials menu also includes traditional Mexican favorites available on Saturdays and Sundays, including Pozole, Menudo, Campechana and Chile Relleno. Browse the options below and check current availability when ordering from our Wahiawa or Kapolei restaurant.',
+      ]}
+    />
+    <MenuItemGrid
+      id="daily-specials"
+      title="Daily Specials"
+      intro="Explore the dishes listed under Daily Specials on our menu, including Mexican-style sandwiches, savory snacks and other favorites."
+      items={sections.daily}
+    />
+    <MenuMeatBand
+      title="Meat Choices for Select Specials"
+      intro="The Sope, Torta and California Fries are listed with your choice of meat. El Ranchero’s general menu includes:"
+      note="Check which meat selections are available for your preferred dish when ordering."
+      rows={meatOptions}
+    />
+    <MenuItemGrid
+      id="weekend-specials"
+      tone="ink"
+      flower={false}
+      scallop
+      scallopRed
+      title="Weekend Specials — Saturday & Sunday Only"
+      intro="Looking for Pozole, Menudo or another traditional Mexican weekend favorite? El Ranchero’s Weekend Specials are available Saturday and Sunday only. Explore the dishes below."
+      items={sections.weekend}
+    />
+    <MenuOrder
+      scallop
+      subtitle="Explore our specials menu at either El Ranchero location. Choose your preferred restaurant to check current availability and takeout options through DoorDash."
+    />
+    <MenuMore
+      excludeHref="/menu/specials"
+      subtitle="Looking for something else? Explore more of Taqueria El Ranchero’s menu, from Mexican breakfast and burritos to tacos, entrées, appetizers, drinks and more."
+    />
+    <MenuAllergy />
+  </div>
 </PageLayout>

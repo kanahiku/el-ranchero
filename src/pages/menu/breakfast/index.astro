@@ -1,77 +1,187 @@
 ---
 /**
  * Breakfast — copy from pages-content/Menu Pages/_ menu_breakfast - Breakfast.docx.
- * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
- * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
- * the grey placeholder.
+ * Poster layout. Photos come from the Sanity "Menu Pages" singleton
+ * (`menuPagesContent`) and the menu category / item documents.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
-import TextSplit from '~/components/widgets/TextSplit.astro';
-import Text from '~/components/ui/Text.astro';
-import Locations from '~/components/widgets/Locations.astro';
-import MenuCategories from '~/components/widgets/MenuCategories.astro';
-import Note from '~/components/widgets/Note.astro';
+import PosterButton from '~/components/home/PosterButton.astro';
+import HomePhoto from '~/components/home/HomePhoto.astro';
+import Lanterns from '~/components/home/Lanterns.astro';
+import Blossom from '~/components/home/Blossom.astro';
+import ArtAgave from '~/assets/images/v3/art-agave.svg';
+import ArtCactus from '~/assets/images/v3/art-cactus.svg';
+import ArtFlourish from '~/assets/images/v3/art-flourish.svg';
+import Calavera from '~/assets/images/v3/calavera.svg';
+import CalaveraSmall from '~/assets/images/v3/calavera2.svg';
 import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMenuSections, getMenuPagesImages } from '~/lib/content';
+import { getMenuCategories, getMenuPagesImages, getMenuSections } from '~/lib/content';
 import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
 
 const metadata = {
   title: 'Mexican Breakfast in Wahiawa & Kapolei | El Ranchero',
   description:
-    "Explore Mexican breakfast at El Ranchero in Wahiawa and Kapolei, served every day from 7 AM to noon. See breakfast burritos, chilaquiles, tacos and eggs.",
+    'Explore Mexican breakfast at El Ranchero in Wahiawa and Kapolei, served every day from 7 AM to noon. See breakfast burritos, chilaquiles, tacos and eggs.',
   ignoreTitleTemplate: true,
 };
 
 const sections = await getMenuSections('breakfast');
 const images = await getMenuPagesImages();
+const moreCategories = (await getMenuCategories()).filter(
+  (category) => category.href && category.href !== '/menu/breakfast'
+);
 
+const lines = (value?: string | string[]) => (value === undefined ? [] : Array.isArray(value) ? value : [value]);
 ---
 
 <PageLayout metadata={metadata}>
-  <Hero2
-    variant="split-dark"
-    overlapHeader={false}
-    image={images.breakfastHero}
-    tagline="Every day, 7 AM to 12 PM"
-    title="Mexican Breakfast in Wahiawa & Kapolei"
-    content="Start your morning with Mexican breakfast at Taqueria El Ranchero, served daily at both our Wahiawa and Kapolei locations. If you’re heading to work, school or out for the day, our Breakfast Burrito is an easy choice to take with you.<br /><br />Prefer a sit-down breakfast? Explore chilaquiles, egg plates and more."
-    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
-  />
+  <div class="v3-interior">
+    <section class="v3-menu-hero" aria-labelledby="breakfast-title">
+      <Lanterns class="v3-menu-lanterns" />
+      <div class="v3-wrap v3-menu-hero-frame">
+        <div class="v3-menu-hero-copy">
+          <h1 id="breakfast-title" class="v3-display">
+            Mexican Breakfast<br />
+            in Wahiawa &<br />
+            Kapolei
+          </h1>
+          <div class="v3-menu-copy flex flex-col items-start gap-4">
+            <p>Every day, 7 AM to 12 PM</p>
+            <p>
+              Start your morning with Mexican breakfast at Taqueria El Ranchero, served daily at both our Wahiawa and
+              Kapolei locations. If you’re heading to work, school or out for the day, our Breakfast Burrito is an easy
+              choice to take with you.
+            </p>
+            <p>Prefer a sit-down breakfast? Explore chilaquiles, egg plates and more.</p>
+            <PosterButton text="Order Now" href={PRIMARY_CTA_HREF} tone="gold" class="mt-4" />
+          </div>
+        </div>
+        <div class="v3-menu-hero-media">
+          <HomePhoto
+            image={images.breakfastHero}
+            class="v3-menu-hero-photo"
+            sizes="(min-width: 768px) 48vw, 100vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+    </section>
 
-  <MenuItemsSection id="breakfast-menu" tone="page" title="Explore Our Breakfast Menu" intro="Choose from our breakfast dishes, including burritos, tacos and traditional egg-based plates." items={sections.main} />
+    <section id="breakfast-menu" class="v3-section v3-paper" aria-labelledby="breakfast-menu-title">
+      <Blossom class="v3-art v3-art-bloom-explore" fill="var(--v3-red)" center="var(--v3-red)" />
+      <ArtAgave class="v3-art v3-art-agave" aria-hidden="true" />
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="breakfast-menu-title" class="v3-display">Explore Our Breakfast Menu</h2>
+          <p>Choose from our breakfast dishes, including burritos, tacos and traditional egg-based plates.</p>
+        </div>
+        <div class="v3-card-grid">
+          {
+            sections.main.map((item) => (
+              <article class="v3-menu-card">
+                <HomePhoto image={item.image} sizes="(min-width: 768px) 50vw, 100vw" />
+                <div class="v3-menu-card-body">
+                  {item.badge && <p class="v3-item-badge">{item.badge}</p>}
+                  <h3>
+                    {item.title}
+                    {item.note && <span class="v3-item-note">{item.note}</span>}
+                  </h3>
+                  {lines(item.description).map((paragraph) => (
+                    <p>{paragraph}</p>
+                  ))}
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
-  <TextSplit id="takeout-or-sit-down" heading="Breakfast for Takeout or a Sit-Down Meal" withImage image={images.breakfastTakeout} imageAspect="4 / 3" class="bg-card">
-    <div class="flex flex-col gap-6">
-      <Text color="default">
-        For breakfast on the go, the Breakfast Burrito and Breakfast Taco offer a choice of bacon, ham, chorizo or veggie. If you have time to sit down, explore Chilaquiles, Huevos Rancheros, Huevos con Chorizo or another breakfast plate.
-      </Text>
-      <Text color="default">
-        The breakfast menu is served from 7 AM to 12 PM every day at both El Ranchero restaurants.
-      </Text>
-    </div>
-  </TextSplit>
+    <section id="takeout-or-sit-down" class="v3-section v3-menu-breakfast" aria-labelledby="takeout-title">
+      <ArtFlourish class="v3-art v3-art-flourish" aria-hidden="true" />
+      <div class="v3-wrap v3-menu-split">
+        <HomePhoto image={images.breakfastTakeout} class="v3-menu-split-photo" sizes="(min-width: 768px) 46vw, 100vw" />
+        <div class="v3-menu-copy flex flex-col items-start gap-4">
+          <h2 id="takeout-title" class="v3-display">Breakfast for Takeout or a Sit-Down Meal</h2>
+          <p>
+            For breakfast on the go, the Breakfast Burrito and Breakfast Taco offer a choice of bacon, ham, chorizo or
+            veggie. If you have time to sit down, explore Chilaquiles, Huevos Rancheros, Huevos con Chorizo or another
+            breakfast plate.
+          </p>
+          <p>The breakfast menu is served from 7 AM to 12 PM every day at both El Ranchero restaurants.</p>
+        </div>
+      </div>
+    </section>
 
-  <Locations
-    id="order"
-    variant="order"
-    eyebrow=""
-    title="Order From Your Nearest El Ranchero"
-    subtitle="Choose your location to check available takeout options and order through DoorDash."
-    locations={orderLocations}
-    footnote={locationsFootnote}
-  />
+    <section id="order" class="v3-section v3-paper v3-scalloped" aria-labelledby="order-title">
+      <div class="v3-scallop" aria-hidden="true"></div>
+      <ArtCactus class="v3-art v3-art-cactus" aria-hidden="true" />
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="order-title" class="v3-display">Order From Your Nearest El Ranchero</h2>
+          <p>Choose your location to check available takeout options and order through DoorDash.</p>
+        </div>
+        <div class="v3-menu-order-grid">
+          {
+            orderLocations.map((location) => (
+              <article class="v3-menu-order-card">
+                <h3>{location.name}</h3>
+                <p>
+                  {location.addressLine1}
+                  {location.addressLine2 ? (
+                    <>
+                      <br />
+                      {location.addressLine2}
+                    </>
+                  ) : null}
+                </p>
+                {location.actions.map((action) => (
+                  <PosterButton text={action.text} href={action.href} tone="gold" />
+                ))}
+              </article>
+            ))
+          }
+        </div>
+        <p class="v3-body mt-8" set:html={locationsFootnote} />
+      </div>
+    </section>
 
-  <MenuCategories
-    id="more-menu"
-    tone="page"
-    title="Explore More of Our Menu"
-    subtitle="Looking for something else? Explore more of Taqueria El Ranchero’s menu, from tacos and burritos to appetizers, drinks and more."
-    excludeHref="/menu/breakfast"
-    ctaText="View Full Menu"
-    ctaHref="/menu"
-  />
+    <section id="more-menu" class="v3-section" aria-labelledby="more-menu-title">
+      <div class="v3-wrap">
+        <div class="v3-ihead">
+          <h2 id="more-menu-title" class="v3-display">Explore More of Our Menu</h2>
+          <p>
+            Looking for something else? Explore more of Taqueria El Ranchero’s menu, from tacos and burritos to
+            appetizers, drinks and more.
+          </p>
+          <PosterButton text="View Full Menu" href="/menu" tone="gold" />
+        </div>
+        <div class="v3-card-grid">
+          {
+            moreCategories.map((category) => (
+              <article class="v3-menu-card">
+                <HomePhoto image={category.exploreMoreImage ?? category.image} sizes="(min-width: 768px) 50vw, 100vw" />
+                <div class="v3-menu-card-body">
+                  <h3>
+                    <a href={category.href}>{category.title}</a>
+                  </h3>
+                  {category.description && <p>{category.description}</p>}
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
-  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
+    <section class="v3-allergy" aria-labelledby="allergy-title">
+      <CalaveraSmall class="v3-allergy-skull v3-allergy-skull-l" aria-hidden="true" />
+      <Calavera class="v3-allergy-skull v3-allergy-skull-r" aria-hidden="true" />
+      <div class="v3-allergy-card">
+        <h2 id="allergy-title" class="v3-display">{allergyNotice.title}</h2>
+        <p>{allergyNotice.description}</p>
+      </div>
+    </section>
+  </div>
 </PageLayout>
