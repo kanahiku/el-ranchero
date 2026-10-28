@@ -17,6 +17,7 @@ import { CATERING_CTA_HREF } from '~/config/cta';
 import { EVENTS_INSTAGRAM_HANDLE, EVENTS_INSTAGRAM_HREF } from '~/data/events';
 import { findStore, storeDirectionsHref } from '~/data/locations';
 import { getLocationImages } from '~/lib/content';
+import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getLocationImages();
 const favoriteImages = images.kapoleiFavorites;
@@ -209,4 +210,5 @@ const faqs = [
     subtitle="Visit Taqueria El Ranchero in Kapolei or order your favorites online through DoorDash."
     actions={[{ variant: 'primary', text: 'Order Kapolei on DoorDash', href: store.orderPickupHref }]}
   />
+  <RelatedBlogs pageSlug="locations/kapolei" surface="grey" />
 </PageLayout>

@@ -5,6 +5,7 @@
  * Use one section per group (e.g. "Signature Margaritas", "Aguas Frescas & Other Drinks").
  * Cards are flex columns, so every card in a row has the same height.
  */
+import Motif from '~/components/ui/Motif.astro';
 import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
@@ -46,10 +47,12 @@ const paragraphs = (value?: string | string[]) => (value === undefined ? [] : Ar
 <section
   {...id ? { id } : {}}
   class:list={[
-    'not-prose relative w-full scroll-mt-24 overflow-hidden md:scroll-mt-32',
+    'not-prose relative w-full scroll-mt-24 overflow-x-clip md:scroll-mt-32',
     tone === 'card' ? 'bg-card' : 'bg-page',
   ]}
 >
+  {tone === 'page' && <Motif name="grid-paper" class="absolute inset-0" />}
+  <Motif name={tone === 'card' ? 'scallop-edge-card' : 'scallop-edge-cream'} class="absolute inset-x-0 -top-3 z-10 h-6" />
   <div class="relative z-[1] mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
     <div class="mb-10 flex max-w-4xl flex-col gap-6 md:mb-14">
       {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
@@ -65,7 +68,7 @@ const paragraphs = (value?: string | string[]) => (value === undefined ? [] : Ar
       items.length > 0 && (
         <div class:list={['grid grid-cols-1 gap-4 md:grid-cols-2', columns === 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-3']}>
           {items.map((item) => (
-            <article class:list={['flex h-full flex-col overflow-hidden', tone === 'card' ? 'bg-page' : 'bg-card']}>
+            <article class:list={['flex h-full flex-col gap-3 overflow-hidden p-4 shadow-polaroid', tone === 'card' ? 'bg-page' : 'bg-card']}>
               <div class="relative w-full bg-section-grey" style="aspect-ratio: 4 / 3;">
                 {item.image?.src ? (
                   <Image
@@ -90,7 +93,7 @@ const paragraphs = (value?: string | string[]) => (value === undefined ? [] : Ar
                   </span>
                 )}
               </div>
-              <div class="flex flex-1 flex-col gap-3 px-5 py-5">
+              <div class="flex flex-1 flex-col gap-3 px-1 pb-2">
                 <div class="flex items-center justify-between gap-3">
                   <h3 class="font-rough text-h4 font-normal leading-tight text-heading">{item.title}</h3>
                   {item.note && (

@@ -1,0 +1,57 @@
+---
+/**
+ * Motif — decorative art (papel picado, agave, cactus, calavera, starburst,
+ * scallop edge, lantern garland, grid paper, vines). Assets live in
+ * `public/motifs/`. Position it from the parent with `class`
+ * (absolute + inset/size utilities); the art fills the box.
+ *
+ * - "tile-x" motifs repeat horizontally at the box height (strips/borders).
+ * - "tile" motifs repeat at natural size (grid paper).
+ * - "contain" motifs scale to fit the box.
+ * Names without an asset (e.g. "icon") render nothing visible.
+ */
+export interface Props {
+  /** Figma layer name, e.g. "agave", "papel-picado", "scallop-edge". */
+  name: string;
+  class?: string;
+}
+
+type Mode = 'tile-x' | 'tile' | 'contain';
+const MOTIFS: Record<string, { file: string; mode: Mode; flip?: boolean }> = {
+  'papel-picado': { file: 'papel-picado.svg', mode: 'tile-x' },
+  'papel-picado-small': { file: 'papel-picado-small.svg', mode: 'contain' },
+  'scallop-edge': { file: 'scallop-edge.svg', mode: 'tile-x' },
+  'scallop-edge-dark': { file: 'scallop-edge-dark.svg', mode: 'tile-x' },
+  'scallop-edge-orange': { file: 'scallop-edge-orange.svg', mode: 'tile-x' },
+  'scallop-edge-card': { file: 'scallop-edge-card.svg', mode: 'tile-x' },
+  'scallop-edge-green': { file: 'scallop-edge-green.svg', mode: 'tile-x' },
+  'scallop-edge-cream': { file: 'scallop-edge-cream.svg', mode: 'tile-x' },
+  'lantern-garland': { file: 'lantern-garland.svg', mode: 'tile-x' },
+  'grid-paper': { file: 'grid-paper.svg', mode: 'tile' },
+  agave: { file: 'agave.png', mode: 'contain' },
+  cactus: { file: 'cactus.svg', mode: 'contain' },
+  starburst: { file: 'starburst.png', mode: 'contain' },
+  'calavera-large': { file: 'calavera.png', mode: 'contain' },
+  'calavera-small': { file: 'calavera.png', mode: 'contain' },
+  'vine-left': { file: 'vine-side.png', mode: 'contain' },
+  'vine-right': { file: 'vine-side.png', mode: 'contain', flip: true },
+  'vine-center': { file: 'vine-center.png', mode: 'contain' },
+};
+
+const { name, class: className = '' } = Astro.props;
+const motif = MOTIFS[name];
+
+let style: string | undefined;
+if (motif) {
+  const url = `url(/motifs/${motif.file})`;
+  const layout =
+    motif.mode === 'tile-x'
+      ? 'background-repeat:repeat-x;background-size:auto 100%;background-position:center top;'
+      : motif.mode === 'tile'
+        ? 'background-repeat:repeat;background-position:top left;'
+        : 'background-repeat:no-repeat;background-size:contain;background-position:center;';
+  style = `background-image:${url};${layout}${motif.flip ? 'transform:scaleX(-1);' : ''}`;
+}
+---
+
+<div data-motif={name} aria-hidden="true" class:list={['pointer-events-none', className]} style={style}></div>

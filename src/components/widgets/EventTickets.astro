@@ -1,0 +1,66 @@
+---
+/**
+ * EventTickets — Figma "Events" 2083:2158. Green band, lantern garland on top,
+ * header (title + intro), row of dashed "ticket" cards, footer line + CTA,
+ * cactus motif bottom-left.
+ */
+import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+import Motif from '~/components/ui/Motif.astro';
+import type { CallToAction } from '~/types';
+
+export interface Ticket {
+  day: string;
+  title: string;
+  description: string;
+  /** Icon name in public/motifs/icons: banner | karaoke | dj | drink. */
+  icon?: 'banner' | 'karaoke' | 'dj' | 'drink';
+}
+
+export interface Props {
+  id?: string;
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  tickets: Ticket[];
+  footnote?: string;
+  action?: CallToAction;
+}
+
+const { id, eyebrow, title, intro, tickets, footnote, action } = Astro.props;
+---
+
+<section {...id ? { id } : {}} class="relative w-full overflow-hidden bg-section-green text-contrast">
+  <Motif name="lantern-garland" class="absolute inset-x-0 top-1.5 h-[120px] md:h-[190px]" />
+
+  <Motif name="cactus" class="absolute bottom-0 left-[87px] hidden size-[227px] xl:block" />
+
+  <div class="container-x relative z-10 flex flex-col gap-12 pb-16 md:pb-[120px] pt-[160px] md:pt-[230px]">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-16">
+      <div class="flex flex-col items-start gap-1 lg:w-1/2 lg:shrink-0">
+        {eyebrow && <Heading variant="eyebrow" color="inherit" class="inline-block rotate-3 text-marigold">{eyebrow}</Heading>}
+        <Heading variant="h2" color="white" html={title} />
+      </div>
+      {intro && <Text variant="body-lg" class="flex-1 text-sage">{intro}</Text>}
+    </div>
+
+    <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        tickets.map((t) => (
+          <li class="flex h-full flex-col items-start gap-2.5 rounded-md border-[1.5px] border-dashed border-heading/50 bg-card px-6 py-7">
+            {t.icon && <img src={`/motifs/icons/${t.icon}.svg`} alt="" width="36" height="36" class="size-9" aria-hidden="true" />}
+            <p class="type-label text-accent">{t.day}</p>
+            <Heading variant="h5" color="inherit" as="h3" class="text-heading">{t.title}</Heading>
+            <Text variant="small" class="text-muted">{t.description}</Text>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+      {footnote && <p class="font-medium text-[16px] text-contrast [&_a]:underline" set:html={footnote} />}
+      {action && <Button {...action} hideNote class="self-start" />}
+    </div>
+  </div>
+</section>

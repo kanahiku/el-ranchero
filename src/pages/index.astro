@@ -1,9 +1,11 @@
 ---
 /**
  * Homepage — Figma "Taqueria El Ranchero (For Review)" Variant 1 (2083:1854).
- * Composes shared widgets only. All images and decorative motifs are grey
- * placeholders until the asset pass (see ImagePlaceholder / Motif).
+ * Composes shared widgets only. Photos, reviews and blogs come from Sanity;
+ * only decorative motifs (public/motifs) live in the codebase.
  */
+import { getHomepageImages } from '~/lib/content';
+import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import HeroArch from '~/components/widgets/HeroArch.astro';
 import StatsRibbon from '~/components/widgets/StatsRibbon.astro';
@@ -26,32 +28,13 @@ const metadata = {
 const light = { variant: 'ghost', tone: 'dark' } as const; // cream fill, red type
 const outline = { variant: 'ghost', tone: 'light' } as const; // ink outline
 
-// TODO: placeholder reviews from Figma — only shown while Sanity has none.
-const fallbackReviews = [
-  {
-    quote:
-      'Dummy review: the breakfast burrito is huge and the salsa is made fresh. We stop in every Saturday on the way out of Wahiawa.',
-    name: 'Test Reviewer One',
-    source: 'Google · Wahiawā',
-  },
-  {
-    quote:
-      'Dummy review: great spot for a family dinner. The Molcajete was sizzling when it hit the table and the margaritas were just right.',
-    name: 'Test Reviewer Two',
-    source: 'Yelp · Kapolei',
-  },
-  {
-    quote:
-      'Dummy review: Taco Tuesday and karaoke on Wednesday are the best part of my week. Friendly staff and a fun crowd.',
-    name: 'Test Reviewer Three',
-    source: 'Google · Kapolei',
-  },
-];
+const images = await getHomepageImages();
 ---
 
 <Layout metadata={metadata}>
   <HeroArch
     id="home-hero"
+    image={images.hero}
     eyebrow="¡Bienvenidos!"
     title="Hawaii’s<br />Original<br />Taqueria"
     body="Northern California–inspired Mexican food in Wahiawā and Kapolei. Tacos, burritos and ranchero-style entrées made fresh every day with meats off the open-fire grill and salsas made in-house."
@@ -68,6 +51,7 @@ const fallbackReviews = [
 
   <PolaroidFeature
     id="breakfast"
+    image={images.breakfast}
     eyebrow="Desayuno"
     title="Mexican Breakfast, Every Day From 7 AM"
     body="Start your morning at El Ranchero. Breakfast is served daily from 7 AM to 12 PM at both locations."
@@ -93,16 +77,19 @@ const fallbackReviews = [
     dishes={[
       {
         title: 'Molcajete',
+        image: images.molcajete,
         description:
           'Our signature: grilled meats, vegetables and savory sauce served sizzling in a volcanic stone mortar, with beans, rice and tortillas.',
       },
       {
         title: 'Tacos & Birria',
+        image: images.tacosBirria,
         description:
           'Classic tacos with your choice of carne asada, carnitas or al pastor, plus Tacos and Mulitas de Birria, three per order.',
       },
       {
         title: 'Burritos',
+        image: images.burritos,
         description:
           'The Burrito Grande with meat, beans, rice, cheese, pico, guac and sour cream, or the fries-stuffed California Burrito.',
       },
@@ -119,21 +106,25 @@ const fallbackReviews = [
       {
         day: 'Tuesday',
         title: 'Taco Tuesday',
+        icon: 'banner',
         description: 'Make tacos part of your Tuesday plans. Check the latest announcements for current specials.',
       },
       {
         day: 'Wednesday',
         title: 'Free Karaoke Wednesday',
+        icon: 'karaoke',
         description: 'Karaoke hosted by local DJs. Sing in Spanish or English, no set theme.',
       },
       {
         day: 'Friday',
         title: 'DJ & Promoter Nights',
+        icon: 'dj',
         description: 'Many Fridays feature local promoters and DJs. Check the schedule for performers.',
       },
       {
         day: 'Saturday',
         title: 'Latin Night',
+        icon: 'drink',
         description: 'Music from across Latin America and an evening centered on the Latino community.',
       },
     ]}
@@ -150,6 +141,7 @@ const fallbackReviews = [
       {
         label: 'No. 1 · The Original',
         name: 'Wahiawā',
+        image: images.wahiawa,
         address: '823 California Ave, Unit A5, Wahiawā, HI 96786 · Wahiawā Shopping Center',
         hours: 'Kitchen 7 AM–10 PM  ·  Breakfast 7 AM–12 PM daily',
         description:
@@ -167,6 +159,7 @@ const fallbackReviews = [
         label: 'No. 2 · Ka Makana Aliʻi',
         labelClass: 'text-section-green',
         name: 'Kapolei',
+        image: images.kapolei,
         address: '91-5431 Kapolei Pkwy #501, Kapolei, HI 96707 · Ka Makana Aliʻi',
         hours: 'Kitchen 7 AM–10 PM  ·  Breakfast 7 AM–12 PM daily',
         description:
@@ -189,19 +182,23 @@ const fallbackReviews = [
       {
         eyebrow: 'Catering',
         title: 'Mexican Catering for Gatherings',
+        image: images.catering,
         body: 'From small office lunches to events for roughly 250 guests, including taco bar packages. Tell our catering team about your group and we’ll plan it with you.',
         action: { variant: 'primary', text: 'Explore Catering', href: CATERING_CTA_HREF },
       },
       {
         eyebrow: 'Fiestas privadas',
         title: 'Host Your Private Event in Kapolei',
+        image: images.privateEvents,
         body: 'A rentable event space with a stage, TVs, microphones and speakers — for birthdays, baby showers, wedding receptions and company parties.',
         action: { variant: 'primary', text: 'Explore Event Space', href: '/events/event-space-rental' },
       },
     ]}
   />
 
-  <ReviewCards id="reviews" eyebrow="Lo que dicen" title="Customers Are Raving" fallback={fallbackReviews} />
+  <ReviewCards id="reviews" eyebrow="Lo que dicen" title="Customers Are Raving" />
+
+  <RelatedBlogs pageSlug="" surface="grey" />
 
   <CTAFiesta
     id="visit"

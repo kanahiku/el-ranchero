@@ -1,0 +1,65 @@
+---
+/**
+ * DishPolaroids — Figma "Favorites" 2083:2143. Paper section with grid-paper
+ * motif, centred header, three tilted polaroid dish cards, one CTA.
+ */
+import Heading from '~/components/ui/Heading.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+import Motif from '~/components/ui/Motif.astro';
+import ImagePlaceholder from '~/components/ui/ImagePlaceholder.astro';
+import type { CallToAction } from '~/types';
+
+export interface Dish {
+  title: string;
+  description: string;
+  href?: string;
+  /** Photo (Sanity). */
+  image?: { src: string; alt?: string };
+}
+
+export interface Props {
+  id?: string;
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  dishes: Dish[];
+  action?: CallToAction;
+}
+
+const { id, eyebrow, title, subtitle, dishes, action } = Astro.props;
+// Figma slot offsets + tilts: flat, down 48 / -1.5deg, down 12 / +1.5deg.
+const tilt = ['', 'md:mt-12 md:-rotate-[1.5deg]', 'md:mt-3 md:rotate-[1.5deg]'];
+---
+
+<section {...id ? { id } : {}} class="relative w-full bg-page">
+  <Motif name="grid-paper" class="absolute inset-0" />
+  <Motif name="scallop-edge-cream" class="absolute inset-x-0 -top-3 z-10 h-6" />
+
+  <div class="container-x relative flex flex-col items-center gap-10 py-16 md:gap-14 md:py-[120px]">
+    <div class="flex max-w-[860px] flex-col items-center gap-2 text-center">
+      {eyebrow && <Heading variant="eyebrow" class="inline-block rotate-3">{eyebrow}</Heading>}
+      <Heading variant="h2" html={title} />
+      {subtitle && <Text variant="body-lg" class="mt-2 max-w-[640px] text-tan-body">{subtitle}</Text>}
+    </div>
+
+    <div class="flex w-full flex-col items-center gap-8 md:flex-row md:items-start md:gap-7">
+      {
+        dishes.map((dish, i) => (
+          <article
+            class:list={[
+              'flex w-full max-w-[420px] flex-col gap-3.5 bg-card px-4 pb-7 pt-4 shadow-polaroid md:flex-1',
+              tilt[i % tilt.length],
+            ]}
+          >
+            <ImagePlaceholder class="h-[300px]" image={dish.image} />
+            <Heading variant="h4" color="inherit" class="text-accent">{dish.title}</Heading>
+            <Text variant="small" color="default">{dish.description}</Text>
+          </article>
+        ))
+      }
+    </div>
+
+    {action && <Button {...action} hideNote />}
+  </div>
+</section>

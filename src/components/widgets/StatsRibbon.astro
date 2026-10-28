@@ -1,0 +1,24 @@
+---
+/** StatsRibbon — Figma "Ribbon - Stats" 2083:2114. Green band of Rye callouts split by ✦. */
+export interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+---
+
+<div class="w-full overflow-hidden bg-section-green py-5 md:py-[22px]">
+  <ul class="mx-auto flex max-w-[1440px] flex-wrap px-5 items-center justify-center gap-x-5 gap-y-2 md:flex-nowrap md:gap-x-[clamp(14px,1.95vw,28px)]">
+    {
+      items.map((item, i) => (
+        <>
+          {i > 0 && (
+            <li class="text-[16px] text-marigold md:text-[18px]" aria-hidden="true">
+              ✦
+            </li>
+          )}
+          <li class="type-ticker whitespace-nowrap text-contrast">{item}</li>
+        </>
+      ))
+    }
+  </ul>
+</div>

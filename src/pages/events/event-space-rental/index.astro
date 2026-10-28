@@ -16,6 +16,7 @@ import Text from '~/components/ui/Text.astro';
 import Form from '~/components/ui/Form.astro';
 import { moreEventsColumns, moreEventsRows } from '~/data/events';
 import { getEventsImages } from '~/lib/content';
+import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getEventsImages();
 
@@ -114,4 +115,5 @@ const inquiryInputs = [
     subtitle="Your occasion is unique. Send an event space inquiry with the details you know so far and confirm the next steps with the Kapolei team."
     actions={[{ variant: 'primary', text: 'Request Event Space Information', href: '#inquiry' }]}
   />
+  <RelatedBlogs pageSlug="events/event-space-rental" surface="grey" />
 </PageLayout>

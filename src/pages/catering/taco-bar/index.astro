@@ -14,6 +14,7 @@ import Button from '~/components/ui/Button.astro';
 import Text from '~/components/ui/Text.astro';
 import { getCateringImages } from '~/lib/content';
 import { CATERING_REQUEST_HREF, cateringOptionPages } from '~/data/catering';
+import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getCateringImages();
 const currentHref = '/catering/taco-bar';
@@ -126,4 +127,5 @@ const faqs = [
     subtitle="Tell us how many people you're feeding and what you have in mind. We'll help you review the available taco bar catering options and discuss the next steps for your gathering."
     actions={[{ variant: 'primary', text: 'Request Taco Bar Catering', href: requestHref }]}
   />
+  <RelatedBlogs pageSlug="catering/taco-bar" surface="grey" />
 </PageLayout>

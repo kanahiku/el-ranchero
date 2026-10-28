@@ -13,6 +13,7 @@ import Button from '~/components/ui/Button.astro';
 import Text from '~/components/ui/Text.astro';
 import { getCateringImages } from '~/lib/content';
 import { CATERING_REQUEST_HREF, cateringOptionPages } from '~/data/catering';
+import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getCateringImages();
 const currentHref = '/catering/large-groups';
@@ -133,4 +134,5 @@ const faqs = [
     subtitle="Planning a meal for a big gathering? Tell us about your event, approximately how many people you're expecting, and how you envision serving the food. We'll help you review the available catering options and next steps."
     actions={[{ variant: 'primary', text: 'Request Large Group Catering', href: CATERING_REQUEST_HREF }]}
   />
+  <RelatedBlogs pageSlug="catering/large-groups" surface="grey" />
 </PageLayout>

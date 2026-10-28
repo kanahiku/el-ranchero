@@ -23,6 +23,7 @@ import BulletList from '~/components/ui/BulletList.astro';
 import { storeLocations } from '~/data/locations';
 import { cateringOptionPages } from '~/data/catering';
 import { getCateringImages } from '~/lib/content';
+import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getCateringImages();
 
@@ -339,4 +340,5 @@ const faqs = [
     subtitle="Tell us about your event, your group and what you have in mind. Submit the catering form and the El Ranchero team can help you explore the options available for your gathering."
     actions={[{ variant: 'primary', text: 'Request Catering', href: '#catering-form' }]}
   />
+  <RelatedBlogs pageSlug="catering" surface="grey" />
 </PageLayout>

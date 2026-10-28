@@ -20,6 +20,7 @@
  *   tone        — section background: page (default) or card (tinted). The table
  *                 itself is always cream with a maroon header.
  */
+import Motif from '~/components/ui/Motif.astro';
 import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
@@ -71,7 +72,8 @@ const isStacked = layout === 'stacked';
 const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
 ---
 
-<section {...id ? { id } : {}} class:list={['not-prose w-full', tone === 'card' ? 'bg-card' : 'bg-page']}>
+<section {...id ? { id } : {}} class:list={['not-prose relative w-full', tone === 'card' ? 'bg-card' : 'bg-page']}>
+  <Motif name={tone === 'card' ? 'scallop-edge-card' : 'scallop-edge-cream'} class="absolute inset-x-0 -top-3 z-10 h-6" />
   <div class="mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
     <div class:list={['flex flex-col gap-12', !isStacked && 'lg:flex-row lg:items-start lg:gap-[120px]']}>
       <div class:list={['flex min-w-0 flex-col gap-6', isStacked ? 'max-w-[822px]' : 'flex-1']}>
@@ -119,7 +121,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
 
       <div class:list={['flex min-w-0 flex-col gap-8', !isStacked && 'flex-1']}>
         <div class="w-full overflow-x-auto">
-          <table class:list={['w-full border-collapse border border-heading/15 text-left', isStacked && 'min-w-[640px]']}>
+          <table class:list={['w-full border-collapse border-2 border-heading text-left shadow-hard', isStacked && 'min-w-[640px]']}>
             <thead>
               <tr class="bg-section-dark text-contrast">
                 {

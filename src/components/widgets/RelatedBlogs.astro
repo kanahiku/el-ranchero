@@ -1,7 +1,6 @@
 ---
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import Headline from '~/components/ui/Headline.astro';
-import SectionBg from '~/components/ui/SectionBg.astro';
+import Heading from '~/components/ui/Heading.astro';
+import Motif from '~/components/ui/Motif.astro';
 import BlogCard from '~/components/ui/BlogCard.astro';
 import { getBlogPostsRelatedTo, getRelatedBlogPosts } from '~/lib/content';
 import { cardVariant, isDarkSurface, type SectionSurface } from '~/lib/content/sectionTheme';
@@ -27,7 +26,7 @@ const {
 
 const related = post
   ? await getRelatedBlogPosts(post, RELATED_LIMIT)
-  : pageSlug
+  : pageSlug !== undefined
     ? (await getBlogPostsRelatedTo(pageSlug))
         .filter((item) => item.slug !== excludeSlug)
         .slice(0, RELATED_LIMIT)
@@ -39,16 +38,16 @@ const variant = cardVariant(surface);
 
 {
   related.length > 0 && (
-    <WidgetWrapper containerClass="max-w-container mx-auto" isDark={isDark}>
-      <Headline isDark={isDark} title={title} classes={{ container: 'mb-[30px]' }} />
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        {related.map((item) => (
-          <BlogCard post={item} variant={variant} />
-        ))}
+    <section class="not-prose relative w-full bg-page">
+      <Motif name="scallop-edge-cream" class="absolute inset-x-0 -top-3 z-10 h-6" />
+      <div class="container-x relative flex flex-col gap-10 py-16 md:py-[120px]">
+        <Heading variant="h2">{title}</Heading>
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+          {related.map((item) => (
+            <BlogCard post={item} variant={variant} />
+          ))}
+        </div>
       </div>
-      <Fragment slot="bg">
-        <SectionBg variant={surface} />
-      </Fragment>
-    </WidgetWrapper>
+    </section>
   )
 }

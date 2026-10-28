@@ -20,6 +20,7 @@ import {
   moreEventsRows,
 } from '~/data/events';
 import { getEventsImages } from '~/lib/content';
+import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getEventsImages();
 
@@ -104,4 +105,5 @@ const metadata = {
     subtitle={`For the latest concert updates, follow ${EVENTS_INSTAGRAM_HANDLE}. You’ll find current announcements there as new shows are confirmed.`}
     actions={[{ variant: 'primary', text: instagramLink.text, href: instagramLink.href }]}
   />
+  <RelatedBlogs pageSlug="events/concerts" surface="grey" />
 </PageLayout>
