@@ -7,6 +7,7 @@ import Image from '~/components/common/Image.astro';
 import Button from '~/components/ui/Button.astro';
 import NavList from '~/components/widgets/NavList.astro';
 import { SOCIAL } from '~/config/social';
+import TopBar from '~/components/widgets/TopBar.astro';
 
 import { getHomePermalink } from '~/utils/permalinks';
 import { trimSlash, getAsset } from '~/utils/permalinks';
@@ -56,7 +57,7 @@ const socialIconClass =
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
 const mobileLinkClass =
-  'flex items-center px-3 py-3 font-sans text-[18px] font-semibold capitalize leading-none text-heading transition-colors hover:bg-section-grey/40';
+  'flex items-center px-3 py-3 font-button text-[15px] font-normal uppercase tracking-[0.06em] leading-none text-heading transition-colors hover:bg-section-grey/40';
 const mobileNestedLinkClass =
   'flex items-center gap-3 px-3 py-2.5 text-heading transition-colors hover:bg-section-grey/40';
 const mobilePanelClass =
@@ -124,16 +125,13 @@ const mobilePanelClass =
       </header>
     ) : (
       <header
-        class:list={[{ sticky: isSticky, relative: !isSticky }, 'header-theme top-0 z-40 flex-none mx-auto w-full border-b border-secondary/30 bg-header shadow-header']}
+        class:list={[{ sticky: isSticky, relative: !isSticky }, 'header-theme top-0 z-40 flex-none mx-auto w-full bg-header']}
         {...(isSticky ? { 'data-aw-sticky-header': true } : {})}
         {...(id ? { id } : {})}
       >
-        <div
-          class:list={[
-            'relative mx-auto flex w-full items-center justify-between px-5 py-4 md:gap-10 md:px-16',
-            { 'max-w-container': !isFullWidth },
-          ]}
-        >
+        <TopBar />
+
+        <div class="container-x relative flex items-center justify-between py-3 md:gap-8 md:py-5">
           <a class="flex shrink-0 items-center md:hidden" href={getHomePermalink()} aria-label="El Ranchero home">
             <Logo />
           </a>
@@ -146,39 +144,24 @@ const mobilePanelClass =
             <ToggleMenu class="flex size-12 flex-col items-center justify-center bg-heading/5 text-heading cursor-pointer group" />
           </div>
 
-          <div class="hidden md:flex md:flex-1 md:basis-0 md:items-center">
-            <a class="flex shrink-0 items-center" href={getHomePermalink()} aria-label="El Ranchero home">
-              <Logo />
-            </a>
-          </div>
-
-          <nav class="hidden shrink-0 md:block" data-desktop-nav aria-label="Main navigation">
-            <NavList links={links} class="flex items-center gap-8" />
-          </nav>
-
-          <div class="hidden items-center justify-end gap-8 md:flex md:flex-1 md:basis-0">
+          {/* Desktop: logo left | all links + CTA right */}
+          <a class="hidden shrink-0 items-center md:flex" href={getHomePermalink()} aria-label="El Ranchero home">
+            <Logo class="h-[52px] w-auto xl:h-[75px]" />
+          </a>
+          <div class="hidden items-center justify-end gap-5 md:flex xl:gap-9">
+            <nav class="flex items-center" data-desktop-nav aria-label="Main navigation">
+              <NavList links={links} class="flex items-center gap-5 xl:gap-9" />
+            </nav>
             {showToggleTheme && <ToggleTheme iconClass="w-5 h-5" />}
             {showRssFeed && (
               <a class="text-secondary" aria-label="RSS Feed" href={getAsset('/rss.xml')}>
                 <Icon name="tabler:rss" class="w-5 h-5" />
               </a>
             )}
-            {extraActions.map((btnProps) => (
+            {extraActions.slice(0, 1).map((btnProps) => (
               <Button {...btnProps} hideNote class="whitespace-nowrap" />
             ))}
-            {socialLinks.length > 0 && (
-              <ul class="flex items-center gap-1" aria-label="Social media">
-                {socialLinks.map(({ href, ariaLabel, icon }) => (
-                  <li>
-                    <a href={href} aria-label={ariaLabel} target="_blank" rel="noopener noreferrer" class={socialIconClass}>
-                      <Icon name={icon} class="size-5" aria-hidden="true" />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
-
         </div>
 
         <div class={mobilePanelClass} data-mobile-panel>

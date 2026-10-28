@@ -13,7 +13,7 @@ const { links = [], class: className = '' } = Astro.props;
 
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 const navLinkClass =
-  'inline-flex min-h-11 items-center font-sans text-[16px] font-semibold capitalize leading-none text-heading hover:text-accent whitespace-nowrap';
+  'inline-flex min-h-11 items-center font-button text-[14px] font-normal uppercase tracking-[0.06em] leading-none text-heading hover:text-accent whitespace-nowrap';
 const hasRichContent = (link: NavSubLink) => Boolean(link.description || link.image?.src);
 ---
 

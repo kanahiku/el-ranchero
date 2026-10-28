@@ -5,7 +5,7 @@
  *
  */
 import { Icon } from 'astro-icon/components';
-import logo from '~/assets/images/logo.svg?url';
+import Motif from '~/components/ui/Motif.astro';
 import Logo from '~/components/Logo.astro';
 import { CONTACT } from '~/config/contact';
 import { getHomePermalink } from '~/utils/permalinks';
@@ -36,32 +36,32 @@ const {
   secondaryLinks = [],
   socialLinks = [],
   footNote = '',
+  tagline = 'Hawaii’s original taqueria — Wahiawā & Kapolei, since 2015.',
 } = Astro.props;
 ---
 
-<footer class="relative not-prose w-full border-t border-secondary/30 bg-page">
-  <div
-    class="mx-auto flex w-full max-w-container flex-col px-5 pt-16 sm:px-8 md:px-16"
-  >
-    <div class="flex w-full flex-col items-start justify-between gap-12 md:flex-row md:items-start">
-      <a href={getHomePermalink()} class="shrink-0" aria-label={CONTACT.businessName}>
-        <Logo class="h-14 w-auto" />
-      </a>
+<footer class="relative not-prose w-full overflow-hidden bg-heading text-contrast">
+  <Motif name="scallop-edge" class="absolute inset-x-0 -top-3 z-10 h-6" />
 
-      <nav class="grid w-full grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-16 md:w-auto md:grid-cols-4" aria-label="Footer">
+  <div class="container-x flex flex-col gap-10 pt-16 md:gap-14 md:pt-[120px]">
+    <div class="flex flex-col gap-12 md:flex-row md:gap-16">
+      <div class="flex flex-col items-start gap-4 md:w-[360px] md:shrink-0">
+        <a href={getHomePermalink()} aria-label={CONTACT.businessName}>
+          <Logo class="h-[92px] w-auto" />
+        </a>
+        {tagline && <p class="text-[15px] leading-[1.55] text-sand">{tagline}</p>}
+      </div>
+
+      <nav class="grid flex-1 grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3" aria-label="Footer">
         {
           links.map(({ title, links: items }) => (
-            <div class="flex min-w-0 flex-col items-start gap-4">
-              {title && <p class="type-label text-accent">{title}</p>}
+            <div class="flex min-w-0 flex-col items-start gap-2.5">
+              {title && <p class="font-button text-[14px] uppercase tracking-[0.08em] text-marigold">{title}</p>}
               {items && items.length > 0 && (
-                <ul class="flex flex-col items-start gap-2">
+                <ul class="flex flex-col items-start gap-2.5">
                   {items.map(({ text, href, ariaLabel }) => (
                     <li>
-                      <a
-                        class="text-small text-heading hover:text-accent"
-                        href={href}
-                        aria-label={ariaLabel}
-                      >
+                      <a class="text-[15px] text-contrast hover:text-marigold" href={href} aria-label={ariaLabel}>
                         <Fragment set:html={text} />
                       </a>
                     </li>
@@ -73,14 +73,19 @@ const {
         }
       </nav>
     </div>
-  </div>
 
-  {(socialLinks.length > 0 || secondaryLinks.length > 0 || footNote) && (
-    <div class="mx-auto grid w-full max-w-container grid-cols-1 items-center gap-4 px-5 py-10 sm:px-8 md:grid-cols-[1fr_auto_1fr] md:px-16">
-      {/* Left — social icons, glyphs flush with the content edge */}
-      <div class="flex items-center">
-        {socialLinks.length > 0 && (
-          <ul class="-ml-2.5 flex items-center gap-1">
+    <div class="flex flex-col gap-4 border-t border-contrast/15 pt-5 text-[13px] text-taupe md:flex-row md:items-start md:justify-between">
+      {footNote && <p set:html={footNote} />}
+      {
+        (secondaryLinks.length > 0 || socialLinks.length > 0) && (
+          <ul class="flex flex-wrap items-center gap-x-4 gap-y-2">
+            {secondaryLinks.map(({ text, href }) => (
+              <li>
+                <a class="hover:text-marigold" href={href}>
+                  {text}
+                </a>
+              </li>
+            ))}
             {socialLinks.map(({ href, ariaLabel, icon }) => (
               <li>
                 <a
@@ -88,47 +93,22 @@ const {
                   aria-label={ariaLabel}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex size-10 items-center justify-center text-heading hover:text-accent"
+                  class="inline-flex size-6 items-center justify-center hover:text-marigold"
                 >
                   {icon ? <Icon name={icon} class="size-5" /> : ariaLabel}
                 </a>
               </li>
             ))}
           </ul>
-        )}
-      </div>
-
-      {/* Centre — copyright sits in an auto column so it is the true midpoint */}
-      {footNote && (
-        <p class="text-small leading-none text-muted md:whitespace-nowrap" set:html={footNote} />
-      )}
-
-      {/* Right — legal links, text flush with the content edge */}
-      {secondaryLinks.length > 0 && (
-        <nav aria-label="Legal" class="md:justify-self-end">
-          <ul class="flex flex-wrap items-center gap-x-4">
-            {secondaryLinks.map(({ text, href }) => (
-              <li>
-                <a
-                  class="inline-flex h-10 items-center text-small leading-none text-heading hover:text-accent"
-                  href={href}
-                >
-                  {text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
+        )
+      }
     </div>
-  )}
 
-  <div class="mx-auto w-full max-w-container pt-6">
-    <div
-      role="img"
-      aria-label={CONTACT.businessName}
-      class="block w-full bg-accent"
-      style={`aspect-ratio: 174 / 20; -webkit-mask-image: url('${logo}'); mask-image: url('${logo}'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center bottom; mask-position: center bottom;`}
-    />
+    <p
+      class="select-none whitespace-nowrap text-center font-rough text-[17vw] leading-[0.8] text-accent xl:text-[232px]"
+      aria-hidden="true"
+    >
+      EL RANCHERO
+    </p>
   </div>
 </footer>
