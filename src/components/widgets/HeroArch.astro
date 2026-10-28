@@ -45,9 +45,9 @@ const { id, eyebrow, title, body, actions = [], stamp, image, hideImage = false 
       {body && <Text variant="body-lg" class="text-tan-body" html={body} />}
       {
         actions.length > 0 && (
-          <div class="flex flex-wrap gap-4">
+          <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:flex-wrap">
             {actions.map((action) => (
-              <Button {...action} hideNote />
+              <Button {...action} hideNote class="w-full sm:w-auto" />
             ))}
           </div>
         )

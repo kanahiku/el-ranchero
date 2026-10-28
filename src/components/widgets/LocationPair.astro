@@ -61,9 +61,9 @@ const { id, eyebrow, title, intro, locations } = Astro.props;
                 <span>{loc.hours}</span>
               </p>
               <Text variant="small" class="text-muted">{loc.description}</Text>
-              <div class="mt-auto flex flex-wrap gap-3.5 pt-2">
+              <div class="mt-auto flex w-full flex-col gap-3.5 pt-2 sm:flex-row sm:flex-wrap">
                 {loc.actions.map((a) => (
-                  <Button {...a} hideNote class="px-5 min-[1440px]:px-7" />
+                  <Button {...a} hideNote class="w-full px-5 sm:w-auto min-[1440px]:px-7" />
                 ))}
               </div>
             </div>

@@ -62,11 +62,11 @@ const conversionLinks = actions ?? [
 
 <section {...id ? { id } : {}} class="not-prose relative w-full overflow-hidden bg-section-dark">
   <div class="container-x flex flex-col items-center gap-7 pb-16 text-center md:pb-[120px]">
-    <Motif name="papel-picado-small" class="h-[56px] w-full max-w-[1161px] md:h-[76.5px]" />
+    <Motif name="papel-picado-small" class="h-[76.5px] w-full max-w-[1161px]" />
     {eyebrow && <Heading variant="eyebrow" color="inherit" class="inline-block rotate-3 text-marigold">{eyebrow}</Heading>}
     <Heading variant="display" color="white" class="max-w-4xl text-balance" html={title} />
     {subtitle && <Text variant="body-lg" class="max-w-[620px] text-blush">{subtitle}</Text>}
-    <div class="flex flex-wrap justify-center gap-4 pt-2">
+    <div class="flex w-full flex-col justify-center gap-4 pt-2 sm:w-auto sm:flex-row sm:flex-wrap">
       {
         conversionLinks.map((link) => (
           <Button
@@ -76,6 +76,7 @@ const conversionLinks = actions ?? [
             href={link.href}
             target={/^https?:/.test(link.href) ? '_blank' : undefined}
             hideNote={true}
+            class="w-full sm:w-auto"
           />
         ))
       }

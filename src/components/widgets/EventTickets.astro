@@ -60,7 +60,7 @@ const { id, eyebrow, title, intro, tickets, footnote, action } = Astro.props;
 
     <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
       {footnote && <p class="font-medium text-[16px] text-contrast [&_a]:underline" set:html={footnote} />}
-      {action && <Button {...action} hideNote class="self-start" />}
+      {action && <Button {...action} hideNote class="w-full sm:w-auto md:self-start" />}
     </div>
   </div>
 </section>

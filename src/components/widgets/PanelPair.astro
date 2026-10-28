@@ -44,7 +44,7 @@ const { id, panels } = Astro.props;
             </Heading>
             <Heading variant="h3" html={panel.title} />
             <Text variant="body" class="text-tan-body">{panel.body}</Text>
-            <Button {...panel.action} hideNote class="mt-auto" />
+            <Button {...panel.action} hideNote class="mt-auto w-full sm:w-auto" />
           </article>
         </>
       ))

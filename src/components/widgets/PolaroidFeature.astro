@@ -58,7 +58,7 @@ const { id, eyebrow, title, body, picks = [], action, caption, image } = Astro.p
           </ul>
         )
       }
-      {action && <Button {...action} hideNote />}
+      {action && <Button {...action} hideNote class="w-full sm:w-auto" />}
     </div>
   </div>
 </section>

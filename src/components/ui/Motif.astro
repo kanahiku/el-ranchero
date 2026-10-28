@@ -19,7 +19,7 @@ export interface Props {
 type Mode = 'tile-x' | 'tile' | 'contain';
 const MOTIFS: Record<string, { file: string; mode: Mode; flip?: boolean }> = {
   'papel-picado': { file: 'papel-picado.svg', mode: 'tile-x' },
-  'papel-picado-small': { file: 'papel-picado-small.svg', mode: 'contain' },
+  'papel-picado-small': { file: 'papel-picado-small.svg', mode: 'tile-x' },
   'scallop-edge': { file: 'scallop-edge.svg', mode: 'tile-x' },
   'scallop-edge-dark': { file: 'scallop-edge-dark.svg', mode: 'tile-x' },
   'scallop-edge-orange': { file: 'scallop-edge-orange.svg', mode: 'tile-x' },
