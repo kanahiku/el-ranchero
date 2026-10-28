@@ -292,6 +292,10 @@ function rootVars(b: Brand): string {
     --aw-color-header-text: ${rgb(c.headerText)};
     --aw-color-header-accent: ${rgb(c.headerAccent)};
     --aw-color-header-accent-hover: ${rgb(c.headerAccentHover)};
+    --aw-color-header-scrolled-bg: ${rgb(c.headerText)};
+    --aw-color-header-scrolled-text: ${rgb(c.header)};
+    --aw-color-header-scrolled-accent: ${rgb(c.marigold)};
+    --aw-color-header-scrolled-accent-hover: ${rgb(c.cream)};
     --aw-color-bg-page-end: ${rgb(c.page)};
     --aw-color-bg-section-white: ${rgb(c.page)};
     --aw-color-bg-section-grey: ${rgb(c.sectionGrey)};

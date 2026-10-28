@@ -124,13 +124,13 @@ const mobilePanelClass =
         </div>
       </header>
     ) : (
+      <>
+      <TopBar />
       <header
         class:list={[{ sticky: isSticky, relative: !isSticky }, 'header-theme top-0 z-40 flex-none mx-auto w-full bg-header']}
         {...(isSticky ? { 'data-aw-sticky-header': true } : {})}
         {...(id ? { id } : {})}
       >
-        <TopBar />
-
         <div class="container-x relative flex items-center justify-between py-3 md:gap-8 md:py-5">
           <a class="flex shrink-0 items-center md:hidden" href={getHomePermalink()} aria-label="El Ranchero home">
             <Logo />
@@ -258,6 +258,7 @@ const mobilePanelClass =
           )}
         </div>
       </header>
+      </>
     )
   }
 </aw-header>
@@ -322,6 +323,7 @@ const mobilePanelClass =
     private mql?: MediaQueryList;
     private onMqlChange?: () => void;
     private onResize?: () => void;
+    private onScroll?: () => void;
     private onPageLoad = () => {
       this.updateActiveLinks();
       this.closeOpenDropdown();
@@ -419,11 +421,19 @@ const mobilePanelClass =
       window.addEventListener('resize', this.onResize);
 
       document.documentElement.classList.add('motion-safe:scroll-smooth');
+
+      const stickyHeader = this.querySelector<HTMLElement>('[data-aw-sticky-header]');
+      if (stickyHeader) {
+        this.onScroll = () => stickyHeader.classList.toggle('is-scrolled', window.scrollY > 40);
+        window.addEventListener('scroll', this.onScroll, { passive: true });
+        this.onScroll();
+      }
     }
 
     disconnectedCallback() {
       if (this.mql && this.onMqlChange) this.mql.removeEventListener('change', this.onMqlChange);
       if (this.onResize) window.removeEventListener('resize', this.onResize);
+      if (this.onScroll) window.removeEventListener('scroll', this.onScroll);
       document.removeEventListener('astro:page-load', this.onPageLoad);
       window.removeEventListener('hashchange', this.onPageLoad);
     }

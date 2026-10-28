@@ -10,6 +10,11 @@
 @layer base {
   html {
     font-synthesis: none;
+    /* No rubber-band scroll past the footer, so no cream flashes under the wordmark. */
+    overscroll-behavior-y: none;
+  }
+  body {
+    overscroll-behavior-y: none;
   }
 }
 
@@ -287,6 +292,23 @@
   --aw-color-accent: var(--aw-color-header-accent);
   --aw-color-bg-card: var(--aw-color-bg-header);
   --aw-color-bg-section-grey: rgb(0 0 0 / 8%);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Scrolled: invert bg and text so the sticky bar reads differently. */
+.header-theme.is-scrolled {
+  background-color: var(--aw-color-header-scrolled-bg);
+  --color-heading: var(--aw-color-header-scrolled-text);
+  --color-default: var(--aw-color-header-scrolled-text);
+  --color-muted: var(--aw-color-header-scrolled-text);
+  --color-accent: var(--aw-color-header-scrolled-accent);
+  --color-accent-hover: var(--aw-color-header-scrolled-accent-hover);
+  --aw-color-text-heading: var(--aw-color-header-scrolled-text);
+  --aw-color-accent: var(--aw-color-header-scrolled-accent);
+  --aw-color-bg-card: var(--aw-color-header-scrolled-bg);
+  --aw-color-bg-section-grey: rgb(255 255 255 / 10%);
 }
 
 @utility bg-page {
@@ -308,6 +330,14 @@
    for a beat on return. Blueberry read as a blank blue screen. */
 @utility bg-wash-end {
   background-color: var(--aw-color-bg-page);
+  /* Bottom half is footer ink so overscroll / short pages never flash cream under the footer. */
+  background-image: linear-gradient(
+    to bottom,
+    var(--aw-color-bg-page) 0%,
+    var(--aw-color-bg-page) 50%,
+    var(--aw-color-text-heading) 50%,
+    var(--aw-color-text-heading) 100%
+  );
 }
 
 /* Main page wash — warm cream gradient, top to bottom. */
