@@ -28,7 +28,7 @@
  */
 import { twMerge } from 'tailwind-merge';
 
-type Variant = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'display' | 'eyebrow';
+type Variant = 'h1' | 'h2' | 'h3' | 'h4' | 'eyebrow';
 type Color   = 'default' | 'white' | 'muted' | 'inherit';
 
 export interface Props {
@@ -47,19 +47,17 @@ const { variant = 'h2', as: asOverride, color = 'default', html, class: classNam
 
 // Default semantic element per variant
 const defaultElement: Record<Variant, string> = {
-  h1: 'h1', h2: 'h2', h3: 'h3', h4: 'h4', h5: 'h4', display: 'h2', eyebrow: 'p',
+  h1: 'h1', h2: 'h2', h3: 'h3', h4: 'h4', eyebrow: 'p',
 };
 const Tag = (asOverride ?? defaultElement[variant as Variant]) as any;
 
 // Visual scale per variant
 const scale: Record<string, string> = {
-  h1:      'text-h1 font-rough font-normal uppercase',
-  h2:      'text-h2 font-rough font-normal uppercase',
-  h3:      'text-h3 font-rough font-normal uppercase',
-  h4:      'text-h4 font-rough font-normal uppercase',
-  h5:      'text-h5 font-rough font-normal uppercase',
-  display: 'text-display font-rough font-normal uppercase',
-  eyebrow: 'type-eyebrow font-script',
+  h1:      'text-h1 font-rough font-normal',
+  h2:      'text-h2 font-rough font-normal',
+  h3:      'text-h3 font-rough font-normal',
+  h4:      'text-h4 font-heading font-normal',
+  eyebrow: 'type-eyebrow font-sans',
 };
 
 const colorClass = (() => {

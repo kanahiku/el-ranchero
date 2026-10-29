@@ -14,135 +14,111 @@
 
 export const brand = {
   fonts: {
-    /** Headings (h1–h4, section titles). Single-weight display face. */
+    /** Headings, buttons, eyebrows, ticker, quotes. */
     heading: {
-      name: 'Smokum',
-      cssVariable: '--font-smokum',
+      name: 'Fraunces',
+      cssVariable: '--font-fraunces',
       provider: 'google' as const,
-      displayWeight: '400',
-      weights: ['400'] as string[],
+      /** Weight used by h1–h4, eyebrows and display type. */
+      displayWeight: '600',
+      weights: ['400', '500', '600', '700'] as string[],
       styles: ['normal'] as string[],
       subsets: ['latin'] as string[],
       fallbacks: ['serif'] as string[],
     },
-    /** Eyebrows, ticker, quotes — script accent. */
-    eyebrow: {
-      name: 'Kaushan Script',
-      cssVariable: '--font-kaushan',
-      provider: 'google' as const,
-      weights: ['400'] as string[],
-      styles: ['normal'] as string[],
-      subsets: ['latin'] as string[],
-      fallbacks: ['cursive'] as string[],
-    },
-    /** Paragraphs and UI text. */
+    /** Body copy and UI text. */
     body: {
-      name: 'Host Grotesk',
-      cssVariable: '--font-host-grotesk',
+      name: 'Figtree',
+      cssVariable: '--font-figtree',
       provider: 'google' as const,
-      weights: ['300', '400', '500', '600', '700', '800'] as string[],
+      weights: ['400', '500', '600', '700'] as string[],
       styles: ['normal'] as string[],
       subsets: ['latin'] as string[],
       fallbacks: ['sans-serif'] as string[],
     },
-    /** CTAs / buttons. */
-    button: {
-      name: 'Rye',
-      cssVariable: '--font-rye',
-      provider: 'google' as const,
-      weights: ['400'] as string[],
-      styles: ['normal'] as string[],
-      subsets: ['latin'] as string[],
-      fallbacks: ['serif'] as string[],
-    },
   },
 
-  /** Figma "Taqueria El Ranchero (For Review)" — Variant 1 (2083:1854). */
+  /** Style Guide 110:2377 — named fills. Hover tints are derived. */
   colors: {
-    accent: '#A3201C', // chile red — buttons, eyebrows, highlights
-    accentHover: '#8A1A17',
-    heading: '#2A1A12', // ink brown — type, borders, hard shadows
-    muted: '#5B4636', // secondary body
+    accent: '#7F1D1D', // maroon — links, buttons, highlights
+    accentHover: '#991B1B', // red-800
+    heading: '#09090B', // near-black
+    muted: '#78350F', // brown
     blogText: '#3A3A3A', // blog article body
-    eyebrow: '#A3201C',
-    page: '#F4E9D4', // paper
-    sectionGrey: '#DCD3C2', // image / motif placeholder grey
-    sectionDark: '#A3201C', // red band
-    sectionGreen: '#1F4D2B', // green band
-    card: '#FFF8EA', // cream card / polaroid
-    cardMist: '#F4E9D4',
-    cardDark: '#2A1A12',
-    ctaBg: '#E9A23B', // marigold
-    ctaEnd: '#2A1A12',
-    ctaTan: '#2A1A12',
-    tanText: '#2A1A12',
-    tanBody: '#4A3728', // paragraph on paper
-    ctaPink: '#FFF8EA',
-    ctaPinkText: '#A3201C',
-    featureCard: '#FFF8EA',
-    primary: '#A3201C',
-    secondary: '#9C8B78', // taupe — dividers
-    navy: '#2A1A12', // ink — hover state for red buttons
+    eyebrow: '#78350F', // brown
+    page: '#FFFFFF', // white page
+    sectionGrey: '#FEF3C7', // warm cream band
+    sectionDark: '#7F1D1D', // maroon band
+    sectionGreen: '#064E3B', // deep green band (emerald-900) — FAQ
+    card: '#FFFBEB', // cream
+    cardMist: '#FEF3C7',
+    cardDark: '#78350F', // brown — buttons/cards sitting on maroon bands
+    ctaBg: '#78350F', // brown tags / pills
+    ctaEnd: '#09090B',
+    ctaTan: '#78350F', // secondary (brown) button
+    tanText: '#09090B', // secondary hover
+    tanBody: '#78350F',
+    ctaPink: '#FFFBEB',
+    ctaPinkText: '#7F1D1D',
+    featureCard: '#FFFBEB',
+    primary: '#7F1D1D',
+    secondary: '#A1A1AA', // zinc-400 — borders / dividers
+    navy: '#78350F', // brown — hover state for maroon buttons
     white: '#FFFFFF',
-    cream: '#FFF8EA', // text on red / green / ink bands
-    nav: '#F4E9D4',
-    black: '#2A1A12',
-    header: '#F4E9D4',
-    headerText: '#2A1A12',
-    headerAccent: '#A3201C',
-    headerAccentHover: '#8A1A17',
-    gradientFrom: '#F4E9D4',
-    gradientTo: '#F4E9D4',
-    pageWashFrom: '#F4E9D4',
-    pageWashTo: '#F4E9D4',
-    /** Extra fills used by the homepage frames. */
-    marigold: '#E9A23B',
-    blush: '#F6DCCF', // body on red
-    sage: '#D6E2D3', // body on green
-    sand: '#CDBBA4', // body on ink
-    taupe: '#9C8B78', // legal text on ink
+    cream: '#FFFBEB', // text on maroon / green bands
+    nav: '#FFFFFF',
+    black: '#09090B',
+    /** White header bar with maroon accents. */
+    header: '#FFFFFF',
+    headerText: '#09090B',
+    headerAccent: '#7F1D1D',
+    headerAccentHover: '#991B1B',
+    /** Wallpaper behind transparent sections. */
+    gradientFrom: '#FFFFFF',
+    gradientTo: '#FFFBEB',
+    pageWashFrom: '#FFFFFF',
+    pageWashTo: '#FFFFFF',
   },
 
   type: {
     /**
-     * Figma desktop: hero 138 / section 84 / panel 56 / card 44 / ticket 34.
-     * No mobile type in the file — optical scale for Smokum (condensed, so it
-     * can stay large on a 390px screen).
-     * Faces: Smokum headings, Kaushan Script eyebrows, Host Grotesk body, Rye buttons.
+     * Style Guide 110:2377 (desktop). No mobile type in the file —
+     * mobile sizes are an optical scale (not a flat %), so Fraunces
+     * still has a clear h1 > h2 > h3 step on a 390px screen.
+     * Faces: headings, tag/accent/quote = Fraunces; body and buttons = Figtree.
      */
-    h1: { size: '138px', mobile: '68px', lineHeight: '0.82', tracking: '0' },
-    h2: { size: '84px', mobile: '46px', lineHeight: '0.88', tracking: '-0.01em' },
-    h3: { size: '56px', mobile: '38px', lineHeight: '0.9', tracking: '0' },
-    h4: { size: '44px', mobile: '32px', lineHeight: '0.95', tracking: '0' },
-    /** Ticket titles. */
-    h5: { size: '34px', mobile: '28px', lineHeight: '0.95', tracking: '0' },
-    /** Closing CTA headline. */
-    display: { size: '104px', mobile: '52px', lineHeight: '0.86', tracking: '0' },
-    body: { size: '16px', mobile: '16px', lineHeight: '1.55', tracking: '0' },
-    bodyLg: { size: '18px', mobile: '17px', lineHeight: '1.55', tracking: '0' },
-    button: { size: '15px', mobile: '14px', lineHeight: '1', tracking: '0.04em' },
-    /** Kaushan Script, rotated a few degrees in the layout. */
-    eyebrow: { size: '40px', mobile: '28px', lineHeight: '1.1', tracking: '0' },
-    small: { size: '15px', mobile: '15px', lineHeight: '1.5', tracking: '0' },
-    caption: { size: '13px', mobile: '13px', lineHeight: '1.4', tracking: '0' },
-    /** Rye small-caps labels (day names, footer column titles). */
-    label: { size: '14px', mobile: '13px', lineHeight: '1', tracking: '0.08em' },
-    ticker: { size: '18px', mobile: '14px', lineHeight: '1', tracking: '0.04em' },
+    h1: { size: '72px', mobile: '40px', lineHeight: '1.05', tracking: '-0.01em' },
+    h2: { size: '52px', mobile: '28px', lineHeight: '1.1', tracking: '-0.01em' },
+    h3: { size: '26px', mobile: '22px', lineHeight: '1.2', tracking: '0' },
+    /** Extra — not in the Style Guide. */
+    h4: { size: '24px', mobile: '18px', lineHeight: '1.2', tracking: '0' },
+    /** Roomier than the Style Guide (14/1.3, -1%): Figtree reads best at 16px / 1.6 with no negative tracking. */
+    body: { size: '16px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
+    bodyLg: { size: '16px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
+    button: { size: '14px', mobile: '14px', lineHeight: '1', tracking: '0.04em' },
+    /** Figma `tag`; Fraunces display weight. */
+    eyebrow: { size: '16px', mobile: '15px', lineHeight: '1.2', tracking: '0.02em' },
+    small: { size: '14px', mobile: '14px', lineHeight: '1.55', tracking: '0' },
+    caption: { size: '12px', mobile: '12px', lineHeight: '1.4', tracking: '0' },
+    /** Footer column titles — extra, not in the Style Guide. */
+    label: { size: '18px', mobile: '16px', lineHeight: '1', tracking: '0.06em' },
+    /** Figma `accent`. */
+    ticker: { size: '32px', mobile: '24px', lineHeight: '1', tracking: '0' },
+    /** Figma `quote`. */
     quote: { size: '22px', mobile: '18px', lineHeight: '1.2', tracking: '0' },
   },
 
   radius: {
-    base: '2px',
-    lg: '2px',
-    xl: '2px',
-    hero: '2px',
+    base: '0px',
+    lg: '0px',
+    xl: '0px',
+    hero: '0px',
     full: '9999px',
   },
 
 } as const;
 
 export type Brand = typeof brand;
-type BrandFont = Brand['fonts'][keyof Brand['fonts']];
 
 /** Strip # and expand 3-digit hex. */
 export function hexToChannels(hex: string): string {
@@ -167,48 +143,45 @@ export function rgb(hex: string, alpha?: number): string {
   return `rgb(${channels} / ${a})`;
 }
 
-/** Per-variant CTA colors — red fill (primary), ink outline (secondary), cream fill (light). */
+/** Per-variant CTA colors — hibiscus fill, cream ghost on photos. */
 function ctaButtonVars(c: Brand['colors']): string {
   const primary = `
     --aw-color-btn-primary-bg: ${rgb(c.accent)};
     --aw-color-btn-primary-text: ${rgb(c.cream)};
-    --aw-color-btn-primary-border: ${rgb(c.heading)};
-    --aw-color-btn-primary-bg-hover: ${rgb(c.accentHover)};
+    --aw-color-btn-primary-border: ${rgb(c.accent)};
+    --aw-color-btn-primary-bg-hover: ${rgb(c.navy)};
     --aw-color-btn-primary-text-hover: ${rgb(c.cream)};
-    --aw-color-btn-primary-border-hover: ${rgb(c.heading)};`;
+    --aw-color-btn-primary-border-hover: ${rgb(c.navy)};`;
 
   const secondary = `
-    --aw-color-btn-secondary-bg: transparent;
-    --aw-color-btn-secondary-text: ${rgb(c.heading)};
-    --aw-color-btn-secondary-border: ${rgb(c.heading)};
-    --aw-color-btn-secondary-bg-hover: ${rgb(c.heading)};
+    --aw-color-btn-secondary-bg: ${rgb(c.ctaTan)};
+    --aw-color-btn-secondary-text: ${rgb(c.cream)};
+    --aw-color-btn-secondary-border: ${rgb(c.ctaTan)};
+    --aw-color-btn-secondary-bg-hover: ${rgb(c.tanText)};
     --aw-color-btn-secondary-text-hover: ${rgb(c.cream)};
-    --aw-color-btn-secondary-border-hover: ${rgb(c.heading)};`;
+    --aw-color-btn-secondary-border-hover: ${rgb(c.tanText)};`;
 
-  /** Outline on paper (Figma "Secondary"). */
   const ghostLight = `
     --aw-color-btn-ghost-light-bg: transparent;
     --aw-color-btn-ghost-light-text: ${rgb(c.heading)};
     --aw-color-btn-ghost-light-border: ${rgb(c.heading)};
-    --aw-color-btn-ghost-light-bg-hover: ${rgb(c.heading)};
+    --aw-color-btn-ghost-light-bg-hover: ${rgb(c.accent)};
     --aw-color-btn-ghost-light-text-hover: ${rgb(c.cream)};
-    --aw-color-btn-ghost-light-border-hover: ${rgb(c.heading)};`;
+    --aw-color-btn-ghost-light-border-hover: ${rgb(c.accent)};`;
 
-  /** Cream fill with red type (Figma "Light") for red / green / marigold bands. */
   const ghostDark = `
-    --aw-color-btn-ghost-dark-bg: ${rgb(c.cream)};
-    --aw-color-btn-ghost-dark-text: ${rgb(c.accent)};
-    --aw-color-btn-ghost-dark-border: ${rgb(c.heading)};
-    --aw-color-btn-ghost-dark-bg-hover: ${rgb(c.marigold)};
-    --aw-color-btn-ghost-dark-text-hover: ${rgb(c.heading)};
-    --aw-color-btn-ghost-dark-border-hover: ${rgb(c.heading)};
-    --aw-btn-shadow: ${rgb(c.heading)};`;
+    --aw-color-btn-ghost-dark-bg: transparent;
+    --aw-color-btn-ghost-dark-text: ${rgb(c.cream)};
+    --aw-color-btn-ghost-dark-border: ${rgb(c.cream)};
+    --aw-color-btn-ghost-dark-bg-hover: ${rgb(c.cream, 0.12)};
+    --aw-color-btn-ghost-dark-text-hover: ${rgb(c.cream)};
+    --aw-color-btn-ghost-dark-border-hover: ${rgb(c.cream)};`;
 
   return [primary, secondary, ghostLight, ghostDark].join('');
 }
 
 /** Defines the font's CSS variable (loaded from Google Fonts in Layout.astro). */
-function fontFamilyVar(font: BrandFont): string {
+function fontFamilyVar(font: Brand['fonts']['heading'] | Brand['fonts']['body']): string {
   const stack = [`'${font.name}'`, ...font.fallbacks].join(', ');
   return `${font.cssVariable}: ${stack};`;
 }
@@ -222,15 +195,12 @@ function rootVars(b: Brand): string {
 
   return `
     ${fontFamilyVar(f.heading)}
-    ${fontFamilyVar(f.eyebrow)}
     ${fontFamilyVar(f.body)}
-    ${fontFamilyVar(f.button)}
     --aw-font-sans: var(${f.body.cssVariable});
     --aw-font-serif: var(${f.heading.cssVariable});
     --aw-font-heading: var(${f.heading.cssVariable});
-    --aw-font-script: var(${f.eyebrow.cssVariable});
+    --aw-font-script: var(${f.heading.cssVariable});
     --aw-font-rough: var(${f.heading.cssVariable});
-    --aw-font-button: var(${f.button.cssVariable});
     --aw-weight-heading: ${f.heading.displayWeight};
 
     --aw-tracking-heading: ${t.h2.tracking};
@@ -246,12 +216,6 @@ function rootVars(b: Brand): string {
     --aw-text-h4: ${t.h4.size};
     --aw-text-h4-mobile: ${t.h4.mobile};
     --aw-leading-h4: ${t.h4.lineHeight};
-    --aw-text-h5: ${t.h5.size};
-    --aw-text-h5-mobile: ${t.h5.mobile};
-    --aw-leading-h5: ${t.h5.lineHeight};
-    --aw-text-display: ${t.display.size};
-    --aw-text-display-mobile: ${t.display.mobile};
-    --aw-leading-display: ${t.display.lineHeight};
     --aw-text-body: ${t.body.size};
     --aw-text-body-mobile: ${t.body.mobile};
     --aw-leading-body: ${t.body.lineHeight};
@@ -292,10 +256,6 @@ function rootVars(b: Brand): string {
     --aw-color-header-text: ${rgb(c.headerText)};
     --aw-color-header-accent: ${rgb(c.headerAccent)};
     --aw-color-header-accent-hover: ${rgb(c.headerAccentHover)};
-    --aw-color-header-scrolled-bg: ${rgb(c.headerText)};
-    --aw-color-header-scrolled-text: ${rgb(c.header)};
-    --aw-color-header-scrolled-accent: ${rgb(c.marigold)};
-    --aw-color-header-scrolled-accent-hover: ${rgb(c.cream)};
     --aw-color-bg-page-end: ${rgb(c.page)};
     --aw-color-bg-section-white: ${rgb(c.page)};
     --aw-color-bg-section-grey: ${rgb(c.sectionGrey)};
@@ -317,12 +277,6 @@ function rootVars(b: Brand): string {
     --aw-color-page-wash-to: ${rgb(c.pageWashTo)};
     --aw-shadow-card-mist: 4px 4px 30px rgb(0 0 0 / 5%), 3px 3px 0 ${rgb(c.cardMist)};
     --aw-shadow-card-pink: 4px 4px 30px rgb(0 0 0 / 5%), 3px 3px 0 ${rgb(c.ctaPink)};
-    --aw-color-marigold: ${rgb(c.marigold)};
-    --aw-color-blush: ${rgb(c.blush)};
-    --aw-color-sage: ${rgb(c.sage)};
-    --aw-color-sand: ${rgb(c.sand)};
-    --aw-color-taupe: ${rgb(c.taupe)};
-    --aw-color-ink: ${heading};
     --aw-color-nav-glass: ${rgb(c.nav, 0.25)};
 
     --aw-color-card-heading-dark: ${rgb(c.white)};
@@ -447,21 +401,18 @@ export function brandStylesheet(b: Brand = brand): string {
 }`;
 }
 
-/** Google Fonts stylesheet URL for all brand families. */
+/** Google Fonts stylesheet URL for the heading + body families (no font files kept in the repo). */
 export function brandGoogleFontsHref(): string {
-  const family = (font: BrandFont) =>
+  const { heading, body } = brand.fonts;
+  const family = (font: Brand['fonts']['heading'] | Brand['fonts']['body']) =>
     `family=${font.name.replace(/ /g, '+')}:wght@${[...font.weights].sort().join(';')}`;
-  return `https://fonts.googleapis.com/css2?${brandFonts().map(family).join('&')}&display=swap`;
-}
-
-function brandFonts(): BrandFont[] {
-  const { heading, eyebrow, body, button } = brand.fonts;
-  return [heading, eyebrow, body, button];
+  return `https://fonts.googleapis.com/css2?${family(heading)}&${family(body)}&display=swap`;
 }
 
 /** Astro Fonts API entries — used by astro.config.ts and Layout.astro. */
 export function brandFontConfig() {
-  return brandFonts().map((font) => ({
+  const { heading, body } = brand.fonts;
+  return [heading, body].map((font) => ({
     name: font.name,
     cssVariable: font.cssVariable,
     provider: font.provider,

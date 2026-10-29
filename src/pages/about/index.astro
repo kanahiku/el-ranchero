@@ -10,7 +10,6 @@ import TextSplit from '~/components/widgets/TextSplit.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
 import { getAboutImages } from '~/lib/content';
-import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getAboutImages();
 
@@ -146,5 +145,4 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
       </div>
     </div>
   </TextSplit>
-  <RelatedBlogs pageSlug="about" surface="grey" />
 </PageLayout>

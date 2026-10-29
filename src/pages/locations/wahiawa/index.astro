@@ -16,7 +16,6 @@ import Button from '~/components/ui/Button.astro';
 import { CATERING_CTA_HREF } from '~/config/cta';
 import { findStore, storeDirectionsHref } from '~/data/locations';
 import { getLocationImages } from '~/lib/content';
-import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getLocationImages();
 const favoriteImages = images.wahiawaFavorites;
@@ -210,5 +209,4 @@ const faqs = [
     subtitle="Stop by Taqueria El Ranchero in Wahiawa or order your favorites online through DoorDash."
     actions={[{ variant: 'primary', text: 'Order Wahiawa on DoorDash', href: store.orderPickupHref }]}
   />
-  <RelatedBlogs pageSlug="locations/wahiawa" surface="grey" />
 </PageLayout>

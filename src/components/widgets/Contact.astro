@@ -2,7 +2,6 @@
 import FormContainer from '~/components/ui/Form.astro';
 import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
-import Motif from '~/components/ui/Motif.astro';
 import { storeLocations } from '~/data/locations';
 import type { Contact as Props } from '~/types';
 
@@ -23,15 +22,13 @@ const hasAside = Astro.slots.has('aside');
 
 ---
 
-<section {...id ? { id } : {}} class="not-prose relative w-full scroll-mt-[72px] bg-page">
-  <Motif name="grid-paper" class="absolute inset-0" />
-  <Motif name="scallop-edge-cream" class="absolute inset-x-0 -top-3 z-10 h-6" />
+<section {...id ? { id } : {}} class="not-prose w-full scroll-mt-[72px] bg-page">
   <div class:list={['mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]', classes?.container]}>
     <div class="grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
       <aside
         class:list={[
           'relative z-[1] flex h-full min-w-0 select-text flex-col gap-8',
-          !hasAside && 'border-2 border-heading bg-section-dark px-6 py-8 shadow-hard md:px-10 md:py-12',
+          !hasAside && 'bg-section-dark px-6 py-8 md:px-10 md:py-12',
         ]}
       >
         {
@@ -77,7 +74,7 @@ const hasAside = Astro.slots.has('aside');
         }
       </aside>
 
-      <div class="relative z-[1] flex h-full min-w-0 select-text flex-col border-2 border-heading bg-card px-6 py-8 shadow-hard md:px-10 md:py-12">
+      <div class="relative z-[1] flex h-full min-w-0 select-text flex-col bg-card px-6 py-8 shadow-card-mist md:px-10 md:py-12">
         <div class="mb-8 flex flex-col gap-4">
           {title && <Heading variant="h2" html={title} />}
           {subtitle && <Text variant="body-lg" color="muted" class="max-w-2xl" html={subtitle} />}

@@ -99,7 +99,7 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
       {/* ── LEFT — heading; body when image is aside; image when under-heading ── */}
       <div class:list={['flex min-w-0 flex-1 flex-col', hasImage ? 'gap-8' : 'gap-4']}>
         <div class="flex flex-col gap-4">
-          {eyebrow && <Heading variant="eyebrow" class="inline-block -rotate-2 self-start">{eyebrow}</Heading>}
+          {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
           {
             headingHtml ? (
               <Heading variant="h2" html={headingHtml} />
@@ -114,7 +114,7 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
               {image ? (
                 <Image
                   {...image}
-                  class="h-full w-full border-2 border-heading object-cover shadow-hard"
+                  class="h-full w-full rounded-[32px] object-cover"
                   widths={[400, 768, 1200]}
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   loading="lazy"
@@ -127,7 +127,7 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
               ) : imageSlotHtml ? (
                 <Fragment set:html={imageSlotHtml} />
               ) : (
-                <HeroImagePlaceholder fill class="w-full border-2 border-heading shadow-hard" style={`aspect-ratio: ${imageAspect};`} />
+                <HeroImagePlaceholder fill class="w-full rounded-[32px]" style={`aspect-ratio: ${imageAspect};`} />
               )}
             </div>
           )
@@ -141,7 +141,7 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
             {image ? (
               <Image
                 {...image}
-                class="h-full w-full border-2 border-heading object-cover shadow-hard"
+                class="h-full w-full rounded-[32px] object-cover"
                 widths={[400, 768, 1200]}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 loading="lazy"
@@ -154,7 +154,7 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
             ) : imageSlotHtml ? (
               <Fragment set:html={imageSlotHtml} />
             ) : (
-              <HeroImagePlaceholder fill class="w-full border-2 border-heading shadow-hard" style={`aspect-ratio: ${imageAspect};`} />
+              <HeroImagePlaceholder fill class="w-full rounded-[32px]" style={`aspect-ratio: ${imageAspect};`} />
             )}
           </div>
         ) : (

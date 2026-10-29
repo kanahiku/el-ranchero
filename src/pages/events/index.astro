@@ -13,7 +13,6 @@ import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
 import { EVENTS_INSTAGRAM_HANDLE, EVENTS_INSTAGRAM_HREF, eventPages, locationLinks } from '~/data/events';
 import { getEventsImages } from '~/lib/content';
-import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getEventsImages();
 
@@ -104,5 +103,4 @@ const weeklyRows = [
       </div>
     </div>
   </TextSplit>
-  <RelatedBlogs pageSlug="events" surface="grey" />
 </PageLayout>

@@ -13,7 +13,6 @@
  * Photos come from the Sanity menu category (`image` on the hub, `exploreMoreImage`
  * on category pages). A category without a photo shows the grey placeholder.
  */
-import Motif from '~/components/ui/Motif.astro';
 import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
@@ -72,12 +71,10 @@ const categories = cmsCategories
 
 <section
   {...id ? { id } : {}}
-  class:list={['not-prose relative w-full overflow-x-clip', tone === 'card' ? 'bg-card' : 'bg-page']}
+  class:list={['not-prose relative w-full overflow-hidden', tone === 'card' ? 'bg-card' : 'bg-page']}
   aria-label="Menu categories"
 >
-  {tone === 'page' && <Motif name="grid-paper" class="absolute inset-0" />}
-  <Motif name={tone === 'card' ? 'scallop-edge-card' : 'scallop-edge-cream'} class="absolute inset-x-0 -top-3 z-10 h-6" />
-  <div class="relative mx-auto flex w-full max-w-container flex-col gap-10 px-5 py-16 sm:px-8 md:gap-16 md:px-16 md:py-[120px]">
+  <div class="mx-auto flex w-full max-w-container flex-col gap-10 px-5 py-16 sm:px-8 md:gap-16 md:px-16 md:py-[120px]">
     {/* ── Section header ───────────────────────────────────────────── */}
     <div class="flex w-full flex-col items-start justify-between gap-6 md:flex-row md:items-center">
       <div class="flex max-w-[822px] flex-col gap-6">
@@ -100,7 +97,7 @@ const categories = cmsCategories
         categories.map((cat) => (
           <a
             href={cat.href}
-            class:list={['group flex h-full flex-col overflow-hidden p-4 shadow-polaroid', tone === 'card' ? 'bg-page' : 'bg-card', cat.colSpan]}
+            class:list={['group flex h-full flex-col overflow-hidden', tone === 'card' ? 'bg-page' : 'bg-card', cat.colSpan]}
           >
             <div class="relative w-full shrink-0 overflow-hidden bg-section-grey" style={`aspect-ratio: ${cat.aspect};`}>
               {cat.img?.src ? (

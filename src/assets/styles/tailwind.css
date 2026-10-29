@@ -10,11 +10,6 @@
 @layer base {
   html {
     font-synthesis: none;
-    /* No rubber-band scroll past the footer, so no cream flashes under the wordmark. */
-    overscroll-behavior-y: none;
-  }
-  body {
-    overscroll-behavior-y: none;
   }
 }
 
@@ -39,12 +34,6 @@
   --color-cta-end: var(--aw-color-bg-cta-end);
   --color-tan: var(--aw-color-text-tan);
   --color-tan-body: var(--aw-color-text-tan-body);
-  --color-ink: var(--aw-color-ink);
-  --color-marigold: var(--aw-color-marigold);
-  --color-blush: var(--aw-color-blush);
-  --color-sage: var(--aw-color-sage);
-  --color-sand: var(--aw-color-sand);
-  --color-taupe: var(--aw-color-taupe);
   --color-gradient-from: var(--aw-color-gradient-from);
   --color-gradient-to: var(--aw-color-gradient-to);
   --max-width-container: 1440px;
@@ -56,7 +45,6 @@
   --font-heading: var(--aw-font-heading, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
   --font-script: var(--aw-font-script, cursive), cursive;
   --font-rough: var(--aw-font-rough, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
-  --font-button: var(--aw-font-button, serif), serif;
 
   --shadow-card: var(--aw-shadow-card);
   --shadow-header: var(--aw-shadow-header);
@@ -96,11 +84,6 @@
   font-weight: var(--aw-weight-heading, 400);
 }
 
-@utility font-button {
-  font-family: var(--font-button);
-  font-weight: 400;
-}
-
 @utility font-script {
   font-family: var(--font-script);
   font-weight: 400;
@@ -123,7 +106,7 @@
   font-size: var(--aw-text-h1-mobile);
   line-height: var(--aw-leading-h1);
   letter-spacing: var(--aw-tracking-heading);
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     font-size: var(--aw-text-h1);
   }
 }
@@ -132,7 +115,7 @@
   font-size: var(--aw-text-h2-mobile);
   line-height: var(--aw-leading-h2);
   letter-spacing: var(--aw-tracking-heading);
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     font-size: var(--aw-text-h2);
   }
 }
@@ -140,7 +123,7 @@
 @utility text-h3 {
   font-size: var(--aw-text-h3-mobile);
   line-height: var(--aw-leading-h3);
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     font-size: var(--aw-text-h3);
   }
 }
@@ -151,44 +134,6 @@
   @media (min-width: 768px) {
     font-size: var(--aw-text-h4);
   }
-}
-
-@utility text-h5 {
-  font-size: var(--aw-text-h5-mobile);
-  line-height: var(--aw-leading-h5);
-  @media (min-width: 768px) {
-    font-size: var(--aw-text-h5);
-  }
-}
-
-@utility text-display {
-  font-size: var(--aw-text-display-mobile);
-  line-height: var(--aw-leading-display);
-  @media (min-width: 1024px) {
-    font-size: var(--aw-text-display);
-  }
-}
-
-/* Page gutter: 20px mobile, 64px from tablet up. */
-@utility container-x {
-  margin-inline: auto;
-  width: 100%;
-  max-width: 1440px;
-  padding-inline: 20px;
-  @media (min-width: 768px) {
-    padding-inline: 64px;
-  }
-}
-
-/* Hard ink offset shadows + polaroid drop shadow (Figma). */
-@utility shadow-hard {
-  box-shadow: 6px 6px 0 var(--aw-color-ink);
-}
-@utility shadow-hard-sm {
-  box-shadow: 4px 4px 0 var(--aw-color-ink);
-}
-@utility shadow-polaroid {
-  box-shadow: 0 10px 12px color-mix(in srgb, var(--aw-color-ink) 22%, transparent);
 }
 
 @utility text-body {
@@ -210,18 +155,18 @@
 }
 
 @utility type-eyebrow {
-  font-family: var(--font-script);
+  font-family: var(--font-sans);
   font-size: var(--aw-text-eyebrow-mobile);
   letter-spacing: var(--aw-tracking-eyebrow);
-  font-weight: 400;
-  line-height: 1.5;
+  font-weight: 600;
+  line-height: 1;
   @media (min-width: 768px) {
     font-size: var(--aw-text-eyebrow);
   }
 }
 
 @utility type-label {
-  font-family: var(--font-button);
+  font-family: var(--font-rough);
   font-size: var(--aw-text-label-mobile);
   letter-spacing: var(--aw-tracking-label);
   font-weight: 400;
@@ -233,14 +178,12 @@
 }
 
 @utility type-ticker {
-  font-family: var(--font-button);
-  text-transform: uppercase;
-  letter-spacing: var(--aw-tracking-label);
+  font-family: var(--font-script);
   font-size: var(--aw-text-ticker-mobile);
   font-weight: 400;
   line-height: 1;
   @media (min-width: 768px) {
-    font-size: clamp(14px, 1.25vw, var(--aw-text-ticker));
+    font-size: var(--aw-text-ticker);
   }
 }
 
@@ -292,23 +235,6 @@
   --aw-color-accent: var(--aw-color-header-accent);
   --aw-color-bg-card: var(--aw-color-bg-header);
   --aw-color-bg-section-grey: rgb(0 0 0 / 8%);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-/* Scrolled: invert bg and text so the sticky bar reads differently. */
-.header-theme.is-scrolled {
-  background-color: var(--aw-color-header-scrolled-bg);
-  --color-heading: var(--aw-color-header-scrolled-text);
-  --color-default: var(--aw-color-header-scrolled-text);
-  --color-muted: var(--aw-color-header-scrolled-text);
-  --color-accent: var(--aw-color-header-scrolled-accent);
-  --color-accent-hover: var(--aw-color-header-scrolled-accent-hover);
-  --aw-color-text-heading: var(--aw-color-header-scrolled-text);
-  --aw-color-accent: var(--aw-color-header-scrolled-accent);
-  --aw-color-bg-card: var(--aw-color-header-scrolled-bg);
-  --aw-color-bg-section-grey: rgb(255 255 255 / 10%);
 }
 
 @utility bg-page {
@@ -330,14 +256,6 @@
    for a beat on return. Blueberry read as a blank blue screen. */
 @utility bg-wash-end {
   background-color: var(--aw-color-bg-page);
-  /* Bottom half is footer ink so overscroll / short pages never flash cream under the footer. */
-  background-image: linear-gradient(
-    to bottom,
-    var(--aw-color-bg-page) 0%,
-    var(--aw-color-bg-page) 50%,
-    var(--aw-color-text-heading) 50%,
-    var(--aw-color-text-heading) 100%
-  );
 }
 
 /* Main page wash — warm cream gradient, top to bottom. */
@@ -754,19 +672,17 @@
 /* Site-wide CTA hover — used by Button.astro via btn / btn-* utilities.
    Color tokens per variant; motion (200ms ease + 1px lift) is shared. */
 @utility btn {
-  @apply inline-flex items-center justify-center rounded-[2px] border-2 font-button font-normal uppercase text-center leading-none py-4 px-7 cursor-pointer;
+  @apply inline-flex items-center justify-center rounded-full border-2 font-sans font-semibold uppercase text-center leading-none py-6 px-7 cursor-pointer;
   font-size: var(--aw-text-button);
   letter-spacing: var(--aw-tracking-button);
   transition-property: background-color, color, border-color, box-shadow, transform;
   transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   &:hover {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--aw-btn-shadow, var(--aw-color-ink));
+    transform: translateY(-1px);
   }
   &:active {
-    transform: translate(4px, 4px);
-    box-shadow: 0 0 0 var(--aw-btn-shadow, var(--aw-color-ink));
+    transform: translateY(0);
     transition-duration: 80ms;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -780,7 +696,6 @@
 
 @utility btn-primary {
   @apply btn;
-  box-shadow: 4px 4px 0 var(--aw-btn-shadow, var(--aw-color-ink));
   background-color: var(--aw-band-btn-bg, var(--aw-color-btn-primary-bg));
   color: var(--aw-band-btn-text, var(--aw-color-btn-primary-text));
   border-color: var(--aw-band-btn-bg, var(--aw-color-btn-primary-border));
@@ -817,7 +732,6 @@
 
 @utility btn-ghost-dark {
   @apply btn;
-  box-shadow: 4px 4px 0 var(--aw-btn-shadow, var(--aw-color-ink));
   background-color: var(--aw-color-btn-ghost-dark-bg);
   color: var(--aw-color-btn-ghost-dark-text);
   border-color: var(--aw-color-btn-ghost-dark-border);

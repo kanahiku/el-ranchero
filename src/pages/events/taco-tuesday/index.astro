@@ -20,7 +20,6 @@ import {
   moreEventsRows,
 } from '~/data/events';
 import { getEventsImages } from '~/lib/content';
-import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getEventsImages();
 
@@ -87,5 +86,4 @@ const metadata = {
     subtitle={`Taco Tuesday specials and event details are shared through ${EVENTS_INSTAGRAM_HANDLE}. Check the latest post for participating locations, times and what’s on offer before you head out.`}
     actions={[{ variant: 'primary', text: instagramLink.text, href: instagramLink.href }]}
   />
-  <RelatedBlogs pageSlug="events/taco-tuesday" surface="grey" />
 </PageLayout>

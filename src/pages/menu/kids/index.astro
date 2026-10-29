@@ -14,7 +14,6 @@ import Note from '~/components/widgets/Note.astro';
 import { PRIMARY_CTA_HREF } from '~/config/cta';
 import { getMenuSections, getMenuPagesImages } from '~/lib/content';
 import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
-import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const metadata = {
   title: 'Kids Menu in Wahiawa & Kapolei | El Ranchero',
@@ -61,5 +60,4 @@ const images = await getMenuPagesImages();
   />
 
   <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
-  <RelatedBlogs pageSlug="menu/kids" surface="grey" />
 </PageLayout>

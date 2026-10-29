@@ -19,7 +19,6 @@ import {
   moreEventsRows,
 } from '~/data/events';
 import { getEventsImages } from '~/lib/content';
-import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getEventsImages();
 
@@ -86,5 +85,4 @@ const metadata = {
     subtitle={`Got a song in mind? Save it for Wednesday and join us at Wahiawa or Kapolei. Follow ${EVENTS_INSTAGRAM_HANDLE} for the latest karaoke announcements, DJ information, and event times.`}
     actions={[{ variant: 'primary', text: instagramLink.text, href: instagramLink.href }]}
   />
-  <RelatedBlogs pageSlug="events/karaoke-wednesday" surface="grey" />
 </PageLayout>

@@ -61,7 +61,7 @@ const scale: Record<string, string> = {
   body:      'text-body font-normal',
   small:     'text-small font-normal',
   caption:   'text-[11px] leading-[1.3] font-normal',
-  button:    '[font-size:var(--aw-text-button)] leading-none font-normal uppercase tracking-[0.04em]',
+  button:    'font-sans [font-size:var(--aw-text-button)] leading-none font-semibold uppercase tracking-[0.04em]',
 };
 
 const colors: Record<string, string> = {
@@ -74,7 +74,7 @@ const colors: Record<string, string> = {
 // twMerge only handles the color + className layer so `text-body-lg` (font-size utility)
 // is never stripped by twMerges text-* conflict resolution.
 const overrideCls = twMerge(colors[color as string] ?? '', className);
-const face = variant === 'button' ? 'font-button' : 'font-sans';
+const face = 'font-sans';
 const cls = [face, scale[variant as string] ?? '', overrideCls].filter(Boolean).join(' ');
 ---
 

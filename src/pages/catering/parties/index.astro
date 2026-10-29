@@ -12,7 +12,6 @@ import Button from '~/components/ui/Button.astro';
 import Text from '~/components/ui/Text.astro';
 import { getCateringImages } from '~/lib/content';
 import { CATERING_REQUEST_HREF, cateringOptionPages } from '~/data/catering';
-import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getCateringImages();
 const currentHref = '/catering/parties';
@@ -151,5 +150,4 @@ const faqs = [
     subtitle="Have a celebration coming up? Tell us what you're celebrating, approximately how many guests you're expecting, and what you have in mind for the food. We'll help you explore the catering options available for your gathering."
     actions={[{ variant: 'primary', text: 'Request Party Catering', href: CATERING_REQUEST_HREF }]}
   />
-  <RelatedBlogs pageSlug="catering/parties" surface="grey" />
 </PageLayout>

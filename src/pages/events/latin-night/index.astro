@@ -20,7 +20,6 @@ import {
   moreEventsRows,
 } from '~/data/events';
 import { getEventsImages } from '~/lib/content';
-import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getEventsImages();
 
@@ -86,5 +85,4 @@ const metadata = {
     subtitle={`Get the latest Latin Night details, including the hosting location, event times and announcements, through ${EVENTS_INSTAGRAM_HANDLE}. Make your Saturday plans and join us for Latin Night!`}
     actions={[{ variant: 'primary', text: instagramLink.text, href: instagramLink.href }]}
   />
-  <RelatedBlogs pageSlug="events/latin-night" surface="grey" />
 </PageLayout>

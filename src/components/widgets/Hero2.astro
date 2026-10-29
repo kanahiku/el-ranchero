@@ -14,7 +14,6 @@ import ArtDirectedImage from '~/components/ui/ArtDirectedImage.astro';
 import CTAActions from '~/components/ui/CTAActions.astro';
 import Text from '~/components/ui/Text.astro';
 import Heading from '~/components/ui/Heading.astro';
-import HeroArch from '~/components/widgets/HeroArch.astro';
 import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
 import type { ContentImage } from '~/lib/content/types';
 
@@ -83,17 +82,7 @@ const isLocalOverlayImage =
 ---
 
 {
-  isSplitDark ? (
-    <HeroArch
-      id={id}
-      eyebrow={typeof tagline === 'string' ? tagline : undefined}
-      title={typeof title === 'string' ? title : ''}
-      body={typeof content === 'string' ? content : undefined}
-      actions={Array.isArray(actions) ? actions : []}
-      image={contentImage}
-      hideImage={hideImage}
-    />
-  ) : isChrome ? (
+  isChrome ? (
     <section
       class:list={[
         'relative not-prose overflow-hidden flex flex-col w-full',

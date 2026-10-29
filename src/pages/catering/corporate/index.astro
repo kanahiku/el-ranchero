@@ -13,7 +13,6 @@ import Button from '~/components/ui/Button.astro';
 import Text from '~/components/ui/Text.astro';
 import { getCateringImages } from '~/lib/content';
 import { CATERING_REQUEST_HREF, cateringOptionPages } from '~/data/catering';
-import RelatedBlogs from '~/components/widgets/RelatedBlogs.astro';
 
 const images = await getCateringImages();
 const currentHref = '/catering/corporate';
@@ -138,5 +137,4 @@ const faqs = [
     subtitle="Have a team lunch or workplace gathering coming up? Tell us when you're planning to eat, how many people you're feeding, and what you have in mind. We'll help you review the catering options and next steps."
     actions={[{ variant: 'primary', text: 'Request Office Catering', href: CATERING_REQUEST_HREF }]}
   />
-  <RelatedBlogs pageSlug="catering/corporate" surface="grey" />
 </PageLayout>
