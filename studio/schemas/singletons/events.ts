@@ -18,6 +18,13 @@ export const eventsContent = defineType({
       'Event Space Rental — Hero image',
       'Hero photo for the Event Space Rental page (Kapolei).'
     ),
+    ...[1, 2, 3, 4, 5, 6].map((n) =>
+      imageField(
+        `instagramTile${n}Image`,
+        `Instagram tile ${n}`,
+        'Square tile in "The Latest from @rancheroevents" (1:1). Replace with real @rancheroevents posts when available.'
+      )
+    ),
   ],
   preview: {
     select: { media: 'hubHeroImage' },

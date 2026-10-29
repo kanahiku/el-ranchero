@@ -8,6 +8,8 @@ import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
 import Button from '~/components/ui/Button.astro';
 import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
+import Image from '~/components/common/Image.astro';
+import type { ContentImage } from '~/lib/content/types';
 
 export interface Props {
   eyebrow?: string;
@@ -19,9 +21,11 @@ export interface Props {
   feedLabel?: string;
   tone?: 'page' | 'card';
   id?: string;
+  /** Square tiles from Sanity; shown when no feed embed is slotted. */
+  tiles?: ContentImage[];
 }
 
-const { eyebrow, heading, text, ctaText, ctaHref, feedLabel = 'Instagram feed', tone = 'page', id } = Astro.props;
+const { eyebrow, heading, text, ctaText, ctaHref, feedLabel = 'Instagram feed', tone = 'page', id, tiles = [] } = Astro.props;
 const hasFeed = Astro.slots.has('default');
 const feedHtml = hasFeed ? await Astro.slots.render('default') : '';
 ---
@@ -53,6 +57,25 @@ const feedHtml = hasFeed ? await Astro.slots.render('default') : '';
     {
       hasFeed ? (
         <div aria-label={feedLabel} set:html={feedHtml} />
+      ) : tiles.length > 0 ? (
+        <ul aria-label={feedLabel} class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">
+          {tiles.map((tile) => (
+            <li class="aspect-square overflow-hidden">
+              <Image
+                src={tile.src}
+                alt={tile.alt}
+                class="h-full w-full object-cover"
+                widths={[400, 640, 842]}
+                sizes="(max-width: 768px) 50vw, 421px"
+                width={842}
+                height={842}
+                layout="cover"
+                loading="lazy"
+                format="webp"
+              />
+            </li>
+          ))}
+        </ul>
       ) : (
         /* TODO: replace with the @rancheroevents Instagram embed when the feed provider is chosen */
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6" aria-hidden="true">

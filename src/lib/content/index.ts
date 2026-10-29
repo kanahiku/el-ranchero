@@ -270,7 +270,7 @@ export const getCateringImages = (): Promise<CateringImages> =>
 export const getLocationImages = (): Promise<LocationImages> =>
   imagesOrEmpty('locations', getSanityLocationImages, { wahiawaFavorites: {}, kapoleiFavorites: {} });
 
-export const getEventsImages = (): Promise<EventsImages> => imagesOrEmpty('events', getSanityEventsImages, {});
+export const getEventsImages = (): Promise<EventsImages> => imagesOrEmpty('events', getSanityEventsImages, { instagramTiles: [] });
 
 export const getMenuPagesImages = (): Promise<MenuPagesImages> =>
   imagesOrEmpty('menu pages', getSanityMenuPagesImages, {});

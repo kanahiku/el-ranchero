@@ -30,4 +30,7 @@ pnpm-lock.yaml
 .astro
 
 # Local source photos for one-off Sanity imports.
-src/menu-images/
+src/menu-images/new-imgs/
+
+# Source photos for the Sanity upload scripts (not shipped)
+/new-imgs/

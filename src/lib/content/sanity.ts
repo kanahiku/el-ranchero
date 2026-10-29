@@ -208,6 +208,10 @@ export async function getSanityLocationImages(): Promise<LocationImages> {
   };
 }
 
+const instagramTileFields = Object.fromEntries(
+  [1, 2, 3, 4, 5, 6].map((n) => [`instagramTile${n}Image`, `@rancheroevents post ${n}`])
+) as Record<`instagramTile${1 | 2 | 3 | 4 | 5 | 6}Image`, string>;
+
 export async function getSanityEventsImages(): Promise<EventsImages> {
   const i = await fetchSingletonImages('eventsContent', 'singleton-events', {
     hubHeroImage: 'Events at El Ranchero',
@@ -216,6 +220,7 @@ export async function getSanityEventsImages(): Promise<EventsImages> {
     latinNightHeroImage: 'Saturday Latin Night at El Ranchero',
     concertsHeroImage: 'Live concerts at El Ranchero',
     spaceRentalHeroImage: 'Event space at El Ranchero Kapolei',
+    ...instagramTileFields,
   });
 
   return {
@@ -225,6 +230,9 @@ export async function getSanityEventsImages(): Promise<EventsImages> {
     latinNightHero: i.latinNightHeroImage,
     concertsHero: i.concertsHeroImage,
     spaceRentalHero: i.spaceRentalHeroImage,
+    instagramTiles: ([1, 2, 3, 4, 5, 6] as const)
+      .map((n) => i[`instagramTile${n}Image`])
+      .filter((tile): tile is ContentImage => Boolean(tile)),
   };
 }
 

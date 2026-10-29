@@ -68,6 +68,8 @@ export interface EventsImages {
   latinNightHero?: ContentImage;
   concertsHero?: ContentImage;
   spaceRentalHero?: ContentImage;
+  /** Square tiles for the @rancheroevents band on the Events hub (only the filled ones). */
+  instagramTiles: ContentImage[];
 }
 
 export interface MenuPagesImages {
