@@ -82,7 +82,7 @@ const categories = cmsCategories
         {title && <Heading variant="h2">{title}</Heading>}
         {
           subtitle && (
-            <Text variant="body-lg" color="default">
+            <Text variant="body" color="default">
               {subtitle}
             </Text>
           )
@@ -131,7 +131,7 @@ const categories = cmsCategories
                   {cat.label}
                 </Heading>
                 <span
-                  class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-heading/20 text-heading/60 transition-all duration-200 group-hover:border-heading group-hover:text-heading"
+                  class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-accent text-accent transition-[background-color,color] duration-500 ease-in-out group-hover:border-accent group-hover:bg-accent group-hover:text-white"
                   aria-hidden="true"
                 >
                   <svg
@@ -140,7 +140,7 @@ const categories = cmsCategories
                     fill="none"
                     stroke="currentColor"
                     stroke-width="1.75"
-                    class="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    class="size-3.5 transition-transform duration-500 ease-in-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                     aria-hidden="true"
                   >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 13L13 3M7 3h6v6" />

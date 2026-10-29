@@ -20,8 +20,13 @@ export const navigationData: NavigationContent = {
       },
       {
         text: 'catering',
-        // Figma 2083:1819 — plain link, no dropdown chevron.
         href: '/catering',
+        links: [
+          { text: 'Parties & Celebrations', href: '/catering/parties' },
+          { text: 'Corporate Catering', href: '/catering/corporate' },
+          { text: 'Large Groups', href: '/catering/large-groups' },
+          { text: 'Taco Bar', href: '/catering/taco-bar' },
+        ],
       },
       {
         text: 'events',
@@ -71,6 +76,16 @@ export const navigationData: NavigationContent = {
         ],
       },
       {
+        title: 'catering',
+        links: [
+          { text: 'Catering Overview', href: '/catering' },
+          { text: 'Parties & Celebrations', href: '/catering/parties' },
+          { text: 'Corporate Catering', href: '/catering/corporate' },
+          { text: 'Large Groups', href: '/catering/large-groups' },
+          { text: 'Taco Bar', href: '/catering/taco-bar' },
+        ],
+      },
+      {
         title: 'locations',
         links: [
           { text: 'Wahiawa', href: '/locations/wahiawa' },
@@ -81,8 +96,8 @@ export const navigationData: NavigationContent = {
         title: 'el ranchero',
         links: [
           { text: 'Our Story', href: '/about' },
-          { text: 'Catering', href: '/catering' },
           { text: 'Order Online', href: '/order-online' },
+          { text: 'Reviews', href: '/reviews' },
           { text: 'Blog', href: '/blog' },
           { text: 'Contact', href: '/contact' },
         ],

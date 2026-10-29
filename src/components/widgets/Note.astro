@@ -25,7 +25,7 @@ const {
 
 <section {...id ? { id } : {}} class:list={['not-prose w-full', tone === 'card' ? 'bg-card' : 'bg-page']}>
   <div class="mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16">
-    <div class="flex flex-col gap-4 border-t border-heading/15 pt-10 md:flex-row md:gap-[120px] md:pt-12">
+    <div class="flex flex-col gap-4 md:flex-row md:gap-[120px]">
       {title && <Heading variant="h4" as="h2" class="md:w-1/2 md:flex-1" html={title} />}
       {description && <Text variant="body" color="default" class="md:flex-1" html={description} />}
     </div>

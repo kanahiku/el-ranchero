@@ -44,7 +44,7 @@ export interface Props {
 }
 
 const {
-  eyebrow = 'Our locations',
+  eyebrow,
   locations = [],
   footerNote,
   footerLink,
@@ -66,7 +66,7 @@ const {
       <div class="relative z-10 flex w-full flex-col items-center gap-8">
 
         {/* Eyebrow */}
-        <p class="type-eyebrow font-sans text-primary/60">{eyebrow}</p>
+        {eyebrow && <p class="type-eyebrow font-sans text-primary/60">{eyebrow}</p>}
 
         {/* Location rows */}
         <div class="flex w-full flex-col gap-4">

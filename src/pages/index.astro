@@ -98,7 +98,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     {/* Plant motif (Figma 2083:1163) — overlaps the bottom of the breakfast photo */}
     <Motif slot="motif" name="plant" width={315} height={198} style="left: 68.37%; bottom: 0;" />
     <div class="flex flex-col gap-8">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         Start your morning with a Mexican breakfast at El Ranchero. Our breakfast menu is available daily from 7 AM to
         12 PM at both locations.
       </Text>
@@ -273,9 +273,11 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     withImage
     image={images.catering}
     imageAspect="4 / 3"
+  
+    imageReverse
   >
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         Planning an office lunch or a family celebration? Taqueria El Ranchero offers Mexican catering, including taco
         bar packages for group gatherings.
       </Text>
@@ -295,12 +297,11 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
     heading="Host Your Private Event at El Ranchero Kapolei"
     withImage
     image={images.privateEvents}
-    imageReverse
     imageAspect="4 / 3"
     class="bg-card"
   >
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         Looking for a place to host a celebration or company gathering? Our Kapolei restaurant offers a rentable event
         space with a stage, TVs, microphones and speakers.
       </Text>

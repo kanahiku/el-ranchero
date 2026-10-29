@@ -34,9 +34,9 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
   />
 
   {/* ── Our Story ─────────────────────────────────────────── */}
-  <TextSplit id="our-story" heading="Our Story">
+  <TextSplit id="our-story" heading="Our Story" withImage imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         Taqueria El Ranchero takes its inspiration from the Mexican taquerias of Northern California, where familiar
         dishes and simple preparation are central to the experience.
       </Text>
@@ -46,8 +46,8 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
         setting.
       </Text>
       <Text variant="body" color="default">
-        Today, both restaurants share the same approach to food. Whether you’re visiting our
-        <a href="/locations/wahiawa" class={linkClass}>Wahiawa location</a> or dining with us in
+        Today, both restaurants share the same approach to food. Whether you’re visiting our{' '}
+        <a href="/locations/wahiawa" class={linkClass}>Wahiawa location</a> or dining with us in{' '}
         <a href="/locations/kapolei" class={linkClass}>Kapolei</a>, you’ll find the tacos, burritos and ranchero-style
         dishes that define El Ranchero.
       </Text>
@@ -55,9 +55,9 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
   </TextSplit>
 
   {/* ── Ranchero Style ────────────────────────────────────── */}
-  <TextSplit id="ranchero-style" heading="Ranchero Style" class="bg-card">
+  <TextSplit id="ranchero-style" heading="Ranchero Style" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         The word ranchero refers to ranch-style cooking. For us, that means straightforward meals built around familiar
         ingredients such as chicken, beef, pork, rice and beans.
       </Text>
@@ -66,7 +66,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
         recognizable dishes prepared with traditional combinations of meats, vegetables, tortillas and salsa.
       </Text>
       <Text variant="body" color="default">
-        That approach runs throughout our menu, from everyday tacos and burritos to our signature
+        That approach runs throughout our menu, from everyday tacos and burritos to our signature{' '}
         <a href="/menu/entrees" class={linkClass}>Molcajete</a>, which brings grilled meats and vegetables together in
         a sizzling volcanic stone mortar.
       </Text>
@@ -76,7 +76,7 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
   {/* ── Made Fresh Daily — open-fire grill ── */}
   <TextSplit id="made-fresh-daily" heading="Made Fresh Daily" withImage image={images.madeFreshDaily} imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">Fresh preparation is part of our routine at El Ranchero.</Text>
+      <Text variant="body" color="default">Fresh preparation is part of our routine at El Ranchero.</Text>
       <Text variant="body" color="default">
         Each morning, our kitchen teams grill meats over an open-fire grill and prepare fresh vegetables and herbs. Our
         salsas are made in-house, ready to accompany the dishes served throughout the day.
@@ -90,9 +90,9 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
   </TextSplit>
 
   {/* ── Local Partners ────────────────────────────────────── */}
-  <TextSplit id="local-partners" heading="Local Partners" class="bg-card">
+  <TextSplit id="local-partners" heading="Local Partners" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         Our daily preparation starts with ingredients supplied through local food distributors.
       </Text>
       <Text variant="body" color="default">
@@ -107,9 +107,9 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
   </TextSplit>
 
   {/* ── The Murals — chalk-art mural (photo still needed from the client) ── */}
-  <TextSplit id="the-murals" heading="The Murals" withImage image={images.murals} imageReverse imageAspect="4 / 3">
+  <TextSplit id="the-murals" heading="The Murals" withImage image={images.murals} imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         The chalk-art murals at El Ranchero are a visual connection between our two restaurants.
       </Text>
       <Text variant="body" color="default">
@@ -125,9 +125,9 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
   </TextSplit>
 
   {/* ── Community gathering place — restaurant interior ── */}
-  <TextSplit id="community" heading="A Gathering Place for the Community" withImage image={images.givingBack} imageAspect="4 / 3" class="bg-card">
+  <TextSplit id="community" heading="A Gathering Place for the Community" withImage image={images.givingBack} imageAspect="4 / 3" class="bg-card" imageReverse>
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         Our connection to Oʻahu goes beyond the food we serve. El Ranchero is also a gathering place for the island’s
         Latino community, with music and events that welcome everyone.
       </Text>

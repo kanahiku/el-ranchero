@@ -30,7 +30,7 @@ export interface Props {
 }
 
 const {
-  eyebrow = 'Our story',
+  eyebrow,
   title = 'Kailua roots, island-wide.',
   subtitle =
     "We opened in Kailua in 2006 with one idea: fresh, healthy food should taste worth coming back for — and feel like home. Six locations later, that is still the whole plan.",
@@ -77,7 +77,7 @@ const actionIconUrls = [onlineShopIcon, locationIcon, basketIcon];
               </Heading>
             )}
             {title && <Heading variant="h2" color="white">{title}</Heading>}
-            {subtitle && <Text variant="body-lg" color="white">{subtitle}</Text>}
+            {subtitle && <Text variant="body" color="white">{subtitle}</Text>}
           </div>
 
           <div class="flex w-full flex-col gap-6">

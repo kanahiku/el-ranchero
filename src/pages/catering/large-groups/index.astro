@@ -54,7 +54,7 @@ const faqs = [
     actions={[{ variant: 'primary', text: 'Request Large Group Catering', href: CATERING_REQUEST_HREF }]}
   />
 
-  <TextSplit id="crowd" heading="Feeding a Bigger Crowd">
+  <TextSplit id="crowd" heading="Feeding a Bigger Crowd" withImage imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
       <Text color="default">
         When you're planning food for a large gathering, the number of guests is only part of the picture. Will everyone be sitting down to eat at the same time? Or will people be arriving and eating throughout the event?
@@ -72,6 +72,8 @@ const faqs = [
     image={images.largeGroupFood}
     imageAspect="4 / 3"
     class="bg-card"
+  
+    imageReverse
   >
     <div class="flex flex-col gap-6">
       <Text color="default">
@@ -86,7 +88,7 @@ const faqs = [
     </div>
   </TextSplit>
 
-  <TextSplit id="space" heading="Need a Space for Your Gathering?">
+  <TextSplit id="space" heading="Need a Space for Your Gathering?" withImage imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
       <Text color="default">Still looking for a place to host your event?</Text>
       <Text color="default">
@@ -101,7 +103,7 @@ const faqs = [
     </div>
   </TextSplit>
 
-  <TextSplit id="more-catering" heading="More Catering Options at El Ranchero" class="bg-card">
+  <TextSplit id="more-catering" heading="More Catering Options at El Ranchero" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
     <div class="flex flex-col gap-6">
       <Text color="default">Have a different type of gathering in mind? Take a look at our catering options:</Text>
       <ul class="flex flex-col gap-3">

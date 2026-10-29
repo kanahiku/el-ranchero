@@ -49,6 +49,7 @@ export const brand = {
     page: '#FFFFFF', // white page
     sectionGrey: '#FEF3C7', // warm cream band
     sectionDark: '#7F1D1D', // maroon band
+    footer: '#541313', // deepest maroon — site footer
     sectionGreen: '#064E3B', // deep green band (emerald-900) — FAQ
     statBand: '#607B6B', // sage — hero stats band (Figma 2083:1676)
     card: '#FFFBEB', // cream
@@ -261,6 +262,7 @@ function rootVars(b: Brand): string {
     --aw-color-bg-section-white: ${rgb(c.page)};
     --aw-color-bg-section-grey: ${rgb(c.sectionGrey)};
     --aw-color-bg-section-dark: ${rgb(c.sectionDark)};
+    --aw-color-bg-footer: ${rgb(c.footer)};
     --aw-color-bg-section-green: ${rgb(c.sectionGreen)};
     --aw-color-bg-stat-band: ${rgb(c.statBand)};
     --aw-color-bg-card: ${rgb(c.card)};

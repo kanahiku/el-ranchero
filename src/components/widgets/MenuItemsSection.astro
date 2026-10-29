@@ -55,7 +55,7 @@ const paragraphs = (value?: string | string[]) => (value === undefined ? [] : Ar
       {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
       <Heading variant="h2">{title}</Heading>
       {paragraphs(intro).map((paragraph) => (
-        <Text variant="body-lg" color="default">
+        <Text variant="body" color="default">
           {paragraph}
         </Text>
       ))}

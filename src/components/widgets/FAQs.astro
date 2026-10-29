@@ -43,7 +43,7 @@ const toggleActive = 'group-open:border-accent group-open:text-accent';
 {isDark ? (
   <section
     {...id ? { id } : {}}
-    class="not-prose relative w-full bg-section-green"
+    class="not-prose relative w-full bg-page"
     aria-label="Frequently asked questions"
   >
     <div class="mx-auto w-full max-w-container px-5 sm:px-8 md:px-16">
@@ -51,13 +51,13 @@ const toggleActive = 'group-open:border-accent group-open:text-accent';
       {/* ── Centered section header ──────────────────────────── */}
       <div class="flex flex-col items-start gap-4 pb-12 pt-16 md:pb-16 md:pt-24">
         {tagline && (
-          <p class="type-eyebrow leading-none text-contrast/45">{tagline}</p>
+          <p class="type-eyebrow leading-none text-heading/60">{tagline}</p>
         )}
         {title && (
-          <h2 class="font-rough text-h2 font-normal leading-none text-contrast">{title}</h2>
+          <h2 class="font-rough text-h2 font-normal leading-none text-heading">{title}</h2>
         )}
         {subtitle && (
-          <p class="font-sans text-[15px] leading-relaxed text-contrast/50 max-w-sm mt-1">{subtitle}</p>
+          <p class="font-sans text-[15px] leading-relaxed text-heading/70 max-w-sm mt-1">{subtitle}</p>
         )}
       </div>
 
@@ -66,8 +66,8 @@ const toggleActive = 'group-open:border-accent group-open:text-accent';
         {items.length > 0 && items.map(({ title: itemTitle, description }, index) => (
           <details
             class:list={[
-              'group border-b border-contrast/10 py-1',
-              index === 0 && 'border-t border-contrast/10',
+              'group border-b border-heading/10 py-1',
+              index === 0 && 'border-t border-heading/10',
             ]}
             name="faq-accordion"
           >
@@ -75,19 +75,19 @@ const toggleActive = 'group-open:border-accent group-open:text-accent';
 
               {/* ── Number badge — large, muted accent ── */}
               <span
-                class="shrink-0 w-10 md:w-14 font-rough text-[22px] md:text-[28px] leading-[1.1] text-accent/65 mt-0.5"
+                class="shrink-0 w-10 md:w-14 font-rough text-[22px] md:text-[28px] leading-[1.1] text-accent mt-0.5"
                 aria-hidden="true"
               >
                 {String(index + 1).padStart(2, '0')}.
               </span>
 
               {/* ── Question text ── */}
-              <span class="flex-1 font-rough text-h3 leading-snug text-contrast pr-2 md:pr-4">
+              <span class="flex-1 font-rough text-h3 leading-snug text-heading pr-2 md:pr-4">
                 {itemTitle}
               </span>
 
               {/* ── Expand toggle ── */}
-              <span class="mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-contrast/25 text-contrast/45 transition-all duration-200 group-open:border-accent group-open:text-accent">
+              <span class="mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-heading/25 text-heading/60 transition-all duration-200 group-open:border-accent group-open:text-accent">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-3.5 w-3.5 transition-transform duration-300 group-open:rotate-45"
@@ -105,7 +105,7 @@ const toggleActive = 'group-open:border-accent group-open:text-accent';
             {/* ── Answer — indented under question ── */}
             <div class="pb-7 pl-[60px] pr-12 md:pl-[88px] md:pr-16">
               <p
-                class="font-sans text-[15px] leading-relaxed text-contrast/50"
+                class="font-sans text-[15px] leading-relaxed text-heading/70"
                 set:html={description}
               />
             </div>

@@ -44,9 +44,9 @@ const images = await getMenuPagesImages();
   <MenuItemsSection id="appetizers" tone="page" title="Explore Our Appetizers" items={sections.appetizers} />
   <MenuItemsSection id="sides" tone="card" title="Explore Our Sides" intro="Looking for something extra to go with your meal? El Ranchero offers the following sides." items={sections.sides} />
 
-  <TextSplit id="add-ons" heading="Add-Ons for Your Order">
+  <TextSplit id="add-ons" heading="Add-Ons for Your Order" withImage imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         Want to customize your meal? Depending on the dish, El Ranchero’s listed add-on options include:
       </Text>
       <ul class="flex list-disc flex-col gap-2 pl-5 marker:text-accent">

@@ -42,9 +42,9 @@ const images = await getMenuPagesImages();
   <MenuItemsSection id="margaritas" tone="page" title="Signature Margaritas" items={sections.margaritas} />
   <MenuItemsSection id="other-drinks" tone="card" title="Aguas Frescas & Other Drinks" items={sections['other-drinks']} />
 
-  <TextSplit id="hours" heading="Bar & Kitchen Hours">
+  <TextSplit id="hours" heading="Bar & Kitchen Hours" withImage imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
-      <Text variant="body-lg" color="default">
+      <Text variant="body" color="default">
         Kitchen hours are 7 a.m. to 10 p.m. daily. Bar service is listed through midnight each day; Friday and Saturday closing times may be later. Please confirm late-night bar availability with your preferred location.
       </Text>
       <Text color="default">

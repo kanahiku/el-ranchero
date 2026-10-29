@@ -181,7 +181,7 @@ const pillarBase =
 // Header band: bg-card-light, calendar icon + day label.
 // Default slot holds event rows.
 const scheduleBase =
-  'bg-card rounded-none overflow-hidden flex flex-col gap-4 items-start pb-4 border-8 border-section-grey';
+  'bg-section-dark text-contrast rounded-none overflow-hidden flex flex-col gap-4 items-start pb-4 border-8 border-section-grey';
 
 // ── testimonial ──
 // Dark glass gradient card. Fixed 512px width is applied at the slide level (Swiper).
@@ -288,10 +288,10 @@ const peopleSvg = `<svg viewBox="0 0 16 16" fill="currentColor" class="size-4 sh
   <div class={cls}>
 
     {/* ── Header band: calendar icon + day label ── */}
-    <div class="bg-card-light flex w-full shrink-0 items-center gap-2 p-4">
-      <span class="text-secondary" set:html={calendarSvg} />
+    <div class="bg-card-dark flex w-full shrink-0 items-center gap-2 p-4">
+      <span class="text-contrast" set:html={calendarSvg} />
       {label && (
-        <span class="font-sans text-[12px] uppercase tracking-[0.06em] text-secondary">
+        <span class="font-sans text-[12px] font-semibold uppercase tracking-[0.06em] text-contrast">
           {label}
         </span>
       )}

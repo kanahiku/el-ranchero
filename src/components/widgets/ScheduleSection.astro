@@ -97,7 +97,7 @@ const moonSvg = `<svg viewBox="0 0 20 17.5" fill="none" xmlns="http://www.w3.org
     </div>
 
     {body && (
-      <Text class="min-w-0 flex-1">{body}</Text>
+      <Text color="inherit" class="min-w-0 flex-1 text-heading">{body}</Text>
     )}
 
   </div>
@@ -113,17 +113,17 @@ const moonSvg = `<svg viewBox="0 0 20 17.5" fill="none" xmlns="http://www.w3.org
               {event.time && (
                 <div class="flex items-center gap-2 opacity-40">
                   {event.icon && (
-                    <span class="text-primary" set:html={event.icon === 'morning' ? sunSvg : moonSvg} />
+                    <span class="text-contrast" set:html={event.icon === 'morning' ? sunSvg : moonSvg} />
                   )}
-                  <span class="font-sans text-[12px] uppercase tracking-[0.06em] text-primary">{event.time}</span>
+                  <span class="font-sans text-[12px] uppercase tracking-[0.06em] text-contrast">{event.time}</span>
                 </div>
               )}
               {/* Event name */}
-              <p class:list={['font-sans leading-[1.3] text-primary', event.description ? 'text-[16px]' : 'text-[12px]']}>
+              <p class:list={['font-sans font-semibold leading-[1.3] text-contrast', event.description ? 'text-[16px]' : 'text-[12px]']}>
                 {event.name}
               </p>
               {event.description && (
-                <p class="font-sans text-[14px] leading-[1.4] text-muted">{event.description}</p>
+                <p class="font-sans text-[14px] leading-[1.4] text-contrast/80">{event.description}</p>
               )}
             </div>
           ))}
@@ -135,7 +135,7 @@ const moonSvg = `<svg viewBox="0 0 20 17.5" fill="none" xmlns="http://www.w3.org
   {/* ── Footnote + CTA ── */}
   {(footnote || ctaText) && (
     <div class="mt-10 flex flex-col items-start gap-7 md:mt-[51px]">
-      {footnote && <Text variant="body-lg" color="default" class="max-w-[822px]" html={footnote} />}
+      {footnote && <Text variant="body" color="inherit" class="max-w-[822px] text-heading" html={footnote} />}
       {ctaText && ctaHref && <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} />}
     </div>
   )}

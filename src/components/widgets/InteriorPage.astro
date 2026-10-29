@@ -28,7 +28,7 @@ const hasBody = sections.length > 0;
         {sections.map((section) => (
           <section class="flex flex-col items-start gap-6">
             {section.heading && <Heading variant="h2">{section.heading}</Heading>}
-            {section.body && <Text variant="body-lg">{section.body}</Text>}
+            {section.body && <Text variant="body">{section.body}</Text>}
             {section.items && section.items.length > 0 && (
               <ul class="flex w-full flex-col gap-3">
                 {section.items.map((item) => (

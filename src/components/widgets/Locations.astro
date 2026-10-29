@@ -65,7 +65,7 @@ export interface Props {
 }
 
 const {
-  eyebrow = 'Locations',
+  eyebrow,
   title = 'Six spots across O\u2019ahu.',
   subtitle = 'Dine in, grab and go, or order ahead. There\u2019s an El Ranchero closer than you think.',
   ctaText = 'view all locations',
@@ -90,19 +90,22 @@ const isOrder = variant === 'order';
 ---
 
 <section {...id ? { id } : {}} class="not-prose relative w-full overflow-hidden bg-section-grey">
-  <div class="relative z-[1] mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16 md:py-[120px]">
+  <div class:list={['relative z-[1] mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16', isOrder ? 'md:py-20' : 'md:py-[120px]']}>
     {isOrder ? (
-      <div class="flex flex-col gap-10 md:gap-16">
-        <div class="flex max-w-[822px] flex-col items-start gap-6">
+      <div class="flex flex-col gap-8 md:gap-10">
+        <div class="flex max-w-[822px] flex-col items-start gap-4">
           {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
           {title && <Heading variant="h2">{title}</Heading>}
-          {
-            subtitle && (
-              <Text variant="body-lg" color="default">
-                {subtitle}
-              </Text>
-            )
-          }
+          <div class="flex flex-col gap-2">
+            {
+              subtitle && (
+                <Text variant="body" color="default">
+                  {subtitle}
+                </Text>
+              )
+            }
+            {footnote && <Text variant="body" color="default" html={footnote} />}
+          </div>
         </div>
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
@@ -143,8 +146,6 @@ const isOrder = variant === 'order';
             ))
           }
         </div>
-
-        {footnote && <Text variant="body" color="default" html={footnote} />}
       </div>
     ) : isDetailed ? (
       <div class="flex flex-col gap-10 md:gap-16">
@@ -159,7 +160,7 @@ const isOrder = variant === 'order';
           {title && <Heading variant="h2">{title}</Heading>}
           {
             subtitle && (
-              <Text variant="body-lg" color="default">
+              <Text variant="body" color="default">
                 {subtitle}
               </Text>
             )
@@ -280,7 +281,7 @@ const isOrder = variant === 'order';
           {title && <Heading variant="h2">{title}</Heading>}
           {
             subtitle && (
-              <Text variant="body-lg" color="default">
+              <Text variant="body" color="default">
                 {subtitle}
               </Text>
             )

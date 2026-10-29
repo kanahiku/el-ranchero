@@ -331,6 +331,13 @@
   --aw-band-btn-hover-text: var(--aw-color-bg-section-green);
 }
 
+/* Deepest maroon — site footer. Same contrast flips as the maroon band. */
+@utility bg-footer {
+  background-color: var(--aw-color-bg-footer);
+  --color-accent: var(--aw-color-text-contrast);
+  --color-accent-hover: var(--aw-color-text-contrast);
+}
+
 @utility bg-card-dark {
   background-color: var(--aw-color-bg-card-dark);
 }
@@ -673,7 +680,7 @@
 /* Site-wide CTA hover — used by Button.astro via btn / btn-* utilities.
    Color tokens per variant; motion (200ms ease + 1px lift) is shared. */
 @utility btn {
-  @apply inline-flex items-center justify-center rounded-full border-2 font-sans font-semibold uppercase text-center leading-none py-6 px-7 cursor-pointer;
+  @apply inline-flex items-center justify-center rounded-none border-2 font-sans font-semibold uppercase text-center leading-none py-6 px-7 cursor-pointer;
   font-size: var(--aw-text-button);
   letter-spacing: var(--aw-tracking-button);
   transition-property: background-color, color, border-color, box-shadow, transform;

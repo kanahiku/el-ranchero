@@ -53,7 +53,7 @@ const faqs = [
     actions={[{ variant: 'primary', text: 'Request Party Catering', href: CATERING_REQUEST_HREF }]}
   />
 
-  <TextSplit id="birthday" heading="Birthday Party Catering">
+  <TextSplit id="birthday" heading="Birthday Party Catering" withImage imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
       <Text color="default">
         Celebrating another year with family and friends? Whether it's a casual birthday get-together or a party with guests of different ages, we'd love to help you plan the food.
@@ -64,7 +64,7 @@ const faqs = [
     </div>
   </TextSplit>
 
-  <TextSplit id="graduation" heading="Graduation Party Catering" class="bg-card">
+  <TextSplit id="graduation" heading="Graduation Party Catering" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
     <div class="flex flex-col gap-6">
       <Text color="default">
         Graduation parties bring together family, friends, and classmates to celebrate a big milestone. Some celebrations have everyone sitting down for a meal, while others are open houses with guests arriving throughout the day.
@@ -75,7 +75,7 @@ const faqs = [
     </div>
   </TextSplit>
 
-  <TextSplit id="baby-shower" heading="Baby Shower Catering">
+  <TextSplit id="baby-shower" heading="Baby Shower Catering" withImage imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
       <Text color="default">
         Between games, opening gifts, and spending time with guests, a baby shower has its own rhythm.
@@ -96,6 +96,8 @@ const faqs = [
     image={images.partyFamily}
     imageAspect="4 / 3"
     class="bg-card"
+  
+    imageReverse
   >
     <div class="flex flex-col gap-6">
       <Text color="default">
@@ -107,7 +109,7 @@ const faqs = [
     </div>
   </TextSplit>
 
-  <TextSplit id="sports" heading="Sports Team Catering">
+  <TextSplit id="sports" heading="Sports Team Catering" withImage imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
       <Text color="default">
         Celebrating a win, wrapping up the season, or planning a team appreciation meal? Whether you're feeding just the players or inviting coaches and families too, the size of your group can make a difference when planning the food.
@@ -118,7 +120,7 @@ const faqs = [
     </div>
   </TextSplit>
 
-  <TextSplit id="more-catering" heading="More Catering Options at El Ranchero" class="bg-card">
+  <TextSplit id="more-catering" heading="More Catering Options at El Ranchero" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
     <div class="flex flex-col gap-6">
       <Text color="default">Looking for another way to feed your group? Take a look at our catering options:</Text>
       <ul class="flex flex-col gap-3">
