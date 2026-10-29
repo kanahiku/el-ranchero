@@ -28,7 +28,7 @@ const { name, width, height, style, class: className = '', mobile = false, blend
 ---
 
 <img
-  src={`/motifs/${name}.png`}
+  src={`/motifs/${name}.${name === 'stick' ? 'svg' : 'png'}`}
   alt=""
   aria-hidden="true"
   width={width}
