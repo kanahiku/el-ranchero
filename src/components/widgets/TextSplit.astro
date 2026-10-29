@@ -81,7 +81,9 @@ const isLandscape = Number.isFinite(aspectW) && Number.isFinite(aspectH) && aspe
 const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
 ---
 
-<section {...id ? { id } : {}} class:list={['not-prose w-full', className]}>
+<section {...id ? { id } : {}} class:list={['not-prose relative w-full', Astro.slots.has('motif') && 'overflow-hidden', className]}>
+  {/* Optional decorative motif (<Motif slot="motif" />), positioned against the full-width section */}
+  <slot name="motif" />
   <div
     class:list={[
       'mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16',
@@ -114,7 +116,7 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
               {image ? (
                 <Image
                   {...image}
-                  class="h-full w-full rounded-[32px] object-cover"
+                  class="h-full w-full object-cover"
                   widths={[400, 768, 1200]}
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   loading="lazy"
@@ -127,7 +129,7 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
               ) : imageSlotHtml ? (
                 <Fragment set:html={imageSlotHtml} />
               ) : (
-                <HeroImagePlaceholder fill class="w-full rounded-[32px]" style={`aspect-ratio: ${imageAspect};`} />
+                <HeroImagePlaceholder fill class="w-full" style={`aspect-ratio: ${imageAspect};`} />
               )}
             </div>
           )
@@ -141,7 +143,7 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
             {image ? (
               <Image
                 {...image}
-                class="h-full w-full rounded-[32px] object-cover"
+                class="h-full w-full object-cover"
                 widths={[400, 768, 1200]}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 loading="lazy"
@@ -154,7 +156,7 @@ const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
             ) : imageSlotHtml ? (
               <Fragment set:html={imageSlotHtml} />
             ) : (
-              <HeroImagePlaceholder fill class="w-full rounded-[32px]" style={`aspect-ratio: ${imageAspect};`} />
+              <HeroImagePlaceholder fill class="w-full" style={`aspect-ratio: ${imageAspect};`} />
             )}
           </div>
         ) : (

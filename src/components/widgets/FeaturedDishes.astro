@@ -71,55 +71,58 @@ const subtitleParagraphs = paragraphs(subtitle);
       <div class="flex min-w-0 max-w-[822px] flex-1 flex-col items-start gap-6">
         {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
         {title && <Heading variant="h2">{title}</Heading>}
-        {subtitleParagraphs.map((paragraph) => (
-          <Text variant="body-lg" color="inherit" class="text-heading">{paragraph}</Text>
-        ))}
+        <div class="flex flex-col gap-[30px]">
+          {subtitleParagraphs.map((paragraph) => (
+            <Text variant="body-lg" color="inherit" class="text-heading">{paragraph}</Text>
+          ))}
+        </div>
       </div>
       {ctaText && (
         <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} class="shrink-0" />
       )}
     </div>
 
-    {/* md+: two shared rows (photo area / text panel). Each tile spans both via subgrid, so every
-        text panel is as tall as the tallest one, whatever the amount of copy. */}
-    <div class="grid w-full grid-cols-1 gap-8 md:grid-cols-3 md:grid-rows-[minmax(280px,1fr)_auto] md:gap-y-0">
+    {/* Figma 2083:1700 — 416×552 photo tiles; a translucent blurred panel overlays the bottom half. */}
+    <div class="grid w-full grid-cols-1 gap-8 md:grid-cols-3">
       {
         dishes.map((dish) => {
           const Tile = dish.href ? 'a' : 'article';
           return (
-          <Tile
-            href={dish.href}
-            class:list={[
-              'relative flex min-h-[420px] w-full flex-col overflow-hidden md:row-span-2 md:grid md:min-h-0 md:grid-rows-subgrid',
-              dish.href && 'group',
-            ]}
-          >
-            {dish.image ? (
-              <Image
-                {...dish.image}
-                class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                widths={[400, 640, 832]}
-                sizes="(max-width: 768px) 100vw, 33vw"
-                loading="lazy"
-                width={832}
-                height={1104}
-                layout="cover"
-                format="webp"
-              />
-            ) : (
-              <HeroImagePlaceholder
-                fill
-                class="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
-                label={`${dish.title} placeholder`}
-              />
-            )}
-            <div class="relative z-[1] mt-auto flex w-full flex-col items-start justify-start gap-2 md:row-start-2 md:mt-0 bg-section-dark px-6 py-6 text-left">
-              <Heading variant="h3" color="white">{dish.title}</Heading>
-              {paragraphs(dish.description).map((paragraph) => (
-                <Text color="inherit" class="text-contrast">{paragraph}</Text>
-              ))}
-            </div>
-          </Tile>
+            <Tile
+              href={dish.href}
+              class:list={[
+                'relative block min-h-[480px] w-full overflow-hidden md:aspect-[416/552] md:min-h-0',
+                dish.href && 'group',
+              ]}
+            >
+              {dish.image ? (
+                <Image
+                  {...dish.image}
+                  class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  widths={[400, 640, 832]}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  loading="lazy"
+                  width={832}
+                  height={1104}
+                  layout="cover"
+                  format="webp"
+                />
+              ) : (
+                <HeroImagePlaceholder
+                  fill
+                  class="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
+                  label={`${dish.title} placeholder`}
+                />
+              )}
+              <div class="absolute inset-x-0 bottom-0 z-[1] flex min-h-[49.3%] flex-col items-start gap-3 bg-black/50 p-6 text-left backdrop-blur-[2.5px]">
+                <Heading variant="h3" color="white">{dish.title}</Heading>
+                <div class="flex flex-col gap-3.5">
+                  {paragraphs(dish.description).map((paragraph) => (
+                    <Text color="inherit" class="text-contrast">{paragraph}</Text>
+                  ))}
+                </div>
+              </div>
+            </Tile>
           );
         })
       }

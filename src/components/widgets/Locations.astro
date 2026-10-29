@@ -196,8 +196,8 @@ const isOrder = variant === 'order';
                   )}
                 </div>
 
-                <div class="flex flex-1 flex-col gap-6 px-6 pb-6 pt-8 md:px-8 md:pb-8">
-                  <div class="flex flex-col gap-3">
+                <div class="flex flex-1 flex-col gap-7 px-6 pb-6 pt-8 md:px-8 md:pb-8">
+                  <div class="flex flex-col gap-3.5">
                     {loc.tagline && <Heading variant="eyebrow" color="white" class="text-contrast/70">{loc.tagline}</Heading>}
                     <Heading variant="h3" color="white" as="h3">
                       {loc.heading ?? loc.name}
@@ -220,7 +220,7 @@ const isOrder = variant === 'order';
                   </div>
 
                   {loc.description && loc.description.length > 0 && (
-                    <div class="flex flex-col gap-3">
+                    <div class="flex flex-col gap-[18px]">
                       {loc.description.map((paragraph) => (
                         <Text variant="body" color="white">
                           {paragraph}

@@ -50,6 +50,7 @@ export const brand = {
     sectionGrey: '#FEF3C7', // warm cream band
     sectionDark: '#7F1D1D', // maroon band
     sectionGreen: '#064E3B', // deep green band (emerald-900) — FAQ
+    statBand: '#607B6B', // sage — hero stats band (Figma 2083:1676)
     card: '#FFFBEB', // cream
     cardMist: '#FEF3C7',
     cardDark: '#78350F', // brown — buttons/cards sitting on maroon bands
@@ -94,7 +95,7 @@ export const brand = {
     h4: { size: '24px', mobile: '18px', lineHeight: '1.2', tracking: '0' },
     /** Roomier than the Style Guide (14/1.3, -1%): Figtree reads best at 16px / 1.6 with no negative tracking. */
     body: { size: '16px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
-    bodyLg: { size: '16px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
+    bodyLg: { size: '18px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
     button: { size: '14px', mobile: '14px', lineHeight: '1', tracking: '0.04em' },
     /** Figma `tag`; Fraunces display weight. */
     eyebrow: { size: '16px', mobile: '15px', lineHeight: '1.2', tracking: '0.02em' },
@@ -261,6 +262,7 @@ function rootVars(b: Brand): string {
     --aw-color-bg-section-grey: ${rgb(c.sectionGrey)};
     --aw-color-bg-section-dark: ${rgb(c.sectionDark)};
     --aw-color-bg-section-green: ${rgb(c.sectionGreen)};
+    --aw-color-bg-stat-band: ${rgb(c.statBand)};
     --aw-color-bg-card: ${rgb(c.card)};
     --aw-color-bg-card-dark: ${rgb(c.cardDark)};
     --aw-color-bg-card-light: ${rgb(c.cardMist)};

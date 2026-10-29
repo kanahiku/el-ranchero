@@ -1,7 +1,5 @@
 import type { NavigationContent } from '~/lib/content/types';
 import { CONTACT, FOOTER_CTA_HREF, PRIMARY_CTA_LABEL, SOCIAL } from '~/config';
-import { cateringOptionPages } from '~/data/catering';
-
 export const navigationData: NavigationContent = {
   header: {
     links: [
@@ -22,8 +20,8 @@ export const navigationData: NavigationContent = {
       },
       {
         text: 'catering',
+        // Figma 2083:1819 — plain link, no dropdown chevron.
         href: '/catering',
-        links: cateringOptionPages.map((page) => ({ text: page.nav, href: page.href })),
       },
       {
         text: 'events',
@@ -84,7 +82,6 @@ export const navigationData: NavigationContent = {
         links: [
           { text: 'Our Story', href: '/about' },
           { text: 'Catering', href: '/catering' },
-          ...cateringOptionPages.map((page) => ({ text: page.label, href: page.href })),
           { text: 'Order Online', href: '/order-online' },
           { text: 'Blog', href: '/blog' },
           { text: 'Contact', href: '/contact' },

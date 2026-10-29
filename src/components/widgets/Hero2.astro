@@ -147,6 +147,8 @@ const isLocalOverlayImage =
           ) : (
             <div class="absolute inset-0 bg-gradient-to-b from-transparent from-[85.25%] to-page/80 z-[1]" />
           )}
+          {/* Optional hero motif (<Motif slot="motif" />) — sits above the photo/gradient, below the stats band */}
+          <slot name="motif" />
         </div>
       )}
 
@@ -342,7 +344,7 @@ const isLocalOverlayImage =
       </div>
 
       {hasStats && (
-        <div class="relative bg-[rgb(14_13_7_/_0.1)] backdrop-blur-[15px]">
+        <div class="relative bg-stat-band backdrop-blur-[7.5px]">
           <div class="max-w-container mx-auto px-5 sm:px-8 md:px-16 py-2 md:py-[22px]">
             <slot name="stats" />
           </div>

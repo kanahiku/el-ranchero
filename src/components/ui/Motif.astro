@@ -1,0 +1,44 @@
+---
+/**
+ * Motif atom — decorative brand illustration (Figma motifs: plant, cactus, stick, hat, wordmark).
+ *
+ * Absolutely positioned inside a `relative` parent (a widget's `motif` slot). Hidden below `md`
+ * by default so motifs never crowd mobile layouts; pass `mobile` to keep one visible.
+ * Always `aria-hidden` — purely decorative.
+ *
+ * Props:
+ *   name    — file in /public/motifs (without extension)
+ *   width   — rendered width in px (from Figma)
+ *   style   — position (left/top/right/bottom) in px or %
+ *   mobile  — show below md as well
+ *   blend   — mix-blend-mode for stacked Figma blend layers
+ */
+export interface Props {
+  name: 'plant' | 'cactus' | 'stick' | 'hat' | 'el-ranchero-word' | 'man-on-horse';
+  width: number;
+  height: number;
+  style?: string;
+  class?: string;
+  mobile?: boolean;
+  /** CSS mix-blend-mode (Figma layer blend), e.g. 'overlay' | 'multiply'. */
+  blend?: 'overlay' | 'multiply';
+}
+
+const { name, width, height, style, class: className = '', mobile = false, blend } = Astro.props;
+---
+
+<img
+  src={`/motifs/${name}.png`}
+  alt=""
+  aria-hidden="true"
+  width={width}
+  height={height}
+  loading="lazy"
+  decoding="async"
+  class:list={[
+    'pointer-events-none absolute z-[1] max-w-none select-none',
+    !mobile && 'hidden md:block',
+    className,
+  ]}
+  style={`width: ${width}px; height: auto; ${blend ? `mix-blend-mode: ${blend};` : ''} ${style ?? ''}`}
+/>

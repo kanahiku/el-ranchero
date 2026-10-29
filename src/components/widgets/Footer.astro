@@ -5,8 +5,8 @@
  *
  */
 import { Icon } from 'astro-icon/components';
-import logo from '~/assets/images/logo.svg?url';
 import Logo from '~/components/Logo.astro';
+import Motif from '~/components/ui/Motif.astro';
 import { CONTACT } from '~/config/contact';
 import { getHomePermalink } from '~/utils/permalinks';
 
@@ -48,7 +48,7 @@ const {
         <Logo class="h-14 w-auto" />
       </a>
 
-      <nav class="grid w-full grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-16 md:w-auto md:grid-cols-4" aria-label="Footer">
+      <nav class="grid w-full grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-16 md:w-[771px] md:max-w-[calc(100%-200px)] md:grid-cols-[208.5px_208.5px_1fr] md:gap-x-0" aria-label="Footer">
         {
           links.map(({ title, links: items }) => (
             <div class="flex min-w-0 flex-col items-start gap-4">
@@ -123,12 +123,19 @@ const {
     </div>
   )}
 
-  <div class="mx-auto w-full max-w-container pt-6">
-    <div
-      role="img"
-      aria-label={CONTACT.businessName}
-      class="block w-full bg-accent"
-      style={`aspect-ratio: 174 / 20; -webkit-mask-image: url('${logo}'); mask-image: url('${logo}'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center bottom; mask-position: center bottom;`}
-    />
+  {/* Wordmark + hat motifs (Figma 2083:1814 / 1815): 864px wordmark, hat perched on the final O */}
+  <div class="mx-auto w-full max-w-container overflow-hidden px-5 pt-10 sm:px-8 md:px-16 md:pt-[91px]">
+    <div class="relative mx-auto w-full max-w-[864px]">
+      <img
+        src="/motifs/el-ranchero-word.png"
+        alt={CONTACT.businessName}
+        width="864"
+        height="141"
+        loading="lazy"
+        decoding="async"
+        class="block h-auto w-full"
+      />
+      <Motif name="hat" width={129} height={54} mobile style="left: 87.3%; top: -32px; width: 14.9%;" />
+    </div>
   </div>
 </footer>

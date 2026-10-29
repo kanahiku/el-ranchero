@@ -9,6 +9,16 @@
   },
   "atoms": [
     {
+      "id": "A-MOTIF",
+      "name": "Motif",
+      "figmaNames": ["Motif", "Plant", "Cactus", "Stick", "Hat", "El Ranchero wordmark"],
+      "shape": "Decorative absolutely-positioned brand illustration",
+      "component": "Motif",
+      "import": "~/components/ui/Motif.astro",
+      "props": { "name": "plant | cactus | stick | hat | el-ranchero-word", "width": "px from Figma", "style": "left/top/right/bottom", "mobile": "show below md (default hidden)" },
+      "notes": "Assets in public/motifs. TextSplit and ScheduleSection expose a motif slot; CTABanner and Footer embed theirs."
+    },
+    {
       "id": "A-01",
       "name": "Button",
       "figmaNames": ["Button / Primary", "Button / Ghost", "CTA Primary", "CTA Ghost", "Button / Secondary"],

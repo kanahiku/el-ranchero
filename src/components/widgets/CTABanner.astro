@@ -18,6 +18,7 @@
 import Button from '~/components/ui/Button.astro';
 import Heading from '~/components/ui/Heading.astro';
 import Text from '~/components/ui/Text.astro';
+import Motif from '~/components/ui/Motif.astro';
 import { PRIMARY_CTA_HREF, LOCATION_CTA_HREF, CATERING_CTA_HREF } from '~/config/cta';
 
 export interface Props {
@@ -61,17 +62,14 @@ const conversionLinks = actions ?? [
 
 <section
   {...id ? { id } : {}}
-  class="not-prose relative w-full overflow-hidden bg-section-dark py-16 md:py-[120px]"
+  class="not-prose relative w-full overflow-hidden bg-section-dark py-16 md:py-[170px]"
 >
+  {/* Stick motifs (Figma 2083:1770 / 1771) — centred above the heading and below the buttons, overlay blend; lower one mirrored */}
+  <Motif name="stick" width={248} height={19} blend="overlay" style="left: 41.85%; width: 17.25%; top: 127px;" />
+  <Motif name="stick" width={248} height={19} blend="overlay" class="-scale-x-100" style="left: 41.85%; width: 17.25%; bottom: 127px;" />
+
 
   <div class="relative z-[1] mx-auto flex w-full max-w-container flex-col items-center gap-8 px-5 text-center sm:px-8 md:px-16">
-
-    {/* ── Top ornamental rule ──────────────────────────────── */}
-    <div class="flex w-full max-w-xs items-center gap-4">
-      <div class="h-px flex-1 bg-page/20"></div>
-      <span class="font-script text-[22px] leading-none text-accent" aria-hidden="true">✦</span>
-      <div class="h-px flex-1 bg-page/20"></div>
-    </div>
 
     <div class="flex w-full flex-col items-center gap-6">
       {/* ── Eyebrow ─────────────────────────────────────────── */}
@@ -83,20 +81,20 @@ const conversionLinks = actions ?? [
       <Heading
         variant="h2"
         color="inherit"
-        class="max-w-3xl text-balance text-contrast"
+        class="max-w-[535px] text-balance text-contrast"
       >
         {title}
       </Heading>
 
       {/* ── Subtitle ─────────────────────────────────────────── */}
       {subtitle && (
-        <Text variant="body-lg" class="max-w-lg text-balance text-contrast/55">
+        <Text variant="body-lg" class="max-w-[352px] text-balance text-contrast/55">
           {subtitle}
         </Text>
       )}
 
       {/* ── CTAs ─────────────────────────────────────────────── */}
-      <div class="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
+      <div class="mt-1 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
         {conversionLinks.map((link) => (
           <Button
             variant={link.variant ?? 'primary'}
@@ -108,13 +106,6 @@ const conversionLinks = actions ?? [
           />
         ))}
       </div>
-    </div>
-
-    {/* ── Bottom ornamental rule ───────────────────────────── */}
-    <div class="flex w-full max-w-xs items-center gap-4">
-      <div class="h-px flex-1 bg-page/20"></div>
-      <span class="font-script text-[22px] leading-none text-accent" aria-hidden="true">✦</span>
-      <div class="h-px flex-1 bg-page/20"></div>
     </div>
 
   </div>
