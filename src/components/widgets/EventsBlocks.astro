@@ -1,0 +1,133 @@
+---
+/**
+ * EventsBlocks — renders the editor-arranged sections of an events page
+ * (text + photo, details table, inquiry form). Shared by /events and every
+ * /events/* page so the layouts never fork.
+ */
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import OptionsTable from '~/components/widgets/OptionsTable.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+import Form from '~/components/ui/Form.astro';
+import type { EventsBlock } from '~/data/pages/events';
+import { richToHtml } from '~/lib/content/richText';
+
+export interface Props {
+  blocks: EventsBlock[];
+}
+
+const { blocks } = Astro.props;
+
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
+
+// Inquiry-form fields are fixed (the contact worker reads them); only labels are editable.
+const inquiryInputs = [
+  { type: 'text', name: 'name', label: 'Name', autocomplete: 'name', required: true },
+  { type: 'email', name: 'email', label: 'Email', autocomplete: 'email', required: true },
+  { type: 'tel', name: 'phone', label: 'Phone', autocomplete: 'tel' },
+  {
+    type: 'select',
+    name: 'topic',
+    label: 'Type of event',
+    placeholder: 'Select an event type',
+    required: true,
+    options: [
+      { label: 'Corporate event', value: 'corporate' },
+      { label: 'Baby shower', value: 'baby-shower' },
+      { label: 'Wedding reception', value: 'wedding-reception' },
+      { label: 'Family celebration', value: 'family' },
+      { label: 'Other group occasion', value: 'other' },
+    ],
+  },
+];
+---
+
+{
+  blocks.map((block) => {
+    if (block._type === 'eventsDetailsTable') {
+      return (
+        <OptionsTable
+          id={block.anchor || undefined}
+          tone={block.tone ?? 'page'}
+          heading={block.heading}
+          note={block.note || undefined}
+          columns={['Detail', 'Info']}
+          rows={block.rows.map((row) => [row.label, row.info])}
+          linkGroups={block.links?.length ? [{ links: block.links }] : []}
+        />
+      );
+    }
+
+    if (block._type === 'eventsInquiryForm') {
+      return (
+        <TextSplit id={block.anchor || undefined} heading={block.heading} alignTop class="scroll-mt-24">
+          <div class="flex flex-col gap-8">
+            <Text color="default">{block.intro}</Text>
+            <Form
+              inputs={inquiryInputs}
+              textarea={{ name: 'message', label: block.messageLabel, rows: 5 }}
+              button={block.buttonLabel}
+            />
+            {richToHtml(block.footnote).map((html) => (
+              <Text variant="small" color="muted" html={html} />
+            ))}
+          </div>
+        </TextSplit>
+      );
+    }
+
+    return (
+      <TextSplit
+        id={block.anchor || undefined}
+        heading={block.heading}
+        withImage
+        image={block.image}
+        imageAspect="4 / 3"
+        imageReverse={block.imageSide === 'left'}
+        class={block.tone === 'card' ? 'bg-card' : undefined}
+      >
+        <div class="flex flex-col gap-6">
+          {richToHtml(block.paragraphs).map((html) => (
+            <Text color="default" html={html} />
+          ))}
+          {block.smallPrint && (
+            <Text variant="small" color="muted">
+              {block.smallPrint}
+            </Text>
+          )}
+          {block.links?.length ? (
+            <p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-sans text-body text-heading">
+              {block.links.map((link, index) => (
+                <>
+                  {index > 0 && (
+                    <span class="text-heading/30" aria-hidden="true">
+                      |
+                    </span>
+                  )}
+                  <a href={link.href} class={linkClass}>
+                    {link.text}
+                  </a>
+                </>
+              ))}
+            </p>
+          ) : null}
+          {block.buttons?.length ? (
+            <div class="flex flex-wrap gap-3">
+              {block.buttons.map((button) => (
+                <Button
+                  variant={button.variant === 'ghost' ? 'ghost' : 'primary'}
+                  tone={button.variant === 'ghost' ? 'light' : undefined}
+                  text={button.text}
+                  href={button.href}
+                  target={isExternal(button.href) ? '_blank' : undefined}
+                  hideNote={true}
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </TextSplit>
+    );
+  })
+}

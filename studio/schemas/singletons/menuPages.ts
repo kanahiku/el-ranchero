@@ -1,85 +1,57 @@
-import { ImageIcon } from '@sanity/icons';
-import { defineType } from 'sanity';
-import { imageField } from '../lib/imageField';
+import { BasketIcon } from '@sanity/icons';
+import { defineField, defineType } from 'sanity';
+import { linkField, str, txt } from '../lib/fields';
+import { hrefField } from '../objects/links';
 
+/**
+ * Menu — shared sections. Content that appears at the bottom of /menu and every
+ * /menu/* page: the "Order from your nearest El Ranchero" cards and the allergy notice.
+ * (Id `singleton-menu-pages` — page photos used to live here and now sit on each page.)
+ */
 export const menuPagesContent = defineType({
   name: 'menuPagesContent',
-  title: 'Menu Pages',
+  title: 'Menu — shared sections',
   type: 'document',
-  icon: ImageIcon,
+  icon: BasketIcon,
   groups: [
-    { name: 'hub', title: 'Menu hub' },
-    { name: 'heroes', title: 'Category page heroes' },
-    { name: 'sections', title: 'Category page sections' },
+    { name: 'order', title: 'Order cards', default: true },
+    { name: 'allergy', title: 'Allergy notice' },
   ],
   fields: [
-    imageField('menuHubHeroImage', 'Menu hub — Hero image', 'Hero image for the main Menu page.', 'hub'),
-    imageField(
-      'breakfastEveryDayImage',
-      'Menu hub — Breakfast every day',
-      'Image beside "Breakfast Every Day, Starting at 7 AM" (4:3).',
-      'hub'
+    defineField({
+      name: 'orderLocations',
+      title: 'Restaurant cards',
+      description: 'One card per restaurant, with its DoorDash button.',
+      type: 'array',
+      group: 'order',
+      of: [
+        {
+          type: 'object',
+          name: 'menuOrderLocation',
+          title: 'Restaurant',
+          fields: [
+            str('name', 'Name', '', 'e.g. Wahiawa'),
+            str('address', 'Address', ''),
+            str('buttonText', 'Button label', ''),
+            { ...hrefField, name: 'buttonHref', title: 'Button link' },
+          ],
+          preview: { select: { title: 'name', subtitle: 'address' } },
+        },
+      ],
+    }),
+    str(
+      'footnoteBefore',
+      'Line below cards — text before link',
+      'order',
+      'Built as: text before + link + text after.'
     ),
-    imageField('featuredMolcajeteImage', 'Menu hub — Featured: Molcajete', 'Portrait tile (416×562).', 'hub'),
-    imageField('featuredTacoImage', 'Menu hub — Featured: Taco', 'Portrait tile (416×562).', 'hub'),
-    imageField(
-      'featuredCaliforniaBurritoImage',
-      'Menu hub — Featured: California Burrito',
-      'Portrait tile (416×562).',
-      'hub'
-    ),
+    linkField('footnoteLink', 'Line below cards — link', 'order'),
+    str('footnoteAfter', 'Line below cards — text after link', 'order', 'e.g. a full stop.'),
 
-    imageField('breakfastHeroImage', 'Breakfast — Hero image', 'Hero image for the Breakfast page.', 'heroes'),
-    imageField('burritosHeroImage', 'Burritos — Hero image', 'Hero image for the Burritos page.', 'heroes'),
-    imageField('tacosHeroImage', 'Tacos & Birria — Hero image', 'Hero image for the Tacos & Birria page.', 'heroes'),
-    imageField(
-      'entreesHeroImage',
-      'Entrees & Fajitas — Hero image',
-      'Hero image for the Entrees & Fajitas page.',
-      'heroes'
-    ),
-    imageField(
-      'quesadillasNachosHeroImage',
-      'Quesadillas & Nachos — Hero image',
-      'Hero image for the Quesadillas & Nachos page.',
-      'heroes'
-    ),
-    imageField('specialsHeroImage', 'Specials — Hero image', 'Hero image for the Specials page.', 'heroes'),
-    imageField(
-      'appetizersSidesHeroImage',
-      'Appetizers & Sides — Hero image',
-      'Hero image for the Appetizers & Sides page.',
-      'heroes'
-    ),
-    imageField('kidsHeroImage', 'Kids Menu — Hero image', 'Hero image for the Kids Menu page.', 'heroes'),
-    imageField(
-      'drinksHeroImage',
-      'Drinks & Margaritas — Hero image',
-      'Hero image for the Drinks & Margaritas page.',
-      'heroes'
-    ),
-
-    imageField(
-      'breakfastTakeoutImage',
-      'Breakfast — Takeout or sit-down',
-      'Image beside "Breakfast for Takeout or a Sit-Down Meal" (4:3).',
-      'sections'
-    ),
-    imageField(
-      'entreesMolcajeteImage',
-      'Entrees — Molcajete',
-      'Image beside "Molcajete: Our Signature Dish" (4:3).',
-      'sections'
-    ),
+    str('allergyTitle', 'Title', 'allergy'),
+    txt('allergyDescription', 'Text', 'allergy'),
   ],
   preview: {
-    select: { media: 'menuHubHeroImage' },
-    prepare({ media }) {
-      return {
-        title: 'Menu Pages',
-        subtitle: 'Menu page images',
-        media,
-      };
-    },
+    prepare: () => ({ title: 'Menu — shared sections', subtitle: 'Order cards & allergy notice' }),
   },
 });

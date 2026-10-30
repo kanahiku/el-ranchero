@@ -1,0 +1,80 @@
+---
+/**
+ * LocationsBlocks — renders the editor-arranged sections of a Locations page
+ * (text + photo, favorites grid). Shared by /locations and both restaurant pages.
+ */
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
+import Text from '~/components/ui/Text.astro';
+import Button from '~/components/ui/Button.astro';
+import type { LocationsBlock } from '~/data/pages/locations';
+import { richToHtml } from '~/lib/content/richText';
+
+export interface Props {
+  blocks: LocationsBlock[];
+}
+
+const { blocks } = Astro.props;
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+---
+
+{
+  blocks.map((block) => {
+    if (block._type === 'locationsFavorites') {
+      return (
+        <MenuItemsSection
+          id={block.anchor || undefined}
+          tone={block.tone ?? 'page'}
+          title={block.title}
+          intro={block.intro}
+          items={block.items}
+          footnote={block.footnote || undefined}
+          ctaText={block.button?.text}
+          ctaHref={block.button?.href}
+        />
+      );
+    }
+
+    return (
+      <TextSplit
+        id={block.anchor || undefined}
+        heading={block.heading}
+        withImage
+        image={block.image}
+        imageAspect="4 / 3"
+        imageReverse={block.imageSide === 'left'}
+        class={block.tone === 'card' ? 'bg-card' : undefined}
+      >
+        <div class="flex flex-col gap-6">
+          {richToHtml(block.paragraphs).map((html) => (
+            <Text color="default" html={html} />
+          ))}
+          {block.smallPrint && (
+            <Text variant="small" color="muted">
+              {block.smallPrint}
+            </Text>
+          )}
+          {block.address && (
+            <address class="not-italic whitespace-pre-line font-sans text-body-lg font-semibold text-heading">
+              {block.address}
+            </address>
+          )}
+          {block.buttons?.length ? (
+            <div class="flex flex-wrap gap-3">
+              {block.buttons.map((button) => (
+                <Button
+                  variant={button.variant === 'ghost' ? 'ghost' : 'primary'}
+                  tone={button.variant === 'ghost' ? 'light' : undefined}
+                  text={button.text}
+                  href={button.href}
+                  target={isExternal(button.href) ? '_blank' : undefined}
+                  hideNote={true}
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </TextSplit>
+    );
+  })
+}

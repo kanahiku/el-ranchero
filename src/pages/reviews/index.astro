@@ -1,48 +1,49 @@
 ---
-import Layout from '~/layouts/PageLayout.astro';
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import Headline from '~/components/ui/Headline.astro';
-import SectionBg from '~/components/ui/SectionBg.astro';
+/**
+ * Reviews — all copy, links and the hero photo come from the Sanity "Reviews page"
+ * singleton (`reviewsContent`); defaults live in src/data/pages/reviews.ts.
+ * The review cards are the Sanity "Testimonials" documents.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
+import Testimonials from '~/components/widgets/Testimonials.astro';
 import CTABanner from '~/components/widgets/CTABanner.astro';
-import ReviewsGrid from '~/components/widgets/ReviewsGrid.astro';
-import { CONTACT } from '~/config/contact';
-import { PRIMARY_CTA_HREF } from '~/config/cta';
+import { getReviewsContent } from '~/lib/content';
+import { paragraphsToHtml } from '~/lib/content/inlineLink';
 
-export const prerender = false;
-
-const metadata = {
-  title: `Reviews | ${CONTACT.businessName}`,
-  description: `Read recent Google and Yelp reviews for ${CONTACT.businessName}.`,
-  ignoreTitleTemplate: true,
-};
+const c = await getReviewsContent();
+const metadata = { title: c.seoTitle, description: c.seoDescription, ignoreTitleTemplate: true };
+const isExternal = (href: string) => /^https?:\/\//.test(href);
 ---
 
-<Layout metadata={metadata}>
-  <Hero2>
-    <Fragment slot="title">Reviews</Fragment>
-    <Fragment slot="subtitle">
-      What people are saying about {CONTACT.businessName}.
-    </Fragment>
-    <Fragment slot="bg">
-      <SectionBg variant="hero" />
-    </Fragment>
-  </Hero2>
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    image={c.heroImage}
+    title={c.heroTitle}
+    content={paragraphsToHtml(c.heroParagraphs)}
+    actions={c.heroButtons.map((button) => ({
+      variant: button.variant ?? 'primary',
+      text: button.text,
+      href: button.href,
+      target: isExternal(button.href) ? '_blank' : undefined,
+    }))}
+  />
 
-  <WidgetWrapper containerClass="max-w-container mx-auto">
-    <Headline title="Recent reviews" classes={{ container: 'mb-[9px]' }} />
-    <ReviewsGrid showHeader={false} sources={['google', 'yelp']} variant="dark" showCta={false} />
-    <Fragment slot="bg">
-      <SectionBg variant="grey" />
-    </Fragment>
-  </WidgetWrapper>
+  <Testimonials
+    id="reviews"
+    layout="grid"
+    eyebrow={c.reviewsEyebrow}
+    heading={c.reviewsHeading}
+    subtitle={c.reviewsIntro}
+    footnote={c.reviewsFootnote || undefined}
+    actions={c.reviewsButtons}
+  />
 
   <CTABanner
-    title="Find a Location"
-    subtitle="Six neighborhood restaurants across Oahu. Come see us."
-    ctaText="Find a Location"
-    ctaHref="/locations"
-    secondaryCtaText="Order Online"
-    secondaryCtaHref={PRIMARY_CTA_HREF}
+    title={c.ctaTitle}
+    subtitle={c.ctaSubtitle}
+    actions={[{ variant: 'primary', text: c.ctaButton.text, href: c.ctaButton.href }]}
   />
-</Layout>
+</PageLayout>

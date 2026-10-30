@@ -1,148 +1,26 @@
 ---
 /**
- * About / Our Story — copy from pages-content/_ about - Our Story.docx.
- * Composes shared widgets only. Photos come from the Sanity "About" singleton
- * (`aboutContent`); a missing photo renders the grey placeholder.
+ * About / Our Story — all copy, links and photos come from the Sanity "About"
+ * singleton (`aboutContent`); defaults live in src/data/pages/about.ts.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
-import TextSplit from '~/components/widgets/TextSplit.astro';
-import Text from '~/components/ui/Text.astro';
-import Button from '~/components/ui/Button.astro';
-import { getAboutImages } from '~/lib/content';
+import LocationsBlocks from '~/components/widgets/LocationsBlocks.astro';
+import { getAboutContent } from '~/lib/content';
+import { paragraphsToHtml } from '~/lib/content/inlineLink';
 
-const images = await getAboutImages();
-
-const metadata = {
-  title: 'Our Story | Taqueria El Ranchero in Oʻahu',
-  description:
-    'Learn about Taqueria El Ranchero’s Northern California taqueria influence, ranchero-style dishes, daily preparation, and two Oʻahu locations.',
-  ignoreTitleTemplate: true,
-};
-
-const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
+const c = await getAboutContent();
+const metadata = { title: c.seoTitle, description: c.seoDescription, ignoreTitleTemplate: true };
 ---
 
 <PageLayout metadata={metadata}>
-  {/* ── Hero — Kapolei restaurant exterior ── */}
   <Hero2
     variant="split-dark"
-    image={images.hero}
+    image={c.heroImage}
     overlapHeader={false}
-    title="About Taqueria El Ranchero"
-    content="At Taqueria El Ranchero, we bring Northern California-inspired Mexican taqueria cooking to Oʻahu. Our approach centers on ranchero-style food, fresh daily preparation and meals made for everyday dining.<br /><br />From our original restaurant in Wahiawa to our newer location in Kapolei, we focus on the straightforward cooking that defines our taqueria style."
+    title={c.heroTitle}
+    content={paragraphsToHtml(c.heroParagraphs)}
   />
 
-  {/* ── Our Story ─────────────────────────────────────────── */}
-  <TextSplit id="our-story" heading="Our Story" withImage imageAspect="4 / 3">
-    <div class="flex flex-col gap-6">
-      <Text variant="body" color="default">
-        Taqueria El Ranchero takes its inspiration from the Mexican taquerias of Northern California, where familiar
-        dishes and simple preparation are central to the experience.
-      </Text>
-      <Text variant="body" color="default">
-        Our first restaurant opened in Wahiawa, serving the surrounding neighborhood and people traveling through
-        Central Oʻahu. We later expanded to Kapolei at Ka Makana Aliʻi, bringing the same menu to a full-service dining
-        setting.
-      </Text>
-      <Text variant="body" color="default">
-        Today, both restaurants share the same approach to food. Whether you’re visiting our{' '}
-        <a href="/locations/wahiawa" class={linkClass}>Wahiawa location</a> or dining with us in{' '}
-        <a href="/locations/kapolei" class={linkClass}>Kapolei</a>, you’ll find the tacos, burritos and ranchero-style
-        dishes that define El Ranchero.
-      </Text>
-    </div>
-  </TextSplit>
-
-  {/* ── Ranchero Style ────────────────────────────────────── */}
-  <TextSplit id="ranchero-style" heading="Ranchero Style" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
-    <div class="flex flex-col gap-6">
-      <Text variant="body" color="default">
-        The word ranchero refers to ranch-style cooking. For us, that means straightforward meals built around familiar
-        ingredients such as chicken, beef, pork, rice and beans.
-      </Text>
-      <Text variant="body" color="default">
-        Our food follows a Northern California taqueria approach rather than Tex-Mex or fusion cooking. We focus on
-        recognizable dishes prepared with traditional combinations of meats, vegetables, tortillas and salsa.
-      </Text>
-      <Text variant="body" color="default">
-        That approach runs throughout our menu, from everyday tacos and burritos to our signature{' '}
-        <a href="/menu/entrees" class={linkClass}>Molcajete</a>, which brings grilled meats and vegetables together in
-        a sizzling volcanic stone mortar.
-      </Text>
-    </div>
-  </TextSplit>
-
-  {/* ── Made Fresh Daily — open-fire grill ── */}
-  <TextSplit id="made-fresh-daily" heading="Made Fresh Daily" withImage image={images.madeFreshDaily} imageAspect="4 / 3">
-    <div class="flex flex-col gap-6">
-      <Text variant="body" color="default">Fresh preparation is part of our routine at El Ranchero.</Text>
-      <Text variant="body" color="default">
-        Each morning, our kitchen teams grill meats over an open-fire grill and prepare fresh vegetables and herbs. Our
-        salsas are made in-house, ready to accompany the dishes served throughout the day.
-      </Text>
-      <Text variant="body" color="default">
-        When you place an order, we assemble your food using ingredients prepared earlier that day. This allows us to
-        serve tacos, burritos and other menu favorites efficiently while keeping daily preparation at the center of how
-        we cook.
-      </Text>
-    </div>
-  </TextSplit>
-
-  {/* ── Local Partners ────────────────────────────────────── */}
-  <TextSplit id="local-partners" heading="Local Partners" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
-    <div class="flex flex-col gap-6">
-      <Text variant="body" color="default">
-        Our daily preparation starts with ingredients supplied through local food distributors.
-      </Text>
-      <Text variant="body" color="default">
-        We receive meats through a local distributor and work with a Hawaiʻi produce supplier for vegetables and other
-        produce. From there, our kitchen teams prepare the ingredients used in our menu each day.
-      </Text>
-      <Text variant="body" color="default">
-        These supplier relationships support our approach to serving freshly prepared food at both El Ranchero
-        locations.
-      </Text>
-    </div>
-  </TextSplit>
-
-  {/* ── The Murals — chalk-art mural (photo still needed from the client) ── */}
-  <TextSplit id="the-murals" heading="The Murals" withImage image={images.murals} imageAspect="4 / 3">
-    <div class="flex flex-col gap-6">
-      <Text variant="body" color="default">
-        The chalk-art murals at El Ranchero are a visual connection between our two restaurants.
-      </Text>
-      <Text variant="body" color="default">
-        Our Wahiawa location has a rustic, neighborhood taqueria atmosphere, while Kapolei offers a sit-down dining
-        experience with table service and outdoor seating. Each restaurant has its own character, but the murals bring
-        a recognizable part of El Ranchero into both spaces.
-      </Text>
-      <Text variant="body" color="default">
-        They’re part of the setting guests experience when they visit us for a meal or spend an evening at the
-        restaurant.
-      </Text>
-    </div>
-  </TextSplit>
-
-  {/* ── Community gathering place — restaurant interior ── */}
-  <TextSplit id="community" heading="A Gathering Place for the Community" withImage image={images.givingBack} imageAspect="4 / 3" class="bg-card" imageReverse>
-    <div class="flex flex-col gap-6">
-      <Text variant="body" color="default">
-        Our connection to Oʻahu goes beyond the food we serve. El Ranchero is also a gathering place for the island’s
-        Latino community, with music and events that welcome everyone.
-      </Text>
-      <Text variant="body" color="default">
-        Our regular programming includes karaoke, Latin Night and live concerts featuring Mexican bands. These
-        gatherings bring people together around music and shared cultural experiences.
-      </Text>
-      <Text variant="body" color="default">
-        You can explore our <a href="/events" class={linkClass}>weekly events and upcoming performances</a> to see
-        what’s happening at El Ranchero.
-      </Text>
-      <div class="flex flex-col gap-3 pt-2 sm:flex-row">
-        <Button variant="primary" text="Explore Our Menu" href="/menu" hideNote={true} />
-        <Button variant="ghost" tone="light" text="Find a Location" href="/locations" hideNote={true} />
-      </div>
-    </div>
-  </TextSplit>
+  <LocationsBlocks blocks={c.blocks} />
 </PageLayout>

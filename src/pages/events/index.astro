@@ -1,33 +1,32 @@
 ---
 /**
- * Events hub — copy from pages-content/Events/_events.docx.
- * Composes shared widgets only. The Instagram feed is a placeholder until a
- * feed embed is approved.
+ * Events hub — all copy, links and photos come from the Sanity "Events hub"
+ * singleton (`eventsContent`); defaults live in src/data/pages/events.ts.
+ * The Instagram feed shows Sanity photo tiles until a feed embed is approved.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
 import OptionsTable from '~/components/widgets/OptionsTable.astro';
 import InstagramFeed from '~/components/widgets/InstagramFeed.astro';
-import TextSplit from '~/components/widgets/TextSplit.astro';
-import Text from '~/components/ui/Text.astro';
-import Button from '~/components/ui/Button.astro';
-import { EVENTS_INSTAGRAM_HANDLE, EVENTS_INSTAGRAM_HREF, eventPages, locationLinks } from '~/data/events';
-import { getEventsImages } from '~/lib/content';
+import EventsBlocks from '~/components/widgets/EventsBlocks.astro';
+import { getEventsHubContent } from '~/lib/content';
+import { paragraphsToHtml } from '~/lib/content/inlineLink';
 
-const images = await getEventsImages();
+const c = await getEventsHubContent();
 
-const metadata = {
-  title: 'Latin Nights, Karaoke & Events on Oʻahu | El Ranchero',
-  description:
-    'See Taco Tuesday, free Wednesday karaoke, Friday promoter events, Saturday Latin Night and concert announcements at El Ranchero on Oʻahu.',
-  ignoreTitleTemplate: true,
-};
+const metadata = { title: c.seoTitle, description: c.seoDescription, ignoreTitleTemplate: true };
+const isExternal = (href: string) => /^https?:\/\//.test(href);
 
-const weeklyRows = [
-  ['Tuesday', 'Taco Tuesday', 'Check weekly post', { text: 'Taco Tuesday details', href: eventPages.tacoTuesday.href }],
-  ['Wednesday', 'Free Karaoke', 'Wahiawa & Kapolei', { text: 'Karaoke Wednesday details', href: eventPages.karaoke.href }],
-  ['Friday', 'Promoter nights', 'Varies by event', { text: 'Current Instagram posts', href: EVENTS_INSTAGRAM_HREF, external: true }],
-  ['Saturday', 'Latin Night', 'Check weekly post', { text: 'Saturday Latin Night details', href: eventPages.latinNight.href }],
+const weeklyRows = c.weeklyRows.map((row) => [
+  row.day,
+  row.event,
+  row.location,
+  { text: row.detailsText, href: row.detailsHref, ...(isExternal(row.detailsHref) ? { external: true } : {}) },
+]);
+
+const linkGroups = [
+  ...(c.moreOptionLinks.length ? [{ label: c.moreOptionsLabel, links: c.moreOptionLinks }] : []),
+  ...(c.locationLinks.length ? [{ label: c.locationInfoLabel, links: c.locationLinks }] : []),
 ];
 ---
 
@@ -35,73 +34,38 @@ const weeklyRows = [
   <Hero2
     variant="split-dark"
     overlapHeader={false}
-    image={images.hubHero}
-    title="Live Music, Latin Nights & Events on Oʻahu"
-    content={`At El Ranchero, the night doesn’t end with dinner. It’s where Oʻahu’s Latino community comes together for music, tacos, and a good time. And everyone’s welcome to join in.<br /><br />Make Tuesdays about tacos, grab the mic at free Wednesday karaoke, see what Friday’s promoters have planned, or dance the night away at Saturday Latin Night. We also bring Mexican bands to Oʻahu for special concert nights.<br /><br />There’s always something happening, so follow ${EVENTS_INSTAGRAM_HANDLE} for the latest event details, times, and locations.`}
-    actions={[{ variant: 'primary', text: `Follow ${EVENTS_INSTAGRAM_HANDLE}`, href: EVENTS_INSTAGRAM_HREF, target: '_blank' }]}
+    image={c.heroImage}
+    title={c.heroTitle}
+    content={paragraphsToHtml(c.heroParagraphs)}
+    actions={[
+      {
+        variant: 'primary',
+        text: c.heroButton.text,
+        href: c.heroButton.href,
+        target: isExternal(c.heroButton.href) ? '_blank' : undefined,
+      },
+    ]}
   />
 
   <OptionsTable
     id="weekly-events"
     layout="stacked"
-    heading="Weekly Events at El Ranchero"
-    note="Events happen on different nights and locations. Confirm the latest times, venue and any entry terms in the current announcement."
+    heading={c.weeklyHeading}
+    note={c.weeklyNote}
     columns={['Day', 'Event', 'Location', 'Details']}
     rows={weeklyRows}
-    linkGroups={[
-      {
-        label: 'More event options:',
-        links: [
-          { text: eventPages.concerts.label, href: eventPages.concerts.href },
-          { text: eventPages.spaceRental.label, href: eventPages.spaceRental.href },
-        ],
-      },
-      { label: 'Location information:', links: locationLinks },
-    ]}
+    linkGroups={linkGroups}
   />
 
   <InstagramFeed
     tone="card"
-    heading={`The Latest from ${EVENTS_INSTAGRAM_HANDLE}`}
-    text="New performers, Friday promoter events and concert announcements appear on @rancheroevents. Check the current posts for confirmed dates, venues, times and any entry rules."
-    ctaText="View the Latest Event Announcements"
-    ctaHref={EVENTS_INSTAGRAM_HREF}
-    feedLabel="Latest @rancheroevents posts"
-    tiles={images.instagramTiles}
+    heading={c.instagramHeading}
+    text={c.instagramText}
+    ctaText={c.instagramButton.text}
+    ctaHref={c.instagramButton.href}
+    feedLabel={c.instagramFeedLabel}
+    tiles={c.instagramTiles}
   />
 
-  <TextSplit id="headline-concert" heading="Next Headline Concert" withImage imageAspect="4 / 3">
-    <div class="flex flex-col gap-6">
-      <Text color="default">
-        Big concert nights are part of the El Ranchero experience, bringing professional Mexican bands to Oʻahu for special performances.
-      </Text>
-      <Text color="default">
-        Follow @rancheroevents for the next concert announcement, or visit our Live Concerts page.
-      </Text>
-      <Button variant="primary" text="See Live Concerts" href={eventPages.concerts.href} hideNote={true} class="self-start" />
-    </div>
-  </TextSplit>
-
-  <TextSplit id="promoter-nights" heading="Friday Promoter Nights" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
-    <div class="flex flex-col gap-6">
-      <Text color="default">
-        Most Fridays bring an independently organized promoter or DJ event to El Ranchero. The format, music, location, admission terms and schedule may change from week to week.
-      </Text>
-      <Text color="default">
-        Check the latest @rancheroevents post for this Friday’s lineup, hosting location, start time and any entry details.
-      </Text>
-    </div>
-  </TextSplit>
-
-  <TextSplit id="private-gatherings" heading="Private Gatherings & Catering" withImage imageAspect="4 / 3">
-    <div class="flex flex-col gap-6">
-      <Text color="default">
-        If the occasion is yours to plan, our Kapolei event space may be an option for private gatherings, while El Ranchero catering can help feed groups at other celebrations.
-      </Text>
-      <div class="flex flex-wrap gap-3">
-        <Button variant="primary" text="See Event Space Rental" href={eventPages.spaceRental.href} hideNote={true} />
-        <Button variant="ghost" tone="light" text="See Catering Options" href="/catering" />
-      </div>
-    </div>
-  </TextSplit>
+  <EventsBlocks blocks={c.blocks} />
 </PageLayout>

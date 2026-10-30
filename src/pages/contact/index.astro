@@ -10,6 +10,8 @@ import Heading from '~/components/ui/Heading.astro';
 import Button from '~/components/ui/Button.astro';
 import Text from '~/components/ui/Text.astro';
 import { findStore, storeDirectionsHref } from '~/data/locations';
+import { getContactPageContent } from '~/lib/content';
+import { richToHtmlString } from '~/lib/content/richText';
 import { contactHelpOptions } from '~/data/pages/contact';
 
 const wahiawa = findStore('wahiawa');
@@ -20,32 +22,11 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
 const labelClass = 'font-semibold text-heading';
 const actionClass = 'whitespace-nowrap !px-4 !py-3 sm:!px-5';
 
-const metadata = {
-  title: 'Contact Taqueria El Ranchero | Wahiawa & Kapolei',
-  description:
-    'Contact Taqueria El Ranchero in Wahiawa or Kapolei. Find phone numbers, hours, addresses, directions, and our contact form.',
-  ignoreTitleTemplate: true,
-};
+const c = await getContactPageContent();
+const metadata = { title: c.seoTitle, description: c.seoDescription, ignoreTitleTemplate: true };
 
-const kitchenHours = 'Daily, 7:00 AM to 10:00 PM';
-const barHours = 'Sunday to Thursday until midnight; Friday and Saturday until 2:00 AM';
-
-const stores = [
-  {
-    store: wahiawa,
-    intro: 'Our original taqueria is located in Wahiawa Shopping Center on California Avenue.',
-    address: '823 California Ave, Unit A5, Wahiawa, HI 96786',
-    directionsLabel: 'Get Directions to Wahiawa',
-    visitLabel: 'See our Wahiawa location',
-  },
-  {
-    store: kapolei,
-    intro: 'Find us at Ka Makana Aliʻi in Kapolei, where we offer sit-down dining and outdoor seating.',
-    address: '91-5431 Kapolei Pkwy #501, Kapolei, HI 96707',
-    directionsLabel: 'Get Directions to Kapolei',
-    visitLabel: 'See our Kapolei location',
-  },
-];
+// Phone numbers and links come from the store list; the words come from Sanity.
+const stores = c.locations.map((copy) => ({ copy, store: copy.name.toLowerCase() === 'kapolei' ? kapolei : wahiawa }));
 ---
 
 <Layout metadata={metadata}>
@@ -53,15 +34,15 @@ const stores = [
     variant="split-dark"
     overlapHeader={false}
     hideImage
-    title="Contact Taqueria El Ranchero"
-    content="Have a question about visiting us or want to share feedback? Find the contact details, hours, and directions for our Wahiawa and Kapolei restaurants below, or send us a message using the contact form."
+    title={c.heroTitle}
+    content={c.heroIntro}
   />
 
   <Contact
     id="contact-form"
-    title="Send Us a Message"
-    subtitle={`Have a general question or feedback? Fill out the contact form below to get in touch with our team.<br /><br />For food catering inquiries, visit our <a class="${linkClass}" href="/catering">Catering page</a>. If you're interested in hosting a private event at our Kapolei location, see our <a class="${linkClass}" href="/events/event-space-rental">Event Space Rental page</a>.`}
-    button="Send message"
+    title={c.formTitle}
+    subtitle={richToHtmlString(c.formIntro)}
+    button={c.formButton}
     inputs={[
       { type: 'text', name: 'name', label: 'Name', autocomplete: 'name', placeholder: 'Your name', required: true },
       {
@@ -85,17 +66,17 @@ const stores = [
     textarea={{ label: 'Message', name: 'message', placeholder: 'How can we help?' }}
   >
     <div slot="aside" class="flex flex-col gap-8">
-      <Heading variant="h2">Visit or Call Our Locations</Heading>
+      <Heading variant="h2">{c.asideHeading}</Heading>
       {
-        stores.map(({ store, intro, address, directionsLabel, visitLabel }) => (
+        stores.map(({ store, copy }) => (
           <div class="flex flex-col gap-5 border-t border-heading/15 pt-6">
             <Text color="default" class="font-heading text-[22px] text-heading">
-              {store.name}
+              {copy.name}
             </Text>
-            <Text color="default">{intro}</Text>
+            <Text color="default">{copy.intro}</Text>
             <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 font-sans text-body text-default">
               <dt class={labelClass}>Address</dt>
-              <dd>{address}</dd>
+              <dd>{copy.address}</dd>
               <dt class={labelClass}>Phone</dt>
               <dd>
                 <a class={linkClass} href={store.phoneHref}>
@@ -103,15 +84,15 @@ const stores = [
                 </a>
               </dd>
               <dt class={labelClass}>Kitchen Hours</dt>
-              <dd>{kitchenHours}</dd>
+              <dd>{copy.kitchenHours}</dd>
               <dt class={labelClass}>Bar Hours</dt>
-              <dd>{barHours}</dd>
+              <dd>{copy.barHours}</dd>
             </dl>
             <div class="flex flex-row flex-wrap gap-2 sm:gap-3">
               <Button
                 variant="primary"
                 text="Get Directions"
-                aria-label={directionsLabel}
+                aria-label={copy.directionsLabel}
                 href={storeDirectionsHref(store)}
                 target="_blank"
                 hideNote={true}
@@ -121,7 +102,7 @@ const stores = [
                 variant="ghost"
                 tone="light"
                 text="View Location"
-                aria-label={visitLabel}
+                aria-label={copy.visitLabel}
                 href={store.href}
                 hideNote={true}
                 class={actionClass}

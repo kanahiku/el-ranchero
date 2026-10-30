@@ -1,0 +1,61 @@
+---
+/**
+ * LocationsSubPage — the whole /locations/<slug> restaurant page, driven by the
+ * Sanity `locationsSubPage` document (defaults in src/data/pages/locations.ts).
+ * Address, phone, hours, map and DoorDash links come from src/data/locations.ts.
+ *
+ * Order: split hero → visit panel → editor-arranged blocks → FAQs → closing banner.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import StoreVisit from '~/components/widgets/StoreVisit.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import LocationsBlocks from '~/components/widgets/LocationsBlocks.astro';
+import { findStore } from '~/data/locations';
+import { getLocationsSubPageContent } from '~/lib/content';
+import { paragraphsToHtml } from '~/lib/content/inlineLink';
+import { richToHtmlString } from '~/lib/content/richText';
+
+export interface Props {
+  /** Route slug, e.g. "wahiawa" → /locations/wahiawa. */
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const store = findStore(slug);
+if (!store) throw new Error(`Missing store "${slug}"`);
+const page = await getLocationsSubPageContent(slug);
+
+const metadata = { title: page.seoTitle, description: page.seoDescription, ignoreTitleTemplate: true };
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+const faqItems = page.faqs.map((faq) => ({ title: faq.question, description: richToHtmlString(faq.answer) }));
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    image={page.heroImage}
+    title={page.heroTitle}
+    content={paragraphsToHtml(page.heroParagraphs)}
+    actions={page.heroButtons.map((button) => ({
+      variant: button.variant ?? 'primary',
+      text: button.text,
+      href: button.href,
+      target: isExternal(button.href) ? '_blank' : undefined,
+    }))}
+  />
+
+  <StoreVisit store={store} id="visit" title={page.visitTitle} />
+
+  <LocationsBlocks blocks={page.blocks} />
+
+  <FAQs isDark={true} title={page.faqsTitle} items={faqItems} />
+
+  <CTABanner
+    title={page.ctaTitle}
+    subtitle={page.ctaSubtitle}
+    actions={[{ variant: 'primary', text: page.ctaButton.text, href: page.ctaButton.href }]}
+  />
+</PageLayout>

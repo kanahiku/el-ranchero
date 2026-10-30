@@ -1,56 +1,53 @@
-import { ImageIcon } from '@sanity/icons';
-import { defineType } from 'sanity';
+import { PinIcon } from '@sanity/icons';
+import { defineField, defineType } from 'sanity';
 import { imageField } from '../lib/imageField';
+import { paragraphs, str, txt } from '../lib/fields';
+import { locationsBlockTypes } from '../objects/locationsBlocks';
 
-const favorites = (prefix: 'wahiawa' | 'kapolei', group: string) => [
-  imageField(`${prefix}TacosImage`, 'Favorites — Tacos', 'Card photo (4:3).', group),
-  imageField(`${prefix}BurritoImage`, 'Favorites — California Burrito', 'Card photo (4:3).', group),
-  imageField(`${prefix}BirriaImage`, 'Favorites — Birria', 'Card photo (4:3).', group),
-  imageField(`${prefix}QuesadillasImage`, 'Favorites — Quesadillas', 'Card photo (4:3).', group),
-  imageField(`${prefix}MexicanPlatesImage`, 'Favorites — Mexican Plates', 'Card photo (4:3).', group),
-];
-
+/**
+ * /locations hub page. Address, phone, hours, map and DoorDash links of each
+ * restaurant live in the code (src/data/locations.ts) because the footer and
+ * contact page share them.
+ */
 export const locationsContent = defineType({
   name: 'locationsContent',
-  title: 'Locations',
+  title: 'Locations hub',
   type: 'document',
-  icon: ImageIcon,
+  icon: PinIcon,
   groups: [
-    { name: 'hub', title: 'Locations hub' },
-    { name: 'wahiawa', title: 'Wahiawa page' },
-    { name: 'kapolei', title: 'Kapolei page' },
+    { name: 'hero', title: '1 · Hero', default: true },
+    { name: 'cards', title: '2 · Location cards' },
+    { name: 'sections', title: '3 · Page sections' },
+    { name: 'seo', title: 'SEO' },
   ],
   fields: [
-    imageField('hubHeroImage', 'Hero image', 'Hero photo for the main Locations page (portrait, 619×740).', 'hub'),
-    imageField('hubWahiawaImage', 'Wahiawa card photo', 'Photo on the Wahiawa card (4:3).', 'hub'),
-    imageField('hubKapoleiImage', 'Kapolei card photo', 'Photo on the Kapolei card (4:3).', 'hub'),
-    imageField(
-      'orderOnlineWahiawaImage',
-      'Order Online — Wahiawa',
-      'Wahiawa storefront on the Order Online page (4:3).',
-      'hub'
-    ),
-    imageField(
-      'orderOnlineKapoleiImage',
-      'Order Online — Kapolei',
-      'Kapolei storefront on the Order Online page (4:3).',
-      'hub'
-    ),
+    imageField('heroImage', 'Hero photo', 'Split hero photo (portrait, 619×740).', 'hero'),
+    str('heroTitle', 'Headline', 'hero'),
+    paragraphs('heroParagraphs', 'Intro paragraphs', 'hero'),
 
-    imageField('wahiawaHeroImage', 'Hero image', 'Hero photo for the Wahiawa page (portrait, 619×740).', 'wahiawa'),
-    ...favorites('wahiawa', 'wahiawa'),
+    defineField({
+      name: 'cards',
+      title: 'Restaurants',
+      description: 'One card per restaurant. Drag to reorder.',
+      type: 'array',
+      group: 'cards',
+      of: [{ type: 'locationCard' }],
+    }),
 
-    imageField('kapoleiHeroImage', 'Hero image', 'Hero photo for the Kapolei page (portrait, 619×740).', 'kapolei'),
-    ...favorites('kapolei', 'kapolei'),
+    defineField({
+      name: 'blocks',
+      title: 'Sections under the cards',
+      description: 'Add, remove and drag to reorder.',
+      type: 'array',
+      group: 'sections',
+      of: locationsBlockTypes,
+    }),
+
+    str('seoTitle', 'Page title', 'seo', 'Shown in the browser tab and Google results. ~60 characters.'),
+    txt('seoDescription', 'Meta description', 'seo', '~155 characters.', 3),
   ],
   preview: {
-    select: { media: 'hubHeroImage' },
-    prepare({ media }) {
-      return {
-        title: 'Locations',
-        subtitle: 'Location page images',
-        media,
-      };
-    },
+    select: { media: 'heroImage' },
+    prepare: ({ media }) => ({ title: 'Locations hub', subtitle: '/locations', media }),
   },
 });

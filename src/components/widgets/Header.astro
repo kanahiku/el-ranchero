@@ -18,6 +18,8 @@ export interface Props {
   links?: NavLink[];
   actions?: Array<CallToAction>;
   phone?: { text: string; href: string };
+  /** Social icons (shared with the footer; edited in Studio → Footer). */
+  socialLinks?: Array<{ href?: string; ariaLabel?: string; icon?: string }>;
   isSticky?: boolean;
   isDark?: boolean;
   isFullWidth?: boolean;
@@ -33,6 +35,7 @@ const {
   links = [],
   actions = [],
   phone,
+  socialLinks: socialLinksProp,
   isSticky = false,
   isFullWidth = false,
   showToggleTheme = false,
@@ -49,7 +52,9 @@ const phoneAction = phone
 const phoneLabel = phone ? `Call ${phone.text}` : '';
 const phoneBoxClass =
   'inline-flex items-center justify-center shrink-0 size-9 rounded-md bg-accent text-black border-2 border-accent hover:bg-accent-hover hover:border-accent-hover transition duration-200';
-const socialLinks = SOCIAL.nav;
+const socialLinks = (socialLinksProp ?? [...SOCIAL.nav]).filter(
+  (link): link is { href: string; ariaLabel: string; icon: string } => Boolean(link.href && link.icon)
+);
 const socialIconClass =
   'inline-flex size-9 items-center justify-center text-heading/75 transition-colors hover:text-accent';
 

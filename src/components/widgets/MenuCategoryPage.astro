@@ -1,0 +1,154 @@
+---
+/**
+ * MenuCategoryPage — the whole /menu/<slug> page, driven by the Sanity
+ * `menuCategoryPage` document (defaults in src/data/pages/menu.ts).
+ * One widget for all nine category routes; each route file only passes its slug.
+ *
+ * Order: split hero → editor-arranged blocks (dish list / meat table / text + photo)
+ * → order block → "Explore more" categories → allergy note.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import MenuItemsSection from '~/components/widgets/MenuItemsSection.astro';
+import OptionsTable from '~/components/widgets/OptionsTable.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import Locations from '~/components/widgets/Locations.astro';
+import MenuCategories from '~/components/widgets/MenuCategories.astro';
+import Note from '~/components/widgets/Note.astro';
+import Text from '~/components/ui/Text.astro';
+import Motif from '~/components/ui/Motif.astro';
+import {
+  getMeatOptions,
+  getMenuCategoryPageContent,
+  getMenuSections,
+  getMenuSharedContent,
+} from '~/lib/content';
+import type { MenuSectionKey } from '~/lib/content/menuSections';
+import { inlineLinkHtml, paragraphsToHtml } from '~/lib/content/inlineLink';
+
+export interface Props {
+  /** Route slug, e.g. "tacos" → /menu/tacos. */
+  slug: string;
+}
+
+const { slug } = Astro.props;
+
+const [page, shared, sections, meatOptions] = await Promise.all([
+  getMenuCategoryPageContent(slug),
+  getMenuSharedContent(),
+  getMenuSections(slug),
+  getMeatOptions(),
+]);
+
+const metadata = { title: page.seoTitle, description: page.seoDescription, ignoreTitleTemplate: true };
+const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
+
+const orderLocations = shared.orderLocations.map((location) => ({
+  name: location.name,
+  shopName: '',
+  addressLine1: location.address,
+  addressLine2: '',
+  actions: [{ text: location.buttonText, href: location.buttonHref }],
+}));
+const footnote = inlineLinkHtml(shared.footnoteBefore, shared.footnoteLink, shared.footnoteAfter, linkClass);
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    image={page.heroImage}
+    tagline={page.heroTagline || undefined}
+    title={page.heroTitle}
+    content={paragraphsToHtml(page.heroParagraphs)}
+    actions={page.heroActions.map((action) => ({ ...action, variant: action.variant ?? 'primary' }))}
+  />
+
+  {
+    page.blocks.map((block) => {
+      const tone = block.tone ?? 'page';
+      if (block._type === 'menuDishList') {
+        return (
+          <MenuItemsSection
+            id={block.anchor || undefined}
+            tone={tone}
+            title={block.title}
+            intro={block.intro || undefined}
+            items={sections[block.menuSection as MenuSectionKey] ?? []}
+          />
+        );
+      }
+      if (block._type === 'menuMeatTable') {
+        return (
+          <OptionsTable
+            id={block.anchor || undefined}
+            tone={tone}
+            heading={block.heading}
+            intro={block.intro || undefined}
+            note={block.note || undefined}
+            rows={meatOptions}
+          />
+        );
+      }
+      return (
+        <TextSplit
+          id={block.anchor || undefined}
+          heading={block.heading}
+          withImage
+          image={block.image}
+          imageAspect="4 / 3"
+          class={tone === 'card' ? 'bg-card' : undefined}
+        >
+          {block.motif === 'plant' && (
+            <Motif slot="motif" name="plant" width={315} height={198} style="left: 68.37%; bottom: 0;" />
+          )}
+          <div class="flex flex-col gap-6">
+            {block.paragraphs.map((paragraph) => (
+              <Text variant="body" color="default">
+                {paragraph}
+              </Text>
+            ))}
+            {block.bullets?.length ? (
+              <ul class="flex list-disc flex-col gap-2 pl-5 marker:text-accent">
+                {block.bullets.map((bullet) => (
+                  <li>
+                    <Text as="span" color="default">
+                      {bullet}
+                    </Text>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {block.afterBullets?.map((paragraph) => (
+              <Text variant="body" color="default">
+                {paragraph}
+              </Text>
+            ))}
+          </div>
+        </TextSplit>
+      );
+    })
+  }
+
+  <Locations
+    id="order"
+    variant="order"
+    eyebrow=""
+    title={page.orderTitle}
+    subtitle={page.orderSubtitle}
+    locations={orderLocations}
+    footnote={footnote}
+  />
+
+  <MenuCategories
+    id="more-menu"
+    tone="page"
+    title={page.moreTitle}
+    subtitle={page.moreSubtitle}
+    excludeHref={`/menu/${slug}`}
+    ctaText={page.moreCta.text}
+    ctaHref={page.moreCta.href}
+  />
+
+  <Note tone="card" title={shared.allergyTitle} description={shared.allergyDescription} />
+</PageLayout>

@@ -1,0 +1,74 @@
+---
+/**
+ * LegalPage — privacy policy, terms and accessibility statement, driven by the
+ * Sanity `legalPage` document (defaults in src/data/pages/legal.ts).
+ * One widget for every legal route; each route file only passes its slug.
+ *
+ * Order: text-only split hero → readable column of sections → closing banner.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import SectionBg from '~/components/ui/SectionBg.astro';
+import { getLegalPageContent } from '~/lib/content';
+import { richToHtml } from '~/lib/content/richText';
+
+export interface Props {
+  /** Route slug, e.g. "terms" → /terms. */
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const page = await getLegalPageContent(slug);
+
+const metadata = { title: page.seoTitle, description: page.seoDescription, ignoreTitleTemplate: true };
+
+const headingClass = 'text-[22px] md:text-[26px] font-normal leading-[130%] tracking-tight font-heading text-heading mb-4';
+const bodyClass = 'text-[16px] font-normal leading-[160%] text-muted';
+const listClass = `${bodyClass} space-y-1 list-disc pl-5`;
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2 variant="split-dark" overlapHeader={false} hideImage title={page.heroTitle} content={page.heroIntro} />
+
+  <WidgetWrapper containerClass="max-w-container mx-auto">
+    <div class="mx-auto w-full max-w-3xl space-y-10 text-left md:space-y-14">
+      {
+        page.sections.map((section) => (
+          <section>
+            <h2 class={headingClass}>{section.heading}</h2>
+            <div class={`${bodyClass} space-y-5`}>
+              {richToHtml(section.body).map((html) => (
+                <p set:html={html} />
+              ))}
+            </div>
+            {section.bullets?.length ? (
+              <ul class={`${listClass} mt-4`}>
+                {section.bullets.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            ) : null}
+            {section.closing?.length ? (
+              <div class={`${bodyClass} mt-4 space-y-5`}>
+                {richToHtml(section.closing).map((html) => (
+                  <p set:html={html} />
+                ))}
+              </div>
+            ) : null}
+          </section>
+        ))
+      }
+    </div>
+    <Fragment slot="bg">
+      <SectionBg variant="grey" />
+    </Fragment>
+  </WidgetWrapper>
+
+  <CTABanner
+    title={page.ctaTitle}
+    subtitle={page.ctaSubtitle}
+    actions={[{ variant: 'primary', text: page.ctaButton.text, href: page.ctaButton.href }]}
+  />
+</PageLayout>

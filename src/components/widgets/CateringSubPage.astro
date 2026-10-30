@@ -1,0 +1,104 @@
+---
+/**
+ * CateringSubPage — the whole /catering/<slug> page, driven by the Sanity
+ * `cateringSubPage` document (defaults in src/data/pages/catering.ts).
+ * One widget for all four sub-page routes; each route file only passes its slug.
+ *
+ * Order: split hero → editor-arranged blocks (text + photo / more-options list)
+ * → FAQs → closing banner.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import TextSplit from '~/components/widgets/TextSplit.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import Button from '~/components/ui/Button.astro';
+import Text from '~/components/ui/Text.astro';
+import { cateringOptionPages } from '~/data/catering';
+import { getCateringSubPageContent } from '~/lib/content';
+import { paragraphsToHtml } from '~/lib/content/inlineLink';
+import { RICH_LINK_CLASS, richToHtml, richToHtmlString } from '~/lib/content/richText';
+
+export interface Props {
+  /** Route slug, e.g. "taco-bar" → /catering/taco-bar. */
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const page = await getCateringSubPageContent(slug);
+const currentHref = `/catering/${slug}`;
+
+const metadata = { title: page.seoTitle, description: page.seoDescription, ignoreTitleTemplate: true };
+const faqItems = page.faqs.map((faq) => ({ title: faq.question, description: richToHtmlString(faq.answer) }));
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    image={page.heroImage}
+    title={page.heroTitle}
+    content={paragraphsToHtml(page.heroParagraphs)}
+    actions={[{ variant: 'primary', text: page.heroButton.text, href: page.heroButton.href }]}
+  />
+
+  {
+    page.blocks.map((block) => (
+      <TextSplit
+        id={block.anchor || undefined}
+        heading={block.heading}
+        withImage
+        image={block.image}
+        imageAspect="4 / 3"
+        imageReverse={block.imageSide === 'left'}
+        class={block.tone === 'card' ? 'bg-card' : undefined}
+      >
+        <div class="flex flex-col gap-6">
+          {block._type === 'cateringMoreOptions' ? (
+            <>
+              <Text color="default">{block.intro}</Text>
+              <ul class="flex flex-col gap-3">
+                {cateringOptionPages.map((option) => (
+                  <li class="flex items-start gap-3 font-sans text-body text-default">
+                    <span class="mt-[0.45em] size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                    {option.href === currentHref ? (
+                      <span>{option.label} — You're here</span>
+                    ) : (
+                      <a class={RICH_LINK_CLASS} href={option.href}>
+                        {option.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              {block.button?.text && (
+                <div>
+                  <Button variant="primary" text={block.button.text} href={block.button.href} hideNote={true} />
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              {richToHtml(block.paragraphs).map((html) => (
+                <Text color="default" html={html} />
+              ))}
+              {block.button?.text && (
+                <div>
+                  <Button variant="primary" text={block.button.text} href={block.button.href} hideNote={true} />
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </TextSplit>
+    ))
+  }
+
+  <FAQs id="faqs" isDark title={page.faqsTitle} items={faqItems} />
+
+  <CTABanner
+    title={page.ctaTitle}
+    subtitle={page.ctaSubtitle}
+    actions={[{ variant: 'primary', text: page.ctaButton.text, href: page.ctaButton.href }]}
+  />
+</PageLayout>

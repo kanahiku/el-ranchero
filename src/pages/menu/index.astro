@@ -1,9 +1,8 @@
 ---
 /**
- * Menu hub — copy from pages-content/Menu Pages/_ menu - Menu Hub.docx.
- * Composes shared widgets only. Photos come from the Sanity "Menu Pages" singleton
- * (`menuPagesContent`) and the menu category / item documents; a missing photo renders
- * the grey placeholder.
+ * Menu hub — all copy, links and photos come from the Sanity "Menu hub"
+ * singleton (`menuHubContent`); defaults live in src/data/pages/menu.ts.
+ * Category cards come from Menu categories, the meat table from Meat options.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -14,104 +13,75 @@ import OptionsTable from '~/components/widgets/OptionsTable.astro';
 import Locations from '~/components/widgets/Locations.astro';
 import Note from '~/components/widgets/Note.astro';
 import Text from '~/components/ui/Text.astro';
-import { PRIMARY_CTA_HREF } from '~/config/cta';
-import { getMeatOptions, getMenuPagesImages } from '~/lib/content';
-import { allergyNotice, locationsFootnote, orderLocations } from '~/data/menu';
+import { getMeatOptions, getMenuHubContent, getMenuSharedContent } from '~/lib/content';
+import { inlineLinkHtml, paragraphsToHtml } from '~/lib/content/inlineLink';
 
-const metadata = {
-  title: 'Mexican Food Menu in Wahiawa & Kapolei | El Ranchero',
-  description:
-    "Explore Taqueria El Ranchero's menu, from Mexican breakfast and burritos to tacos, birria, fajitas and drinks. Order from Wahiawa or Kapolei.",
-  ignoreTitleTemplate: true,
-};
+const [c, shared, meatOptions] = await Promise.all([getMenuHubContent(), getMenuSharedContent(), getMeatOptions()]);
 
-const meatOptions = await getMeatOptions();
-const images = await getMenuPagesImages();
+const metadata = { title: c.seoTitle, description: c.seoDescription, ignoreTitleTemplate: true };
+const linkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';
 
+const orderLocations = shared.orderLocations.map((location) => ({
+  name: location.name,
+  shopName: '',
+  addressLine1: location.address,
+  addressLine2: '',
+  actions: [{ text: location.buttonText, href: location.buttonHref }],
+}));
+const footnote = inlineLinkHtml(shared.footnoteBefore, shared.footnoteLink, shared.footnoteAfter, linkClass);
 ---
 
 <PageLayout metadata={metadata}>
   <Hero2
     variant="split-dark"
     overlapHeader={false}
-    image={images.menuHubHero}
-    title="Mexican Food Menu in Wahiawa & Kapolei"
-    content="Explore the Mexican food menu at Taqueria El Ranchero, inspired by the taquerias of Northern California. From tacos and burritos to our signature Molcajete, our dishes reflect the straightforward cooking and fresh daily preparation behind El Ranchero.<br /><br />Both our Wahiawa and Kapolei restaurants serve the same menu. Browse by category below, then choose your location when you’re ready to order."
-    actions={[{ variant: 'primary', text: 'Order Now', href: PRIMARY_CTA_HREF }]}
+    image={c.heroImage}
+    title={c.heroTitle}
+    content={paragraphsToHtml(c.heroParagraphs)}
+    actions={c.heroActions.map((action) => ({ ...action, variant: action.variant ?? 'primary' }))}
   />
 
-  <MenuCategories
-    id="menu-categories"
-    title="Explore Our Menu"
-    subtitle="Find the dishes you’re looking for with our menu categories."
-  />
+  <MenuCategories id="menu-categories" title={c.categoriesTitle} subtitle={c.categoriesSubtitle} />
 
   <TextSplit
     id="breakfast"
-    heading="Breakfast Every Day, Starting at 7 AM"
+    heading={c.breakfastHeading}
     withImage
-    image={images.breakfastEveryDay}
+    image={c.breakfastImage}
     imageAspect="4 / 3"
     class="bg-card"
   >
     <div class="flex flex-col gap-6">
-      <Text variant="body" color="default">
-        Breakfast is available at both El Ranchero locations from 7 AM to 12 PM daily.
-      </Text>
-      <Text color="default">
-        Our Breakfast Burrito is a convenient option when you’re picking up food on the go. It comes with your choice of
-        bacon, ham, chorizo or veggie, along with eggs, beans, cheese, potatoes, tomato, onion and jalapeño.
-      </Text>
-      <Text color="default">
-        If you’re sitting down for breakfast, explore dishes such as Chilaquiles, Huevos con Chorizo and Asada and Eggs.
-      </Text>
+      {
+        c.breakfastParagraphs.map((paragraph) => (
+          <Text variant="body" color="default">
+            {paragraph}
+          </Text>
+        ))
+      }
     </div>
   </TextSplit>
 
   <FeaturedDishes
     id="featured-dishes"
     eyebrow=""
-    title="Featured Dishes From Our Menu"
+    title={c.featuredTitle}
     subtitle=""
     ctaText=""
-    dishes={[
-      {
-        title: 'Molcajete',
-        image: images.featuredMolcajete,
-        href: '/menu/entrees',
-        description: [
-          'Our signature Molcajete brings grilled meats, vegetables and savory sauces together in a traditional volcanic stone mortar.',
-          'Served with beans, rice and your choice of corn or flour tortillas, the Molcajete is designed for sharing between two to three people.',
-          'Explore Entrees & Fajitas.',
-        ],
-      },
-      {
-        title: 'Taco',
-        image: images.featuredTaco,
-        href: '/menu/tacos',
-        description: [
-          'Our Taco comes with your choice of meat, onion, cilantro and salsa. You can choose from the meat options listed below.',
-          'Explore Tacos & Birria.',
-        ],
-      },
-      {
-        title: 'California Burrito',
-        image: images.featuredCaliforniaBurrito,
-        href: '/menu/burritos',
-        description: [
-          'Our California Burrito combines your choice of meat with cheese, fries, guacamole and sour cream.',
-          'Explore Burritos.',
-        ],
-      },
-    ]}
+    dishes={c.featuredDishes.map((dish) => ({
+      title: dish.title,
+      image: dish.image,
+      href: dish.href,
+      description: dish.paragraphs,
+    }))}
   />
 
   <OptionsTable
     id="choose-your-meat"
     tone="card"
-    heading="Choose Your Meat"
-    intro="For dishes that offer a choice of meat, El Ranchero’s menu includes the following options:"
-    note="Available choices depend on the dish. Check the relevant menu category or ordering options for details."
+    heading={c.meatHeading}
+    intro={c.meatIntro}
+    note={c.meatNote}
     rows={meatOptions}
   />
 
@@ -119,11 +89,11 @@ const images = await getMenuPagesImages();
     id="order"
     variant="order"
     eyebrow=""
-    title="Order From Your Nearest El Ranchero"
-    subtitle="Ready to order? Choose your preferred location to view its DoorDash takeout menu."
+    title={c.orderTitle}
+    subtitle={c.orderSubtitle}
     locations={orderLocations}
-    footnote={locationsFootnote}
+    footnote={footnote}
   />
 
-  <Note tone="card" title={allergyNotice.title} description={allergyNotice.description} />
+  <Note tone="card" title={shared.allergyTitle} description={shared.allergyDescription} />
 </PageLayout>

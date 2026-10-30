@@ -8,14 +8,16 @@ import BlogArticleBody from '~/components/blog/BlogArticleBody.astro';
 import BlogSidebar from '~/components/blog/BlogSidebar.astro';
 import { Icon } from 'astro-icon/components';
 import { getFormattedDate } from '~/utils/utils';
-import { getBlogPost } from '~/lib/content';
+import { getBlogIndexContent, getBlogPost } from '~/lib/content';
 import { getArticleToc, getLeadInlineImages, shouldUsePortableBody } from '~/lib/content/blogArticle';
-import { PRIMARY_CTA_LABEL } from '~/config/cta';
 
 export const prerender = false;
 
 const slug = Astro.params.slug;
-const post = typeof slug === 'string' ? await getBlogPost(slug) : undefined;
+const [post, c] = await Promise.all([
+  typeof slug === 'string' ? getBlogPost(slug) : Promise.resolve(undefined),
+  getBlogIndexContent(),
+]);
 
 if (!post) {
   Astro.response.status = 404;
@@ -44,8 +46,8 @@ const metadata = {
       <div class="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12 xl:gap-16 lg:items-start">
         <BlogSidebar
           toc={toc}
-          ctaTitle={post.ctaBanner.title}
-          ctaHref={post.ctaBanner.ctaHref}
+          ctaTitle={c.postCtaTitle}
+          ctaHref={c.postCtaButton.href}
         />
 
         <article class="min-w-0">
@@ -54,7 +56,7 @@ const metadata = {
             class="btn-link gap-1 mb-6"
           >
             <Icon name="tabler:chevron-left" class="w-4 h-4" aria-hidden="true" />
-            All articles
+            {c.backLabel}
           </a>
 
           <h1 class="text-[42px] md:text-[56px] font-normal leading-[105%] tracking-tighter font-heading text-heading mb-4">
@@ -97,12 +99,11 @@ const metadata = {
     </div>
   </section>
 
-  <RelatedBlogs post={post} surface="grey" />
+  <RelatedBlogs post={post} surface="grey" title={c.relatedHeading} />
 
   <CTABanner
-    title={post.ctaBanner.title}
-    subtitle={post.ctaBanner.subtitle}
-    ctaText={PRIMARY_CTA_LABEL}
-    ctaHref={post.ctaBanner.ctaHref}
+    title={c.postCtaTitle}
+    subtitle={c.postCtaSubtitle}
+    actions={[{ variant: 'primary', text: c.postCtaButton.text, href: c.postCtaButton.href }]}
   />
 </Layout>

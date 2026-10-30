@@ -1,11 +1,9 @@
 ---
 /**
- * Catering — copy from pages-content/Catering.docx.
+ * Catering hub — all copy, links and photos come from the Sanity "Catering hub"
+ * singleton (`cateringContent`); defaults live in src/data/pages/catering.ts.
  * The request form posts through the site contact worker (recipient to be confirmed with the client).
- * The doc lists (808) 621-9000 as the catering phone; the Wahiawa / Kapolei location pages use their own numbers.
- * The optional catering photo gallery is omitted until real catering photography exists.
- * Composes shared widgets only. Photos come from the Sanity "Catering" singleton
- * (`cateringContent`); a missing photo renders the grey placeholder.
+ * Composes shared widgets only.
  */
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
@@ -22,31 +20,23 @@ import Form from '~/components/ui/Form.astro';
 import BulletList from '~/components/ui/BulletList.astro';
 import { storeLocations } from '~/data/locations';
 import { cateringOptionPages } from '~/data/catering';
-import { getCateringImages } from '~/lib/content';
+import { getCateringHubContent } from '~/lib/content';
+import { paragraphsToHtml } from '~/lib/content/inlineLink';
+import { RICH_LINK_CLASS, richToHtml, richToHtmlString } from '~/lib/content/richText';
 
-const images = await getCateringImages();
+const c = await getCateringHubContent();
+
+const metadata = { title: c.seoTitle, description: c.seoDescription, ignoreTitleTemplate: true };
 
 const cateringOptionLinks = cateringOptionPages
-  .map(
-    (page) =>
-      `<a class="text-accent underline underline-offset-4" href="${page.href}">${page.label}</a>`
-  )
+  .map((page) => `<a class="${RICH_LINK_CLASS}" href="${page.href}">${page.label}</a>`)
   .reduce((sentence, link, index, links) => {
     if (index === 0) return link;
     const separator = index === links.length - 1 ? ', and ' : ', ';
     return `${sentence}${separator}${link}`;
   }, '');
 
-const metadata = {
-  title: 'Mexican Catering in Wahiawa & Kapolei | Taqueria El Ranchero',
-  description:
-    'Planning an event or group meal? Explore Mexican catering from Taqueria El Ranchero in Wahiawa and Kapolei and submit a catering request today.',
-  ignoreTitleTemplate: true,
-};
-
-const CATERING_PHONE_DISPLAY = '(808) 621-9000';
-const CATERING_PHONE_HREF = 'tel:+18086219000';
-
+// Form inputs are fixed by the contact worker; only the labels around them are editable.
 const requestInputs = [
   { type: 'text', name: 'name', label: 'Name', autocomplete: 'name', required: true },
   { type: 'email', name: 'email', label: 'Email', autocomplete: 'email', required: true },
@@ -66,178 +56,37 @@ const requestInputs = [
   },
 ];
 
-const favorites = [
-  {
-    title: 'Tacos',
-    image: images.favoriteTacos,
-    description:
-      'A taqueria favorite that works well when you are feeding a group and want plenty of flavor and variety.',
-  },
-  {
-    title: 'Burritos',
-    image: images.favoriteBurritos,
-    description: 'Bring a hearty El Ranchero favorite to the table with available burrito options for your gathering.',
-  },
-  {
-    title: 'Mexican Favorites',
-    image: images.favoriteMexican,
-    description:
-      'Ask about available Mexican dishes and group-friendly options that can help round out your catering order.',
-  },
-  {
-    title: 'Sides & More',
-    image: images.favoriteSides,
-    description: 'Complete your spread with available sides and other additions based on your event needs.',
-  },
-];
-
-const occasions = [
-  'Workplace meals and meetings',
-  'Birthday parties',
-  'Family celebrations',
-  'Team gatherings',
-  'Community events',
-  'Group lunches and dinners',
-  'Other special occasions',
-];
-
-const reviews = [
-  {
-    quote: 'Cold drinks, great food! Fast service and the food is hot and fresh.',
-    name: 'Ali V.',
-    location: 'Wahiawa',
-    platform: 'google' as const,
-  },
-  {
-    quote: 'Great service and spacious atmosphere. The kids menu was a plus. I really enjoyed the quesadilla.',
-    name: 'Lawanda M.',
-    location: 'Kapolei',
-    platform: 'google' as const,
-  },
-  {
-    quote: 'Outstanding food! Best Mexican I’ve had in Hawaii.',
-    name: 'John S.',
-    location: 'Kapolei',
-    platform: 'google' as const,
-  },
-];
-
-const reviewLinks = [
-  {
-    text: 'Read Wahiawa Google Reviews',
-    href: 'https://www.google.com/maps/place/Taqueria+El+Ranchero/@21.4785894,-157.9185514,12.25z/data=!4m6!3m5!1s0x7c005df2e6157385:0x308420cdf244ff60!8m2!3d21.4971101!4d-158.0255454!16s%2Fg%2F11b77try2q?entry=tts&g_ep=EgoyMDI0MDkxMS4wKgBIAVAD',
-  },
-  {
-    text: 'Read Kapolei Google Reviews',
-    href: 'https://www.google.com/maps/place/Taqueria+El+Ranchero/@21.3332283,-158.0501425,15z/data=!4m6!3m5!1s0x7c006312335dd9e7:0x38722efab8df9697!8m2!3d21.3332283!4d-158.0501425!16s%2Fg%2F11nmwp8kf6?entry=ttu&g_ep=EgoyMDI2MDgxMS4wIKXMDSoASAFQAw%3D%3D',
-  },
-];
-
-const steps = [
-  {
-    title: 'Tell Us About Your Event',
-    description:
-      'Complete the catering form with your preferred date, estimated guest count and any details that can help us understand what you are planning.',
-  },
-  {
-    title: 'We’ll Review Your Request',
-    description:
-      'Our team can follow up to discuss current catering options, availability and other details related to your event.',
-  },
-  {
-    title: 'Finalize Your Catering Order',
-    description:
-      'Once the details are confirmed, work with the El Ranchero team to finalize your selections and next steps.',
-  },
-];
-
-const planningChecklist = [
-  'Event date and preferred time',
-  'Estimated number of guests',
-  'Type of event or gathering',
-  'Food preferences or requests',
-  'Dietary needs we should know about',
-  'Preferred location, if applicable',
-  'The best way to contact you',
-];
-
-const faqs = [
-  {
-    title: 'How do I request catering from Taqueria El Ranchero?',
-    description: `Complete the catering form on this page with information about your event. You can also call ${CATERING_PHONE_DISPLAY} to ask about catering.`,
-  },
-  {
-    title: 'Does Taqueria El Ranchero have a catering menu?',
-    description:
-      'Catering selections may differ from the regular restaurant menu. Submit a catering request to learn about current food options for your event.',
-  },
-  {
-    title: 'How much does El Ranchero catering cost?',
-    description:
-      'Catering pricing depends on your selections and the details of your order. Submit a catering request so the El Ranchero team can discuss current options and pricing with you.',
-  },
-  {
-    title: 'How far in advance should I request catering?',
-    description:
-      'Availability can depend on your event date and the needs of your order. Submit your request as early as possible so the team can confirm availability.',
-  },
-  {
-    title: 'Can El Ranchero cater a large group?',
-    description:
-      'Include your estimated guest count in your catering request. The El Ranchero team can confirm available options based on the size and needs of your group.',
-  },
-  {
-    title: 'Can I request catering for a workplace event?',
-    description:
-      'Yes. Tell us about your workplace meal, meeting or gathering using the catering form and include your estimated guest count, date and preferred time.',
-  },
-  {
-    title: 'Is the catering menu the same as the restaurant menu?',
-    description:
-      'Not necessarily. You can browse the <a class="text-accent underline underline-offset-4" href="/menu">El Ranchero menu</a> to explore the food served at our restaurants, but catering selections and availability may differ.',
-  },
-  {
-    title: 'Does El Ranchero offer catering from both Wahiawa and Kapolei?',
-    description:
-      'Taqueria El Ranchero has locations in both Wahiawa and Kapolei. Include your event details and preferred area when submitting your catering request so the team can help determine the appropriate next steps.',
-  },
-];
+const faqItems = c.faqs.map((faq) => ({ title: faq.question, description: richToHtmlString(faq.answer) }));
+const exploreHtml = richToHtml(c.exploreParagraphs);
 ---
 
 <PageLayout metadata={metadata}>
   <Hero2
     variant="split-dark"
     overlapHeader={false}
-    image={images.hero}
-    title="Mexican Catering from Taqueria El Ranchero"
-    content="Bring Ranchero-style Mexican food to your next gathering with catering from Taqueria El Ranchero.<br /><br />Whether you are feeding coworkers, family, friends or a larger group, tell us what you are planning and our team can help you explore catering options for your event."
-    actions={[{ variant: 'primary', text: 'Request Catering', href: '#catering-form' }]}
+    image={c.heroImage}
+    title={c.heroTitle}
+    content={paragraphsToHtml(c.heroParagraphs)}
+    actions={[{ variant: 'primary', text: c.heroButton.text, href: c.heroButton.href }]}
   />
 
-  <TextSplit id="catering-form" heading="Tell Us About Your Catering Needs" alignTop class="scroll-mt-24">
+  <TextSplit id="catering-form" heading={c.formHeading} alignTop class="scroll-mt-24">
     <div class="flex flex-col gap-8">
       <div class="flex flex-col gap-6">
-        <Text color="default">Ready to start planning? Share a few details about your event using the form below.</Text>
-        <Text color="default">
-          Let us know your event date, approximately how many people you are feeding and anything else that can help our team understand what you are looking for.
-        </Text>
+        {c.formParagraphs.map((paragraph) => <Text color="default">{paragraph}</Text>)}
       </div>
       <Form
         inputs={requestInputs}
-        textarea={{
-          name: 'message',
-          label: 'Tell us about your event, food preferences and any dietary needs',
-          rows: 5,
-        }}
-        button="Request Catering"
+        textarea={{ name: 'message', label: c.formMessageLabel, rows: 5 }}
+        button={c.formButtonLabel}
       />
       <div class="flex flex-col items-start gap-3">
-        <Text color="default">Prefer to speak with us directly?</Text>
+        <Text color="default">{c.callPrompt}</Text>
         <Button
           variant="ghost"
           tone="light"
-          text={`Call ${CATERING_PHONE_DISPLAY}`}
-          href={CATERING_PHONE_HREF}
+          text={`Call ${c.phoneDisplay}`}
+          href={c.phoneHref}
           hideNote={true}
         />
       </div>
@@ -248,95 +97,82 @@ const faqs = [
     id="favorites"
     tone="card"
     columns={4}
-    title="Catering Favorites"
-    intro={[
-      'Planning food for a group? Bring some of the flavors people know from Taqueria El Ranchero to your next gathering.',
-      'Depending on your event and current catering availability, our team can help you explore options inspired by the food served at our restaurants.',
-    ]}
-    items={favorites}
-    footnote="Catering selections may differ from our regular restaurant menu. Submit a catering request to confirm current options, availability and pricing for your event."
+    title={c.favoritesTitle}
+    intro={c.favoritesIntro}
+    items={c.favoritesItems}
+    footnote={c.favoritesFootnote}
   />
 
-  <TextSplit id="occasions" heading="Bring Ranchero Style to Your Next Gathering" withImage imageAspect="4 / 3">
+  <TextSplit id="occasions" heading={c.occasionsHeading} withImage image={c.occasionsImage} imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
-      <Text color="default">Good food gives people one more reason to gather around the table.</Text>
-      <Text color="default">El Ranchero catering can be a fit for a range of group occasions, including:</Text>
-      <BulletList items={occasions} />
-      <Text color="default">
-        Tell us what you are planning and our team can help you explore catering options for your date and group.
-      </Text>
+      {c.occasionsIntro.map((paragraph) => <Text color="default">{paragraph}</Text>)}
+      <BulletList items={c.occasionsBullets} />
+      {c.occasionsOutro.map((paragraph) => <Text color="default">{paragraph}</Text>)}
     </div>
   </TextSplit>
 
-  <TextSplit id="why-cater" heading="Why Cater with Taqueria El Ranchero?" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
+  <TextSplit
+    id="why-cater"
+    heading={c.whyHeading}
+    class="bg-card"
+    withImage
+    image={c.whyImage}
+    imageAspect="4 / 3"
+    imageReverse
+  >
     <div class="flex flex-col gap-6">
-      <Text color="default">
-        Taqueria El Ranchero has been serving Oʻahu since 2015, beginning with our original Wahiawa location and later expanding to Kapolei.
-      </Text>
-      <Text color="default">
-        El Ranchero is a veteran-founded local business built around the taqueria experience and Ranchero-style Mexican food.
-      </Text>
-      <Text color="default">
-        The restaurant has also earned local recognition, including Gold for Best Mexican in HONOLULU Magazine’s 2023 Hale ʻAina Awards.
-      </Text>
-      <Text color="default">
-        When you are planning food for a group, catering gives you another way to bring El Ranchero flavors to the occasion.
-      </Text>
+      {c.whyParagraphs.map((paragraph) => <Text color="default">{paragraph}</Text>)}
     </div>
   </TextSplit>
 
   <Testimonials
     id="reviews"
-    heading="What Guests Are Saying"
-    subtitle="See what guests have shared about their experiences at Taqueria El Ranchero."
-    testimonials={reviews}
-    footnote="Reviews above reflect guests’ restaurant experiences and are not presented as catering-specific testimonials."
-    actions={reviewLinks}
+    heading={c.reviewsHeading}
+    subtitle={c.reviewsSubtitle}
+    testimonials={c.reviews.map((review) => ({ ...review, platform: 'google' as const }))}
+    footnote={c.reviewsFootnote}
+    actions={c.reviewLinks}
   />
 
-  <BuildSteps id="how-it-works" tone="card" hideImage title="How El Ranchero Catering Works" steps={steps} />
+  <BuildSteps id="how-it-works" tone="card" hideImage title={c.stepsTitle} steps={c.steps} />
 
-  <TextSplit id="planning" heading="Planning Your Catering Order" withImage imageAspect="4 / 3">
+  <TextSplit id="planning" heading={c.planningHeading} withImage image={c.planningImage} imageAspect="4 / 3">
     <div class="flex flex-col gap-6">
-      <Text color="default">You do not need to have every detail figured out before reaching out.</Text>
-      <Text color="default">When submitting your catering request, it helps to include:</Text>
-      <BulletList items={planningChecklist} />
-      <Text color="default">
-        Providing these details helps our team better understand what you need and follow up with the right information.
-      </Text>
+      {c.planningIntro.map((paragraph) => <Text color="default">{paragraph}</Text>)}
+      <BulletList items={c.planningChecklist} />
+      {c.planningOutro.map((paragraph) => <Text color="default">{paragraph}</Text>)}
     </div>
   </TextSplit>
 
-  <TextSplit id="explore-menu" heading="Explore the El Ranchero Menu" class="bg-card" withImage imageAspect="4 / 3" imageReverse>
+  <TextSplit
+    id="explore-menu"
+    heading={c.exploreHeading}
+    class="bg-card"
+    withImage
+    image={c.exploreImage}
+    imageAspect="4 / 3"
+    imageReverse
+  >
     <div class="flex flex-col items-start gap-6">
-      <Text color="default">Want to get a feel for the food before planning your catering order?</Text>
-      <Text color="default">
-        Explore the <a class="text-accent underline underline-offset-4" href="/menu">Taqueria El Ranchero menu</a> to see the Ranchero-style Mexican dishes served at our restaurants.
-      </Text>
-      <Text color="default">
-        Keep in mind that catering selections may differ from the regular restaurant menu. Submit a catering request to confirm what is currently available for your group.
-      </Text>
-      <Text
-        color="default"
-        html={`Looking for a specific catering option? See ${cateringOptionLinks}.`}
-      />
-      <Button variant="primary" text="Explore Our Menu" href="/menu" hideNote={true} />
+      {exploreHtml.map((html) => <Text color="default" html={html} />)}
+      <Text color="default" html={`${c.exploreOptionsLead} ${cateringOptionLinks}.`} />
+      {c.exploreButton.text && <Button variant="primary" text={c.exploreButton.text} href={c.exploreButton.href} hideNote={true} />}
     </div>
   </TextSplit>
 
   <LocationMaps
     id="locations"
-    title="Catering in Wahiawa & Kapolei"
-    subtitle="Taqueria El Ranchero has two Oʻahu locations serving Wahiawa, Kapolei and surrounding communities."
+    title={c.locationsTitle}
+    subtitle={c.locationsSubtitle}
     stores={storeLocations}
-    footnote="Not sure which location to contact about your event? Submit your catering request with the event details and our team can help with the next steps."
+    footnote={c.locationsFootnote}
   />
 
-  <FAQs id="faqs" isDark title="Catering FAQs" items={faqs} />
+  <FAQs id="faqs" isDark title={c.faqsTitle} items={faqItems} />
 
   <CTABanner
-    title="Ready to Plan Your Catering Order?"
-    subtitle="Tell us about your event, your group and what you have in mind. Submit the catering form and the El Ranchero team can help you explore the options available for your gathering."
-    actions={[{ variant: 'primary', text: 'Request Catering', href: '#catering-form' }]}
+    title={c.ctaTitle}
+    subtitle={c.ctaSubtitle}
+    actions={[{ variant: 'primary', text: c.ctaButton.text, href: c.ctaButton.href }]}
   />
 </PageLayout>

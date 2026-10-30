@@ -28,6 +28,8 @@ export interface Props {
   /** Override the default Order Catering / Order Now / Find a Location buttons (Order Now stays centered). */
   actions?: { text: string; href: string; variant?: 'primary' | 'ghost' }[];
   id?: string;
+  /** Show the rider-on-horse motif at the right edge (desktop only). Used on the homepage closer. */
+  rider?: boolean;
 
   /** @deprecated Legacy template props — accepted but ignored. */
   ctaText?: string;
@@ -51,6 +53,7 @@ const {
   subtitle,
   actions,
   id,
+  rider = false,
 } = Astro.props;
 
 const conversionLinks = actions ?? [
@@ -68,6 +71,20 @@ const conversionLinks = actions ?? [
   <Motif name="stick" width={248} height={19} blend="overlay" style="left: 41.85%; width: 17.25%; top: 110px;" />
   <Motif name="stick" width={248} height={19} blend="overlay" class="-scale-x-100" style="left: 41.85%; width: 17.25%; bottom: 110px;" />
 
+  {/* Rider (Figma 2083:1673) — tonal overlay + multiply layers on the green, desktop only */}
+  {
+    rider &&
+      (['overlay', 'multiply'] as const).map((blend) => (
+        <Motif
+          name="man-on-horse"
+          width={444}
+          height={483}
+          blend={blend}
+          class="hidden lg:block"
+          style="right: 6%; bottom: 0; width: 16%;"
+        />
+      ))
+  }
 
   <div class="relative z-[1] mx-auto flex w-full max-w-container flex-col items-center gap-8 px-5 text-center sm:px-8 md:px-16">
 

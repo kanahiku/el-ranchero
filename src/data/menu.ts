@@ -90,47 +90,4 @@ export const meatOptions = [
   { name: 'Chorizo', description: 'Mexican sausage' },
 ];
 
-/** "Order From Your Nearest El Ranchero" — same two cards on every menu page. */
-export const orderLocations: {
-  name: string;
-  shopName: string;
-  addressLine1: string;
-  addressLine2: string;
-  actions: { text: string; href: string }[];
-}[] = [
-  {
-    name: 'Wahiawa',
-    shopName: '',
-    addressLine1: '823 California Ave, Unit A5, Wahiawa, HI 96786',
-    addressLine2: '',
-    actions: [
-      {
-        text: 'Order Wahiawa Takeout',
-        href: 'https://www.doordash.com/store/taqueria-el-ranchero-wahiawa-276575/',
-      },
-    ],
-  },
-  {
-    name: 'Kapolei',
-    shopName: '',
-    addressLine1: '91-5431 Kapolei Pkwy #501, Kapolei, HI 96707',
-    addressLine2: '',
-    actions: [
-      {
-        text: 'Order Kapolei Takeout',
-        href: 'https://www.doordash.com/store/taqueria-el-ranchero-kapolei-2390257/',
-      },
-    ],
-  },
-];
-
-export const locationsFootnote =
-  'For restaurant information and directions, visit our <a href="/locations" class="text-accent underline underline-offset-4 transition-opacity hover:opacity-80">Locations page</a>.';
-
-export const allergyNotice = {
-  title: 'Food Allergy Information',
-  description:
-    'Our food may contain or have come in contact with peanuts, tree nuts, soy, eggs, wheat, fish, shellfish, sesame or dairy products. Please speak to your server if you have any concerns.',
-};
-
 export const menuLinkClass = 'text-accent underline underline-offset-4 transition-opacity hover:opacity-80';

@@ -200,7 +200,8 @@
       "figmaNames": ["Testimonials", "Reviews", "Quotes"],
       "shape": "quotes with name and role",
       "component": "Testimonials",
-      "import": "~/components/widgets/Testimonials.astro"
+      "import": "~/components/widgets/Testimonials.astro",
+      "notes": "layout=\"marquee\" (homepage strip) or layout=\"grid\" (all reviews on /reviews). Cards are TestimonialCard (src/components/ui/TestimonialCard.astro)."
     },
     {
       "id": "P-12",

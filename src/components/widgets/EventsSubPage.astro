@@ -1,0 +1,72 @@
+---
+/**
+ * EventsSubPage — the whole /events/<slug> page, driven by the Sanity
+ * `eventsSubPage` document (defaults in src/data/pages/events.ts).
+ * One widget for all five sub-page routes; each route file only passes its slug.
+ *
+ * Order: split hero → editor-arranged blocks → "More events" table → closing banner.
+ */
+import PageLayout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import OptionsTable from '~/components/widgets/OptionsTable.astro';
+import CTABanner from '~/components/widgets/CTABanner.astro';
+import EventsBlocks from '~/components/widgets/EventsBlocks.astro';
+import { getEventsHubContent, getEventsSubPageContent } from '~/lib/content';
+import { paragraphsToHtml } from '~/lib/content/inlineLink';
+
+export interface Props {
+  /** Route slug, e.g. "taco-tuesday" → /events/taco-tuesday. */
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const [page, hub] = await Promise.all([getEventsSubPageContent(slug), getEventsHubContent()]);
+const currentHref = `/events/${slug}`;
+
+const metadata = { title: page.seoTitle, description: page.seoDescription, ignoreTitleTemplate: true };
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+
+const moreRows = hub.eventsList.map((event) =>
+  event.href === currentHref
+    ? [event.label, event.when, 'You’re here']
+    : [{ text: event.label, href: event.href }, event.when, event.details]
+);
+---
+
+<PageLayout metadata={metadata}>
+  <Hero2
+    variant="split-dark"
+    overlapHeader={false}
+    image={page.heroImage}
+    title={page.heroTitle}
+    content={paragraphsToHtml(page.heroParagraphs)}
+    actions={[
+      {
+        variant: 'primary',
+        text: page.heroButton.text,
+        href: page.heroButton.href,
+        target: isExternal(page.heroButton.href) ? '_blank' : undefined,
+      },
+    ]}
+  />
+
+  <EventsBlocks blocks={page.blocks} />
+
+  <OptionsTable
+    id="more-events"
+    tone={page.moreTone}
+    layout="stacked"
+    heading={page.moreHeading}
+    intro={page.moreIntro}
+    columns={['Event', 'When', 'Details']}
+    rows={moreRows}
+    ctaText={page.moreButton.text}
+    ctaHref={page.moreButton.href}
+  />
+
+  <CTABanner
+    title={page.ctaTitle}
+    subtitle={page.ctaSubtitle}
+    actions={[{ variant: 'primary', text: page.ctaButton.text, href: page.ctaButton.href }]}
+  />
+</PageLayout>
