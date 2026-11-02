@@ -89,7 +89,7 @@ const slugify = (value: string) =>
               <li>
                 <a
                   href={`#${slugify(category.title)}`}
-                  class="inline-flex min-h-10 items-center border border-section-dark bg-transparent px-4 font-heading text-button font-semibold leading-none text-heading transition-colors duration-200 hover:bg-section-dark hover:text-contrast aria-[current=true]:bg-section-dark aria-[current=true]:text-contrast"
+                  class="inline-flex min-h-10 items-center border border-section-dark bg-transparent px-4 font-sans text-button font-semibold leading-none text-heading transition-colors duration-200 hover:bg-section-dark hover:text-contrast aria-[current=true]:bg-section-dark aria-[current=true]:text-contrast"
                   data-full-menu-jump-link
                 >
                   {category.title}
@@ -128,7 +128,7 @@ const slugify = (value: string) =>
               {category.href && (
                 <a
                   href={category.href}
-                  class="font-heading text-button font-semibold leading-none text-accent hover:text-accent-hover"
+                  class="font-sans text-button font-semibold leading-none text-accent hover:text-accent-hover"
                 >
                   View category
                 </a>

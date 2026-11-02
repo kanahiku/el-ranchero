@@ -17,8 +17,10 @@ import Intersect from '~/components/common/Intersect.astro';
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
 
+import { Font } from 'astro:assets';
+
 import type { MetaData as MetaDataType } from '~/types';
-import { brandGoogleFontsHref } from '~/brand';
+import { brand } from '~/brand';
 import PageBg from '~/components/ui/PageBg.astro';
 
 export interface Props {
@@ -27,7 +29,6 @@ export interface Props {
 
 const { metadata = {} } = Astro.props;
 const { language, textDirection } = I18N;
-const googleFontsHref = brandGoogleFontsHref();
 ---
 
 <!doctype html>
@@ -36,9 +37,8 @@ const googleFontsHref = brandGoogleFontsHref();
     <GoogleTagManager placement="head" />
     <CommonMeta />
     <Favicons />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href={googleFontsHref} />
+    <Font cssVariable={brand.fonts.heading.cssVariable} preload />
+    <Font cssVariable={brand.fonts.body.cssVariable} preload />
     <CustomStyles />
     <ApplyColorMode />
     <Metadata {...metadata} />

@@ -14,27 +14,46 @@
 
 export const brand = {
   fonts: {
-    /** Headings, buttons, eyebrows, ticker, quotes. */
+    /** Headings, ticker, and quotes. Bree Serif ships Regular only. */
     heading: {
-      name: 'Fraunces',
-      cssVariable: '--font-fraunces',
-      provider: 'google' as const,
-      /** Weight used by h1–h4, eyebrows and display type. */
-      displayWeight: '600',
-      weights: ['400', '500', '600', '700'] as string[],
+      name: 'Bree Serif',
+      cssVariable: '--font-bree-serif',
+      provider: 'local' as const,
+      /** Only Regular is in the family, so display type stays at 400. */
+      displayWeight: '400',
+      weights: ['400'] as string[],
       styles: ['normal'] as string[],
       subsets: ['latin'] as string[],
       fallbacks: ['serif'] as string[],
+      files: [
+        {
+          src: './src/fonts/bree-serif/BreeSerif-Regular.ttf',
+          weight: '400',
+          style: 'normal' as const,
+        },
+      ],
     },
-    /** Body copy and UI text. */
+    /** Body copy, nav links, and CTA labels. Variable wght axis 300–900. */
     body: {
       name: 'Figtree',
       cssVariable: '--font-figtree',
-      provider: 'google' as const,
-      weights: ['400', '500', '600', '700'] as string[],
-      styles: ['normal'] as string[],
+      provider: 'local' as const,
+      weights: ['300 900'] as string[],
+      styles: ['normal', 'italic'] as string[],
       subsets: ['latin'] as string[],
       fallbacks: ['sans-serif'] as string[],
+      files: [
+        {
+          src: './src/fonts/figtree/Figtree-VariableFont_wght.ttf',
+          weight: '300 900',
+          style: 'normal' as const,
+        },
+        {
+          src: './src/fonts/figtree/Figtree-Italic-VariableFont_wght.ttf',
+          weight: '300 900',
+          style: 'italic' as const,
+        },
+      ],
     },
   },
 
@@ -85,9 +104,9 @@ export const brand = {
   type: {
     /**
      * Style Guide 110:2377 (desktop). No mobile type in the file —
-     * mobile sizes are an optical scale (not a flat %), so Fraunces
+     * mobile sizes are an optical scale (not a flat %), so Bree Serif
      * still has a clear h1 > h2 > h3 step on a 390px screen.
-     * Faces: headings, tag/accent/quote = Fraunces; body and buttons = Figtree.
+     * Faces: headings, ticker, and quotes = Bree Serif; body, nav, and CTA labels = Figtree.
      */
     h1: { size: '72px', mobile: '40px', lineHeight: '1.05', tracking: '-0.01em' },
     h2: { size: '52px', mobile: '28px', lineHeight: '1.1', tracking: '-0.01em' },
@@ -98,7 +117,7 @@ export const brand = {
     body: { size: '16px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
     bodyLg: { size: '18px', mobile: '16px', lineHeight: '1.6', tracking: '0' },
     button: { size: '14px', mobile: '14px', lineHeight: '1', tracking: '0.04em' },
-    /** Figma `tag`; Fraunces display weight. */
+    /** Figma `tag`; Figtree. */
     eyebrow: { size: '16px', mobile: '15px', lineHeight: '1.2', tracking: '0.02em' },
     small: { size: '14px', mobile: '14px', lineHeight: '1.55', tracking: '0' },
     caption: { size: '12px', mobile: '12px', lineHeight: '1.4', tracking: '0' },
@@ -182,12 +201,6 @@ function ctaButtonVars(c: Brand['colors']): string {
   return [primary, secondary, ghostLight, ghostDark].join('');
 }
 
-/** Defines the font's CSS variable (loaded from Google Fonts in Layout.astro). */
-function fontFamilyVar(font: Brand['fonts']['heading'] | Brand['fonts']['body']): string {
-  const stack = [`'${font.name}'`, ...font.fallbacks].join(', ');
-  return `${font.cssVariable}: ${stack};`;
-}
-
 function rootVars(b: Brand): string {
   const { colors: c, fonts: f, radius: r, type: t } = b;
   const accent = rgb(c.accent);
@@ -196,8 +209,6 @@ function rootVars(b: Brand): string {
   const muted = rgb(c.muted);
 
   return `
-    ${fontFamilyVar(f.heading)}
-    ${fontFamilyVar(f.body)}
     --aw-font-sans: var(${f.body.cssVariable});
     --aw-font-serif: var(${f.heading.cssVariable});
     --aw-font-heading: var(${f.heading.cssVariable});
@@ -405,25 +416,14 @@ export function brandStylesheet(b: Brand = brand): string {
 }`;
 }
 
-/** Google Fonts stylesheet URL for the heading + body families (no font files kept in the repo). */
-export function brandGoogleFontsHref(): string {
-  const { heading, body } = brand.fonts;
-  const family = (font: Brand['fonts']['heading'] | Brand['fonts']['body']) =>
-    `family=${font.name.replace(/ /g, '+')}:wght@${[...font.weights].sort().join(';')}`;
-  return `https://fonts.googleapis.com/css2?${family(heading)}&${family(body)}&display=swap`;
-}
-
-/** Astro Fonts API entries — used by astro.config.ts and Layout.astro. */
+/** Local font entries for astro.config.ts. Layout.astro renders them with `<Font>`. */
 export function brandFontConfig() {
   const { heading, body } = brand.fonts;
   return [heading, body].map((font) => ({
     name: font.name,
     cssVariable: font.cssVariable,
     provider: font.provider,
-    weights: font.weights,
-    styles: font.styles,
-    subsets: font.subsets,
     fallbacks: font.fallbacks,
-    preload: true,
+    files: font.files,
   }));
 }

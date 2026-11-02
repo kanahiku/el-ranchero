@@ -54,11 +54,15 @@ export default defineConfig({
   fonts: brandFontConfig().map((font) => ({
     name: font.name,
     cssVariable: font.cssVariable,
-    provider: fontProviders.google(),
-    weights: font.weights,
-    styles: font.styles,
-    subsets: font.subsets,
-    fallbacks: font.fallbacks,
+    fallbacks: [...font.fallbacks],
+    provider: fontProviders.local(),
+    options: {
+      variants: font.files.map((file) => ({
+        src: [file.src],
+        weight: file.weight,
+        style: file.style,
+      })),
+    },
   })),
 
   integrations: [

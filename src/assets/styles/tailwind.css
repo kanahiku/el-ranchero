@@ -6,7 +6,7 @@
 
 @custom-variant intersect (&:not([no-intersect]));
 
-/* Disable faux-bold/italic. Headings/buttons are Norca-Rough; body is Host Grotesk; tag/quote/ticker are Wreck Script. */
+/* Disable faux-bold/italic. Headings are Bree Serif Regular; body, nav, and CTAs are Figtree. */
 @layer base {
   html {
     font-synthesis: none;

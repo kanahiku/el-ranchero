@@ -7,7 +7,7 @@ alwaysApply: true
 
 Phase 1 of every Figma build. Do not restyle buttons or compose pages until `src/brand.ts` matches the file.
 
-`src/brand.ts` is the only look file. `CustomStyles.astro` injects `brandStylesheet()`. `astro.config.ts` reads `brandFontConfig()` for Google Fonts.
+`src/brand.ts` is the only look file. `CustomStyles.astro` injects `brandStylesheet()`. `astro.config.ts` reads `brandFontConfig()` for the local font files.
 
 ## From Figma
 
