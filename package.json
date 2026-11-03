@@ -37,7 +37,7 @@
     "seed:catering": "tsx --env-file=.env scripts/seed-catering-to-sanity.ts",
     "seed:menu-pages": "tsx --env-file=.env scripts/seed-menu-pages-to-sanity.ts",
     "seed:menu": "tsx --env-file=.env scripts/seed-menu-to-sanity.ts",
-    "seed:test-content": "tsx --env-file=.env scripts/seed-test-content-to-sanity.ts",
+    "seed:real-reviews": "tsx --env-file=.env scripts/seed-real-reviews-to-sanity.ts",
     "studio": "cd studio && npm run dev"
   },
   "dependencies": {
