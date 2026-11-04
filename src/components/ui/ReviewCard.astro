@@ -39,10 +39,6 @@ const stars = [1, 2, 3, 4, 5];
         ))
       }
     </div>
-    <span class="inline-flex items-center gap-1.5 shrink-0" title={`Reviewed on ${sourceLabel}`}>
-      <Icon name={sourceIcon} class="w-5 h-5 text-accent" aria-hidden="true" />
-      <span class="sr-only">{sourceLabel}</span>
-    </span>
   </div>
 
   <h3
@@ -71,7 +67,7 @@ const stars = [1, 2, 3, 4, 5];
           variant === 'light' ? '' : 'text-contrast hover:text-white',
         ]}
       >
-        View on {sourceLabel}
+        Read full review
       </a>
     )
   }

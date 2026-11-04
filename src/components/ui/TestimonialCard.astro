@@ -15,7 +15,9 @@ export interface Props {
   class?: string;
 }
 
-const { quote, name, location, platform, class: className } = Astro.props;
+const { quote, name, location: rawLocation, platform, class: className } = Astro.props;
+// The platform logo already says where the review is from — drop "Google Review" / "Yelp Review" labels.
+const location = rawLocation && !/^\s*(google|yelp)\s+reviews?\s*$/i.test(rawLocation) ? rawLocation : undefined;
 ---
 
 <article class:list={['flex flex-col gap-5 bg-card p-4', className]}>
