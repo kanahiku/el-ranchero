@@ -1,6 +1,7 @@
 import { DocumentTextIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 import { linkField, richParagraphs, str, stringList, txt } from '../lib/fields';
+import { requiredSlug, requiredTitle } from '../../lib/validation';
 
 /** One document per legal page (/privacy-policy, /terms, /accessibility). Created by `npm run seed:legal`. */
 export const legalPage = defineType({
@@ -15,8 +16,22 @@ export const legalPage = defineType({
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
-    defineField({ name: 'pageName', title: 'Page', type: 'string', readOnly: true, description: 'Fixed.' }),
-    defineField({ name: 'slug', title: 'URL', type: 'string', readOnly: true, description: 'Fixed — the page address.' }),
+    defineField({
+      name: 'pageName',
+      title: 'Page',
+      type: 'string',
+      readOnly: true,
+      description: 'Fixed.',
+      validation: requiredTitle,
+    }),
+    defineField({
+      name: 'slug',
+      title: 'URL',
+      type: 'string',
+      readOnly: true,
+      description: 'Fixed — the page address.',
+      validation: requiredSlug,
+    }),
 
     str('heroTitle', 'Headline', 'hero'),
     txt('heroIntro', 'Intro / last-updated line', 'hero', undefined, 3),

@@ -31,7 +31,8 @@ const google: Review[] = [
   },
   {
     name: 'Lilly Biesinger',
-    quote: 'Horchata is very good! Taco Tuesday is a great time to go for a deal on the tacos. Pretty fast service and delicious sauces!',
+    quote:
+      'Horchata is very good! Taco Tuesday is a great time to go for a deal on the tacos. Pretty fast service and delicious sauces!',
   },
   {
     name: 'Glen Alamo',
@@ -58,7 +59,8 @@ const google: Review[] = [
 const yelp: Review[] = [
   {
     name: 'Joslyn H.',
-    quote: 'Colton makes the best flaming mango! Ask for him at the bar or ask your waitress to have him make it. The aesthetics of the drink were on point too.',
+    quote:
+      'Colton makes the best flaming mango! Ask for him at the bar or ask your waitress to have him make it. The aesthetics of the drink were on point too.',
   },
   {
     name: 'Miguel G.',
@@ -72,7 +74,8 @@ const yelp: Review[] = [
   },
   {
     name: 'Ron F.',
-    quote: 'Great restaurant! If you come, ask for Umberto as your server - the best! Also, the margarita flight for happy hour ain\u2019t all that bad.',
+    quote:
+      'Great restaurant! If you come, ask for Umberto as your server - the best! Also, the margarita flight for happy hour ain\u2019t all that bad.',
   },
   {
     name: 'Teven H.',

@@ -1,3 +1,4 @@
+import type { CallToAction } from '~/types';
 // ─── Shared primitives ────────────────────────────────────────────────────────
 
 export interface ContentImage {
@@ -52,7 +53,7 @@ export interface SocialLink {
 export interface NavigationContent {
   header: {
     links: NavLink[];
-    actions: { variant?: string; text?: string; href?: string }[];
+    actions: { variant?: CallToAction['variant']; text?: string; href?: string }[];
     phone?: NavPhone;
   };
   footer: {

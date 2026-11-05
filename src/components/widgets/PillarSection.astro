@@ -71,38 +71,32 @@ const { eyebrow, heading, bodyHtml, cards = [], id } = Astro.props;
   {...id ? { id } : {}}
   class="not-prose w-full rounded-t-[32px] bg-cta py-12 md:rounded-t-[64px] md:py-16 lg:py-[120px]"
 >
-<div class="mx-auto w-full max-w-container px-5 sm:px-8 md:px-16 lg:px-[120px]">
+  <div class="mx-auto w-full max-w-container px-5 sm:px-8 md:px-16 lg:px-[120px]">
+    {/* ── Header: eyebrow + heading (left) | body text (right) ── */}
+    <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-[120px]">
+      <div class="flex min-w-0 flex-1 flex-col gap-4">
+        {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
+        <Heading variant="h2">{heading}</Heading>
+      </div>
 
-  {/* ── Header: eyebrow + heading (left) | body text (right) ── */}
-  <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-[120px]">
-
-    <div class="flex min-w-0 flex-1 flex-col gap-4">
-      {eyebrow && (
-        <Heading variant="eyebrow">{eyebrow}</Heading>
-      )}
-      <Heading variant="h2">{heading}</Heading>
+      {bodyHtml && <Text class="min-w-0 flex-1" html={bodyHtml} />}
     </div>
 
-    {bodyHtml && (
-      <Text class="min-w-0 flex-1" html={bodyHtml} />
-    )}
-
+    {/* ── Card grid ── */}
+    {
+      cards.length > 0 && (
+        <div class="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          {cards.map((card) => (
+            <Card variant="pillar" label={card.label} iconBg={card.iconBg ?? false}>
+              <Fragment slot="icon" set:html={card.iconSvg} />
+              <Heading variant="h4" color="inherit" class="text-primary" as="p">
+                {card.heading}
+              </Heading>
+              <Text variant="small">{card.description}</Text>
+            </Card>
+          ))}
+        </div>
+      )
+    }
   </div>
-
-  {/* ── Card grid ── */}
-  {cards.length > 0 && (
-    <div class="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-      {cards.map((card) => (
-        <Card variant="pillar" label={card.label} iconBg={card.iconBg ?? false}>
-          <Fragment slot="icon" set:html={card.iconSvg} />
-          <Heading variant="h4" color="inherit" class="text-primary" as="p">
-            {card.heading}
-          </Heading>
-          <Text variant="small">{card.description}</Text>
-        </Card>
-      ))}
-    </div>
-  )}
-
-</div>
 </section>

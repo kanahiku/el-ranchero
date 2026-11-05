@@ -26,46 +26,46 @@ export interface Props {
 const {
   eyebrow = 'Design Your Own Salad',
   title = 'Build your own salad, your way.',
-  subtitle =
-    'Pick your lettuce, four toppings, a cheese and a dressing. Want more? Pile it on. The bowl you actually want \u2014 no swaps you have to argue for.',
+  subtitle = 'Pick your lettuce, four toppings, a cheese and a dressing. Want more? Pile it on. The bowl you actually want \u2014 no swaps you have to argue for.',
   ctaText = 'start building',
   ctaHref = '/menu',
   id,
 } = Astro.props;
 ---
 
-<section
-  {...id ? { id } : {}}
-  class="not-prose relative w-full overflow-hidden"
->
+<section {...id ? { id } : {}} class="not-prose relative w-full overflow-hidden">
   <div class="mx-auto max-w-container px-4 pb-12 md:px-8">
-  {/* Gradient band: transparent at the top, fades to cream at the bottom */}
-  <div class="flex min-h-[610px] w-full flex-col items-center justify-center gap-10 bg-gradient-to-b from-transparent from-[24%] to-page/90 px-4 py-10 md:flex-row md:gap-16 md:p-16">
-
-    {/* ── Left column: text content ── */}
-    <div class="flex min-w-0 flex-1 flex-col items-start gap-6">
-      <div class="flex w-full flex-col gap-6">
-        {eyebrow && (
-          <Heading variant="eyebrow" color="inherit" class="text-eyebrow opacity-80">
-            {eyebrow}
-          </Heading>
-        )}
-        {title && <Heading variant="h2">{title}</Heading>}
-        {subtitle && (
-          <Text variant="body" color="default">{subtitle}</Text>
-        )}
+    {/* Gradient band: transparent at the top, fades to cream at the bottom */}
+    <div
+      class="flex min-h-[610px] w-full flex-col items-center justify-center gap-10 bg-gradient-to-b from-transparent from-[24%] to-page/90 px-4 py-10 md:flex-row md:gap-16 md:p-16"
+    >
+      {/* ── Left column: text content ── */}
+      <div class="flex min-w-0 flex-1 flex-col items-start gap-6">
+        <div class="flex w-full flex-col gap-6">
+          {
+            eyebrow && (
+              <Heading variant="eyebrow" color="inherit" class="text-eyebrow opacity-80">
+                {eyebrow}
+              </Heading>
+            )
+          }
+          {title && <Heading variant="h2">{title}</Heading>}
+          {
+            subtitle && (
+              <Text variant="body" color="default">
+                {subtitle}
+              </Text>
+            )
+          }
+        </div>
+        {ctaText && <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} />}
       </div>
-      {ctaText && (
-        <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} />
-      )}
-    </div>
 
-    {/* ── Right column: illustration + floating tags ── */}
-    <div class="relative w-full max-w-[562px] shrink-0" style="aspect-ratio: 562 / 624;">
-      <!-- TODO: replace with <Image> when asset is ready -->
-      <HeroImagePlaceholder fill class="absolute inset-0" />
+      {/* ── Right column: illustration + floating tags ── */}
+      <div class="relative w-full max-w-[562px] shrink-0" style="aspect-ratio: 562 / 624;">
+        <!-- TODO: replace with <Image> when asset is ready -->
+        <HeroImagePlaceholder fill class="absolute inset-0" />
+      </div>
     </div>
-
-  </div>
   </div>
 </section>

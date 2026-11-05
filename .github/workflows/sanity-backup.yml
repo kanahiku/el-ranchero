@@ -1,0 +1,28 @@
+name: Sanity backup
+
+on:
+  schedule:
+    - cron: '0 3 * * 0' # weekly, Sunday 03:00 UTC
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx tsx scripts/sanity-export.ts
+        env:
+          PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+          PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+          BACKUP_S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

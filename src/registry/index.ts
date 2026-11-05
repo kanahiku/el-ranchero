@@ -25,7 +25,10 @@ export interface ComponentRegistry {
 export const registry = registryJson as ComponentRegistry;
 
 function normalize(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
 }
 
 /**
@@ -36,9 +39,7 @@ export function matchFigmaName(name: string): RegistryPattern | undefined {
   const needle = normalize(name);
   if (!needle) return undefined;
 
-  const exact = registry.patterns.find((pattern) =>
-    pattern.figmaNames.some((alias) => normalize(alias) === needle)
-  );
+  const exact = registry.patterns.find((pattern) => pattern.figmaNames.some((alias) => normalize(alias) === needle));
   if (exact) return exact;
 
   return registry.patterns.find((pattern) =>

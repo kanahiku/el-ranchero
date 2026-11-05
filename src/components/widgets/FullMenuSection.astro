@@ -31,15 +31,7 @@ export interface Props {
   id?: string;
 }
 
-const {
-  eyebrow,
-  title = 'The Full El Ranchero Menu',
-  subtitle,
-  categories = [],
-  ctaText,
-  ctaHref,
-  id,
-} = Astro.props;
+const { eyebrow, title = 'The Full El Ranchero Menu', subtitle, categories = [], ctaText, ctaHref, id } = Astro.props;
 
 const slugify = (value: string) =>
   value
@@ -51,8 +43,7 @@ const slugify = (value: string) =>
 
 <section {...id ? { id } : {}} class="not-prose relative w-full bg-page" aria-label="Full menu">
   <!-- Decorative images in their own overflow-hidden shell so sticky positioning still works -->
-  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-  </div>
+  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true"></div>
 
   <div
     class="relative z-[1] mx-auto flex w-full max-w-container flex-col gap-10 px-5 py-16 sm:px-8 md:gap-14 md:px-16 md:py-[120px]"
@@ -120,9 +111,7 @@ const slugify = (value: string) =>
                   {category.title}
                 </h3>
                 {category.description && (
-                  <p class="font-sans text-body leading-[1.45] tracking-[-0.01em] text-muted">
-                    {category.description}
-                  </p>
+                  <p class="font-sans text-body leading-[1.45] tracking-[-0.01em] text-muted">{category.description}</p>
                 )}
               </div>
               {category.href && (

@@ -24,7 +24,8 @@ const page = await getLegalPageContent(slug);
 
 const metadata = { title: page.seoTitle, description: page.seoDescription, ignoreTitleTemplate: true };
 
-const headingClass = 'text-[22px] md:text-[26px] font-normal leading-[130%] tracking-tight font-heading text-heading mb-4';
+const headingClass =
+  'text-[22px] md:text-[26px] font-normal leading-[130%] tracking-tight font-heading text-heading mb-4';
 const bodyClass = 'text-[16px] font-normal leading-[160%] text-muted';
 const listClass = `${bodyClass} space-y-1 list-disc pl-5`;
 ---

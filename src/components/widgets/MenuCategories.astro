@@ -60,9 +60,7 @@ const categories = cmsCategories
       label: category.title,
       href: category.href!,
       description: category.description ?? '',
-      img: isHub
-        ? (category.image ?? category.exploreMoreImage)
-        : (category.exploreMoreImage ?? category.image),
+      img: isHub ? (category.image ?? category.exploreMoreImage) : (category.exploreMoreImage ?? category.image),
       colSpan: isHub && wide ? 'md:col-span-6' : 'md:col-span-4',
       aspect: isHub && wide ? '16 / 9' : '4 / 3',
     };
@@ -97,9 +95,16 @@ const categories = cmsCategories
         categories.map((cat) => (
           <a
             href={cat.href}
-            class:list={['group flex h-full flex-col overflow-hidden', tone === 'card' ? 'bg-page' : 'bg-card', cat.colSpan]}
+            class:list={[
+              'group flex h-full flex-col overflow-hidden',
+              tone === 'card' ? 'bg-page' : 'bg-card',
+              cat.colSpan,
+            ]}
           >
-            <div class="relative w-full shrink-0 overflow-hidden bg-section-grey" style={`aspect-ratio: ${cat.aspect};`}>
+            <div
+              class="relative w-full shrink-0 overflow-hidden bg-section-grey"
+              style={`aspect-ratio: ${cat.aspect};`}
+            >
               {cat.img?.src ? (
                 <Image
                   src={cat.img.src}

@@ -66,7 +66,8 @@ export function mdToBlock(source: string): Record<string, unknown> {
   const children: Array<Record<string, unknown>> = [];
   let last = 0;
   for (const match of source.matchAll(MD_LINK)) {
-    if (match.index! > last) children.push({ _type: 'span', _key: key(), text: source.slice(last, match.index), marks: [] });
+    if (match.index! > last)
+      children.push({ _type: 'span', _key: key(), text: source.slice(last, match.index), marks: [] });
     const defKey = key();
     markDefs.push({ _key: defKey, _type: 'link', href: match[2] });
     children.push({ _type: 'span', _key: key(), text: match[1], marks: [defKey] });

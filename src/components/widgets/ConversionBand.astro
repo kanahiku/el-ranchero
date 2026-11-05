@@ -14,27 +14,31 @@ const links = [
 ---
 
 <div class="not-prose w-full border-t border-heading/10 bg-card">
-  <div class="mx-auto flex w-full max-w-container flex-col divide-y divide-heading/10 sm:flex-row sm:divide-x sm:divide-y-0">
-    {links.map((link) => (
-      <a
-        href={link.href}
-        class="group flex flex-1 items-center justify-between gap-3 px-6 py-5 transition-colors duration-200 hover:bg-section-grey/30 md:px-10 md:py-6"
-      >
-        <span class="font-sans text-button font-semibold uppercase tracking-[0.06em] text-heading transition-colors group-hover:text-heading">
-          {link.label}
-        </span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.75"
-          class="size-3.5 shrink-0 text-heading/40 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-heading"
-          aria-hidden="true"
+  <div
+    class="mx-auto flex w-full max-w-container flex-col divide-y divide-heading/10 sm:flex-row sm:divide-x sm:divide-y-0"
+  >
+    {
+      links.map((link) => (
+        <a
+          href={link.href}
+          class="group flex flex-1 items-center justify-between gap-3 px-6 py-5 transition-colors duration-200 hover:bg-section-grey/30 md:px-10 md:py-6"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3 13L13 3M7 3h6v6" />
-        </svg>
-      </a>
-    ))}
+          <span class="font-sans text-button font-semibold uppercase tracking-[0.06em] text-heading transition-colors group-hover:text-heading">
+            {link.label}
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            class="size-3.5 shrink-0 text-heading/40 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-heading"
+            aria-hidden="true"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13L13 3M7 3h6v6" />
+          </svg>
+        </a>
+      ))
+    }
   </div>
 </div>

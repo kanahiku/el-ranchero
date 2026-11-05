@@ -1,0 +1,176 @@
+---
+import type { BlogPost } from '~/lib/content/types';
+import { formatTableCell } from '~/components/blog/blogClasses';
+import { Icon } from 'astro-icon/components';
+import Button from '~/components/ui/Button.astro';
+import BlogArticleImage from '~/components/blog/BlogArticleImage.astro';
+import { getPortableHeadingId } from '~/lib/content/blogArticle';
+import { paragraphClass, headingClass, h3Class } from '~/components/blog/blogClasses';
+
+export interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const contentBlocks = post.contentBlocks ?? [];
+---
+
+{
+  contentBlocks.map((block) => {
+    if (block._type === 'heading' && block.level === 2) {
+      const headingId = getPortableHeadingId(post, block._key);
+      return (
+        <h2 id={headingId} class:list={[headingClass, 'mt-10 md:mt-14 scroll-mt-28']}>
+          {block.text}
+        </h2>
+      );
+    }
+
+    if (block._type === 'heading') {
+      return <h3 class={h3Class}>{block.text}</h3>;
+    }
+
+    if (block._type === 'image') {
+      return <BlogArticleImage image={block.image} caption={block.caption} />;
+    }
+
+    if (block._type === 'list') {
+      const isOrdered = block.listType === 'number';
+      const Tag = isOrdered ? 'ol' : 'ul';
+      return (
+        <Tag class="mt-5 space-y-2 not-prose">
+          {block.items.map((item, idx) => (
+            <li class:list={[paragraphClass, 'flex items-start gap-3']}>
+              {isOrdered ? (
+                <span class="shrink-0 font-medium text-heading tabular-nums min-w-[1.5rem]">{idx + 1}.</span>
+              ) : (
+                <span class="mt-[0.45em] shrink-0 w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true" />
+              )}
+              <span set:html={item.html} />
+            </li>
+          ))}
+        </Tag>
+      );
+    }
+
+    if (block._type === 'table') {
+      const colCount = block.headerRow.length;
+      return (
+        <figure class="mt-8 overflow-x-auto">
+          <table
+            class="w-full border-separate border-spacing-0 text-left font-sans text-[14px] md:text-[15px]"
+            style={`min-width: ${colCount * 160}px`}
+          >
+            <thead>
+              <tr>
+                {block.headerRow.map((header, hi) => (
+                  <th
+                    class:list={[
+                      'bg-card-dark text-white font-bold leading-[160%] px-4 py-3 border-r border-accent last:border-r-0',
+                      hi === 0 && 'rounded-tl-lg',
+                      hi === block.headerRow.length - 1 && 'rounded-tr-lg text-white border-r-0',
+                    ]}
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row, ri) => {
+                const isLast = ri === block.rows.length - 1;
+                return (
+                  <tr>
+                    {row.cells.map((cell, ci) => {
+                      const isFirstCol = ci === 0;
+                      const isLastCol = ci === row.cells.length - 1;
+                      const CellTag = isFirstCol ? 'th' : 'td';
+                      return (
+                        <CellTag
+                          class:list={[
+                            'align-top bg-card-light leading-[160%] px-4 py-4 border-r border-accent last:border-r-0',
+                            isFirstCol ? 'font-medium text-blog' : 'font-normal text-blog',
+                            isLast && isFirstCol && 'rounded-bl-lg',
+                            isLast && isLastCol && 'rounded-br-lg',
+                          ]}
+                        >
+                          <span set:html={formatTableCell(cell)} />
+                        </CellTag>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {block.caption && <figcaption class="mt-2 text-[13px] text-blog/70 text-center">{block.caption}</figcaption>}
+        </figure>
+      );
+    }
+
+    if (block._type === 'callout') {
+      const calloutConfig = {
+        tip: { icon: 'tabler:bulb', border: 'border-accent', bg: 'bg-card-light' },
+        info: { icon: 'tabler:info-circle', border: 'border-blue-400', bg: 'bg-blue-50' },
+        warning: { icon: 'tabler:alert-triangle', border: 'border-orange-400', bg: 'bg-orange-50' },
+        note: { icon: 'tabler:note', border: 'border-gray-300', bg: 'bg-section-grey' },
+      }[block.calloutType] ?? { icon: 'tabler:note', border: 'border-gray-300', bg: 'bg-section-grey' };
+      return (
+        <div class:list={['mt-6 flex gap-4 rounded-lg p-4 md:p-5 border-l-4', calloutConfig.border, calloutConfig.bg]}>
+          <Icon name={calloutConfig.icon} class="shrink-0 w-5 h-5 mt-0.5 text-heading/60" aria-hidden="true" />
+          <p class={paragraphClass}>{block.text}</p>
+        </div>
+      );
+    }
+
+    if (block._type === 'button') {
+      return (
+        <p class="mt-6">
+          <Button variant={block.variant || 'primary'} text={block.text} href={block.href} hideNote={true} />
+        </p>
+      );
+    }
+
+    if (block._type === 'faq') {
+      return (
+        <div class="mt-10 mb-8">
+          <h2 class={headingClass}>{block.title || 'Frequently Asked Questions'}</h2>
+          <div class="space-y-0">
+            {block.items.map((item, index) => (
+              <details class:list={['group py-1', index > 0 && 'border-t border-default/15']} name="blog-faq">
+                <summary class="flex cursor-pointer list-none select-none items-center justify-between gap-4 py-4">
+                  <span class="pr-4 font-sans text-[16px] font-medium leading-snug text-heading md:text-[18px]">
+                    {item.question}
+                  </span>
+                  <span class="flex size-6 shrink-0 items-center justify-center rounded-full border border-default/30 text-heading transition-colors duration-200 group-open:border-accent group-open:text-accent">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="size-3.5 transition-transform duration-300 group-open:rotate-45"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      aria-hidden="true"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                  </span>
+                </summary>
+                <div class="pb-5 pr-10">
+                  <p class="text-[15px] font-normal leading-[160%] text-blog md:text-[16px]" set:html={item.answer} />
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <p
+        class:list={[paragraphClass, 'mt-5', block.quote && 'italic border-l-4 border-accent pl-5']}
+        set:html={block.html}
+      />
+    );
+  })
+}

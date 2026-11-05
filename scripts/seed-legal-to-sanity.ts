@@ -66,7 +66,6 @@ function applyType(value: unknown, rule: TypeRule): unknown {
 
 const LINK: TypeRule = { type: 'link' };
 
-
 async function seedDoc(
   id: string,
   type: string,
@@ -96,12 +95,10 @@ async function seedDoc(
 }
 
 for (const page of legalPageDefaults) {
-  await seedDoc(
-    `legal-page-${page.slug}`,
-    'legalPage',
-    page as unknown as Doc,
-    { ctaButton: LINK, sections: { type: 'legalSection' } }
-  );
+  await seedDoc(`legal-page-${page.slug}`, 'legalPage', page as unknown as Doc, {
+    ctaButton: LINK,
+    sections: { type: 'legalSection' },
+  });
 }
 
 if (!commit) console.log('\nDry run. Re-run with --commit to write.');

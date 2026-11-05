@@ -14,7 +14,6 @@ export const CATERING_CTA_HREF = '/catering';
 /** Footer conversion card. */
 export const FOOTER_CTA_EYEBROW = 'Hungry?';
 export const FOOTER_CTA_TITLE = 'Order ahead.<br />Skip the line.';
-export const FOOTER_CTA_BODY =
-  'Order Taqueria El Ranchero for takeout from Wahiawa or Kapolei through DoorDash.';
+export const FOOTER_CTA_BODY = 'Order Taqueria El Ranchero for takeout from Wahiawa or Kapolei through DoorDash.';
 export const FOOTER_CTA_LABEL = 'order online';
 export const FOOTER_CTA_HREF = '/order-online';

@@ -82,13 +82,7 @@ const exploreHtml = richToHtml(c.exploreParagraphs);
       />
       <div class="flex flex-col items-start gap-3">
         <Text color="default">{c.callPrompt}</Text>
-        <Button
-          variant="ghost"
-          tone="light"
-          text={`Call ${c.phoneDisplay}`}
-          href={c.phoneHref}
-          hideNote={true}
-        />
+        <Button variant="ghost" tone="light" text={`Call ${c.phoneDisplay}`} href={c.phoneHref} hideNote={true} />
       </div>
     </div>
   </TextSplit>
@@ -156,7 +150,11 @@ const exploreHtml = richToHtml(c.exploreParagraphs);
     <div class="flex flex-col items-start gap-6">
       {exploreHtml.map((html) => <Text color="default" html={html} />)}
       <Text color="default" html={`${c.exploreOptionsLead} ${cateringOptionLinks}.`} />
-      {c.exploreButton.text && <Button variant="primary" text={c.exploreButton.text} href={c.exploreButton.href} hideNote={true} />}
+      {
+        c.exploreButton.text && (
+          <Button variant="primary" text={c.exploreButton.text} href={c.exploreButton.href} hideNote={true} />
+        )
+      }
     </div>
   </TextSplit>
 

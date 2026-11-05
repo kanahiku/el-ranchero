@@ -6,7 +6,14 @@ import { schemaTypes } from './schemas';
 import { structure, singletonTypes } from './structure';
 
 /** Fixed-URL documents: edited in place, never created from the "+" menu. */
-const fixedTypes = new Set([...singletonTypes, 'menuCategoryPage', 'cateringSubPage', 'eventsSubPage', 'locationsSubPage', 'legalPage']);
+const fixedTypes = new Set([
+  ...singletonTypes,
+  'menuCategoryPage',
+  'cateringSubPage',
+  'eventsSubPage',
+  'locationsSubPage',
+  'legalPage',
+]);
 
 export default defineConfig({
   name: 'el-ranchero',
@@ -15,10 +22,7 @@ export default defineConfig({
   projectId: process.env.SANITY_STUDIO_PROJECT_ID ?? 'jntapqhj',
   dataset: process.env.SANITY_STUDIO_DATASET ?? 'production',
 
-  plugins: [
-    structureTool({ structure }),
-    visionTool(),
-  ],
+  plugins: [structureTool({ structure }), visionTool()],
 
   document: {
     newDocumentOptions: (prev) => prev.filter((option) => !fixedTypes.has(option.templateId)),

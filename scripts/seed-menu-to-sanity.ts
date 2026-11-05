@@ -94,7 +94,10 @@ meatOptions.forEach((meat, index) => {
   });
 });
 
-const counts = docs.reduce<Record<string, number>>((acc, doc) => ({ ...acc, [doc._type]: (acc[doc._type] ?? 0) + 1 }), {});
+const counts = docs.reduce<Record<string, number>>(
+  (acc, doc) => ({ ...acc, [doc._type]: (acc[doc._type] ?? 0) + 1 }),
+  {}
+);
 console.log(`Project ${projectId}/${dataset} — ${docs.length} documents:`, counts);
 
 if (!commit) {

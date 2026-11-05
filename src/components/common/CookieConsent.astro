@@ -1,0 +1,118 @@
+---
+/**
+ * Cookie banner: Necessary (always on), Analytics, Marketing, Preferences.
+ * Opens on first visit; reopen from any `[data-cookie-settings]` control (footer).
+ * Choices go to Consent Mode v2 via `gtag('consent', 'update', …)`.
+ */
+const categories = [
+  { key: 'analytics', label: 'Analytics', hint: 'Helps us understand how the site is used.' },
+  { key: 'marketing', label: 'Marketing', hint: 'Used to measure and personalize ads.' },
+  { key: 'preferences', label: 'Preferences', hint: 'Remembers your settings.' },
+] as const;
+---
+
+<div
+  id="cookie-consent"
+  role="dialog"
+  aria-label="Cookie preferences"
+  hidden
+  class="fixed inset-x-3 bottom-3 z-[60] mx-auto max-w-2xl bg-section-dark p-5 text-contrast shadow-header md:p-6"
+>
+  <p class="text-body">
+    We use cookies to run the site and, with your permission, to understand how it is used. See our
+    <a class="underline" href="/privacy-policy">Privacy Policy</a>.
+  </p>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2" data-cookie-options hidden>
+    <label class="flex items-start gap-2 text-small opacity-70">
+      <input type="checkbox" checked disabled class="mt-1" />
+      <span><strong>Necessary</strong> — always on.</span>
+    </label>
+    {
+      categories.map(({ key, label, hint }) => (
+        <label class="flex items-start gap-2 text-small">
+          <input type="checkbox" name={key} class="mt-1" />
+          <span>
+            <strong>{label}</strong> — {hint}
+          </span>
+        </label>
+      ))
+    }
+  </div>
+  <div class="mt-5 flex flex-wrap gap-3">
+    <button type="button" class="btn btn-primary" data-cookie-action="accept">Accept all</button>
+    <button type="button" class="btn btn-ghost-dark" data-cookie-action="reject">Reject all</button>
+    <button type="button" class="btn btn-ghost-dark" data-cookie-action="customize">Customize</button>
+    <button type="button" class="btn btn-ghost-dark" data-cookie-action="save" hidden>Save choices</button>
+  </div>
+</div>
+
+<script>
+  type Choice = { analytics: boolean; marketing: boolean; preferences: boolean };
+  const KEY = 'cookie-consent';
+
+  const read = (): Choice | null => {
+    try {
+      return JSON.parse(localStorage.getItem(KEY) || 'null');
+    } catch {
+      return null;
+    }
+  };
+
+  const apply = (c: Choice) => {
+    const state = (on: boolean) => (on ? 'granted' : 'denied');
+    const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+    w.gtag?.('consent', 'update', {
+      analytics_storage: state(c.analytics),
+      ad_storage: state(c.marketing),
+      ad_user_data: state(c.marketing),
+      ad_personalization: state(c.marketing),
+      functionality_storage: state(c.preferences),
+      personalization_storage: state(c.preferences),
+    });
+  };
+
+  function init() {
+    const root = document.getElementById('cookie-consent');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = 'true';
+    const options = root.querySelector<HTMLElement>('[data-cookie-options]')!;
+    const saveBtn = root.querySelector<HTMLElement>('[data-cookie-action="save"]')!;
+    const customizeBtn = root.querySelector<HTMLElement>('[data-cookie-action="customize"]')!;
+    const boxes = Array.from(root.querySelectorAll<HTMLInputElement>('input[name]'));
+
+    const open = (showOptions: boolean) => {
+      const saved = read();
+      boxes.forEach((b) => (b.checked = Boolean(saved?.[b.name as keyof Choice])));
+      options.hidden = !showOptions;
+      saveBtn.hidden = !showOptions;
+      customizeBtn.hidden = showOptions;
+      root.hidden = false;
+    };
+
+    const commit = (c: Choice) => {
+      localStorage.setItem(KEY, JSON.stringify(c));
+      apply(c);
+      root.hidden = true;
+    };
+
+    root.addEventListener('click', (e) => {
+      const action = (e.target as HTMLElement).closest<HTMLElement>('[data-cookie-action]')?.dataset.cookieAction;
+      if (action === 'accept') commit({ analytics: true, marketing: true, preferences: true });
+      if (action === 'reject') commit({ analytics: false, marketing: false, preferences: false });
+      if (action === 'customize') open(true);
+      if (action === 'save') {
+        const pick = (n: keyof Choice) => boxes.find((b) => b.name === n)?.checked ?? false;
+        commit({ analytics: pick('analytics'), marketing: pick('marketing'), preferences: pick('preferences') });
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('[data-cookie-settings]')) open(true);
+    });
+
+    if (!read()) open(false);
+  }
+
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

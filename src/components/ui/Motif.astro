@@ -35,10 +35,6 @@ const { name, width, height, style, class: className = '', mobile = false, blend
   height={height}
   loading="lazy"
   decoding="async"
-  class:list={[
-    'pointer-events-none absolute z-[1] max-w-none select-none',
-    !mobile && 'hidden md:block',
-    className,
-  ]}
+  class:list={['pointer-events-none absolute z-[1] max-w-none select-none', !mobile && 'hidden md:block', className]}
   style={`width: ${width}px; height: auto; ${blend ? `mix-blend-mode: ${blend};` : ''} ${style ?? ''}`}
 />

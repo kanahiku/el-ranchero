@@ -24,13 +24,36 @@ const location = rawLocation && !/^\s*(google|yelp)\s+reviews?\s*$/i.test(rawLoc
   <div class="flex items-start gap-1.5">
     {
       platform === 'yelp' ? (
-        <img src={yelpIcon.src} alt="Yelp" width={yelpIcon.width} height={yelpIcon.height} class="h-6 w-auto object-contain" loading="lazy" decoding="async" />
+        <img
+          src={yelpIcon.src}
+          alt="Yelp"
+          width={yelpIcon.width}
+          height={yelpIcon.height}
+          class="h-6 w-auto object-contain"
+          loading="lazy"
+          decoding="async"
+        />
       ) : (
-        <img src={googleIcon.src} alt="Google" width={googleIcon.width} height={googleIcon.height} class="h-6 w-auto object-contain" loading="lazy" decoding="async" />
+        <img
+          src={googleIcon.src}
+          alt="Google"
+          width={googleIcon.width}
+          height={googleIcon.height}
+          class="h-6 w-auto object-contain"
+          loading="lazy"
+          decoding="async"
+        />
       )
     }
     <div class="-rotate-[1.82deg]" role="img" aria-label="5 out of 5 stars">
-      <svg width="139" height="20" viewBox="0 0 139 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg
+        width="139"
+        height="20"
+        viewBox="0 0 139 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
         {
           [0, 1, 2, 3, 4].map((i) => (
             <g transform={`translate(${i * 27.8}, 0)`}>

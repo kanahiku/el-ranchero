@@ -7,7 +7,8 @@ const anchor = defineField({
   title: 'Section ID',
   description: 'Used for in-page links (e.g. #planning). Lowercase letters and dashes.',
   type: 'string',
-  validation: (r) => r.regex(/^[a-z0-9-]*$/, { name: 'lowercase-dashes' }).error('Use lowercase letters, numbers and dashes.'),
+  validation: (r) =>
+    r.regex(/^[a-z0-9-]*$/, { name: 'lowercase-dashes' }).error('Use lowercase letters, numbers and dashes.'),
 });
 
 const tone = defineField({

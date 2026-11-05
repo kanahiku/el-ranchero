@@ -14,6 +14,7 @@ import ArtDirectedImage from '~/components/ui/ArtDirectedImage.astro';
 import CTAActions from '~/components/ui/CTAActions.astro';
 import Text from '~/components/ui/Text.astro';
 import Heading from '~/components/ui/Heading.astro';
+import HeroSplit from '~/components/widgets/HeroSplit.astro';
 import HeroImagePlaceholder from '~/components/ui/HeroImagePlaceholder.astro';
 import type { ContentImage } from '~/lib/content/types';
 
@@ -202,7 +203,9 @@ const isLocalOverlayImage =
               withImage ? 'items-stretch gap-6 md:gap-[72px]' : 'items-start gap-6',
             ]}
           >
-            {tagline && <Heading variant="eyebrow" color="inherit" class="mb-2 text-heading/60 md:mb-4" html={tagline} />}
+            {tagline && (
+              <Heading variant="eyebrow" color="inherit" class="mb-2 text-heading/60 md:mb-4" html={tagline} />
+            )}
             <div
               class:list={[
                 'flex w-full flex-col items-start',
@@ -255,9 +258,7 @@ const isLocalOverlayImage =
             <div
               class:list={[
                 'flex shrink-0 flex-col justify-center gap-6 pb-10 pt-6 lg:py-24',
-                showSplitDarkImage
-                  ? 'items-start lg:w-[55%] lg:pr-16'
-                  : 'w-full items-center text-center',
+                showSplitDarkImage ? 'items-start lg:w-[55%] lg:pr-16' : 'w-full items-center text-center',
               ]}
             >
               {tagline && <Heading variant="eyebrow" color="inherit" class="text-contrast/55" html={tagline} />}
@@ -352,86 +353,20 @@ const isLocalOverlayImage =
       )}
     </section>
   ) : (
-    <section class:list={['relative not-prose', overlapHeader && 'md:-mt-[76px]']} {...(id ? { id } : {})}>
-      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <slot name="bg">{bg ? <Fragment set:html={bg} /> : null}</slot>
-      </div>
-      <div class:list={['relative max-w-container mx-auto', !isSplitImage && 'px-4 sm:px-6']}>
-        {!isSplitImage && overlapHeader && <div class="pt-0 md:pt-[76px] pointer-events-none" />}
-        <div
-          class:list={[
-            isSplitImage && 'md:flex md:items-stretch md:min-h-[640px] lg:min-h-[760px]',
-            isSplitImage && isReversed && 'md:flex-row-reverse',
-            !hasImage && 'py-12 md:py-[100px]',
-          ]}
-        >
-          <div
-            class:list={[
-              hasImage ? 'md:basis-1/2 self-center text-left' : 'w-full max-w-3xl text-left',
-              isSplitImage && [
-                'px-4 sm:px-6 py-12 md:pb-20 lg:pb-[100px]',
-                overlapHeader ? 'md:pt-[calc(76px+5rem)]' : 'md:pt-20',
-                isReversed ? 'md:pl-16 lg:pl-24' : 'md:pr-16 lg:pr-24',
-              ],
-            ]}
-          >
-            {tagline && (
-              <p
-                class="type-eyebrow text-eyebrow font-sans intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
-                set:html={tagline}
-              />
-            )}
-            {title && (
-              <h1
-                class="text-h2 font-normal leading-[105%] font-heading text-heading dark:text-gray-200 intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
-                set:html={title}
-              />
-            )}
-            <div class="max-w-3xl lg:max-w-none flex flex-col items-start gap-6">
-              {subtitle && (
-                <p
-                  class="text-body text-muted dark:text-slate-300 intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
-                  set:html={subtitle}
-                />
-              )}
-              {actions &&
-                (Array.isArray(actions) ? (
-                  <CTAActions
-                    actions={actions}
-                    noteTone="light"
-                    class="intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
-                  />
-                ) : (
-                  <Fragment set:html={actions} />
-                ))}
-            </div>
-            {content && <Fragment set:html={content} />}
-          </div>
-          {isSplitImage && (
-            <div class="relative mt-8 md:mt-0 md:basis-1/2 aspect-[4/3] md:aspect-auto">
-              <div class="absolute inset-0 overflow-hidden [&>*]:!h-full [&>*]:!w-full [&>*]:!max-w-none [&>*]:!rounded-none [&>*]:!aspect-auto [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:rounded-none">
-                {typeof image === 'string' ? (
-                  <Fragment set:html={image} />
-                ) : (
-                  <Image
-                    src={contentImage?.src}
-                    alt={contentImage?.alt ?? ''}
-                    class="w-full h-full object-cover"
-                    widths={[400, 768, 1200]}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    loading="eager"
-                    width={700}
-                    height={700}
-                    layout="cover"
-                    format="webp"
-                  />
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
+    <HeroSplit
+      id={id}
+      title={title}
+      subtitle={subtitle}
+      tagline={tagline}
+      content={content}
+      actions={actions}
+      image={image}
+      contentImage={contentImage}
+      bg={bg}
+      isReversed={isReversed}
+      overlapHeader={overlapHeader}
+      hasImage={hasImage}
+      isSplitImage={isSplitImage}
+    />
   )
 }
-

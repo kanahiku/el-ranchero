@@ -61,8 +61,7 @@ export const storeLocations: StoreLocation[] = [
       'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d118807.78334032193!2d-157.9185514!3d21.4785894!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c005df2e6157385%3A0x308420cdf244ff60!2sTaqueria%20El%20Ranchero!5e0!3m2!1sen!2sph!4v1786723483970!5m2!1sen!2sph',
     directionsHref:
       'https://www.google.com/maps/place/Taqueria+El+Ranchero/@21.4785894,-157.9185514,12.25z/data=!4m6!3m5!1s0x7c005df2e6157385:0x308420cdf244ff60!8m2!3d21.4971101!4d-158.0255454!16s%2Fg%2F11b77try2q',
-    intro:
-      'Wahiawa is where the El Ranchero story began. Taqueria El Ranchero opened its first location here in 2015.',
+    intro: 'Wahiawa is where the El Ranchero story began. Taqueria El Ranchero opened its first location here in 2015.',
     orderPickupHref: 'https://www.doordash.com/store/taqueria-el-ranchero-wahiawa-276575/',
     orderDeliveryHref: 'https://www.doordash.com/store/taqueria-el-ranchero-wahiawa-276575/',
   },

@@ -3,6 +3,7 @@ import { defineField, defineType } from 'sanity';
 import { imageField } from '../lib/imageField';
 import { faqList, linkField, paragraphs, str, txt } from '../lib/fields';
 import { cateringBlockTypes } from '../objects/cateringBlocks';
+import { requiredSlug, requiredTitle } from '../../lib/validation';
 
 /** One document per /catering/<slug> page (created by `npm run seed:catering`). */
 export const cateringSubPage = defineType({
@@ -18,8 +19,22 @@ export const cateringSubPage = defineType({
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
-    defineField({ name: 'pageName', title: 'Page', type: 'string', readOnly: true, description: 'Fixed.' }),
-    defineField({ name: 'slug', title: 'URL', type: 'string', readOnly: true, description: 'Fixed — /catering/ plus this value.' }),
+    defineField({
+      name: 'pageName',
+      title: 'Page',
+      type: 'string',
+      readOnly: true,
+      description: 'Fixed.',
+      validation: requiredTitle,
+    }),
+    defineField({
+      name: 'slug',
+      title: 'URL',
+      type: 'string',
+      readOnly: true,
+      description: 'Fixed — /catering/ plus this value.',
+      validation: requiredSlug,
+    }),
 
     imageField('heroImage', 'Hero photo', 'Portrait 619×740.', 'hero'),
     str('heroTitle', 'Headline', 'hero'),
@@ -47,6 +62,10 @@ export const cateringSubPage = defineType({
   ],
   preview: {
     select: { title: 'pageName', slug: 'slug', media: 'heroImage' },
-    prepare: ({ title, slug, media }) => ({ title: title || 'Catering page', subtitle: `/catering/${slug ?? ''}`, media }),
+    prepare: ({ title, slug, media }) => ({
+      title: title || 'Catering page',
+      subtitle: `/catering/${slug ?? ''}`,
+      media,
+    }),
   },
 });

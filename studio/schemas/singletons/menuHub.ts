@@ -70,7 +70,13 @@ export const menuHubContent = defineType({
     txt('meatNote', 'Note under the table', G.meat, undefined, 3),
 
     str('orderTitle', 'Heading', G.order),
-    txt('orderSubtitle', 'Text', G.order, 'The restaurant cards and DoorDash buttons are shared — see Pages → Menu → Shared sections.', 3),
+    txt(
+      'orderSubtitle',
+      'Text',
+      G.order,
+      'The restaurant cards and DoorDash buttons are shared — see Pages → Menu → Shared sections.',
+      3
+    ),
 
     str('seoTitle', 'Page title', G.seo, 'Shown in the browser tab and Google results. ~60 characters.'),
     txt('seoDescription', 'Meta description', G.seo, '~155 characters.', 3),

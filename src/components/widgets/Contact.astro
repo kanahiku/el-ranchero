@@ -19,7 +19,6 @@ const {
 } = Astro.props;
 
 const hasAside = Astro.slots.has('aside');
-
 ---
 
 <section {...id ? { id } : {}} class="not-prose w-full scroll-mt-[72px] bg-page">
@@ -37,44 +36,48 @@ const hasAside = Astro.slots.has('aside');
           ) : (
             <>
               <div class="flex flex-col gap-4">
-                <Heading variant="eyebrow" color="white" class="text-contrast/55">El Ranchero</Heading>
-                <Heading variant="h2" color="white">Our Restaurants</Heading>
+                <Heading variant="eyebrow" color="white" class="text-contrast/55">
+                  El Ranchero
+                </Heading>
+                <Heading variant="h2" color="white">
+                  Our Restaurants
+                </Heading>
                 <Text variant="body-lg" color="white" class="max-w-md text-contrast/65">
                   Call Wahiawa or Kapolei, or send a message and our team will follow up.
                 </Text>
               </div>
 
               <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
-                {
-                  storeLocations.map((store) => (
-                    <div class="flex flex-col gap-2 border-t border-contrast/15 pt-5">
-                      <Heading variant="eyebrow" color="white" class="text-contrast/55">
-                        {store.name}
-                      </Heading>
-                      <a
-                        href={store.phoneHref}
-                        class="font-sans text-body-lg text-contrast transition-opacity hover:opacity-80"
-                      >
-                        {store.phoneDisplay}
-                      </a>
-                      <address class="not-italic">
-                        <Text variant="body" color="white" as="span" class="block">
-                          {store.addressLine1}
-                        </Text>
-                        <Text variant="body" color="white" as="span" class="block text-contrast/70">
-                          {store.addressLine2}
-                        </Text>
-                      </address>
-                    </div>
-                  ))
-                }
+                {storeLocations.map((store) => (
+                  <div class="flex flex-col gap-2 border-t border-contrast/15 pt-5">
+                    <Heading variant="eyebrow" color="white" class="text-contrast/55">
+                      {store.name}
+                    </Heading>
+                    <a
+                      href={store.phoneHref}
+                      class="font-sans text-body-lg text-contrast transition-opacity hover:opacity-80"
+                    >
+                      {store.phoneDisplay}
+                    </a>
+                    <address class="not-italic">
+                      <Text variant="body" color="white" as="span" class="block">
+                        {store.addressLine1}
+                      </Text>
+                      <Text variant="body" color="white" as="span" class="block text-contrast/70">
+                        {store.addressLine2}
+                      </Text>
+                    </address>
+                  </div>
+                ))}
               </div>
             </>
           )
         }
       </aside>
 
-      <div class="relative z-[1] flex h-full min-w-0 select-text flex-col bg-card px-6 py-8 shadow-card-mist md:px-10 md:py-12">
+      <div
+        class="relative z-[1] flex h-full min-w-0 select-text flex-col bg-card px-6 py-8 shadow-card-mist md:px-10 md:py-12"
+      >
         <div class="mb-8 flex flex-col gap-4">
           {title && <Heading variant="h2" html={title} />}
           {subtitle && <Text variant="body-lg" color="muted" class="max-w-2xl" html={subtitle} />}
@@ -93,6 +96,5 @@ const hasAside = Astro.slots.has('aside');
         }
       </div>
     </div>
-
   </div>
 </section>

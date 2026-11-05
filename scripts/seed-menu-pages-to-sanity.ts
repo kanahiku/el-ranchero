@@ -13,11 +13,8 @@
  * edits survive. Needs SANITY_WRITE_TOKEN.
  */
 import { createClient } from '@sanity/client';
-import {
-  menuCategoryPageDefaults,
-  menuHubDefaults,
-  menuSharedDefaults,
-} from '../src/data/pages/menu';
+import { menuHubDefaults, menuSharedDefaults } from '../src/data/pages/menu';
+import { menuCategoryPageDefaults } from '../src/data/pages/menuSubPages';
 
 const commit = process.argv.includes('--commit');
 const token = process.env.SANITY_WRITE_TOKEN;
@@ -52,7 +49,7 @@ function withKeys(value: unknown): unknown {
 function applyType(value: unknown, rule: TypeRule): unknown {
   if (Array.isArray(value)) return value.map((item) => applyType(item, rule));
   if (!value || typeof value !== 'object') return value;
-  const obj = { ...(value as Doc), _type: rule.type };
+  const obj: Record<string, unknown> = { ...(value as Doc), _type: rule.type };
   for (const [field, nested] of Object.entries(rule.nested ?? {})) {
     if (obj[field] != null) obj[field] = applyType(obj[field], nested);
   }

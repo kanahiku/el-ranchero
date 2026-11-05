@@ -19,14 +19,7 @@ export interface Props {
   id?: string;
 }
 
-const {
-  items = [
-    { text: 'Healthy', tilt: true },
-    { text: 'Fresh' },
-    { text: 'Local', tilt: true },
-  ],
-  id,
-} = Astro.props;
+const { items = [{ text: 'Healthy', tilt: true }, { text: 'Fresh' }, { text: 'Local', tilt: true }], id } = Astro.props;
 
 const set = [...items, ...items, ...items];
 const doubled = [...set, ...set];

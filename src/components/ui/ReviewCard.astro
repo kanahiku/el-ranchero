@@ -14,8 +14,6 @@ const { review, variant = 'dark', showLink = true } = Astro.props;
 const headingClass = variant === 'dark' ? 'text-card-heading-dark' : 'text-card-heading-light';
 const bodyClass = variant === 'dark' ? 'text-card-body-dark' : 'text-card-body-light';
 const metaClass = variant === 'dark' ? 'text-white/50' : 'text-muted';
-const sourceLabel = review.source === 'google' ? 'Google' : 'Yelp';
-const sourceIcon = review.source === 'google' ? 'tabler:brand-google' : 'tabler:star';
 const formattedDate = review.date
   ? new Date(review.date).toLocaleDateString('en-US', {
       month: 'short',
@@ -41,13 +39,7 @@ const stars = [1, 2, 3, 4, 5];
     </div>
   </div>
 
-  <h3
-    class:list={[
-      'text-[16px] font-sans font-medium leading-[130%]',
-      formattedDate ? 'mb-1' : 'mb-3',
-      headingClass,
-    ]}
-  >
+  <h3 class:list={['text-[16px] font-sans font-medium leading-[130%]', formattedDate ? 'mb-1' : 'mb-3', headingClass]}>
     {review.authorName}
   </h3>
   {
@@ -62,10 +54,7 @@ const stars = [1, 2, 3, 4, 5];
         href={review.sourceUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class:list={[
-          'mt-auto pt-4 btn-link',
-          variant === 'light' ? '' : 'text-contrast hover:text-white',
-        ]}
+        class:list={['mt-auto pt-4 btn-link', variant === 'light' ? '' : 'text-contrast hover:text-white']}
       >
         Read full review
       </a>

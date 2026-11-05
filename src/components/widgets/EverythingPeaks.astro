@@ -49,17 +49,20 @@ const { eyebrow, heading, headingHtml, cta, id } = Astro.props;
 
 <section {...id ? { id } : {}} class="not-prose w-full py-8 md:py-16">
   <div class="mx-auto w-full max-w-container px-5 sm:px-8 md:px-16 lg:px-[120px]">
-    <div class="flex w-full flex-col items-center gap-8 rounded-t-[32px] bg-gradient-to-t from-transparent to-section-grey p-6 md:rounded-t-[64px] md:p-16 lg:flex-row lg:items-center lg:gap-8 lg:p-[64px]">
-
+    <div
+      class="flex w-full flex-col items-center gap-8 rounded-t-[32px] bg-gradient-to-t from-transparent to-section-grey p-6 md:rounded-t-[64px] md:p-16 lg:flex-row lg:items-center lg:gap-8 lg:p-[64px]"
+    >
       {/* ── LEFT ── */}
       <div class="flex min-w-0 flex-1 flex-col gap-8">
-
         {/* Eyebrow + heading */}
         <div class="flex flex-col gap-4">
           {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
-          {headingHtml
-            ? <Heading variant="h2" html={headingHtml} />
-            : heading && <Heading variant="h2">{heading}</Heading>
+          {
+            headingHtml ? (
+              <Heading variant="h2" html={headingHtml} />
+            ) : (
+              heading && <Heading variant="h2">{heading}</Heading>
+            )
           }
         </div>
 
@@ -74,14 +77,9 @@ const { eyebrow, heading, headingHtml, cta, id } = Astro.props;
         <slot name="image">
           {/* Default: grey placeholder — replace when asset is ready */}
           <!-- TODO: replace with <Image> when asset is ready -->
-          <div
-            class="w-full rounded-[32px] bg-section-grey"
-            style="aspect-ratio: 1695 / 928;"
-            aria-hidden="true"
-          />
+          <div class="w-full rounded-[32px] bg-section-grey" style="aspect-ratio: 1695 / 928;" aria-hidden="true"></div>
         </slot>
       </div>
-
     </div>
   </div>
 </section>

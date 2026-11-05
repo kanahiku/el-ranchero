@@ -5,17 +5,19 @@ import Footer from '~/components/widgets/Footer.astro';
 import { getNavigationContent } from '~/lib/content';
 
 import type { MetaData } from '~/types';
+import type { JsonLdNode } from '~/config/schema/types';
 
 export interface Props {
   metadata?: MetaData;
+  jsonLd?: JsonLdNode[];
 }
 
-const { metadata } = Astro.props;
+const { metadata, jsonLd } = Astro.props;
 const navigation = await getNavigationContent();
 const footer = navigation.footer;
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} jsonLd={jsonLd}>
   <slot name="header">
     <Header
       links={navigation.header.links}

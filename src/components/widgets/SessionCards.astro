@@ -33,25 +33,29 @@ const { eyebrow, cards = [], id } = Astro.props;
 
 <section {...id ? { id } : {}} class="not-prose w-full py-12 md:py-16">
   <div class="mx-auto flex w-full max-w-container flex-col gap-8 px-5 sm:px-8 md:px-16 lg:px-[120px]">
-    {eyebrow && (
-      <Heading variant="eyebrow" color="inherit" class="text-accent">
-        {eyebrow}
-      </Heading>
-    )}
+    {
+      eyebrow && (
+        <Heading variant="eyebrow" color="inherit" class="text-accent">
+          {eyebrow}
+        </Heading>
+      )
+    }
     <div class="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2">
-      {cards.map((card) => (
-        <Card
-          variant="feature"
-          iconType="calendar"
-          label={card.label}
-          title={card.title}
-          speaker={card.speaker}
-          description={card.description}
-          ctaText={card.ctaText}
-          ctaHref={card.ctaHref}
-          class="h-full"
-        />
-      ))}
+      {
+        cards.map((card) => (
+          <Card
+            variant="feature"
+            iconType="calendar"
+            label={card.label}
+            title={card.title}
+            speaker={card.speaker}
+            description={card.description}
+            ctaText={card.ctaText}
+            ctaHref={card.ctaHref}
+            class="h-full"
+          />
+        ))
+      }
     </div>
   </div>
 </section>

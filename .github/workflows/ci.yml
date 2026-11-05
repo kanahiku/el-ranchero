@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, types, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check:eslint
+      - run: npm run check:prettier
+      - run: npm run check:astro
+      - run: npm run build
+        env:
+          PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+          PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
+      - name: npm audit (production deps, high+)
+        run: npm audit --omit=dev --audit-level=critical
+
+  site-checks:
+    name: SEO + links (deployed site)
+    runs-on: ubuntu-latest
+    # Pages are SSR, so the checks crawl the deployed site instead of reading dist/.
+    # Set the repo variable SITE_URL to the production or preview URL.
+    env:
+      SITE_URL: ${{ vars.SITE_URL || 'https://el-ranchero-drab.vercel.app' }}
+      CHECK_DIR: .site-snapshot
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx tsx scripts/snapshot-site.ts
+      - run: npm run seo:check | tee seo-report.txt
+      - run: npm run links:check | tee links-report.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: site-check-reports
+          path: |
+            seo-report.txt
+            links-report.txt

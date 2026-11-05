@@ -20,27 +20,32 @@ export const menuItemSeed: Record<string, SeedMenuItem[]> = {
     {
       title: 'Breakfast Burrito',
       section: 'main',
-      description: 'Choose bacon, ham, chorizo or veggie, with eggs, beans, cheese, potatoes, tomato, onion and jalapeño. A convenient handheld option when you’re picking up breakfast to go.',
+      description:
+        'Choose bacon, ham, chorizo or veggie, with eggs, beans, cheese, potatoes, tomato, onion and jalapeño. A convenient handheld option when you’re picking up breakfast to go.',
     },
     {
       title: 'Breakfast Taco',
       section: 'main',
-      description: 'Choose bacon, ham, chorizo or veggie, with eggs, beans, cheese, potatoes, tomato, onion, jalapeño and salsa.',
+      description:
+        'Choose bacon, ham, chorizo or veggie, with eggs, beans, cheese, potatoes, tomato, onion, jalapeño and salsa.',
     },
     {
       title: 'Chilaquiles',
       section: 'main',
-      description: 'Fried tortillas with salsa and eggs, cilantro, queso fresco and sour cream, served with beans and potatoes.',
+      description:
+        'Fried tortillas with salsa and eggs, cilantro, queso fresco and sour cream, served with beans and potatoes.',
     },
     {
       title: 'Huevos con Chorizo',
       section: 'main',
-      description: 'Mexican sausage with eggs, salsa, cilantro and queso fresco, served with beans, potatoes and your choice of corn or flour tortillas.',
+      description:
+        'Mexican sausage with eggs, salsa, cilantro and queso fresco, served with beans, potatoes and your choice of corn or flour tortillas.',
     },
     {
       title: 'Huevos Rancheros',
       section: 'main',
-      description: 'Two over-easy eggs over a corn tortilla, topped with cilantro, salsa, sour cream and avocado, served with beans and potatoes.',
+      description:
+        'Two over-easy eggs over a corn tortilla, topped with cilantro, salsa, sour cream and avocado, served with beans and potatoes.',
     },
     {
       title: 'El Americano',
@@ -92,14 +97,18 @@ export const menuItemSeed: Record<string, SeedMenuItem[]> = {
     {
       title: 'Wet Burrito',
       section: 'main',
-      description: 'Prefer your burrito covered in sauce? Any burrito on our menu can be prepared as a Wet Burrito with your choice of red or green sauce, along with lettuce, sour cream and queso fresco.',
+      description:
+        'Prefer your burrito covered in sauce? Any burrito on our menu can be prepared as a Wet Burrito with your choice of red or green sauce, along with lettuce, sour cream and queso fresco.',
     },
   ],
   tacos: [
     {
       title: 'Taco',
       section: 'main',
-      description: ['Your choice of meat with onion, cilantro and salsa.', 'You can also make it a plate with two tacos served alongside rice and beans.'],
+      description: [
+        'Your choice of meat with onion, cilantro and salsa.',
+        'You can also make it a plate with two tacos served alongside rice and beans.',
+      ],
     },
     {
       title: 'Taco Grande',
@@ -131,22 +140,26 @@ export const menuItemSeed: Record<string, SeedMenuItem[]> = {
     {
       title: 'Chicken Enchiladas',
       section: 'main',
-      description: 'Chicken enchiladas with your choice of red or green sauce, served with sour cream, queso fresco and avocado.',
+      description:
+        'Chicken enchiladas with your choice of red or green sauce, served with sour cream, queso fresco and avocado.',
     },
     {
       title: 'Taquitos',
       section: 'main',
-      description: 'Four taquitos with your choice of beef or chicken, served with guacamole, sour cream and queso fresco.',
+      description:
+        'Four taquitos with your choice of beef or chicken, served with guacamole, sour cream and queso fresco.',
     },
     {
       title: 'Beef Fajitas',
       section: 'main',
-      description: 'Beef fajitas served with your choice of corn or flour tortillas. You can also add guacamole, sour cream and pico de gallo.',
+      description:
+        'Beef fajitas served with your choice of corn or flour tortillas. You can also add guacamole, sour cream and pico de gallo.',
     },
     {
       title: 'Chicken Fajitas',
       section: 'main',
-      description: 'Chicken fajitas served with your choice of corn or flour tortillas. Guacamole, sour cream and pico de gallo can also be added.',
+      description:
+        'Chicken fajitas served with your choice of corn or flour tortillas. Guacamole, sour cream and pico de gallo can also be added.',
     },
     {
       title: 'Chile Verde',
@@ -161,7 +174,8 @@ export const menuItemSeed: Record<string, SeedMenuItem[]> = {
     {
       title: 'Grilled Vegetables & Mushrooms',
       section: 'main',
-      description: 'Grilled bell peppers, onions, zucchini and mushrooms, served with your choice of corn or flour tortillas.',
+      description:
+        'Grilled bell peppers, onions, zucchini and mushrooms, served with your choice of corn or flour tortillas.',
     },
   ],
   'quesadillas-nachos': [
@@ -205,12 +219,14 @@ export const menuItemSeed: Record<string, SeedMenuItem[]> = {
     {
       title: 'Torta',
       section: 'daily',
-      description: 'A grilled Mexican-style sandwich with your choice of meat, beans, cheese, sour cream, lettuce, tomato and onion.',
+      description:
+        'A grilled Mexican-style sandwich with your choice of meat, beans, cheese, sour cream, lettuce, tomato and onion.',
     },
     {
       title: 'Torta Cubana',
       section: 'daily',
-      description: 'A hearty, stacked Mexican-style sandwich with breaded beef or chicken, ham, bacon, chorizo, sausage, egg, avocado, lettuce, tomato, onion, jalapeño, mayonnaise and queso fresco.',
+      description:
+        'A hearty, stacked Mexican-style sandwich with breaded beef or chicken, ham, bacon, chorizo, sausage, egg, avocado, lettuce, tomato, onion, jalapeño, mayonnaise and queso fresco.',
     },
     {
       title: 'California Fries',
@@ -225,12 +241,14 @@ export const menuItemSeed: Record<string, SeedMenuItem[]> = {
     {
       title: 'Taquitos',
       section: 'daily',
-      description: 'Two taquitos with your choice of beef or chicken, served with guacamole, sour cream and queso fresco.',
+      description:
+        'Two taquitos with your choice of beef or chicken, served with guacamole, sour cream and queso fresco.',
     },
     {
       title: 'Tostada de Ceviche',
       section: 'daily',
-      description: 'A combination of fish, lime juice, onion, cucumber, tomato, cilantro and avocado, served over a crispy tortilla.',
+      description:
+        'A combination of fish, lime juice, onion, cucumber, tomato, cilantro and avocado, served over a crispy tortilla.',
     },
     {
       title: 'Elote',
@@ -240,12 +258,14 @@ export const menuItemSeed: Record<string, SeedMenuItem[]> = {
     {
       title: 'Pozole',
       section: 'weekend',
-      description: 'A traditional Mexican soup made with pork and hominy, served with lime, onion, radish and cabbage toppings.',
+      description:
+        'A traditional Mexican soup made with pork and hominy, served with lime, onion, radish and cabbage toppings.',
     },
     {
       title: 'Menudo',
       section: 'weekend',
-      description: 'Tripe soup in a flavorful red broth, served with lime, onion, cilantro and your choice of corn or flour tortillas.',
+      description:
+        'Tripe soup in a flavorful red broth, served with lime, onion, cilantro and your choice of corn or flour tortillas.',
     },
     {
       title: 'Campechana',
@@ -255,7 +275,8 @@ export const menuItemSeed: Record<string, SeedMenuItem[]> = {
     {
       title: 'Chile Relleno',
       section: 'weekend',
-      description: 'A cheese-stuffed pepper served with your choice of red or green sauce, sour cream, queso fresco and avocado.',
+      description:
+        'A cheese-stuffed pepper served with your choice of red or green sauce, sour cream, queso fresco and avocado.',
     },
   ],
   'appetizers-sides': [
@@ -321,12 +342,14 @@ export const menuItemSeed: Record<string, SeedMenuItem[]> = {
     {
       title: 'Passion Li Hing “Mahalo Margarita”',
       section: 'margaritas',
-      description: 'El Ranchero Maestro Dobel Tequila, passion fruit syrup and fresh lime sour, finished with a li hing rim.',
+      description:
+        'El Ranchero Maestro Dobel Tequila, passion fruit syrup and fresh lime sour, finished with a li hing rim.',
     },
     {
       title: 'Michelada',
       section: 'margaritas',
-      description: 'El Ranchero’s own recipe, made with house-made michelada mix, chamoy and a tamarindo stick. Served with your choice of beer and a tajín rim.',
+      description:
+        'El Ranchero’s own recipe, made with house-made michelada mix, chamoy and a tamarindo stick. Served with your choice of beer and a tajín rim.',
     },
     {
       title: 'Aguas Frescas',

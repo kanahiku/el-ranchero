@@ -73,7 +73,7 @@ const TYPE_RULES: Record<string, TypeRule> = {
 function applyType(value: unknown, rule: TypeRule): unknown {
   if (Array.isArray(value)) return value.map((item) => applyType(item, rule));
   if (!value || typeof value !== 'object') return value;
-  const obj = { ...(value as Record<string, unknown>), _type: rule.type };
+  const obj: Record<string, unknown> = { ...(value as Record<string, unknown>), _type: rule.type };
   for (const [field, nested] of Object.entries(rule.nested ?? {})) {
     if (obj[field] != null) obj[field] = applyType(obj[field], nested);
   }

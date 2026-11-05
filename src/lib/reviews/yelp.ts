@@ -42,7 +42,9 @@ export async function fetchYelpReviews(): Promise<{ reviews: Review[]; viewAllUr
       authorName: review.user?.name || 'Yelp reviewer',
       text: review.text || '',
       rating: Math.min(5, Math.max(1, Math.round(review.rating ?? 5))),
-      date: review.time_created ? new Date(review.time_created.replace(' ', 'T')).toISOString() : new Date().toISOString(),
+      date: review.time_created
+        ? new Date(review.time_created.replace(' ', 'T')).toISOString()
+        : new Date().toISOString(),
       source: 'yelp' as const,
       sourceUrl: review.url || viewAllUrl || '',
     }));

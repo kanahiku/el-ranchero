@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { ComposeIcon } from '@sanity/icons';
+import { requiredSlug } from '../../lib/validation';
 
 /**
  * Groups a category page can split its dishes into. The page code decides which
@@ -41,7 +42,7 @@ export const menuItem = defineType({
       type: 'slug',
       group: 'content',
       options: { source: 'title' },
-      validation: (r) => r.required(),
+      validation: requiredSlug,
     }),
     defineField({
       name: 'description',
@@ -121,7 +122,10 @@ export const menuItem = defineType({
             prepare({ title, order, section }) {
               return {
                 title: title || 'Choose category',
-                subtitle: [section && section !== 'main' ? section : null, typeof order === 'number' ? `Order ${order}` : null]
+                subtitle: [
+                  section && section !== 'main' ? section : null,
+                  typeof order === 'number' ? `Order ${order}` : null,
+                ]
                   .filter(Boolean)
                   .join(' · '),
               };

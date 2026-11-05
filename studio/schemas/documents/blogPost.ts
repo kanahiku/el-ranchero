@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { ComposeIcon } from '@sanity/icons';
 import { relatedPageOptions } from '../objects/relatedPageOptions';
+import { requiredSlug, slugChangeWarning } from '../../lib/validation';
 
 export const blogPost = defineType({
   name: 'blogPost',
@@ -26,7 +27,7 @@ export const blogPost = defineType({
       group: 'content',
       description: 'Used in the URL: /blog/your-slug. Publish to make the article live — no code deploy needed.',
       options: { source: 'title' },
-      validation: (r) => r.required(),
+      validation: (r) => [requiredSlug(r), slugChangeWarning('/blog')(r)],
     }),
     defineField({
       name: 'excerpt',
@@ -149,7 +150,8 @@ export const blogPost = defineType({
               name: 'alt',
               title: 'Alt text',
               type: 'string',
-              validation: (r) => r.required().warning('Describe the photo for accessibility and SEO.'),
+              validation: (r) =>
+                r.required().error('Alt text is required: describe the photo for accessibility and SEO.'),
             }),
             defineField({
               name: 'caption',

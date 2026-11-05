@@ -15,7 +15,12 @@
       "shape": "Decorative absolutely-positioned brand illustration",
       "component": "Motif",
       "import": "~/components/ui/Motif.astro",
-      "props": { "name": "plant | cactus | stick | hat | el-ranchero-word", "width": "px from Figma", "style": "left/top/right/bottom", "mobile": "show below md (default hidden)" },
+      "props": {
+        "name": "plant | cactus | stick | hat | el-ranchero-word",
+        "width": "px from Figma",
+        "style": "left/top/right/bottom",
+        "mobile": "show below md (default hidden)"
+      },
       "notes": "Assets in public/motifs. TextSplit and ScheduleSection expose a motif slot; CTABanner and Footer embed theirs."
     },
     {
@@ -286,7 +291,15 @@
     {
       "id": "P-20",
       "name": "Text Split",
-      "figmaNames": ["Half of this is not your problem.", "Then talk to your doctor about it.", "And then we stop.", "2-col text split", "2:271", "2:1297", "62:53"],
+      "figmaNames": [
+        "Half of this is not your problem.",
+        "Then talk to your doctor about it.",
+        "And then we stop.",
+        "2-col text split",
+        "2:271",
+        "2:1297",
+        "62:53"
+      ],
       "shape": "2-col split: text-only (heading | body); withImage end (text stack | image); withImage under-heading (heading+image | body). rx 32.",
       "component": "TextSplit",
       "import": "~/components/widgets/TextSplit.astro",
@@ -696,7 +709,14 @@
     {
       "id": "P-51",
       "name": "Menu item list",
-      "figmaNames": ["Our Salad Menu", "Our Wraps & Subs Menu", "Our Vegan Menu", "Our Vegetarian Menu", "Our Soup Menu", "Our Keiki Menu"],
+      "figmaNames": [
+        "Our Salad Menu",
+        "Our Wraps & Subs Menu",
+        "Our Vegan Menu",
+        "Our Vegetarian Menu",
+        "Our Soup Menu",
+        "Our Keiki Menu"
+      ],
       "shape": "Cream menu-paper list. Script index, ghosted number, h3 title, description column. Hover fills the row blueberry.",
       "component": "MenuItemsSection",
       "import": "~/components/widgets/MenuItemsSection.astro",

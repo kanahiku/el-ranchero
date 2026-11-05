@@ -118,7 +118,9 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
 
       <div class:list={['flex min-w-0 flex-col gap-8', !isStacked && 'flex-1']}>
         <div class="w-full overflow-x-auto">
-          <table class:list={['w-full border-collapse border border-heading/15 text-left', isStacked && 'min-w-[640px]']}>
+          <table
+            class:list={['w-full border-collapse border border-heading/15 text-left', isStacked && 'min-w-[640px]']}
+          >
             <thead>
               <tr class="bg-section-dark text-contrast">
                 {
@@ -164,7 +166,11 @@ const linkClass = 'text-accent underline underline-offset-4 transition-opacity h
           </table>
         </div>
 
-        {ctaText && ctaHref && <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} class="self-start" />}
+        {
+          ctaText && ctaHref && (
+            <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} class="self-start" />
+          )
+        }
 
         {
           isStacked &&

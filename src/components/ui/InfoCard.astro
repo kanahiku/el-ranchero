@@ -13,24 +13,16 @@ export interface Props {
   class?: string;
 }
 
-const {
-  title,
-  description,
-  icon,
-  variant = 'dark',
-  size = 'md',
-  border = true,
-  class: className = '',
-} = Astro.props;
+const { title, description, icon, variant = 'dark', size = 'md', border = true, class: className = '' } = Astro.props;
 
-const headingClass: Record<CardVariant, string> = {
+const headingClass = {
   dark: 'text-card-heading-dark',
   light: 'text-card-heading-light',
   outlined: 'text-card-heading-outlined',
   glass: 'text-card-heading-glass',
 }[variant];
 
-const bodyClass: Record<CardVariant, string> = {
+const bodyClass = {
   dark: 'text-card-body-dark',
   light: 'text-card-body-light',
   outlined: 'text-card-body-outlined',
@@ -38,7 +30,7 @@ const bodyClass: Record<CardVariant, string> = {
 }[variant];
 
 // Icon mark: dark bg square for light cards; accent-bordered square for dark/glass
-const iconMark: Record<CardVariant, string> = {
+const iconMark = {
   dark: 'border border-accent/60',
   light: 'bg-card-dark',
   outlined: 'bg-card-dark',

@@ -25,14 +25,7 @@ const linkClass = variant === 'dark' ? 'text-white' : 'text-timeline-step-light'
           </h3>
           <p class:list={['text-[14px] md:text-[15px] font-normal leading-[160%]', bodyClass]}>{description}</p>
         </div>
-        <span
-          class:list={[
-            'text-[14px] md:text-[15px] font-medium shrink-0 card-link',
-            linkClass,
-          ]}
-        >
-          {linkText}
-        </span>
+        <span class:list={['text-[14px] md:text-[15px] font-medium shrink-0 card-link', linkClass]}>{linkText}</span>
       </a>
     ))
   }

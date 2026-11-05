@@ -3,6 +3,7 @@ import { CogIcon, DocumentTextIcon, DocumentsIcon, HomeIcon, PinIcon, ThListIcon
 import type { StructureBuilder } from 'sanity/structure';
 
 const SINGLETONS: Record<string, string> = {
+  siteSettings: 'singleton-site-settings',
   siteNavigation: 'singleton-navigation',
   siteFooter: 'singleton-footer',
   homepageContent: 'singleton-homepage',
@@ -62,11 +63,7 @@ const LEGAL_PAGES: Array<[slug: string, title: string]> = [
 ];
 
 const singleton = (S: StructureBuilder, type: string, id: string, title: string, icon?: ComponentType) =>
-  S.listItem()
-    .title(title)
-    .id(id)
-    .icon(icon)
-    .child(S.document().schemaType(type).documentId(id).title(title));
+  S.listItem().title(title).id(id).icon(icon).child(S.document().schemaType(type).documentId(id).title(title));
 
 export const structure = (S: StructureBuilder) =>
   S.list()
@@ -96,10 +93,7 @@ export const structure = (S: StructureBuilder) =>
                           .id(`catering-page-${slug}`)
                           .icon(DocumentTextIcon)
                           .child(
-                            S.document()
-                              .schemaType('cateringSubPage')
-                              .documentId(`catering-page-${slug}`)
-                              .title(title)
+                            S.document().schemaType('cateringSubPage').documentId(`catering-page-${slug}`).title(title)
                           )
                       ),
                     ])
@@ -140,10 +134,7 @@ export const structure = (S: StructureBuilder) =>
                           .id(`events-page-${slug}`)
                           .icon(DocumentTextIcon)
                           .child(
-                            S.document()
-                              .schemaType('eventsSubPage')
-                              .documentId(`events-page-${slug}`)
-                              .title(title)
+                            S.document().schemaType('eventsSubPage').documentId(`events-page-${slug}`).title(title)
                           )
                       ),
                     ])
@@ -163,12 +154,7 @@ export const structure = (S: StructureBuilder) =>
                           .title(title)
                           .id(`legal-page-${slug}`)
                           .icon(DocumentTextIcon)
-                          .child(
-                            S.document()
-                              .schemaType('legalPage')
-                              .documentId(`legal-page-${slug}`)
-                              .title(title)
-                          )
+                          .child(S.document().schemaType('legalPage').documentId(`legal-page-${slug}`).title(title))
                       )
                     )
                 ),
@@ -186,14 +172,16 @@ export const structure = (S: StructureBuilder) =>
                           .id(`menu-page-${slug}`)
                           .icon(DocumentTextIcon)
                           .child(
-                            S.document()
-                              .schemaType('menuCategoryPage')
-                              .documentId(`menu-page-${slug}`)
-                              .title(title)
+                            S.document().schemaType('menuCategoryPage').documentId(`menu-page-${slug}`).title(title)
                           )
                       ),
                       S.divider(),
-                      singleton(S, 'menuPagesContent', 'singleton-menu-pages', 'Shared sections (order cards, allergy)'),
+                      singleton(
+                        S,
+                        'menuPagesContent',
+                        'singleton-menu-pages',
+                        'Shared sections (order cards, allergy)'
+                      ),
                     ])
                 ),
             ])
@@ -209,6 +197,7 @@ export const structure = (S: StructureBuilder) =>
             .items([
               singleton(S, 'siteNavigation', 'singleton-navigation', 'Navigation'),
               singleton(S, 'siteFooter', 'singleton-footer', 'Footer'),
+              singleton(S, 'siteSettings', 'singleton-site-settings', 'Site settings (business info for SEO)'),
             ])
         ),
 
@@ -281,6 +270,11 @@ export const structure = (S: StructureBuilder) =>
               { field: 'name', direction: 'asc' },
             ])
         ),
+
+      S.listItem()
+        .title('Redirects (old URL → new URL)')
+        .schemaType('redirect')
+        .child(S.documentTypeList('redirect').title('Redirects')),
     ]);
 
 export const singletonTypes = new Set(Object.keys(SINGLETONS));

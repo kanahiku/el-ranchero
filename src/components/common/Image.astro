@@ -23,6 +23,15 @@
  *
  * Accessibility:
  *   `alt` is required. Pass `alt=""` explicitly for purely decorative images.
+ *
+ * Loading:
+ *   Below-the-fold images are `loading="lazy"` + `decoding="async"` by default.
+ *   Pass `priority` for the hero / LCP image: `loading="eager"` + `fetchpriority="high"`.
+ *   An explicit `loading` / `fetchpriority` / `decoding` attr always wins.
+ *
+ * Dimensions:
+ *   width/height are always emitted. Sanity images without explicit sizes use the
+ *   asset's intrinsic size (or the Studio crop `rect`) so layout never jumps.
  */
 import { Image as AstroImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -41,6 +50,8 @@ interface Props extends Omit<HTMLAttributes<'img'>, 'src' | 'width' | 'height'> 
   widths?: number[];
   format?: Format;
   layout?: Layout;
+  /** Hero / LCP image: eager + high fetch priority. Default false (lazy). */
+  priority?: boolean;
 }
 
 const {
@@ -51,6 +62,7 @@ const {
   widths,
   format,
   layout = 'constrained',
+  priority = false,
   class: className,
   style,
   ...attrs
@@ -98,7 +110,27 @@ if (resolved && typeof resolved === 'object' && 'width' in resolved && 'height' 
   }
 }
 
+// Sanity URLs carry the intrinsic size in the filename (`…-1200x800.jpg`); a Studio
+// crop (`rect=left,top,width,height`) overrides it. Use that when no size was passed.
+if (isSanityUrl && !w && !h) {
+  const sanityUrl = new URL(resolved as string);
+  const rect = sanityUrl.searchParams.get('rect')?.split(',').map(Number);
+  const dims = sanityUrl.pathname.match(/-(\d+)x(\d+)\.[a-z]+$/i);
+  if (rect && rect.length === 4 && rect[2] > 0 && rect[3] > 0) {
+    w = rect[2];
+    h = rect[3];
+  } else if (dims) {
+    w = Number(dims[1]);
+    h = Number(dims[2]);
+  }
+}
+
 const aspectRatio = w && h ? w / h : undefined;
+
+const loadingAttr = attrs.loading ?? (priority ? 'eager' : 'lazy');
+const fetchPriorityAttr = attrs.fetchpriority ?? (priority ? 'high' : undefined);
+const decodingAttr = attrs.decoding ?? 'async';
+const loadAttrs = { loading: loadingAttr, fetchpriority: fetchPriorityAttr, decoding: decodingAttr };
 
 const sanityCoverObjectPosition = (): string | undefined => {
   if (!isSanityUrl || layout !== 'cover') return undefined;
@@ -239,7 +271,17 @@ const hasLocalImage = resolved && typeof resolved === 'object' && 'src' in resol
 
 {
   isRemoteImg && cdnSrc ? (
-    <img src={cdnSrc} srcset={cdnSrcSet} alt={alt} width={w} height={h} class={className} style={cdnStyle} {...attrs} />
+    <img
+      src={cdnSrc}
+      srcset={cdnSrcSet}
+      alt={alt}
+      width={w}
+      height={h}
+      class={className}
+      style={cdnStyle}
+      {...attrs}
+      {...loadAttrs}
+    />
   ) : hasLocalImage ? (
     <AstroImage
       src={resolved as ImageMetadata}
@@ -251,6 +293,7 @@ const hasLocalImage = resolved && typeof resolved === 'object' && 'src' in resol
       class={className}
       style={localStyle}
       {...attrs}
+      {...loadAttrs}
     />
   ) : (
     <HeroImagePlaceholder

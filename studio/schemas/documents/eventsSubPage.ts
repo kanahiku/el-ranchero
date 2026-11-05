@@ -3,6 +3,7 @@ import { defineField, defineType } from 'sanity';
 import { imageField } from '../lib/imageField';
 import { linkField, paragraphs, str, txt } from '../lib/fields';
 import { eventsBlockTypes } from '../objects/eventsBlocks';
+import { requiredSlug, requiredTitle } from '../../lib/validation';
 
 /** One document per /events/<slug> page (created by `npm run seed:events`). */
 export const eventsSubPage = defineType({
@@ -18,8 +19,22 @@ export const eventsSubPage = defineType({
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
-    defineField({ name: 'pageName', title: 'Page', type: 'string', readOnly: true, description: 'Fixed.' }),
-    defineField({ name: 'slug', title: 'URL', type: 'string', readOnly: true, description: 'Fixed — /events/ plus this value.' }),
+    defineField({
+      name: 'pageName',
+      title: 'Page',
+      type: 'string',
+      readOnly: true,
+      description: 'Fixed.',
+      validation: requiredTitle,
+    }),
+    defineField({
+      name: 'slug',
+      title: 'URL',
+      type: 'string',
+      readOnly: true,
+      description: 'Fixed — /events/ plus this value.',
+      validation: requiredSlug,
+    }),
 
     imageField('heroImage', 'Hero photo', 'Split hero photo.', 'hero'),
     str('heroTitle', 'Headline', 'hero'),

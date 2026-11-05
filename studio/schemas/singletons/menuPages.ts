@@ -39,12 +39,7 @@ export const menuPagesContent = defineType({
         },
       ],
     }),
-    str(
-      'footnoteBefore',
-      'Line below cards — text before link',
-      'order',
-      'Built as: text before + link + text after.'
-    ),
+    str('footnoteBefore', 'Line below cards — text before link', 'order', 'Built as: text before + link + text after.'),
     linkField('footnoteLink', 'Line below cards — link', 'order'),
     str('footnoteAfter', 'Line below cards — text after link', 'order', 'e.g. a full stop.'),
 

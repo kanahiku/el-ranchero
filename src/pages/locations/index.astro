@@ -40,7 +40,11 @@ const metadata = { title: c.seoTitle, description: c.seoDescription, ignoreTitle
       addressLine2: card.addressLine2,
       description: card.paragraphs,
       hours: card.hours,
-      actions: card.actions.map((action) => ({ text: action.text, href: action.href, variant: action.variant ?? 'primary' })),
+      actions: card.actions.map((action) => ({
+        text: action.text,
+        href: action.href,
+        variant: action.variant ?? 'primary',
+      })),
     }))}
   />
 

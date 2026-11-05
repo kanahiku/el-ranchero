@@ -51,13 +51,13 @@ const {
 
 // Resolve ghost based on tone; keep legacy aliases for data-driven action arrays.
 const variantClass: Record<string, string> = {
-  primary:      'btn-primary',
-  secondary:    'btn-secondary',
-  tertiary:     'btn-secondary',
-  ghost:        tone === 'light' ? 'btn-ghost-light' : 'btn-ghost-dark',
-  'ghost-dark':  'btn-ghost-dark',   // backward compat
-  'ghost-light': 'btn-ghost-light',  // backward compat
-  link:         'btn-link',
+  primary: 'btn-primary',
+  secondary: 'btn-secondary',
+  tertiary: 'btn-secondary',
+  ghost: tone === 'light' ? 'btn-ghost-light' : 'btn-ghost-dark',
+  'ghost-dark': 'btn-ghost-dark', // backward compat
+  'ghost-light': 'btn-ghost-light', // backward compat
+  link: 'btn-link',
 };
 
 const showNote = variant === 'primary' && !hideNote && Boolean(PRIMARY_CTA_NOTE);

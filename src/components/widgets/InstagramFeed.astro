@@ -25,7 +25,17 @@ export interface Props {
   tiles?: ContentImage[];
 }
 
-const { eyebrow, heading, text, ctaText, ctaHref, feedLabel = 'Instagram feed', tone = 'page', id, tiles = [] } = Astro.props;
+const {
+  eyebrow,
+  heading,
+  text,
+  ctaText,
+  ctaHref,
+  feedLabel = 'Instagram feed',
+  tone = 'page',
+  id,
+  tiles = [],
+} = Astro.props;
 const hasFeed = Astro.slots.has('default');
 const feedHtml = hasFeed ? await Astro.slots.render('default') : '';
 ---

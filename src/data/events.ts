@@ -14,7 +14,12 @@ export interface EventLink {
 }
 
 export const eventPages = {
-  tacoTuesday: { label: 'Taco Tuesday', href: '/events/taco-tuesday', when: 'Tuesdays', details: 'Weekly taco-focused event' },
+  tacoTuesday: {
+    label: 'Taco Tuesday',
+    href: '/events/taco-tuesday',
+    when: 'Tuesdays',
+    details: 'Weekly taco-focused event',
+  },
   karaoke: {
     label: 'Karaoke Wednesday',
     href: '/events/karaoke-wednesday',

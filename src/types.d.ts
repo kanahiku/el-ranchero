@@ -249,6 +249,7 @@ export interface Brands extends Omit<Headline, 'classes'>, Widget {
 }
 
 export interface Features extends Omit<Headline, 'classes'>, Widget {
+  cardClass?: string;
   image?: string | unknown;
   items?: Array<Item>;
   columns?: number;

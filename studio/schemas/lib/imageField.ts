@@ -1,4 +1,5 @@
 import { defineField } from 'sanity';
+import { requiredAlt } from '../../lib/validation';
 
 /** Image with hotspot + required alt text. Shared by every page-image singleton. */
 export const imageField = (name: string, title: string, description?: string, group?: string) =>
@@ -14,7 +15,7 @@ export const imageField = (name: string, title: string, description?: string, gr
         name: 'alt',
         title: 'Alt text',
         type: 'string',
-        validation: (r) => r.required().warning('Describe the image for accessibility and SEO.'),
+        validation: requiredAlt,
       }),
     ],
   });

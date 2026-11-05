@@ -46,75 +46,79 @@ const {
   hideImage = false,
   tone = 'page',
 } = Astro.props;
-
 ---
 
 <section
   {...id ? { id } : {}}
   class:list={['not-prose relative w-full overflow-hidden', tone === 'card' ? 'bg-card' : 'bg-page']}
 >
-  <div class="relative z-[1] mx-auto flex w-full max-w-container flex-col gap-12 px-5 py-16 sm:px-8 md:flex-row md:items-center md:gap-16 md:px-16 md:py-[120px]">
+  <div
+    class="relative z-[1] mx-auto flex w-full max-w-container flex-col gap-12 px-5 py-16 sm:px-8 md:flex-row md:items-center md:gap-16 md:px-16 md:py-[120px]"
+  >
     <div class="flex min-w-0 flex-1 flex-col items-start gap-8">
       <div class="flex w-full flex-col gap-6">
         {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
         {title && <Heading variant="h2">{title}</Heading>}
-        {subtitle && (
-          <Text variant="body" color="default">{subtitle}</Text>
-        )}
+        {
+          subtitle && (
+            <Text variant="body" color="default">
+              {subtitle}
+            </Text>
+          )
+        }
       </div>
 
-      {steps.length > 0 && (
-        <ol class="flex w-full flex-col">
-          {steps.map((step, index) => (
-            <li class="relative flex items-start gap-5 pb-8 last:pb-0 md:gap-6">
-              {index < steps.length - 1 && (
-                <span
-                  class="absolute bottom-0 left-[18px] top-10 w-px bg-heading/15 md:left-[22px]"
-                  aria-hidden="true"
-                />
-              )}
-              <Heading
-                variant="h3"
-                as="span"
-                color="inherit"
-                class="w-10 shrink-0 text-accent md:w-12"
-              >
-                {String(index + 1).padStart(2, '0')}
-              </Heading>
-              <div class="flex min-w-0 flex-1 flex-col gap-1 pt-0.5">
-                <Heading variant="h4" as="h3">{step.title}</Heading>
-                <Text color="default">{step.description}</Text>
-              </div>
-            </li>
-          ))}
-        </ol>
-      )}
+      {
+        steps.length > 0 && (
+          <ol class="flex w-full flex-col">
+            {steps.map((step, index) => (
+              <li class="relative flex items-start gap-5 pb-8 last:pb-0 md:gap-6">
+                {index < steps.length - 1 && (
+                  <span
+                    class="absolute bottom-0 left-[18px] top-10 w-px bg-heading/15 md:left-[22px]"
+                    aria-hidden="true"
+                  />
+                )}
+                <Heading variant="h3" as="span" color="inherit" class="w-10 shrink-0 text-accent md:w-12">
+                  {String(index + 1).padStart(2, '0')}
+                </Heading>
+                <div class="flex min-w-0 flex-1 flex-col gap-1 pt-0.5">
+                  <Heading variant="h4" as="h3">
+                    {step.title}
+                  </Heading>
+                  <Text color="default">{step.description}</Text>
+                </div>
+              </li>
+            ))}
+          </ol>
+        )
+      }
 
       {note && <Text variant="small">{note}</Text>}
 
-      {ctaText && ctaHref && (
-        <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} />
-      )}
+      {ctaText && ctaHref && <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} />}
     </div>
 
-    {!hideImage && (
-    <div class="relative w-full shrink-0 md:w-[42%] md:max-w-[520px]" style="aspect-ratio: 562 / 624;">
-      {image ? (
-        <Image
-          {...image}
-          class="absolute inset-0 h-full w-full object-cover"
-          widths={[400, 768, 1100]}
-          sizes="(max-width: 768px) 100vw, 42vw"
-          loading="lazy"
-          width={562}
-          height={624}
-          layout="cover"
-          format="webp"
-        />
-      ) : (
-        <HeroImagePlaceholder fill class="absolute inset-0" />
-      )}
-    </div>
-    )}
+    {
+      !hideImage && (
+        <div class="relative w-full shrink-0 md:w-[42%] md:max-w-[520px]" style="aspect-ratio: 562 / 624;">
+          {image ? (
+            <Image
+              {...image}
+              class="absolute inset-0 h-full w-full object-cover"
+              widths={[400, 768, 1100]}
+              sizes="(max-width: 768px) 100vw, 42vw"
+              loading="lazy"
+              width={562}
+              height={624}
+              layout="cover"
+              format="webp"
+            />
+          ) : (
+            <HeroImagePlaceholder fill class="absolute inset-0" />
+          )}
+        </div>
+      )
+    }
   </div>
 </section>

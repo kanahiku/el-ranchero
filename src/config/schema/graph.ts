@@ -1,6 +1,6 @@
 import { business } from './business';
 import { pages } from './pages';
-import type { BusinessSchema, JsonLdNode, PageSchema } from './types';
+import type { BreadcrumbItem, BusinessSchema, JsonLdNode, PageSchema } from './types';
 import { absoluteUrl, businessId, normalizePath, siteOrigin } from './urls';
 
 function buildWebsiteJson(entity: BusinessSchema): JsonLdNode {
@@ -91,6 +91,49 @@ function buildBreadcrumbJson(page: PageSchema): JsonLdNode {
   };
 }
 
+export interface PageFallback {
+  title?: string;
+  description?: string;
+}
+
+const titleCase = (slug: string) => slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+/** Generic WebPage + breadcrumb for routes with no entry in `pages` (CMS-driven subpages). */
+function buildFallbackPage(path: string, { title, description }: PageFallback): PageSchema | undefined {
+  if (!title || path === '/' || path === '/404') return undefined;
+  const crumbs: BreadcrumbItem[] = [{ name: 'Home', path: '/' }];
+  const parts = path.split('/').filter(Boolean);
+  let acc = '';
+  parts.forEach((part, i) => {
+    acc += `/${part}`;
+    const parent = pagesByPath.get(acc);
+    crumbs.push({ name: i === parts.length - 1 ? title : (parent?.name ?? titleCase(part)), path: acc });
+  });
+  return { name: title, path, schemaType: 'WebPage', description: description ?? null, faq: [], breadcrumb: crumbs };
+}
+
+export function buildBlogPostingJson(post: {
+  headline: string;
+  description?: string;
+  path: string;
+  datePublished: string;
+  author?: string;
+  image?: string;
+}): JsonLdNode {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.headline,
+    description: post.description,
+    url: absoluteUrl(post.path),
+    mainEntityOfPage: absoluteUrl(post.path),
+    datePublished: post.datePublished,
+    ...(post.author ? { author: { '@type': 'Person', name: post.author } } : {}),
+    ...(post.image ? { image: post.image } : {}),
+    publisher: { '@id': businessId(business.idFragment) },
+  };
+}
+
 const pagesByPath = new Map(pages.map((page) => [normalizePath(page.path), page]));
 
 /**
@@ -98,12 +141,12 @@ const pagesByPath = new Map(pages.map((page) => [normalizePath(page.path), page]
  * Homepage always includes WebSite + business type; other pages emit
  * their Service/WebPage/etc. node, FAQ when present, and breadcrumbs.
  */
-export function getJsonLdBlocks(pathname: string): JsonLdNode[] {
+export function getJsonLdBlocks(pathname: string, fallback: PageFallback = {}): JsonLdNode[] {
   if (!siteOrigin()) return [];
 
   const path = normalizePath(pathname);
   const blocks: JsonLdNode[] = [];
-  const page = pagesByPath.get(path);
+  const page = pagesByPath.get(path) ?? buildFallbackPage(path, fallback);
 
   if (path === '/') {
     blocks.push(buildWebsiteJson(business));

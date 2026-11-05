@@ -13,6 +13,8 @@ import icon from 'astro-icon';
 import compress from 'astro-compress';
 import type { AstroIntegration } from 'astro';
 
+type LocalVariant = { src: [string]; weight: string; style: 'normal' | 'italic' };
+
 import astrowind from './vendor/integration';
 
 import { brandFontConfig } from './src/brand';
@@ -61,7 +63,7 @@ export default defineConfig({
         src: [file.src],
         weight: file.weight,
         style: file.style,
-      })),
+      })) as [LocalVariant, ...LocalVariant[]],
     },
   })),
 

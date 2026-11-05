@@ -1,0 +1,29 @@
+---
+/**
+ * Google Consent Mode v2 defaults. Must render BEFORE GTM / gtag so nothing
+ * tracks until the visitor opts in. A saved choice (localStorage `cookie-consent`)
+ * is applied immediately so returning visitors are not re-prompted.
+ */
+const script = `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+  analytics_storage: 'denied', functionality_storage: 'denied', personalization_storage: 'denied',
+  security_storage: 'granted', wait_for_update: 500
+});
+try {
+  var saved = JSON.parse(localStorage.getItem('cookie-consent') || 'null');
+  if (saved) gtag('consent', 'update', {
+    analytics_storage: saved.analytics ? 'granted' : 'denied',
+    ad_storage: saved.marketing ? 'granted' : 'denied',
+    ad_user_data: saved.marketing ? 'granted' : 'denied',
+    ad_personalization: saved.marketing ? 'granted' : 'denied',
+    functionality_storage: saved.preferences ? 'granted' : 'denied',
+    personalization_storage: saved.preferences ? 'granted' : 'denied'
+  });
+} catch (e) {}
+`;
+---
+
+<script is:inline set:html={script} />

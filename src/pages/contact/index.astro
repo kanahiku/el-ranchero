@@ -30,13 +30,7 @@ const stores = c.locations.map((copy) => ({ copy, store: copy.name.toLowerCase()
 ---
 
 <Layout metadata={metadata}>
-  <Hero2
-    variant="split-dark"
-    overlapHeader={false}
-    hideImage
-    title={c.heroTitle}
-    content={c.heroIntro}
-  />
+  <Hero2 variant="split-dark" overlapHeader={false} hideImage title={c.heroTitle} content={c.heroIntro} />
 
   <Contact
     id="contact-form"

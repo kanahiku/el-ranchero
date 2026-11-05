@@ -60,9 +60,14 @@ export const richParagraphs = (name: string, title: string, group: string, descr
                   description: 'Page on this site (e.g. /menu) or a full URL (https://…).',
                   type: 'string',
                   validation: (r) =>
-                    r.required().custom((value) =>
-                      !value || /^(\/|#|https?:\/\/|tel:|mailto:)/.test(value) || 'Start with /, https://, tel: or mailto:'
-                    ),
+                    r
+                      .required()
+                      .custom(
+                        (value) =>
+                          !value ||
+                          /^(\/|#|https?:\/\/|tel:|mailto:)/.test(value) ||
+                          'Start with /, https://, tel: or mailto:'
+                      ),
                 }),
               ],
             },

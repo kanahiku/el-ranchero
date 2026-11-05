@@ -11,12 +11,7 @@ export interface Props {
   variant?: 'sticky' | 'inline';
 }
 
-const {
-  toc,
-  ctaTitle = 'Have a question?',
-  ctaHref = '/form',
-  variant = 'sticky',
-} = Astro.props;
+const { toc, ctaTitle = 'Have a question?', ctaHref = '/form', variant = 'sticky' } = Astro.props;
 
 const isSticky = variant === 'sticky';
 ---
@@ -79,13 +74,7 @@ const isSticky = variant === 'sticky';
       <div class:list={['rounded-lg bg-card-light p-5', toc.length > 0 && 'mt-8']}>
         <p class="text-[18px] md:text-[20px] font-sans font-medium leading-[130%] text-heading mb-4">{ctaTitle}</p>
         <div class="flex flex-col gap-1.5">
-          <Button
-            variant="primary"
-            text={PRIMARY_CTA_LABEL}
-            href={ctaHref}
-            hideNote={true}
-            class="w-auto self-start"
-          />
+          <Button variant="primary" text={PRIMARY_CTA_LABEL} href={ctaHref} hideNote={true} class="w-auto self-start" />
           <CTANote />
         </div>
       </div>
@@ -105,62 +94,58 @@ const isSticky = variant === 'sticky';
   }
 </style>
 
-{
-  isSticky && (
-    <script>
-      class BlogTocNav extends HTMLElement {
-        abort;
+<script>
+  class BlogTocNav extends HTMLElement {
+    abort?: () => void;
 
-        connectedCallback() {
-          const links = Array.from(this.querySelectorAll('a[data-toc-link]'));
-          const items = [];
+    connectedCallback() {
+      const links = Array.from(this.querySelectorAll('a[data-toc-link]'));
+      const items: { link: Element; target: HTMLElement }[] = [];
 
-          for (const link of links) {
-            const id = decodeURIComponent(link.getAttribute('href') || '').replace('#', '');
-            const target = id ? document.getElementById(id) : null;
-            if (target) items.push({ link, target });
-          }
-
-          if (!items.length) return;
-
-          const marker = () => {
-            const header = document.getElementById('header');
-            const headerH = header?.getBoundingClientRect().height ?? 72;
-            return Math.max(headerH + 56, 168);
-          };
-
-          const sync = () => {
-            const line = marker();
-            let active = items[0];
-            for (const item of items) {
-              if (item.target.getBoundingClientRect().top <= line) active = item;
-            }
-
-            for (const item of items) {
-              if (item === active) item.link.setAttribute('aria-current', 'location');
-              else item.link.removeAttribute('aria-current');
-            }
-          };
-
-          sync();
-          window.addEventListener('scroll', sync, { passive: true });
-          window.addEventListener('resize', sync);
-          window.addEventListener('hashchange', sync);
-          this.abort = () => {
-            window.removeEventListener('scroll', sync);
-            window.removeEventListener('resize', sync);
-            window.removeEventListener('hashchange', sync);
-          };
-        }
-
-        disconnectedCallback() {
-          this.abort?.();
-        }
+      for (const link of links) {
+        const id = decodeURIComponent(link.getAttribute('href') || '').replace('#', '');
+        const target = id ? document.getElementById(id) : null;
+        if (target) items.push({ link, target });
       }
 
-      if (!customElements.get('blog-toc-nav')) {
-        customElements.define('blog-toc-nav', BlogTocNav);
-      }
-    </script>
-  )
-}
+      if (!items.length) return;
+
+      const marker = () => {
+        const header = document.getElementById('header');
+        const headerH = header?.getBoundingClientRect().height ?? 72;
+        return Math.max(headerH + 56, 168);
+      };
+
+      const sync = () => {
+        const line = marker();
+        let active = items[0];
+        for (const item of items) {
+          if (item.target.getBoundingClientRect().top <= line) active = item;
+        }
+
+        for (const item of items) {
+          if (item === active) item.link.setAttribute('aria-current', 'location');
+          else item.link.removeAttribute('aria-current');
+        }
+      };
+
+      sync();
+      window.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      window.addEventListener('hashchange', sync);
+      this.abort = () => {
+        window.removeEventListener('scroll', sync);
+        window.removeEventListener('resize', sync);
+        window.removeEventListener('hashchange', sync);
+      };
+    }
+
+    disconnectedCallback() {
+      this.abort?.();
+    }
+  }
+
+  if (!customElements.get('blog-toc-nav')) {
+    customElements.define('blog-toc-nav', BlogTocNav);
+  }
+</script>

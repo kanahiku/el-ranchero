@@ -33,7 +33,9 @@ const navDoc = {
   _type: 'siteNavigation',
   links: header.links.map((link) => ({
     ...typed('navLink', { text: link.text, ...(link.href ? { href: link.href } : {}) }),
-    ...(link.links?.length ? { subLinks: link.links.map((sub) => typed('navSubLink', { text: sub.text, href: sub.href })) } : {}),
+    ...(link.links?.length
+      ? { subLinks: link.links.map((sub) => typed('navSubLink', { text: sub.text, href: sub.href })) }
+      : {}),
   })),
   ...(header.phone ? { phone: header.phone } : {}),
   actions: header.actions.map((action) => ({ _key: key(), ...action })),

@@ -73,11 +73,7 @@ function resolveTurnstileSecret(env: Env, siteSlug: string): string {
 }
 
 /** Always allowed so local + Vercel preview/prod work before a custom domain exists. */
-const DEFAULT_ORIGIN_PATTERNS = [
-  'http://localhost:*',
-  'http://127.0.0.1:*',
-  'https://*.vercel.app',
-];
+const DEFAULT_ORIGIN_PATTERNS = ['http://localhost:*', 'http://127.0.0.1:*', 'https://*.vercel.app'];
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -126,9 +122,7 @@ async function handleSubmit(request: Request, env: Env, origin: string, patterns
       return withCors(origin, patterns, json({ ok: false, error: parsed.error }, 400));
     }
 
-    const site = await env.DB.prepare('SELECT * FROM sites WHERE slug = ?')
-      .bind(parsed.site)
-      .first<SiteRow>();
+    const site = await env.DB.prepare('SELECT * FROM sites WHERE slug = ?').bind(parsed.site).first<SiteRow>();
 
     if (!site) {
       return withCors(origin, patterns, json({ ok: false, error: 'Unknown site' }, 400));
@@ -201,9 +195,7 @@ async function handleEmailSummary(request: Request, env: Env, origin: string, pa
       return withCors(origin, patterns, json({ ok: false, error: parsed.error }, 400));
     }
 
-    const site = await env.DB.prepare('SELECT * FROM sites WHERE slug = ?')
-      .bind(parsed.site)
-      .first<SiteRow>();
+    const site = await env.DB.prepare('SELECT * FROM sites WHERE slug = ?').bind(parsed.site).first<SiteRow>();
 
     if (!site) {
       return withCors(origin, patterns, json({ ok: false, error: 'Unknown site' }, 400));
@@ -440,12 +432,7 @@ async function emailsSentToday(db: D1Database, siteSlug: string, sinceIso: strin
   return Number(row?.n ?? 0);
 }
 
-async function outboundSentToday(
-  db: D1Database,
-  siteSlug: string,
-  kind: string,
-  sinceIso: string
-): Promise<number> {
+async function outboundSentToday(db: D1Database, siteSlug: string, kind: string, sinceIso: string): Promise<number> {
   try {
     const row = await db
       .prepare(
@@ -529,21 +516,14 @@ function resendUserError(status: number, errText: string): string {
   } catch {
     /* ignore */
   }
-  if (
-    status === 403 ||
-    /testing emails|verify a domain|onboarding@resend\.dev/i.test(message)
-  ) {
+  if (status === 403 || /testing emails|verify a domain|onboarding@resend\.dev/i.test(message)) {
     return 'Resend is still in test mode. Use the email address on the Resend account, or verify a sending domain.';
   }
   return 'Unable to send email right now. Download or print instead.';
 }
 
 function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function emailHtml(siteName: string, lead: Submission): string {

@@ -84,7 +84,10 @@ const doubled = layout === 'grid' ? [] : [...half, ...half];
 
 <section
   {...id ? { id } : {}}
-  class:list={['not-prose relative w-full overflow-hidden py-16 md:py-[120px]', tone === 'card' ? 'bg-section-grey' : 'bg-page']}
+  class:list={[
+    'not-prose relative w-full overflow-hidden py-16 md:py-[120px]',
+    tone === 'card' ? 'bg-section-grey' : 'bg-page',
+  ]}
 >
   {/* ── Centered header ── */}
   <div class="mx-auto w-full max-w-container px-5 sm:px-8 md:px-16">

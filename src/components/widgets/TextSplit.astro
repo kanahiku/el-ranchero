@@ -81,14 +81,14 @@ const isLandscape = Number.isFinite(aspectW) && Number.isFinite(aspectH) && aspe
 const useNarrowGap = imageUnderHeading || (imageAside && isLandscape);
 ---
 
-<section {...id ? { id } : {}} class:list={['not-prose relative w-full', Astro.slots.has('motif') && 'overflow-hidden', className]}>
+<section
+  {...id ? { id } : {}}
+  class:list={['not-prose relative w-full', Astro.slots.has('motif') && 'overflow-hidden', className]}
+>
   {/* Optional decorative motif (<Motif slot="motif" />), positioned against the full-width section */}
   <slot name="motif" />
   <div
-    class:list={[
-      'mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16',
-      compact ? 'md:py-16' : 'md:py-[120px]',
-    ]}
+    class:list={['mx-auto w-full max-w-container px-5 py-16 sm:px-8 md:px-16', compact ? 'md:py-16' : 'md:py-[120px]']}
   >
     <div
       class:list={[

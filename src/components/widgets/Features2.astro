@@ -1,6 +1,5 @@
 ---
 import { Icon } from 'astro-icon/components';
-import Button from '~/components/ui/Button.astro';
 import Headline from '~/components/ui/Headline.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { Features as Props } from '~/types';
@@ -29,15 +28,17 @@ const columnsClass =
         ? 'sm:grid-cols-2'
         : '';
 
-const cardBg = cardClass ?? (isDark
-  ? 'border-white/15 bg-white/5 backdrop-blur-sm'
-  : 'border-accent/50 bg-white dark:bg-slate-900');
+const cardBg =
+  cardClass ?? (isDark ? 'border-white/15 bg-white/5 backdrop-blur-sm' : 'border-accent/50 bg-white dark:bg-slate-900');
 
 const cardTitle = isDark ? 'text-white' : '';
 const cardDesc = isDark ? 'text-white/70' : 'text-muted';
 
 const headlineClasses = isDark
-  ? { title: 'text-[26px] md:text-[40px] font-normal leading-[110%] text-white', subtitle: 'text-[16px] font-normal leading-[160%] text-white/70' }
+  ? {
+      title: 'text-[26px] md:text-[40px] font-normal leading-[110%] text-white',
+      subtitle: 'text-[16px] font-normal leading-[160%] text-white/70',
+    }
   : (classes?.headline as Record<string, string>);
 ---
 
@@ -51,14 +52,14 @@ const headlineClasses = isDark
           const cardHref = callToAction?.href;
           const CardWrapper = cardHref ? 'a' : 'div';
           const cardLinkProps = cardHref ? { href: cardHref } : {};
-          
+
           return (
             <CardWrapper
               {...cardLinkProps}
               class:list={[
                 'relative flex flex-col h-full rounded-lg p-6 intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
                 cardBg,
-                cardHref && 'group cursor-pointer'
+                cardHref && 'group cursor-pointer',
               ]}
             >
               {(icon || defaultIcon) && <Icon name={icon || defaultIcon} class="mb-6 size-9 text-primary sm:size-12" />}
@@ -66,7 +67,10 @@ const headlineClasses = isDark
                 {itemTitle}
               </h3>
               {description && (
-                <p class:list={['text-[14px] md:text-[15px] font-normal leading-[160%] mt-2 flex-1', cardDesc]} set:html={description} />
+                <p
+                  class:list={['text-[14px] md:text-[15px] font-normal leading-[160%] mt-2 flex-1', cardDesc]}
+                  set:html={description}
+                />
               )}
               {callToAction?.text && (
                 <span

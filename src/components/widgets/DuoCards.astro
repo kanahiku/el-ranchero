@@ -33,46 +33,46 @@ const { cards = [], id } = Astro.props;
 <section {...id ? { id } : {}} class="not-prose w-full pb-12 md:pb-16">
   <div class="mx-auto w-full max-w-container px-5 sm:px-8 md:px-16 lg:px-[120px]">
     <div class="flex flex-col items-stretch gap-8 lg:flex-row">
-      {cards.map((card) => {
-        const isDark = (card.variant ?? 'dark') === 'dark';
-        return (
-          <Card variant={isDark ? 'dark' : 'outlined'} class="flex-1">
-            <div class="flex w-full flex-1 flex-col items-start gap-4">
-              {card.eyebrow && (
-                <Heading variant="eyebrow">{card.eyebrow}</Heading>
-              )}
-              {isDark ? (
-                <Heading variant="h2" color="inherit" class="text-contrast">
-                  {card.heading}
-                </Heading>
-              ) : (
-                <Heading
-                  variant="h2"
-                  color="inherit"
-                  class="bg-[linear-gradient(110deg,var(--aw-color-bg-section-dark)_5%,var(--aw-color-primary)_97%)] bg-clip-text text-transparent"
-                >
-                  {card.heading}
-                </Heading>
-              )}
-              {isDark ? (
-                <Text color="inherit" class="text-contrast">
-                  {card.body}
-                </Text>
-              ) : (
-                <Text>{card.body}</Text>
-              )}
-            </div>
-            <Button
-              variant={isDark ? 'ghost' : 'primary'}
-              tone={isDark ? 'dark' : undefined}
-              text={card.cta.text}
-              href={card.cta.href}
-              hideNote
-              class="mt-auto self-start"
-            />
-          </Card>
-        );
-      })}
+      {
+        cards.map((card) => {
+          const isDark = (card.variant ?? 'dark') === 'dark';
+          return (
+            <Card variant={isDark ? 'dark' : 'outlined'} class="flex-1">
+              <div class="flex w-full flex-1 flex-col items-start gap-4">
+                {card.eyebrow && <Heading variant="eyebrow">{card.eyebrow}</Heading>}
+                {isDark ? (
+                  <Heading variant="h2" color="inherit" class="text-contrast">
+                    {card.heading}
+                  </Heading>
+                ) : (
+                  <Heading
+                    variant="h2"
+                    color="inherit"
+                    class="bg-[linear-gradient(110deg,var(--aw-color-bg-section-dark)_5%,var(--aw-color-primary)_97%)] bg-clip-text text-transparent"
+                  >
+                    {card.heading}
+                  </Heading>
+                )}
+                {isDark ? (
+                  <Text color="inherit" class="text-contrast">
+                    {card.body}
+                  </Text>
+                ) : (
+                  <Text>{card.body}</Text>
+                )}
+              </div>
+              <Button
+                variant={isDark ? 'ghost' : 'primary'}
+                tone={isDark ? 'dark' : undefined}
+                text={card.cta.text}
+                href={card.cta.href}
+                hideNote
+                class="mt-auto self-start"
+              />
+            </Card>
+          );
+        })
+      }
     </div>
   </div>
 </section>

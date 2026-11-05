@@ -68,7 +68,6 @@ function applyType(value: unknown, rule: TypeRule): unknown {
 
 const LINK: TypeRule = { type: 'link' };
 const BUTTON: TypeRule = { type: 'buttonLink' };
-const FAQ: TypeRule = { type: 'faqItem' };
 const FAVORITE: TypeRule = { type: 'locationFavorite' };
 
 /** `_type` for the nested objects inside a page's `blocks` (blocks carry their own `_type`). */

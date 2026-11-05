@@ -27,6 +27,10 @@ import { testimonial } from './documents/testimonial';
 import { menuCategory } from './documents/menuCategory';
 import { menuItem } from './documents/menuItem';
 import { meatOption } from './documents/meatOption';
+import { redirect } from './documents/redirect';
+import { siteSettings } from './singletons/siteSettings';
+import { seo } from './objects/seo';
+import { imageWithAlt } from './objects/imageWithAlt';
 
 // Navigation objects
 import { navLink, navSubLink } from './objects/navLink';
@@ -35,6 +39,8 @@ import { footerColumn, footerLink, socialLink } from './objects/footerColumn';
 
 export const schemaTypes = [
   // Documents
+  siteSettings,
+  redirect,
   siteNavigation,
   siteFooter,
   homepageContent,
@@ -82,6 +88,8 @@ export const schemaTypes = [
   locationsFavorites,
 
   // Objects — shared
+  seo,
+  imageWithAlt,
   link,
   buttonLink,
 

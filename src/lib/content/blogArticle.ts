@@ -23,7 +23,7 @@ export function slugifyHeading(text: string): string {
 }
 
 function uniqueHeadingId(text: string, used: Set<string>): string {
-  let id = slugifyHeading(text) || 'section';
+  const id = slugifyHeading(text) || 'section';
   let unique = id;
   let n = 2;
   while (used.has(unique)) {
@@ -77,9 +77,7 @@ function imagesForHeading(groups: Map<string, BlogContentImage[]>, heading?: str
 export function getUnmatchedInlineImages(post: BlogPost): BlogContentImage[] {
   if (shouldUsePortableBody(post)) return [];
   const groups = groupInlineImages(post.contentBlocks);
-  const matched = new Set(
-    post.sections.map((section) => normalizeHeading(section.heading ?? '')).filter(Boolean)
-  );
+  const matched = new Set(post.sections.map((section) => normalizeHeading(section.heading ?? '')).filter(Boolean));
   const leftover: BlogContentImage[] = [];
 
   for (const [heading, images] of groups) {
@@ -94,7 +92,10 @@ export function getArticleToc(post: BlogPost): TocItem[] {
   if (shouldUsePortableBody(post)) {
     const used = new Set<string>();
     return (post.contentBlocks ?? [])
-      .filter((block): block is Extract<BlogContentBlock, { _type: 'heading' }> => block._type === 'heading' && block.level === 2)
+      .filter(
+        (block): block is Extract<BlogContentBlock, { _type: 'heading' }> =>
+          block._type === 'heading' && block.level === 2
+      )
       .map((block) => ({
         id: uniqueHeadingId(block.text, used),
         title: block.text,

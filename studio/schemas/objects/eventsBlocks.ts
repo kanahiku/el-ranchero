@@ -5,9 +5,11 @@ import { richParagraphs } from '../lib/fields';
 const anchor = defineField({
   name: 'anchor',
   title: 'Section ID',
-  description: 'Used for in-page links (e.g. #inquiry). Lowercase letters and dashes. Change only if you know it is linked.',
+  description:
+    'Used for in-page links (e.g. #inquiry). Lowercase letters and dashes. Change only if you know it is linked.',
   type: 'string',
-  validation: (r) => r.regex(/^[a-z0-9-]*$/, { name: 'lowercase-dashes' }).error('Use lowercase letters, numbers and dashes.'),
+  validation: (r) =>
+    r.regex(/^[a-z0-9-]*$/, { name: 'lowercase-dashes' }).error('Use lowercase letters, numbers and dashes.'),
 });
 
 const tone = defineField({
@@ -130,4 +132,8 @@ export const eventsInquiryForm = defineType({
   },
 });
 
-export const eventsBlockTypes = [{ type: 'eventsTextSplit' }, { type: 'eventsDetailsTable' }, { type: 'eventsInquiryForm' }];
+export const eventsBlockTypes = [
+  { type: 'eventsTextSplit' },
+  { type: 'eventsDetailsTable' },
+  { type: 'eventsInquiryForm' },
+];

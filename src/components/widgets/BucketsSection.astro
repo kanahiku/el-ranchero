@@ -18,11 +18,11 @@ import Card from '~/components/ui/Card.astro';
 ---
 
 <section class="not-prose w-full py-12 md:py-16 lg:py-[80px]">
-  <div class="mx-auto flex w-full max-w-container flex-col gap-12 px-5 sm:px-8 md:flex-row md:gap-16 md:px-16 lg:gap-[64px] lg:px-[120px]">
-
+  <div
+    class="mx-auto flex w-full max-w-container flex-col gap-12 px-5 sm:px-8 md:flex-row md:gap-16 md:px-16 lg:gap-[64px] lg:px-[120px]"
+  >
     {/* ── LEFT: pull-quote + rules ── */}
     <div class="flex min-w-0 flex-1 flex-col gap-10 md:gap-[64px]">
-
       {/* Pull quote */}
       <p class="font-heading text-h3 font-normal leading-[1.2] text-heading">
         The price goes up as the evidence goes down. Bucket one is free and it is the one that matters most.{' '}
@@ -38,19 +38,23 @@ import Card from '~/components/ui/Card.astro';
         <div class="font-sans text-small leading-[1.3] text-muted space-y-[1.3em]">
           <p>
             <strong class="font-bold">1. Overflow, not completion.</strong>{' '}
-            You never &ldquo;finish&rdquo; a bucket. You fill it as well as you reasonably can, and what spills over (spare money, spare attention, spare Tuesdays) runs down to the next. Nobody is being told to wait.
+            You never &ldquo;finish&rdquo; a bucket. You fill it as well as you reasonably can, and what spills over (spare
+            money, spare attention, spare Tuesdays) runs down to the next. Nobody is being told to wait.
           </p>
           <p>
             <strong class="font-bold">2. Inside bucket one there is no order. </strong>{' '}
-            The buckets are a sequence; the four pillars inside bucket one are not. Show up for any one, stay for all four. Start with whichever you can face on a Tuesday.
+            The buckets are a sequence; the four pillars inside bucket one are not. Show up for any one, stay for all four.
+            Start with whichever you can face on a Tuesday.
           </p>
           <p>
             <strong class="font-bold">3. The buckets refill.</strong>{' '}
-            Bucket one is a permanent habit, not a phase you graduate from. You do not stop walking because you have moved on to blood tests.
+            Bucket one is a permanent habit, not a phase you graduate from. You do not stop walking because you have moved
+            on to blood tests.
           </p>
           <p>
             <strong class="font-bold">4. We are not against bucket three. </strong>{' '}
-            Recreational anti-aging is fine. If you enjoy it and can afford it, help yourself, the same as a weekend in Las Vegas. The objection is buying bucket three while bucket one sits empty.
+            Recreational anti-aging is fine. If you enjoy it and can afford it, help yourself, the same as a weekend in Las
+            Vegas. The objection is buying bucket three while bucket one sits empty.
           </p>
         </div>
       </div>
@@ -58,7 +62,6 @@ import Card from '~/components/ui/Card.astro';
 
     {/* ── RIGHT: three bucket cards ── */}
     <div class="flex min-w-0 flex-1 flex-col items-stretch gap-0">
-
       {/* ── Bucket 01: The Basics ── */}
       <Card
         variant="bordered"
@@ -75,22 +78,27 @@ import Card from '~/components/ui/Card.astro';
               <span class="text-heading">The Basics</span>
             </div>
             <p class="font-sans text-[12px] leading-[1.3] text-primary">
-              Move. Eat well. Sleep. Stay connected. That&rsquo;s it. That&rsquo;s the bucket, and it is the one with the strongest evidence in all of longevity medicine. It costs you a calendar, not a credit card.
+              Move. Eat well. Sleep. Stay connected. That&rsquo;s it. That&rsquo;s the bucket, and it is the one with
+              the strongest evidence in all of longevity medicine. It costs you a calendar, not a credit card.
             </p>
           </div>
           {/* Meta badges */}
           <div class="flex shrink-0 flex-col gap-2.5 pt-1 opacity-40">
             <div class="flex items-center gap-1.5">
               <svg class="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1" y="3.5" width="12" height="8.5" rx="1.5" stroke="#2C4A5B" stroke-width="1.2"/>
-                <path d="M1 6h12" stroke="#2C4A5B" stroke-width="1.2"/>
-                <circle cx="9.5" cy="8.5" r="1" fill="#2C4A5B"/>
+                <rect x="1" y="3.5" width="12" height="8.5" rx="1.5" stroke="#2C4A5B" stroke-width="1.2"></rect>
+                <path d="M1 6h12" stroke="#2C4A5B" stroke-width="1.2"></path>
+                <circle cx="9.5" cy="8.5" r="1" fill="#2C4A5B"></circle>
               </svg>
               <span class="font-sans text-[11px] uppercase tracking-[0.06em] text-primary">free</span>
             </div>
             <div class="flex items-center gap-1.5">
               <svg class="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 1l1.5 3.5H12l-2.8 2 1.1 3.5L7 8l-3.3 2 1.1-3.5L2 4.5h3.5L7 1z" stroke="#2C4A5B" stroke-width="1.1" stroke-linejoin="round"/>
+                <path
+                  d="M7 1l1.5 3.5H12l-2.8 2 1.1 3.5L7 8l-3.3 2 1.1-3.5L2 4.5h3.5L7 1z"
+                  stroke="#2C4A5B"
+                  stroke-width="1.1"
+                  stroke-linejoin="round"></path>
               </svg>
               <span class="font-sans text-[11px] uppercase tracking-[0.06em] text-primary">strongest evidence</span>
             </div>
@@ -125,21 +133,27 @@ import Card from '~/components/ui/Card.astro';
               <span class="text-heading">Measure &amp; ask</span>
             </div>
             <p class="font-sans text-[12px] leading-[1.3] text-primary">
-              Blood pressure. A1c. Kidney and liver function. DEXA. Coronary calcium. Hearing. Cheap, mostly covered, and almost never ordered unless somebody asks, plus the question hardly anyone asks: do I still need all these medications?
+              Blood pressure. A1c. Kidney and liver function. DEXA. Coronary calcium. Hearing. Cheap, mostly covered,
+              and almost never ordered unless somebody asks, plus the question hardly anyone asks: do I still need all
+              these medications?
             </p>
           </div>
           <div class="flex shrink-0 flex-col gap-2.5 pt-1 opacity-40">
             <div class="flex items-center gap-1.5">
               <svg class="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1" y="3.5" width="12" height="8.5" rx="1.5" stroke="#2C4A5B" stroke-width="1.2"/>
-                <path d="M1 6h12" stroke="#2C4A5B" stroke-width="1.2"/>
-                <circle cx="9.5" cy="8.5" r="1" fill="#2C4A5B"/>
+                <rect x="1" y="3.5" width="12" height="8.5" rx="1.5" stroke="#2C4A5B" stroke-width="1.2"></rect>
+                <path d="M1 6h12" stroke="#2C4A5B" stroke-width="1.2"></path>
+                <circle cx="9.5" cy="8.5" r="1" fill="#2C4A5B"></circle>
               </svg>
               <span class="font-sans text-[11px] uppercase tracking-[0.06em] text-primary">mostly covered</span>
             </div>
             <div class="flex items-center gap-1.5">
               <svg class="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 1l1.5 3.5H12l-2.8 2 1.1 3.5L7 8l-3.3 2 1.1-3.5L2 4.5h3.5L7 1z" stroke="#2C4A5B" stroke-width="1.1" stroke-linejoin="round"/>
+                <path
+                  d="M7 1l1.5 3.5H12l-2.8 2 1.1 3.5L7 8l-3.3 2 1.1-3.5L2 4.5h3.5L7 1z"
+                  stroke="#2C4A5B"
+                  stroke-width="1.1"
+                  stroke-linejoin="round"></path>
               </svg>
               <span class="font-sans text-[11px] uppercase tracking-[0.06em] text-primary">moderate evidence</span>
             </div>
@@ -173,21 +187,27 @@ import Card from '~/components/ui/Card.astro';
               <span class="text-heading">The fancy stuff</span>
             </div>
             <p class="font-sans text-[12px] leading-[1.3] text-primary">
-              IV drips, peptides, whole-body MRI, cancer panels, chambers, a stack of fifty supplements. Sometimes real, often theatre, always expensive. Fine once the first two are full, and that is the only claim we make about it.
+              IV drips, peptides, whole-body MRI, cancer panels, chambers, a stack of fifty supplements. Sometimes real,
+              often theatre, always expensive. Fine once the first two are full, and that is the only claim we make
+              about it.
             </p>
           </div>
           <div class="flex shrink-0 flex-col gap-2.5 pt-1 opacity-40">
             <div class="flex items-center gap-1.5">
               <svg class="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1" y="3.5" width="12" height="8.5" rx="1.5" stroke="#2C4A5B" stroke-width="1.2"/>
-                <path d="M1 6h12" stroke="#2C4A5B" stroke-width="1.2"/>
-                <circle cx="9.5" cy="8.5" r="1" fill="#2C4A5B"/>
+                <rect x="1" y="3.5" width="12" height="8.5" rx="1.5" stroke="#2C4A5B" stroke-width="1.2"></rect>
+                <path d="M1 6h12" stroke="#2C4A5B" stroke-width="1.2"></path>
+                <circle cx="9.5" cy="8.5" r="1" fill="#2C4A5B"></circle>
               </svg>
               <span class="font-sans text-[11px] uppercase tracking-[0.06em] text-primary">thousands</span>
             </div>
             <div class="flex items-center gap-1.5">
               <svg class="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 1l1.5 3.5H12l-2.8 2 1.1 3.5L7 8l-3.3 2 1.1-3.5L2 4.5h3.5L7 1z" stroke="#2C4A5B" stroke-width="1.1" stroke-linejoin="round"/>
+                <path
+                  d="M7 1l1.5 3.5H12l-2.8 2 1.1 3.5L7 8l-3.3 2 1.1-3.5L2 4.5h3.5L7 1z"
+                  stroke="#2C4A5B"
+                  stroke-width="1.1"
+                  stroke-linejoin="round"></path>
               </svg>
               <span class="font-sans text-[11px] uppercase tracking-[0.06em] text-primary">weakest evidence</span>
             </div>
@@ -195,7 +215,6 @@ import Card from '~/components/ui/Card.astro';
         </div>
         {/* No CTA on bucket 03 — intentional per Figma */}
       </Card>
-
     </div>
   </div>
 </section>

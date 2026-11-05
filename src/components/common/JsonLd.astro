@@ -1,11 +1,16 @@
 ---
 import { getJsonLdBlocks } from '~/config/schema';
+import type { JsonLdNode } from '~/config/schema/types';
 
-const blocks = getJsonLdBlocks(Astro.url.pathname);
+export interface Props {
+  title?: string;
+  description?: string;
+  /** Extra nodes for this page (e.g. BlogPosting). */
+  extra?: JsonLdNode[];
+}
+
+const { title, description, extra = [] } = Astro.props;
+const blocks = [...getJsonLdBlocks(Astro.url.pathname, { title, description }), ...extra];
 ---
 
-{
-  blocks.map((block) => (
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(block)} />
-  ))
-}
+{blocks.map((block) => <script type="application/ld+json" is:inline set:html={JSON.stringify(block)} />)}

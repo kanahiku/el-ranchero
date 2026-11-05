@@ -1,0 +1,262 @@
+---
+import { getArticleBlocks } from '~/lib/content/blogArticle';
+import type { BlogPost } from '~/lib/content/types';
+import { Icon } from 'astro-icon/components';
+import Button from '~/components/ui/Button.astro';
+import ComparisonTable from '~/components/ui/ComparisonTable.astro';
+import IconPoint from '~/components/ui/IconPoint.astro';
+import ServiceDirectory from '~/components/ui/ServiceDirectory.astro';
+import ReviewsGrid from '~/components/widgets/ReviewsGrid.astro';
+import BlogArticleImage from '~/components/blog/BlogArticleImage.astro';
+import type { ServiceSection } from '~/lib/content/types';
+import type { ReviewSource } from '~/lib/reviews';
+import { paragraphClass, headingClass } from '~/components/blog/blogClasses';
+
+export interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const blocks = getArticleBlocks(post);
+
+function reviewSources(section: ServiceSection): ReviewSource[] {
+  if (section._type === 'yelpReviewsSection') return ['yelp'];
+  if (section._type === 'liveReviewsSection') {
+    if (section.sources === 'google') return ['google'];
+    if (section.sources === 'yelp') return ['yelp'];
+    return ['google', 'yelp'];
+  }
+  return ['google', 'yelp'];
+}
+---
+
+{
+  blocks.map(({ section, headingId, showHeading, images }) => (
+    <section class:list={['mt-10 md:mt-14', headingId && 'scroll-mt-28']} {...(headingId ? { id: headingId } : {})}>
+      {showHeading && section.heading && <h2 class={headingClass}>{section.heading}</h2>}
+
+      {section._type === 'editorialSection' && (
+        <div class="space-y-5">
+          {section.paragraphs.map((paragraph) => (
+            <p class={paragraphClass}>{paragraph}</p>
+          ))}
+        </div>
+      )}
+
+      {section._type === 'splitContentSection' && (
+        <>
+          <div class="space-y-5">
+            {section.paragraphs.map((paragraph) => (
+              <p class={paragraphClass}>{paragraph}</p>
+            ))}
+          </div>
+          {section.image?.src && <BlogArticleImage image={section.image} />}
+          {section.ctaText && (
+            <p class="mt-6">
+              <Button variant="ghost" tone="light" text={section.ctaText} href={section.ctaHref || '/form'} />
+            </p>
+          )}
+          {section.linkText && section.linkHref && (
+            <p class="mt-4">
+              <a href={section.linkHref} class="btn-link">
+                {section.linkText}
+              </a>
+            </p>
+          )}
+        </>
+      )}
+
+      {section._type === 'comparisonTableSection' && (
+        <>
+          {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+          {section.column3 ? (
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[720px] border-separate border-spacing-0 text-left font-sans">
+                <thead>
+                  <tr>
+                    <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 rounded-tl-lg border-r border-accent">
+                      {section.featureLabel}
+                    </th>
+                    <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 border-r border-accent">
+                      {section.column1}
+                    </th>
+                    <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 border-r border-accent">
+                      {section.column2}
+                    </th>
+                    <th class="bg-card-dark text-white font-sans font-medium text-[16px] leading-[160%] px-4 md:px-5 py-3 md:py-4 rounded-tr-lg">
+                      {section.column3}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {section.rows.map((row, rowIndex) => {
+                    const isLast = rowIndex === section.rows.length - 1;
+                    return (
+                      <tr>
+                        <th
+                          class:list={[
+                            'align-top bg-card-light text-blog font-sans font-medium text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5 border-r border-accent',
+                            isLast && 'rounded-bl-lg',
+                          ]}
+                        >
+                          {row.feature}
+                        </th>
+                        <td class="align-top bg-card-light text-blog font-sans font-normal text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5 border-r border-accent">
+                          {row.cell1}
+                        </td>
+                        <td class="align-top bg-card-light text-blog font-sans font-normal text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5 border-r border-accent">
+                          {row.cell2}
+                        </td>
+                        <td
+                          class:list={[
+                            'align-top bg-card-light text-blog font-sans font-normal text-[15px] leading-[160%] px-4 md:px-5 py-4 md:py-5',
+                            isLast && 'rounded-br-lg',
+                          ]}
+                        >
+                          {row.cell3}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <ComparisonTable
+              featureLabel={section.featureLabel}
+              columns={[section.column1, section.column2]}
+              rows={section.rows.map((row) => ({
+                feature: row.feature,
+                left: row.cell1,
+                right: row.cell2,
+              }))}
+            />
+          )}
+        </>
+      )}
+
+      {section._type === 'iconPointsSection' && (
+        <>
+          {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+          <div class="space-y-6">
+            {section.items.map((item) => (
+              <IconPoint
+                title={item.title}
+                description={item.description}
+                icon={item.icon || 'tabler:point'}
+                variant="light"
+                orientation="inline"
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {section._type === 'timelineSection' && (
+        <>
+          {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+          <ol class="space-y-6">
+            {section.steps.map((step, index) => (
+              <li class="flex items-start gap-4">
+                <div class="shrink-0 w-9 h-9 rounded-full bg-card-dark flex items-center justify-center font-heading font-normal text-[15px] text-white mt-0.5">
+                  {index + 1}
+                </div>
+                <div class="min-w-0">
+                  <h3 class="text-[16px] font-sans font-medium leading-[130%] text-heading mb-0.5">{step.title}</h3>
+                  <p class="text-[14px] md:text-[15px] font-normal leading-[160%] text-blog">{step.description}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
+
+      {section._type === 'infoCardsSection' && (
+        <>
+          {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+          <div class="space-y-6">
+            {section.items.map((item) => (
+              <IconPoint
+                title={item.title}
+                description={item.description}
+                icon={item.icon || 'tabler:point'}
+                variant="light"
+                orientation="inline"
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {section._type === 'linkedCardsSection' && (
+        <>
+          {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+          <ServiceDirectory items={section.items} variant="light" />
+        </>
+      )}
+
+      {section._type === 'bulletCardsSection' && (
+        <>
+          {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+          <div class="space-y-8">
+            {section.items.map((card) => (
+              <div>
+                <h3 class="text-[16px] font-sans font-medium leading-[130%] text-heading mb-3">{card.title}</h3>
+                <ul class="space-y-2">
+                  {card.items.map((item) => (
+                    <li class="flex items-start gap-3">
+                      <Icon name="tabler:check" class="mt-0.5 shrink-0 w-5 h-5 text-primary" aria-hidden="true" />
+                      <span class="text-[16px] font-normal leading-[160%] text-blog">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {section._type === 'checklistSection' && (
+        <>
+          {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+          <ul class="space-y-4">
+            {section.items.map((item) => (
+              <li class="flex items-start gap-3">
+                <Icon name="tabler:check" class="mt-0.5 shrink-0 w-5 h-5 text-primary" aria-hidden="true" />
+                <span class={paragraphClass}>{item.text}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {section._type === 'quoteCardsSection' && (
+        <>
+          {section.intro && <p class={`${paragraphClass} mb-6`}>{section.intro}</p>}
+          <div class="space-y-6">
+            {section.items.map((item) => (
+              <blockquote class="border-l-4 border-accent pl-5">
+                <p class={`${paragraphClass} italic`}>“{item.quote}”</p>
+                <footer class="mt-3 text-[16px] font-sans font-medium text-heading">{item.name}</footer>
+              </blockquote>
+            ))}
+          </div>
+        </>
+      )}
+
+      {(section._type === 'yelpReviewsSection' || section._type === 'liveReviewsSection') && (
+        <ReviewsGrid
+          showHeader={false}
+          showCta={false}
+          sources={reviewSources(section)}
+          variant="light"
+          isDark={false}
+        />
+      )}
+
+      {images.map((imageBlock) => (
+        <BlogArticleImage image={imageBlock.image} caption={imageBlock.caption} />
+      ))}
+    </section>
+  ))
+}

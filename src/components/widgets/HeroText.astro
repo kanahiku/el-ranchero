@@ -53,26 +53,26 @@ const {
               />
             )
           }
-          <div class="flex flex-col gap-1.5 w-full intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+          <div
+            class="flex flex-col gap-1.5 w-full intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+          >
             <div class="flex flex-nowrap flex-col sm:flex-row sm:items-center justify-start gap-4 self-start">
-            {
-              callToAction && (
-                typeof callToAction === 'string' ? (
-                  <Fragment set:html={callToAction} />
-                ) : (
-                  <Button variant="primary" {...callToAction} hideNote />
-                )
-              )
-            }
-            {
-              callToAction2 && (
-                typeof callToAction2 === 'string' ? (
-                  <Fragment set:html={callToAction2} />
-                ) : (
-                  <Button {...callToAction2} hideNote />
-                )
-              )
-            }
+              {
+                callToAction &&
+                  (typeof callToAction === 'string' ? (
+                    <Fragment set:html={callToAction} />
+                  ) : (
+                    <Button variant="primary" {...callToAction} hideNote />
+                  ))
+              }
+              {
+                callToAction2 &&
+                  (typeof callToAction2 === 'string' ? (
+                    <Fragment set:html={callToAction2} />
+                  ) : (
+                    <Button {...callToAction2} hideNote />
+                  ))
+              }
             </div>
             {callToAction && typeof callToAction !== 'string' && <CTANote />}
           </div>

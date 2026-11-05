@@ -40,7 +40,14 @@ const thumbnail = post.image?.src ? post.image : undefined;
         role="img"
         aria-label={`${post.title} photo placeholder`}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-10 h-10"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -63,7 +70,5 @@ const thumbnail = post.image?.src ? post.image : undefined;
   <p class:list={['text-[14px] md:text-[15px] font-normal leading-[160%] flex-1', bodyClass]}>
     {post.excerpt}
   </p>
-  <span class:list={['mt-auto pt-4 text-[14px] md:text-[15px] font-medium card-link', linkClass]}>
-    Read article
-  </span>
+  <span class:list={['mt-auto pt-4 text-[14px] md:text-[15px] font-medium card-link', linkClass]}> Read article </span>
 </CardWrapper>

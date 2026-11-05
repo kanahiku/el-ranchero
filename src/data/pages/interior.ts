@@ -96,17 +96,14 @@ export const interiorPages: Record<string, InteriorPageContent> = {
   '/about': {
     path: '/about',
     title: 'Our Story',
-    metaDescription:
-      'El Ranchero opened in Kailua in 2006. Fresh, healthy, local food — now at six spots across Oahu.',
+    metaDescription: 'El Ranchero opened in Kailua in 2006. Fresh, healthy, local food — now at six spots across Oahu.',
     heading: 'Our story',
     lede: 'We opened in Kailua in 2006 with one idea: fresh, healthy food should taste worth coming back for — and feel like home. Six locations later, thats still the whole plan.',
     sections: [
       {
         heading: 'From Kailua to Oahu',
         body: 'Healthy, fresh, and local is how we started, and how we still buy.',
-        links: [
-          { text: LOCATION_CTA_LABEL, href: LOCATION_CTA_HREF },
-        ],
+        links: [{ text: LOCATION_CTA_LABEL, href: LOCATION_CTA_HREF }],
       },
     ],
   },
@@ -140,8 +137,7 @@ export const interiorPages: Record<string, InteriorPageContent> = {
   '/catering': {
     path: '/catering',
     title: 'Catering',
-    metaDescription:
-      'El Ranchero catering trays for offices, meetings, events, and large groups across Oahu.',
+    metaDescription: 'El Ranchero catering trays for offices, meetings, events, and large groups across Oahu.',
     heading: 'Catering',
     lede: 'Trays for the table, priced as they are on the current menu. Servings, minimums, lead time, and delivery radius will fill in once the shops confirm them.',
     sections: [

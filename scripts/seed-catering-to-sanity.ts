@@ -12,7 +12,8 @@
  * edits survive. Needs SANITY_WRITE_TOKEN.
  */
 import { createClient } from '@sanity/client';
-import { cateringHubDefaults, cateringSubPageDefaults } from '../src/data/pages/catering';
+import { cateringHubDefaults } from '../src/data/pages/catering';
+import { cateringSubPageDefaults } from '../src/data/pages/cateringSubPages';
 import { mdToBlock } from '../src/lib/content/richText';
 
 const commit = process.argv.includes('--commit');
@@ -131,7 +132,12 @@ await seedDoc(
   },
   (doc, set) => {
     const items = (set.favoritesItems ?? doc.favoritesItems) as Doc[] | undefined;
-    const photos = [old.favoriteTacosImage, old.favoriteBurritosImage, old.favoriteMexicanImage, old.favoriteSidesImage];
+    const photos = [
+      old.favoriteTacosImage,
+      old.favoriteBurritosImage,
+      old.favoriteMexicanImage,
+      old.favoriteSidesImage,
+    ];
     if (items) {
       photos.forEach((photo, i) => {
         if (photo && items[i] && !items[i].image) items[i].image = photo;

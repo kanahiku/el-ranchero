@@ -158,7 +158,9 @@ export const orderOnlineDefaults: OrderOnlineContent = {
       shopName: '',
       addressLine1: '91-5431 Kapolei Pkwy #501',
       addressLine2: 'Kapolei, HI 96707',
-      paragraphs: ['Ordering from Kapolei? Check out our available takeout selections and find your next El Ranchero meal.'],
+      paragraphs: [
+        'Ordering from Kapolei? Check out our available takeout selections and find your next El Ranchero meal.',
+      ],
       hours: [],
       actions: [
         { text: 'Kapolei Takeout Menu', href: kapolei.orderPickupHref, variant: 'primary' },
@@ -179,4 +181,3 @@ export const orderOnlineDefaults: OrderOnlineContent = {
     'Want to see more of what we serve? Browse our restaurant menu for tacos, burritos, Mexican breakfast, and more.',
   ctaButton: { text: 'Explore Our Menu', href: '/menu' },
 };
-

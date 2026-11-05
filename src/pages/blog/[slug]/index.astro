@@ -7,8 +7,9 @@ import BlogArticleImage from '~/components/blog/BlogArticleImage.astro';
 import BlogArticleBody from '~/components/blog/BlogArticleBody.astro';
 import BlogSidebar from '~/components/blog/BlogSidebar.astro';
 import { Icon } from 'astro-icon/components';
+import { buildBlogPostingJson } from '~/config/schema';
 import { getFormattedDate } from '~/utils/utils';
-import { getBlogIndexContent, getBlogPost } from '~/lib/content';
+import { getBlogIndexContent, getBlogPost, getRedirectFor } from '~/lib/content';
 import { getArticleToc, getLeadInlineImages, shouldUsePortableBody } from '~/lib/content/blogArticle';
 
 export const prerender = false;
@@ -20,6 +21,8 @@ const [post, c] = await Promise.all([
 ]);
 
 if (!post) {
+  const moved = await getRedirectFor(Astro.url.pathname.replace(/\/$/, ''));
+  if (moved) return Astro.redirect(moved.to, moved.permanent ? 301 : 302);
   Astro.response.status = 404;
   return Astro.rewrite('/404');
 }
@@ -35,31 +38,36 @@ const metadata = {
   description: post.meta.description,
   ignoreTitleTemplate: true,
 };
+
+const jsonLd = [
+  buildBlogPostingJson({
+    headline: post.title,
+    description: post.meta.description,
+    path: Astro.url.pathname,
+    datePublished: publishDate.toISOString(),
+    author: post.author,
+  }),
+];
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} jsonLd={jsonLd}>
   <section class="relative">
     <div class="absolute inset-0 overflow-hidden pointer-events-none -z-[1]" aria-hidden="true">
       <SectionBg variant="white" />
     </div>
     <div class="relative max-w-container mx-auto px-4 md:px-6 py-8 md:py-16 lg:py-20">
       <div class="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12 xl:gap-16 lg:items-start">
-        <BlogSidebar
-          toc={toc}
-          ctaTitle={c.postCtaTitle}
-          ctaHref={c.postCtaButton.href}
-        />
+        <BlogSidebar toc={toc} ctaTitle={c.postCtaTitle} ctaHref={c.postCtaButton.href} />
 
         <article class="min-w-0">
-          <a
-            href="/blog"
-            class="btn-link gap-1 mb-6"
-          >
+          <a href="/blog" class="btn-link gap-1 mb-6">
             <Icon name="tabler:chevron-left" class="w-4 h-4" aria-hidden="true" />
             {c.backLabel}
           </a>
 
-          <h1 class="text-[42px] md:text-[56px] font-normal leading-[105%] tracking-tighter font-heading text-heading mb-4">
+          <h1
+            class="text-[42px] md:text-[56px] font-normal leading-[105%] tracking-tighter font-heading text-heading mb-4"
+          >
             {post.title}
           </h1>
           <p class="text-[14px] md:text-[15px] font-medium text-blog mb-8">
@@ -79,11 +87,7 @@ const metadata = {
             )
           }
 
-          {
-            leadImages.map((imageBlock) => (
-              <BlogArticleImage image={imageBlock.image} caption={imageBlock.caption} />
-            ))
-          }
+          {leadImages.map((imageBlock) => <BlogArticleImage image={imageBlock.image} caption={imageBlock.caption} />)}
 
           {
             toc.length > 0 && (

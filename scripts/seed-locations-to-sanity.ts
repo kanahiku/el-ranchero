@@ -12,7 +12,8 @@
  * edits survive. Needs SANITY_WRITE_TOKEN.
  */
 import { createClient } from '@sanity/client';
-import { locationsHubDefaults, locationsSubPageDefaults } from '../src/data/pages/locations';
+import { locationsHubDefaults } from '../src/data/pages/locations';
+import { locationsSubPageDefaults } from '../src/data/pages/locationsSubPages';
 import { mdToBlock } from '../src/lib/content/richText';
 
 const commit = process.argv.includes('--commit');
@@ -125,7 +126,7 @@ const OLD_IMAGE_FIELDS = [
   ),
 ];
 const FAVORITE_FIELDS = ['Tacos', 'Burrito', 'Birria', 'Quesadillas', 'MexicanPlates'];
-const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
+const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
 
 // Hub
 const hub = clone(locationsHubDefaults) as unknown as Doc;

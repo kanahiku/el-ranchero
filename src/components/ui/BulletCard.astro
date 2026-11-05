@@ -9,13 +9,7 @@ export interface Props {
   class?: string;
 }
 
-const {
-  title,
-  items,
-  variant = 'dark',
-  size = 'lg',
-  class: className = '',
-} = Astro.props;
+const { title, items, variant = 'dark', size = 'lg', class: className = '' } = Astro.props;
 
 const headingClass = variant === 'dark' ? 'text-card-heading-dark' : 'text-card-heading-light';
 const bodyClass = variant === 'dark' ? 'text-card-body-dark' : 'text-card-body-light';
@@ -26,11 +20,15 @@ const bodyClass = variant === 'dark' ? 'text-card-body-dark' : 'text-card-body-l
     {title}
   </h3>
   <ul class="space-y-4">
-    {items.map((item) => (
-      <li class="flex gap-3">
-        <span class="shrink-0 text-accent font-bold text-[18px] leading-[160%]" aria-hidden="true">›</span>
-        <span class:list={['text-[15px] md:text-[16px] font-normal leading-[160%]', bodyClass]}>{item}</span>
-      </li>
-    ))}
+    {
+      items.map((item) => (
+        <li class="flex gap-3">
+          <span class="shrink-0 text-accent font-bold text-[18px] leading-[160%]" aria-hidden="true">
+            ›
+          </span>
+          <span class:list={['text-[15px] md:text-[16px] font-normal leading-[160%]', bodyClass]}>{item}</span>
+        </li>
+      ))
+    }
   </ul>
 </CardWrapper>

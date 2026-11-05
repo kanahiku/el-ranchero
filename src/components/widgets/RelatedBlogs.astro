@@ -17,20 +17,12 @@ export interface Props {
 
 const RELATED_LIMIT = 3;
 
-const {
-  pageSlug,
-  post,
-  excludeSlug,
-  surface = 'grey',
-  title = 'Related Blogs',
-} = Astro.props;
+const { pageSlug, post, excludeSlug, surface = 'grey', title = 'Related Blogs' } = Astro.props;
 
 const related = post
   ? await getRelatedBlogPosts(post, RELATED_LIMIT)
   : pageSlug
-    ? (await getBlogPostsRelatedTo(pageSlug))
-        .filter((item) => item.slug !== excludeSlug)
-        .slice(0, RELATED_LIMIT)
+    ? (await getBlogPostsRelatedTo(pageSlug)).filter((item) => item.slug !== excludeSlug).slice(0, RELATED_LIMIT)
     : [];
 
 const isDark = isDarkSurface(surface);

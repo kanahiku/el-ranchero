@@ -1,6 +1,7 @@
 import { defineField, defineType } from 'sanity';
 import { TagIcon } from '@sanity/icons';
 import { imageField } from '../lib/imageField';
+import { requiredSlug, slugChangeWarning } from '../../lib/validation';
 
 export const menuCategory = defineType({
   name: 'menuCategory',
@@ -18,9 +19,10 @@ export const menuCategory = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      description: 'Used in URLs like /menu/tacos. Must match an existing menu page route — changing it breaks the link.',
+      description:
+        'Used in URLs like /menu/tacos. Must match an existing menu page route — changing it breaks the link.',
       options: { source: 'title' },
-      validation: (r) => r.required(),
+      validation: (r) => [requiredSlug(r), slugChangeWarning('/menu')(r)],
     }),
     defineField({
       name: 'description',
@@ -28,7 +30,11 @@ export const menuCategory = defineType({
       type: 'text',
       rows: 3,
     }),
-    imageField('image', 'Card photo', 'Photo on the category card on the Menu page. Wide cards are 16:9, regular cards 4:3.'),
+    imageField(
+      'image',
+      'Card photo',
+      'Photo on the category card on the Menu page. Wide cards are 16:9, regular cards 4:3.'
+    ),
     imageField(
       'exploreMoreImage',
       'Card photo — "Explore More" (4:3)',

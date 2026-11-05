@@ -57,9 +57,21 @@ export const eventsContent = defineType({
     }),
     txt('weeklyNote', 'Note under the table', G.weekly, undefined, 3),
     str('moreOptionsLabel', 'Links row 1 — label', G.weekly),
-    defineField({ name: 'moreOptionLinks', title: 'Links row 1', type: 'array', group: G.weekly, of: [{ type: 'link' }] }),
+    defineField({
+      name: 'moreOptionLinks',
+      title: 'Links row 1',
+      type: 'array',
+      group: G.weekly,
+      of: [{ type: 'link' }],
+    }),
     str('locationInfoLabel', 'Links row 2 — label', G.weekly),
-    defineField({ name: 'locationLinks', title: 'Links row 2', type: 'array', group: G.weekly, of: [{ type: 'link' }] }),
+    defineField({
+      name: 'locationLinks',
+      title: 'Links row 2',
+      type: 'array',
+      group: G.weekly,
+      of: [{ type: 'link' }],
+    }),
 
     str('instagramHeading', 'Heading', G.instagram),
     txt('instagramText', 'Text', G.instagram),
@@ -93,7 +105,8 @@ export const eventsContent = defineType({
     defineField({
       name: 'eventsList',
       title: 'Events',
-      description: 'Feeds the “More Events at El Ranchero” table on every events page. The page you are on shows “You’re here”.',
+      description:
+        'Feeds the “More Events at El Ranchero” table on every events page. The page you are on shows “You’re here”.',
       type: 'array',
       group: G.list,
       of: [

@@ -15,9 +15,7 @@ const showNote = actions.some((action) => action.variant === 'primary');
 
 <div class:list={['flex flex-col gap-1.5 w-full', className]}>
   <div class="flex w-full flex-col sm:w-auto sm:flex-row sm:flex-wrap sm:items-center justify-start gap-3">
-    {actions.map((action) => (
-      <Button {...action} hideNote class="w-full sm:mb-0 sm:w-auto" />
-    ))}
+    {actions.map((action) => <Button {...action} hideNote class="w-full sm:mb-0 sm:w-auto" />)}
   </div>
   {showNote && <CTANote tone={noteTone} />}
 </div>

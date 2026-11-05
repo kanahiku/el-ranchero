@@ -29,7 +29,7 @@
 import { twMerge } from 'tailwind-merge';
 
 type Variant = 'body-lg' | 'body' | 'small' | 'caption' | 'button';
-type Color   = 'default' | 'muted' | 'white' | 'inherit';
+type Color = 'default' | 'muted' | 'white' | 'inherit';
 
 export interface Props {
   /** Visual scale + default semantic element. Defaults to 'body'. */
@@ -48,26 +48,26 @@ const { variant = 'body', as: asOverride, color = 'muted', html, class: classNam
 // Default semantic element per variant
 const defaultElement: Record<Variant, string> = {
   'body-lg': 'p',
-  body:      'p',
-  small:     'p',
-  caption:   'p',
-  button:    'span',
+  body: 'p',
+  small: 'p',
+  caption: 'p',
+  button: 'span',
 };
-const Tag = (asOverride ?? defaultElement[variant as Variant]) as any;
+const Tag = (asOverride ?? defaultElement[variant as Variant]) as 'div';
 
 // Visual scale per variant
 const scale: Record<string, string> = {
   'body-lg': 'text-body-lg font-normal',
-  body:      'text-body font-normal',
-  small:     'text-small font-normal',
-  caption:   'text-[11px] leading-[1.3] font-normal',
-  button:    'font-sans [font-size:var(--aw-text-button)] leading-none font-semibold uppercase tracking-[0.04em]',
+  body: 'text-body font-normal',
+  small: 'text-small font-normal',
+  caption: 'text-[11px] leading-[1.3] font-normal',
+  button: 'font-sans [font-size:var(--aw-text-button)] leading-none font-semibold uppercase tracking-[0.04em]',
 };
 
 const colors: Record<string, string> = {
   default: 'text-default',
-  muted:   'text-muted',
-  white:   'text-contrast',
+  muted: 'text-muted',
+  white: 'text-contrast',
   inherit: '',
 };
 
@@ -78,4 +78,12 @@ const face = 'font-sans';
 const cls = [face, scale[variant as string] ?? '', overrideCls].filter(Boolean).join(' ');
 ---
 
-{html ? <Tag class={cls} set:html={html} /> : <Tag class={cls}><slot /></Tag>}
+{
+  html ? (
+    <Tag class={cls} set:html={html} />
+  ) : (
+    <Tag class={cls}>
+      <slot />
+    </Tag>
+  )
+}

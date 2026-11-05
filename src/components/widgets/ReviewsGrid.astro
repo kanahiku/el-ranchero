@@ -28,9 +28,7 @@ const feed = limitReviewsForDisplay(await getReviewFeed(sources), sources);
 const ctaVariant = isDark ? 'ghost-dark' : 'ghost-light';
 const introColor = isDark ? 'text-white/70' : 'text-muted';
 const viewAll = [
-  sources.includes('google') && feed.viewAll.google
-    ? { label: 'View all on Google', href: feed.viewAll.google }
-    : null,
+  sources.includes('google') && feed.viewAll.google ? { label: 'View all on Google', href: feed.viewAll.google } : null,
   sources.includes('yelp') && feed.viewAll.yelp ? { label: 'View all on Yelp', href: feed.viewAll.yelp } : null,
 ].filter(Boolean) as { label: string; href: string }[];
 
@@ -52,14 +50,7 @@ const gridClass =
         classes={{ container: `${intro ? 'mb-[9px]' : 'mb-[30px]'} text-left md:mx-0` }}
       />
       {intro && (
-        <p
-          class:list={[
-            'text-[16px] font-normal leading-[160%] text-left max-w-3xl mb-[30px]',
-            introColor,
-          ]}
-        >
-          {intro}
-        </p>
+        <p class:list={['text-[16px] font-normal leading-[160%] text-left max-w-3xl mb-[30px]', introColor]}>{intro}</p>
       )}
     </>
   )

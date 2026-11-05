@@ -60,25 +60,24 @@ const paragraphs = (value?: string | string[]) =>
 const subtitleParagraphs = paragraphs(subtitle);
 ---
 
-<section
-  {...id ? { id } : {}}
-  class="not-prose relative w-full overflow-hidden bg-page"
->
-
-
-  <div class="relative z-[1] mx-auto flex w-full max-w-container flex-col gap-10 px-5 py-16 sm:px-8 md:gap-16 md:px-16 md:py-[120px]">
+<section {...id ? { id } : {}} class="not-prose relative w-full overflow-hidden bg-page">
+  <div
+    class="relative z-[1] mx-auto flex w-full max-w-container flex-col gap-10 px-5 py-16 sm:px-8 md:gap-16 md:px-16 md:py-[120px]"
+  >
     <div class="flex w-full min-w-0 flex-col items-start gap-6">
       <div class="flex min-w-0 max-w-[822px] flex-1 flex-col items-start gap-6">
         {eyebrow && <Heading variant="eyebrow">{eyebrow}</Heading>}
         {title && <Heading variant="h2">{title}</Heading>}
         <div class="flex flex-col gap-[30px]">
-          {subtitleParagraphs.map((paragraph) => (
-            <Text variant="body" color="inherit" class="text-heading">{paragraph}</Text>
-          ))}
+          {
+            subtitleParagraphs.map((paragraph) => (
+              <Text variant="body" color="inherit" class="text-heading">
+                {paragraph}
+              </Text>
+            ))
+          }
         </div>
-        {ctaText && (
-          <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} class="mt-2 shrink-0" />
-        )}
+        {ctaText && <Button variant="primary" text={ctaText} href={ctaHref} hideNote={true} class="mt-2 shrink-0" />}
       </div>
     </div>
 
@@ -115,10 +114,14 @@ const subtitleParagraphs = paragraphs(subtitle);
                 />
               )}
               <div class="absolute inset-x-0 bottom-0 z-[1] flex min-h-[49.3%] flex-col items-start gap-3 bg-black/50 p-6 text-left backdrop-blur-[2.5px]">
-                <Heading variant="h3" color="white">{dish.title}</Heading>
+                <Heading variant="h3" color="white">
+                  {dish.title}
+                </Heading>
                 <div class="flex flex-col gap-3.5">
                   {paragraphs(dish.description).map((paragraph) => (
-                    <Text color="inherit" class="text-contrast">{paragraph}</Text>
+                    <Text color="inherit" class="text-contrast">
+                      {paragraph}
+                    </Text>
                   ))}
                 </div>
               </div>

@@ -3,6 +3,7 @@ import { defineField, defineType } from 'sanity';
 import { imageField } from '../lib/imageField';
 import { buttons, linkField, paragraphs, str, txt } from '../lib/fields';
 import { menuBlockTypes } from '../objects/menuBlocks';
+import { requiredSlug, requiredTitle } from '../../lib/validation';
 
 /**
  * One document per /menu/<slug> page (created by `npm run seed:menu-pages`).
@@ -27,6 +28,7 @@ export const menuCategoryPage = defineType({
       type: 'string',
       readOnly: true,
       description: 'Fixed — identifies which page this document controls.',
+      validation: requiredTitle,
     }),
     defineField({
       name: 'slug',
@@ -34,6 +36,7 @@ export const menuCategoryPage = defineType({
       type: 'string',
       readOnly: true,
       description: 'Fixed — /menu/ plus this value.',
+      validation: requiredSlug,
     }),
 
     imageField('heroImage', 'Hero photo', 'Split hero photo.', 'hero'),
@@ -53,7 +56,13 @@ export const menuCategoryPage = defineType({
     }),
 
     str('orderTitle', 'Heading', 'order'),
-    txt('orderSubtitle', 'Text', 'order', 'The restaurant cards and DoorDash buttons are shared — see Pages → Menu → Shared sections.', 3),
+    txt(
+      'orderSubtitle',
+      'Text',
+      'order',
+      'The restaurant cards and DoorDash buttons are shared — see Pages → Menu → Shared sections.',
+      3
+    ),
 
     str('moreTitle', 'Heading', 'more'),
     txt('moreSubtitle', 'Text', 'more', 'The category cards come from Menu → Categories.', 3),

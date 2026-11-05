@@ -11,6 +11,9 @@ import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
 import GoogleTagManager from '~/components/common/GoogleTagManager.astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
+import ConsentMode from '~/components/common/ConsentMode.astro';
+import CookieConsent from '~/components/common/CookieConsent.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Intersect from '~/components/common/Intersect.astro';
 
@@ -20,20 +23,23 @@ import { ClientRouter } from 'astro:transitions';
 import { Font } from 'astro:assets';
 
 import type { MetaData as MetaDataType } from '~/types';
+import type { JsonLdNode } from '~/config/schema/types';
 import { brand } from '~/brand';
 import PageBg from '~/components/ui/PageBg.astro';
 
 export interface Props {
   metadata?: MetaDataType;
+  jsonLd?: JsonLdNode[];
 }
 
-const { metadata = {} } = Astro.props;
+const { metadata = {}, jsonLd = [] } = Astro.props;
 const { language, textDirection } = I18N;
 ---
 
 <!doctype html>
 <html lang={language} dir={textDirection} class="min-h-dvh bg-wash-end">
   <head>
+    <ConsentMode />
     <GoogleTagManager placement="head" />
     <CommonMeta />
     <Favicons />
@@ -44,7 +50,7 @@ const { language, textDirection } = I18N;
     <Metadata {...metadata} />
     <SiteVerification />
     <Analytics />
-    <JsonLd />
+    <JsonLd title={metadata.title} description={metadata.description} extra={jsonLd} />
 
     <!-- Comment the line below to disable View Transitions -->
     <ClientRouter fallback="swap" />
@@ -55,6 +61,8 @@ const { language, textDirection } = I18N;
     <GoogleTagManager placement="body" />
     <slot />
 
+    <SpeedInsights />
+    <CookieConsent />
     <Intersect />
   </body>
 </html>

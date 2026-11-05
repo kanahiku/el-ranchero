@@ -12,7 +12,8 @@
  * edits survive. Needs SANITY_WRITE_TOKEN.
  */
 import { createClient } from '@sanity/client';
-import { eventsHubDefaults, eventsSubPageDefaults } from '../src/data/pages/events';
+import { eventsHubDefaults } from '../src/data/pages/events';
+import { eventsSubPageDefaults } from '../src/data/pages/eventsSubPages';
 import { mdToBlock } from '../src/lib/content/richText';
 
 const commit = process.argv.includes('--commit');
