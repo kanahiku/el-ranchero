@@ -35,3 +35,4 @@ src/menu-images/new-imgs/
 # Source photos for the Sanity upload scripts (not shipped)
 /new-imgs/
 .site-snapshot/
+studio/.sanity/

@@ -13,7 +13,6 @@ import Analytics from '~/components/common/Analytics.astro';
 import GoogleTagManager from '~/components/common/GoogleTagManager.astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import ConsentMode from '~/components/common/ConsentMode.astro';
-import CookieConsent from '~/components/common/CookieConsent.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Intersect from '~/components/common/Intersect.astro';
 
@@ -62,7 +61,9 @@ const { language, textDirection } = I18N;
     <slot />
 
     <SpeedInsights />
-    <CookieConsent />
+    {
+      /* TODO: re-enable <CookieConsent /> (and the footer "Cookie settings" button) once the client confirms the policy */
+    }
     <Intersect />
   </body>
 </html>
