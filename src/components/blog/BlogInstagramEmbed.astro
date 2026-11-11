@@ -8,11 +8,43 @@ export interface Props {
 const { embed } = Astro.props;
 ---
 
-<blockquote
-  class="instagram-media mx-auto mt-6 max-w-[540px]"
-  data-instgrm-permalink={embed.permalink}
-  data-instgrm-version="14"
->
-  <a href={embed.permalink} target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
-  <p>{embed.caption}</p>
-</blockquote>
+<figure class="blog-instagram-embed mt-6 max-w-[540px] rounded-lg border border-card-light bg-card-light p-4 md:p-5">
+  <blockquote
+    class="instagram-media"
+    data-instgrm-permalink={embed.permalink}
+    data-instgrm-version="14"
+    style="background:#fff; border:0; border-radius:3px; margin:0; max-width:540px; min-width:326px; padding:0; width:100%;"
+  >
+    <p class="text-[15px] font-normal leading-[160%] text-blog md:text-[16px]">{embed.caption}</p>
+  </blockquote>
+  <figcaption class="mt-4" data-ig-fallback>
+    <a href={embed.permalink} target="_blank" rel="noopener noreferrer" class="btn-link">View this post on Instagram</a>
+  </figcaption>
+</figure>
+
+<script>
+  const MIN_HEIGHT = 80;
+
+  function settle(root: HTMLElement) {
+    const frame = root.querySelector('iframe.instagram-media');
+    const fallback = root.querySelector<HTMLElement>('[data-ig-fallback]');
+    if (!(frame instanceof HTMLIFrameElement)) return;
+    const height = frame.getBoundingClientRect().height;
+    if (height > MIN_HEIGHT) {
+      if (fallback) fallback.hidden = true;
+      return;
+    }
+    frame.hidden = true;
+  }
+
+  function boot() {
+    const embeds = document.querySelectorAll<HTMLElement>('.blog-instagram-embed');
+    if (!embeds.length) return;
+    const api = (window as Window & { instgrm?: { Embeds?: { process?: () => void } } }).instgrm;
+    api?.Embeds?.process?.();
+    window.setTimeout(() => embeds.forEach(settle), 2500);
+  }
+
+  if (document.readyState === 'complete') boot();
+  else window.addEventListener('load', boot, { once: true });
+</script>
