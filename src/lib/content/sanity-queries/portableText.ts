@@ -46,6 +46,7 @@ export type SanityPortableBlock = {
   reviewUrl?: string;
   businessName?: string;
   businessUrl?: string;
+  permalink?: string;
 } & SanityImageFields;
 
 export type SanityBlogPost = Omit<BlogPost, 'image' | 'relatedPages' | 'body' | 'contentBlocks'> & {
@@ -284,6 +285,18 @@ export function portableTextToContentBlocks(body: SanityPortableBlock[] | null |
           _key: row._key || `row-${ri}`,
           cells: row.cells ?? [],
         })),
+      });
+      return;
+    }
+
+    if (block._type === 'instagramEmbed' && block.permalink?.trim() && block.caption?.trim()) {
+      flushList();
+      flushFaqSection();
+      result.push({
+        _type: 'instagramEmbed',
+        _key: key,
+        permalink: block.permalink.trim(),
+        caption: block.caption.trim(),
       });
       return;
     }

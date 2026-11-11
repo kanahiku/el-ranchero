@@ -297,7 +297,8 @@ export type BlogContentBlock =
   | BlogContentCallout
   | BlogContentButton
   | BlogContentFaq
-  | BlogContentYelpReview;
+  | BlogContentYelpReview
+  | BlogContentInstagramEmbed;
 
 export interface BlogContentParagraph {
   _type: 'paragraph';
@@ -382,6 +383,13 @@ export interface BlogContentYelpReview {
   reviewUrl: string;
   businessName: string;
   businessUrl: string;
+}
+
+export interface BlogContentInstagramEmbed {
+  _type: 'instagramEmbed';
+  _key: string;
+  permalink: string;
+  caption: string;
 }
 
 // ─── Testimonials ─────────────────────────────────────────────────────────────

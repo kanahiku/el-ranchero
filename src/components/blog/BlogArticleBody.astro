@@ -67,3 +67,8 @@ const unmatchedImages = usePortableBody ? [] : getUnmatchedInlineImages(post);
     <script is:inline async src="https://www.yelp.com/embed/widgets.js"></script>
   )
 }
+{
+  post.contentBlocks?.some((block) => block._type === 'instagramEmbed') && (
+    <script is:inline async src="https://www.instagram.com/embed.js"></script>
+  )
+}

@@ -5,6 +5,7 @@ import { Icon } from 'astro-icon/components';
 import Button from '~/components/ui/Button.astro';
 import BlogArticleImage from '~/components/blog/BlogArticleImage.astro';
 import BlogYelpReview from '~/components/blog/BlogYelpReview.astro';
+import BlogInstagramEmbed from '~/components/blog/BlogInstagramEmbed.astro';
 import { getPortableHeadingId } from '~/lib/content/blogArticle';
 import { paragraphClass, headingClass, h3Class, h4Class } from '~/components/blog/blogClasses';
 
@@ -135,6 +136,10 @@ const contentBlocks = post.contentBlocks ?? [];
 
     if (block._type === 'yelpReview') {
       return <BlogYelpReview review={block} />;
+    }
+
+    if (block._type === 'instagramEmbed') {
+      return <BlogInstagramEmbed embed={block} />;
     }
 
     if (block._type === 'button') {

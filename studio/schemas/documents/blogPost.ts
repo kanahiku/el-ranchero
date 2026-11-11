@@ -291,6 +291,32 @@ export const blogPost = defineType({
         }),
         defineArrayMember({
           type: 'object',
+          name: 'instagramEmbed',
+          title: 'Instagram post',
+          fields: [
+            defineField({
+              name: 'permalink',
+              title: 'Permalink',
+              type: 'url',
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Caption',
+              type: 'string',
+              description: 'Visible fallback, for example “A post shared by …”.',
+              validation: (r) => r.required(),
+            }),
+          ],
+          preview: {
+            select: { title: 'caption', subtitle: 'permalink' },
+            prepare({ title, subtitle }: { title?: string; subtitle?: string }) {
+              return { title: title || 'Instagram post', subtitle };
+            },
+          },
+        }),
+        defineArrayMember({
+          type: 'object',
           name: 'yelpEmbed',
           title: 'Yelp review',
           fields: [

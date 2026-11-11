@@ -1,0 +1,18 @@
+---
+import type { BlogContentInstagramEmbed } from '~/lib/content/types';
+
+export interface Props {
+  embed: BlogContentInstagramEmbed;
+}
+
+const { embed } = Astro.props;
+---
+
+<blockquote
+  class="instagram-media mx-auto mt-6 max-w-[540px]"
+  data-instgrm-permalink={embed.permalink}
+  data-instgrm-version="14"
+>
+  <a href={embed.permalink} target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
+  <p>{embed.caption}</p>
+</blockquote>

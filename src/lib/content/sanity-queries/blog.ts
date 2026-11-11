@@ -102,6 +102,12 @@ const BLOG_POST_PROJECTION = /* groq */ `
       title,
       "items": items[] { _key, question, answer }
     },
+    _type == "instagramEmbed" => {
+      _type,
+      _key,
+      permalink,
+      caption
+    },
     _type == "yelpEmbed" => {
       _type,
       _key,
