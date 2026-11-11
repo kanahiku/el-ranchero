@@ -95,8 +95,7 @@ export function spansToHtml(children: SanitySpan[] | undefined, markDefs: Sanity
     .join('');
 }
 
-const CTA_DIRECTIVE_REGEX =
-  /^\s*(?:\((?:create a )?cta button\)|\[(?:insert )?cta button(?::\s*|\s+)?\])\s*(.*)$/i;
+const CTA_DIRECTIVE_REGEX = /^\s*(?:\((?:create a )?cta button\)|\[(?:insert )?cta button(?::\s*|\s+)?\])\s*(.*)$/i;
 const FAQ_HEADING_REGEX =
   /frequently asked|faqs?$|^faq\b|what homeowners most often want to know|questions homeowners ask|common questions|questions to ask/i;
 const FAQ_CONCLUSION_REGEX =
@@ -146,7 +145,10 @@ function detectCtaButton(
   return null;
 }
 
-function yelpReviewFromBlock(block: SanityPortableBlock, key: string): Extract<BlogContentBlock, { _type: 'yelpReview' }> | null {
+function yelpReviewFromBlock(
+  block: SanityPortableBlock,
+  key: string
+): Extract<BlogContentBlock, { _type: 'yelpReview' }> | null {
   if (block._type === 'yelpEmbed' && block.reviewId?.trim()) {
     return {
       _type: 'yelpReview',

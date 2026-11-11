@@ -50,9 +50,19 @@ const SINGLETONS = {
     type: 'aboutContent',
     slots: [
       ['About', 'Hero.jpg', 'heroImage', 'Taqueria El Ranchero restaurant exterior at Ka Makana Aliʻi in Kapolei'],
-      ['About', 'Made_Fresh_Daily.jpg', 'madeFreshDailyImage', 'Grilled meat being prepared on the open-fire grill at El Ranchero'],
+      [
+        'About',
+        'Made_Fresh_Daily.jpg',
+        'madeFreshDailyImage',
+        'Grilled meat being prepared on the open-fire grill at El Ranchero',
+      ],
       // ['About', 'The_Murals.jpg', 'muralsImage', …] — photo still needed from the client
-      ['About', 'Giving_Back.jpg', 'givingBackImage', 'Dining room and bar inside Taqueria El Ranchero with TVs, green tile and exposed brick'],
+      [
+        'About',
+        'Giving_Back.jpg',
+        'givingBackImage',
+        'Dining room and bar inside Taqueria El Ranchero with TVs, green tile and exposed brick',
+      ],
     ],
   },
   'singleton-catering': {
@@ -60,40 +70,115 @@ const SINGLETONS = {
     slots: [
       ['Catering', 'Hero.jpg', 'heroImage', 'Al pastor trompo turning in front of an open flame'],
       ['Catering', 'Catering_Favorites_Tacos.jpg', 'favoriteTacosImage', 'Tacos served in a red basket'],
-      ['Catering', 'Catering_Favorites_Burritos.jpg', 'favoriteBurritosImage', 'Burrito cut in half to show a filling of grilled steak and beans'],
-      ['Catering', 'Catering_Favorites_Mexican_Favorites.jpg', 'favoriteMexicanImage', 'Chicken enchiladas topped with crema, served with rice'],
+      [
+        'Catering',
+        'Catering_Favorites_Burritos.jpg',
+        'favoriteBurritosImage',
+        'Burrito cut in half to show a filling of grilled steak and beans',
+      ],
+      [
+        'Catering',
+        'Catering_Favorites_Mexican_Favorites.jpg',
+        'favoriteMexicanImage',
+        'Chicken enchiladas topped with crema, served with rice',
+      ],
       ['Catering', 'Catering_Favorites_Sides_and_More.jpg', 'favoriteSidesImage', 'Fresh guacamole'],
     ],
   },
   'singleton-locations': {
     type: 'locationsContent',
     slots: [
-      ['Locations', 'Hero.jpg', 'hubHeroImage', 'Taqueria El Ranchero restaurant exterior at Ka Makana Aliʻi in Kapolei'],
+      [
+        'Locations',
+        'Hero.jpg',
+        'hubHeroImage',
+        'Taqueria El Ranchero restaurant exterior at Ka Makana Aliʻi in Kapolei',
+      ],
       ['Locations', 'Wahiawa.jpg', 'hubWahiawaImage', 'Taqueria El Ranchero storefront at Wahiawa Shopping Center'],
-      ['Locations', 'Kapolei.jpg', 'hubKapoleiImage', 'Taqueria El Ranchero restaurant exterior at Ka Makana Aliʻi in Kapolei'],
+      [
+        'Locations',
+        'Kapolei.jpg',
+        'hubKapoleiImage',
+        'Taqueria El Ranchero restaurant exterior at Ka Makana Aliʻi in Kapolei',
+      ],
 
-      ['Locations - Wahiawa', 'Hero.jpg', 'wahiawaHeroImage', 'Taqueria El Ranchero storefront sign at Wahiawa Shopping Center'],
+      [
+        'Locations - Wahiawa',
+        'Hero.jpg',
+        'wahiawaHeroImage',
+        'Taqueria El Ranchero storefront sign at Wahiawa Shopping Center',
+      ],
       ['Locations - Wahiawa', 'Wahiawa_Favorites_Tacos.jpg', 'wahiawaTacosImage', 'Tacos served in a red basket'],
       // ['Locations - Wahiawa', 'Wahiawa_Favorites_California_Burrito.jpg', 'wahiawaBurritoImage', …] — no photo yet
-      ['Locations - Wahiawa', 'Wahiawa_Favorites_Birria.jpg', 'wahiawaBirriaImage', 'Tacos de birria with a cup of consomé'],
-      ['Locations - Wahiawa', 'Wahiawa_Favorites_Quesadillas.jpg', 'wahiawaQuesadillasImage', 'Meat quesadilla on a white plate'],
-      ['Locations - Wahiawa', 'Wahiawa_Favorites_Mexican_Plates.jpg', 'wahiawaMexicanPlatesImage', 'Chicken enchiladas topped with crema, served with rice'],
+      [
+        'Locations - Wahiawa',
+        'Wahiawa_Favorites_Birria.jpg',
+        'wahiawaBirriaImage',
+        'Tacos de birria with a cup of consomé',
+      ],
+      [
+        'Locations - Wahiawa',
+        'Wahiawa_Favorites_Quesadillas.jpg',
+        'wahiawaQuesadillasImage',
+        'Meat quesadilla on a white plate',
+      ],
+      [
+        'Locations - Wahiawa',
+        'Wahiawa_Favorites_Mexican_Plates.jpg',
+        'wahiawaMexicanPlatesImage',
+        'Chicken enchiladas topped with crema, served with rice',
+      ],
 
-      ['Locations - Kapolei', 'Hero.jpg', 'kapoleiHeroImage', 'Taqueria El Ranchero restaurant exterior at Ka Makana Aliʻi in Kapolei'],
+      [
+        'Locations - Kapolei',
+        'Hero.jpg',
+        'kapoleiHeroImage',
+        'Taqueria El Ranchero restaurant exterior at Ka Makana Aliʻi in Kapolei',
+      ],
       ['Locations - Kapolei', 'Kapolei_Favorites_Tacos.jpg', 'kapoleiTacosImage', 'Tacos served in a red basket'],
       // ['Locations - Kapolei', 'Kapolei_Favorites_California_Burrito.jpg', 'kapoleiBurritoImage', …] — no photo yet
-      ['Locations - Kapolei', 'Kapolei_Favorites_Birria.jpg', 'kapoleiBirriaImage', 'Tacos de birria with a cup of consomé'],
-      ['Locations - Kapolei', 'Kapolei_Favorites_Quesadillas.jpg', 'kapoleiQuesadillasImage', 'Meat quesadilla on a white plate'],
-      ['Locations - Kapolei', 'Kapolei_Favorites_Mexican_Plates.jpg', 'kapoleiMexicanPlatesImage', 'Carne asada plate with rice, beans and fresh vegetables'],
+      [
+        'Locations - Kapolei',
+        'Kapolei_Favorites_Birria.jpg',
+        'kapoleiBirriaImage',
+        'Tacos de birria with a cup of consomé',
+      ],
+      [
+        'Locations - Kapolei',
+        'Kapolei_Favorites_Quesadillas.jpg',
+        'kapoleiQuesadillasImage',
+        'Meat quesadilla on a white plate',
+      ],
+      [
+        'Locations - Kapolei',
+        'Kapolei_Favorites_Mexican_Plates.jpg',
+        'kapoleiMexicanPlatesImage',
+        'Carne asada plate with rice, beans and fresh vegetables',
+      ],
     ],
   },
   'singleton-events': {
     type: 'eventsContent',
     slots: [
-      ['Events', 'Hero.jpg', 'hubHeroImage', 'Dining room and bar inside Taqueria El Ranchero with TVs, green tile and exposed brick'],
-      ['Events - Taco Tuesday', 'Hero.jpg', 'tacoTuesdayHeroImage', 'Tacos served in a red basket with a cup of salsa and a lime wedge'],
+      [
+        'Events',
+        'Hero.jpg',
+        'hubHeroImage',
+        'Dining room and bar inside Taqueria El Ranchero with TVs, green tile and exposed brick',
+      ],
+      [
+        'Events - Taco Tuesday',
+        'Hero.jpg',
+        'tacoTuesdayHeroImage',
+        'Tacos served in a red basket with a cup of salsa and a lime wedge',
+      ],
       // Karaoke / Latin Night / Live Concerts heroes — no photo yet
-      ['Events - Event Space Rental', 'Hero.jpg', 'spaceRentalHeroImage', 'Dining room and bar inside Taqueria El Ranchero with TVs, green tile and exposed brick'],
+      [
+        'Events - Event Space Rental',
+        'Hero.jpg',
+        'spaceRentalHeroImage',
+        'Dining room and bar inside Taqueria El Ranchero with TVs, green tile and exposed brick',
+      ],
     ],
   },
   'singleton-menu-pages': {
@@ -101,22 +186,62 @@ const SINGLETONS = {
     slots: [
       ['Menu', 'Hero.jpg', 'menuHubHeroImage', 'Grilled meat being tossed on the open-fire grill'],
       ['Menu', 'Breakfast_Every_Day.jpg', 'breakfastEveryDayImage', 'Asada and eggs with breakfast potatoes'],
-      ['Menu', 'Featured_Dishes_Molcajete.jpg', 'featuredMolcajeteImage', 'Steaming molcajete of grilled meats served with rice, beans and warm tortillas'],
-      ['Menu', 'Featured_Dishes_Taco.jpg', 'featuredTacoImage', 'Tacos served in a red basket with salsa and a lime wedge'],
+      [
+        'Menu',
+        'Featured_Dishes_Molcajete.jpg',
+        'featuredMolcajeteImage',
+        'Steaming molcajete of grilled meats served with rice, beans and warm tortillas',
+      ],
+      [
+        'Menu',
+        'Featured_Dishes_Taco.jpg',
+        'featuredTacoImage',
+        'Tacos served in a red basket with salsa and a lime wedge',
+      ],
       // ['Menu', 'Featured_Dishes_California_Burrito.jpg', 'featuredCaliforniaBurritoImage', …] — no photo yet
 
       ['Menu - Breakfast', 'Hero.jpg', 'breakfastHeroImage', 'Asada and eggs with breakfast potatoes'],
       ['Menu - Burritos', 'Hero.jpg', 'burritosHeroImage', 'Cook slicing a foil-wrapped burrito on a cutting board'],
       ['Menu - Tacos & Birria', 'Hero.jpg', 'tacosHeroImage', 'Al pastor trompo turning in front of an open flame'],
-      ['Menu - Entrees & Fajitas', 'Hero.jpg', 'entreesHeroImage', 'Sizzling beef fajitas with grilled vegetables, rice and beans'],
-      ['Menu - Quesadillas & Nachos', 'Hero.jpg', 'quesadillasNachosHeroImage', 'Nachos Grande topped with meat, guacamole and sour cream'],
-      ['Menu - Specials', 'Hero.jpg', 'specialsHeroImage', 'Chile relleno topped with sour cream, served with rice and beans'],
+      [
+        'Menu - Entrees & Fajitas',
+        'Hero.jpg',
+        'entreesHeroImage',
+        'Sizzling beef fajitas with grilled vegetables, rice and beans',
+      ],
+      [
+        'Menu - Quesadillas & Nachos',
+        'Hero.jpg',
+        'quesadillasNachosHeroImage',
+        'Nachos Grande topped with meat, guacamole and sour cream',
+      ],
+      [
+        'Menu - Specials',
+        'Hero.jpg',
+        'specialsHeroImage',
+        'Chile relleno topped with sour cream, served with rice and beans',
+      ],
       // ['Menu - Appetizers & Sides', 'Hero.jpg', 'appetizersSidesHeroImage', …] — no photo yet
       ['Menu - Kids', 'Hero.jpg', 'kidsHeroImage', 'Kids taco served with rice and beans'],
-      ['Menu - Drinks & Margaritas', 'Hero.jpg', 'drinksHeroImage', 'Passion Li Hing “Mahalo Margarita” in a martini glass'],
+      [
+        'Menu - Drinks & Margaritas',
+        'Hero.jpg',
+        'drinksHeroImage',
+        'Passion Li Hing “Mahalo Margarita” in a martini glass',
+      ],
 
-      ['Menu - Breakfast', 'Takeout_or_Sit_Down.jpg', 'breakfastTakeoutImage', 'Mexican omelette topped with red and green salsa and avocado'],
-      ['Menu - Entrees & Fajitas', 'Molcajete_Signature_Dish.jpg', 'entreesMolcajeteImage', 'Molcajete of grilled meats and vegetables served with rice, beans and tortillas'],
+      [
+        'Menu - Breakfast',
+        'Takeout_or_Sit_Down.jpg',
+        'breakfastTakeoutImage',
+        'Mexican omelette topped with red and green salsa and avocado',
+      ],
+      [
+        'Menu - Entrees & Fajitas',
+        'Molcajete_Signature_Dish.jpg',
+        'entreesMolcajeteImage',
+        'Molcajete of grilled meats and vegetables served with rice, beans and tortillas',
+      ],
     ],
   },
 };
@@ -140,7 +265,12 @@ const EXPLORE_MORE_FOLDER = (stem) => (stem === 'Kids_Menu' ? 'Menu - Burritos' 
 const MENU_ITEMS = [
   ['Menu - Breakfast', 'Breakfast_Menu_Breakfast_Burrito', 'menuItem-breakfast-breakfast-burrito', 'Breakfast Burrito'],
   ['Menu - Breakfast', 'Breakfast_Menu_Chilaquiles', 'menuItem-breakfast-chilaquiles', 'Chilaquiles'],
-  ['Menu - Breakfast', 'Breakfast_Menu_Huevos_con_Chorizo', 'menuItem-breakfast-huevos-con-chorizo', 'Huevos con Chorizo'],
+  [
+    'Menu - Breakfast',
+    'Breakfast_Menu_Huevos_con_Chorizo',
+    'menuItem-breakfast-huevos-con-chorizo',
+    'Huevos con Chorizo',
+  ],
   ['Menu - Breakfast', 'Breakfast_Menu_Mexican_Omelette', 'menuItem-breakfast-mexican-omelette', 'Mexican Omelette'],
   ['Menu - Breakfast', 'Breakfast_Menu_Asada_and_Eggs', 'menuItem-breakfast-asada-and-eggs', 'Asada and Eggs'],
 
@@ -153,14 +283,24 @@ const MENU_ITEMS = [
   ['Menu - Tacos & Birria', 'Tacos_Seafood_Taco', 'menuItem-tacos-seafood-taco', 'Seafood Taco'],
   ['Menu - Tacos & Birria', 'Birria_Tacos_de_Birria', 'menuItem-tacos-tacos-de-birria', 'Tacos de Birria'],
 
-  ['Menu - Entrees & Fajitas', 'Entrees_Chicken_Enchiladas', 'menuItem-entrees-chicken-enchiladas', 'Chicken Enchiladas'],
+  [
+    'Menu - Entrees & Fajitas',
+    'Entrees_Chicken_Enchiladas',
+    'menuItem-entrees-chicken-enchiladas',
+    'Chicken Enchiladas',
+  ],
   ['Menu - Entrees & Fajitas', 'Entrees_Taquitos', 'menuItem-entrees-taquitos', 'Taquitos'],
   ['Menu - Entrees & Fajitas', 'Entrees_Beef_Fajitas', 'menuItem-entrees-beef-fajitas', 'Beef Fajitas'],
   ['Menu - Entrees & Fajitas', 'Entrees_Chicken_Fajitas', 'menuItem-entrees-chicken-fajitas', 'Chicken Fajitas'],
   ['Menu - Entrees & Fajitas', 'Entrees_Carne_Asada', 'menuItem-entrees-carne-asada', 'Carne Asada'],
 
   ['Menu - Quesadillas & Nachos', 'Quesadillas_Quesadilla', 'menuItem-quesadillas-nachos-quesadilla', 'Quesadilla'],
-  ['Menu - Quesadillas & Nachos', 'Quesadillas_Meat_Quesadilla', 'menuItem-quesadillas-nachos-meat-quesadilla', 'Meat Quesadilla'],
+  [
+    'Menu - Quesadillas & Nachos',
+    'Quesadillas_Meat_Quesadilla',
+    'menuItem-quesadillas-nachos-meat-quesadilla',
+    'Meat Quesadilla',
+  ],
   ['Menu - Quesadillas & Nachos', 'Nachos_Nachos', 'menuItem-quesadillas-nachos-nachos', 'Nachos'],
   ['Menu - Quesadillas & Nachos', 'Nachos_Nachos_Grande', 'menuItem-quesadillas-nachos-nachos-grande', 'Nachos Grande'],
 
@@ -170,7 +310,12 @@ const MENU_ITEMS = [
   ['Menu - Specials', 'Daily_Specials_California_Fries', 'menuItem-specials-california-fries', 'California Fries'],
   ['Menu - Specials', 'Daily_Specials_Tamales', 'menuItem-specials-tamales', 'Tamales'],
   ['Menu - Specials', 'Daily_Specials_Taquitos', 'menuItem-specials-taquitos', 'Taquitos'],
-  ['Menu - Specials', 'Daily_Specials_Tostada_de_Ceviche', 'menuItem-specials-tostada-de-ceviche', 'Tostada de Ceviche'],
+  [
+    'Menu - Specials',
+    'Daily_Specials_Tostada_de_Ceviche',
+    'menuItem-specials-tostada-de-ceviche',
+    'Tostada de Ceviche',
+  ],
   ['Menu - Specials', 'Daily_Specials_Elote', 'menuItem-specials-elote', 'Elote'],
   ['Menu - Specials', 'Weekend_Specials_Pozole', 'menuItem-specials-pozole', 'Pozole'],
   ['Menu - Specials', 'Weekend_Specials_Menudo', 'menuItem-specials-menudo', 'Menudo'],
@@ -188,7 +333,12 @@ const MENU_ITEMS = [
   ['Menu - Kids', 'Kids_Menu_Cheese_Quesadilla', 'menuItem-kids-cheese-quesadilla', 'Cheese Quesadilla'],
   ['Menu - Kids', 'Kids_Menu_Taco', 'menuItem-kids-taco', 'Taco'],
 
-  ['Menu - Drinks & Margaritas', 'Signature_Margaritas_Passion_Li_Hing_Mahalo_Margarita', 'menuItem-drinks-passion-li-hing-mahalo-margarita', 'Passion Li Hing “Mahalo Margarita”'],
+  [
+    'Menu - Drinks & Margaritas',
+    'Signature_Margaritas_Passion_Li_Hing_Mahalo_Margarita',
+    'menuItem-drinks-passion-li-hing-mahalo-margarita',
+    'Passion Li Hing “Mahalo Margarita”',
+  ],
   ['Menu - Drinks & Margaritas', 'Signature_Margaritas_Michelada', 'menuItem-drinks-michelada', 'Michelada'],
   ['Menu - Drinks & Margaritas', 'Other_Drinks_Aguas_Frescas', 'menuItem-drinks-aguas-frescas', 'Aguas Frescas'],
   ['Menu - Drinks & Margaritas', 'Other_Drinks_Jarritos', 'menuItem-drinks-jarritos', 'Jarritos'],
@@ -310,7 +460,9 @@ async function main() {
   }
   const sameAsUsed = (rel) => {
     // "Explore More" copies are byte-identical to ones already uploaded (checked by hash)
-    const hash = createHash('sha1').update(readFileSync(join(SOURCE, rel))).digest('hex');
+    const hash = createHash('sha1')
+      .update(readFileSync(join(SOURCE, rel)))
+      .digest('hex');
     return assetCache.has(hash);
   };
   const orphaned = unused.filter((rel) => !sameAsUsed(rel));

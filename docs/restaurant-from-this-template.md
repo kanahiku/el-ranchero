@@ -10,11 +10,11 @@ With only a **Homepage** in Figma, treat that frame as the design system, then i
 
 From `ONBOARDING.md`, every site keeps:
 
-| Keep | Why |
-|---|---|
-| `/contact`, `/reviews`, `/blog`, `/privacy-policy`, `/terms-of-service`, `/accessibility` | Always-on routes |
-| Sanity, forms/Resend, GTM, Search Console, JSON-LD | Infra, not this client's copy |
-| Shared atoms: `Button`, `Heading`, `Text`, `Card`, `Form` | Restyle them; don't fork |
+| Keep                                                                                                     | Why                                      |
+| -------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `/contact`, `/reviews`, `/blog`, `/privacy-policy`, `/terms-of-service`, `/accessibility`                | Always-on routes                         |
+| Sanity, forms/Resend, GTM, Search Console, JSON-LD                                                       | Infra, not this client's copy            |
+| Shared atoms: `Button`, `Heading`, `Text`, `Card`, `Form`                                                | Restyle them; don't fork                 |
 | Generic widgets: `Hero2`, `FAQs`, `Testimonials`, `Content`, `CTABanner`, `Header`, `Footer`, `Timeline` | Restyle to match the restaurant homepage |
 
 The 32-system quiz at `/form` is **this client only**. For a restaurant, drop it and point the primary CTA at reservations or `/contact`.
@@ -25,19 +25,19 @@ The 32-system quiz at `/form` is **this client only**. For a restaurant, drop it
 
 `brand.ts` is colors, type, and radius only. Fill these for the restaurant:
 
-| File | What to put |
-|---|---|
-| `src/config/site.ts` | Name, URL, SEO description, `formSlug`, GTM later |
-| `src/config/contact.ts` | Phone, email, **full address**, **hours** (dinner vs lunch), `areaServed` |
-| `src/config/social.ts` | Instagram / Facebook / TikTok / Google listing |
-| `src/config/cta.ts` | e.g. "Reserve a table" → OpenTable / `/reservations` / `tel:` |
-| `src/config/schema/business.ts` | `businessType: 'Restaurant'` (or `FoodEstablishment`), `priceRange: '$$$'`, cuisine later |
-| `src/config/schema/pages.ts` | Drop aging routes; add Menu / About / Reservations |
-| `src/data/navigation.ts` | Header/footer: Menu, About, Reservations, Contact |
-| `src/config.yaml` | `metadata.title` / `openGraph.site_name` — still used for `<title>` and OG |
-| `src/assets/images/logo.svg` (or `.webp`) | Restaurant logo |
-| `public/favicon.svg` + regen `.ico`, `apple-touch-icon.png`, `og-image.jpg` | Favicon rule: all identity assets together |
-| `.env` / `studio/.env` / `vercel.json` | New Sanity project, slug, hosts |
+| File                                                                        | What to put                                                                               |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `src/config/site.ts`                                                        | Name, URL, SEO description, `formSlug`, GTM later                                         |
+| `src/config/contact.ts`                                                     | Phone, email, **full address**, **hours** (dinner vs lunch), `areaServed`                 |
+| `src/config/social.ts`                                                      | Instagram / Facebook / TikTok / Google listing                                            |
+| `src/config/cta.ts`                                                         | e.g. "Reserve a table" → OpenTable / `/reservations` / `tel:`                             |
+| `src/config/schema/business.ts`                                             | `businessType: 'Restaurant'` (or `FoodEstablishment`), `priceRange: '$$$'`, cuisine later |
+| `src/config/schema/pages.ts`                                                | Drop aging routes; add Menu / About / Reservations                                        |
+| `src/data/navigation.ts`                                                    | Header/footer: Menu, About, Reservations, Contact                                         |
+| `src/config.yaml`                                                           | `metadata.title` / `openGraph.site_name` — still used for `<title>` and OG                |
+| `src/assets/images/logo.svg` (or `.webp`)                                   | Restaurant logo                                                                           |
+| `public/favicon.svg` + regen `.ico`, `apple-touch-icon.png`, `og-image.jpg` | Favicon rule: all identity assets together                                                |
+| `.env` / `studio/.env` / `vercel.json`                                      | New Sanity project, slug, hosts                                                           |
 
 Hours in `contact.ts` matter more for a restaurant than for this club site. Schema.org uses them.
 
@@ -127,16 +127,16 @@ From the Homepage, write down a short **style contract** (put it in the prompt e
 
 Then compose inner pages **only from those widgets**, with restaurant-standard IA:
 
-| Route | Typical composition |
-|---|---|
-| `/` | Pixel-match Figma Homepage |
-| `/menu` | Page hero + category filter + dish cards + CTA |
-| `/about` | Split story + chef/quote + maybe credentials-style timeline |
-| `/reservations` | Hours, party size note, form or embed, map |
-| `/contact` | Keep the contact widget; restaurant hours + map + phone |
-| `/reviews` | Keep reviews grid |
-| `/blog` | Keep (events, seasonal menus, stories) |
-| Legal | Keep; rewrite business name |
+| Route           | Typical composition                                         |
+| --------------- | ----------------------------------------------------------- |
+| `/`             | Pixel-match Figma Homepage                                  |
+| `/menu`         | Page hero + category filter + dish cards + CTA              |
+| `/about`        | Split story + chef/quote + maybe credentials-style timeline |
+| `/reservations` | Hours, party size note, form or embed, map                  |
+| `/contact`      | Keep the contact widget; restaurant hours + map + phone     |
+| `/reviews`      | Keep reviews grid                                           |
+| `/blog`         | Keep (events, seasonal menus, stories)                      |
+| Legal           | Keep; rewrite business name                                 |
 
 That is the same Figma order: tokens → atoms → widgets → pages. Inner pages are "same system, different copy and section order," not new visual languages.
 

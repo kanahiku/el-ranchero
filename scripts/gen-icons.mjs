@@ -39,7 +39,9 @@ async function buildMark() {
     .toBuffer();
   // The logo's top border rule starts just right of the hat — blank it out.
   alpha = await sharp(alpha)
-    .composite([{ input: { create: { width: 24 * 8, height: 9 * 8, channels: 3, background: '#000' } }, left: 27 * 8, top: 0 }])
+    .composite([
+      { input: { create: { width: 24 * 8, height: 9 * 8, channels: 3, background: '#000' } }, left: 27 * 8, top: 0 },
+    ])
     .greyscale()
     .png()
     .toBuffer();
@@ -59,7 +61,12 @@ const { width: mw, height: mh } = await sharp(mark).metadata();
 const SIZE = 64;
 const markH = 46;
 const markW = (mw / mh) * markH;
-const markDataUri = `data:image/png;base64,${(await sharp(mark).resize(Math.round(markW * 4), markH * 4).png().toBuffer()).toString('base64')}`;
+const markDataUri = `data:image/png;base64,${(
+  await sharp(mark)
+    .resize(Math.round(markW * 4), markH * 4)
+    .png()
+    .toBuffer()
+).toString('base64')}`;
 const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="32" height="32">
   <!-- El Ranchero favicon — cream rider + horse (from logo.png) on brand maroon. Regenerate with scripts/gen-icons.mjs -->
   <rect width="${SIZE}" height="${SIZE}" rx="12" fill="${BRAND_BG}"/>
@@ -73,17 +80,28 @@ async function square(px, { radius = 0.1875 } = {}) {
   const inner = Math.round(px * (markH / SIZE));
   const m = await sharp(mark).resize({ height: inner }).png().toBuffer();
   const mask = Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${px}" height="${px}"><rect width="${px}" height="${px}" rx="${px * radius}" fill="#fff"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${px}" height="${px}"><rect width="${px}" height="${px}" rx="${px * radius}" fill="#fff"/></svg>`
   );
   return sharp({ create: { width: px, height: px, channels: 4, background: BRAND_BG } })
-    .composite([{ input: m, gravity: 'center' }, { input: mask, blend: 'dest-in' }])
+    .composite([
+      { input: m, gravity: 'center' },
+      { input: mask, blend: 'dest-in' },
+    ])
     .png()
     .toBuffer();
 }
 
 // apple-touch-icon must be opaque (iOS fills transparency with black) → no rounded corners.
 const apple = await sharp({ create: { width: 180, height: 180, channels: 4, background: BRAND_BG } })
-  .composite([{ input: await sharp(mark).resize({ height: Math.round(180 * (markH / SIZE)) }).png().toBuffer(), gravity: 'center' }])
+  .composite([
+    {
+      input: await sharp(mark)
+        .resize({ height: Math.round(180 * (markH / SIZE)) })
+        .png()
+        .toBuffer(),
+      gravity: 'center',
+    },
+  ])
   .png()
   .toBuffer();
 
@@ -97,7 +115,9 @@ const ogBase = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1200"
 </svg>`);
 const ogMark = await sharp(mark).resize({ height: 330 }).png().toBuffer();
 
-const ico32 = await sharp(await square(32, { radius: 0.1875 })).png().toBuffer();
+const ico32 = await sharp(await square(32, { radius: 0.1875 }))
+  .png()
+  .toBuffer();
 
 await Promise.all([
   sharp(apple).toFile('public/apple-touch-icon.png'),

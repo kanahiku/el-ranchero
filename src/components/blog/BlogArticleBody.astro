@@ -64,11 +64,11 @@ const unmatchedImages = usePortableBody ? [] : getUnmatchedInlineImages(post);
 
 {
   post.contentBlocks?.some((block) => block._type === 'yelpReview') && (
-    <script is:inline async src="https://www.yelp.com/embed/widgets.js"></script>
+    <script is:inline async src="https://www.yelp.com/embed/widgets.js" />
   )
 }
 {
   post.contentBlocks?.some((block) => block._type === 'instagramEmbed') && (
-    <script is:inline async src="https://www.instagram.com/embed.js"></script>
+    <script is:inline async src="https://www.instagram.com/embed.js" />
   )
 }

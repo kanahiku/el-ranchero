@@ -48,7 +48,11 @@ const DOCS = [
       [`${tileDir}/Instagram_Tile_2_Karaoke_Night.jpg`, 'instagramTile2Image', 'Friends enjoying karaoke night'],
       [`${tileDir}/Instagram_Tile_3_Dance_Floor.jpg`, 'instagramTile3Image', 'Dancing under string lights'],
       [`${tileDir}/Instagram_Tile_4_Taco_Feast.jpg`, 'instagramTile4Image', 'Shared taco feast'],
-      [`${tileDir}/Instagram_Tile_5_Margarita_Toast.jpg`, 'instagramTile5Image', 'Margarita toast with chips and guacamole'],
+      [
+        `${tileDir}/Instagram_Tile_5_Margarita_Toast.jpg`,
+        'instagramTile5Image',
+        'Margarita toast with chips and guacamole',
+      ],
       [`${tileDir}/Instagram_Tile_6_Birria_Dip.jpg`, 'instagramTile6Image', 'Birria taco dipped in consomé'],
     ],
   ],
@@ -61,7 +65,11 @@ const DOCS = [
     'singleton-menu-pages',
     'menuPagesContent',
     [
-      ['Menu - Appetizers & Sides/Hero/Hero.jpg', 'appetizersSidesHeroImage', 'Margarita toast with chips and guacamole'],
+      [
+        'Menu - Appetizers & Sides/Hero/Hero.jpg',
+        'appetizersSidesHeroImage',
+        'Margarita toast with chips and guacamole',
+      ],
       ['Menu/Featured Dishes From Our Menu/California_Burrito.jpg', 'featuredCaliforniaBurritoImage', BURRITO_ALT],
     ],
   ],

@@ -1,6 +1,7 @@
 # Forms Worker — Verification Checklist
 
 Run through this every time you:
+
 - Add a new client site
 - Deploy a new version of the worker
 - Change any Resend or Cloudflare config
@@ -24,13 +25,13 @@ npx wrangler secret list --name massic-forms
 
 **Pass criteria — check each line:**
 
-| Env var / Secret | Must be | Fail state |
-|---|---|---|
-| `RESEND_FROM` | **NOT present** in `wrangler.toml [vars]` and NOT set as a secret | If set, every site sends from the same sender name → cross-site mismatch |
-| `NOTIFY_EMAIL_OVERRIDE` | **NOT present** anywhere | If set, all sites' leads go to one inbox — catastrophic mismatch |
-| `RESEND_DAILY_LIMIT` | `"1000"` (or your agreed cap) | If missing, defaults to 1000 in code |
-| `RESEND_API_KEY` | present as a secret starting with `re_` | If absent or placeholder, no emails send |
-| `TURNSTILE_SECRET_<SLUG>` | one entry per active site | If missing for a site, that site's form rejects all submissions with "Spam check failed" |
+| Env var / Secret          | Must be                                                           | Fail state                                                                               |
+| ------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `RESEND_FROM`             | **NOT present** in `wrangler.toml [vars]` and NOT set as a secret | If set, every site sends from the same sender name → cross-site mismatch                 |
+| `NOTIFY_EMAIL_OVERRIDE`   | **NOT present** anywhere                                          | If set, all sites' leads go to one inbox — catastrophic mismatch                         |
+| `RESEND_DAILY_LIMIT`      | `"1000"` (or your agreed cap)                                     | If missing, defaults to 1000 in code                                                     |
+| `RESEND_API_KEY`          | present as a secret starting with `re_`                           | If absent or placeholder, no emails send                                                 |
+| `TURNSTILE_SECRET_<SLUG>` | one entry per active site                                         | If missing for a site, that site's form rejects all submissions with "Spam check failed" |
 
 **Quick grep to confirm `RESEND_FROM` and `NOTIFY_EMAIL_OVERRIDE` are not in wrangler.toml:**
 
@@ -49,9 +50,9 @@ npx wrangler d1 execute massic-forms --remote --command="SELECT slug, name, noti
 **For every row, verify:**
 
 - [ ] `notify_email` is the client's real inbox (not `@example.com`, not another client's address)
-- [ ] `from_email` matches the sending domain verified on Resend  
-  - ✅ Verified domain → `hello@theirdomain.com`  
-  - ⏳ Not yet verified → `Client Name <onboarding@resend.dev>` is acceptable temporarily  
+- [ ] `from_email` matches the sending domain verified on Resend
+  - ✅ Verified domain → `hello@theirdomain.com`
+  - ⏳ Not yet verified → `Client Name <onboarding@resend.dev>` is acceptable temporarily
   - ❌ Wrong site's domain or another client's domain → fix immediately
 - [ ] `name` matches the business name exactly as the client expects it in email subjects
 - [ ] No two rows share the same `notify_email` (unless intentionally shared and documented)
@@ -61,6 +62,7 @@ npx wrangler d1 execute massic-forms --remote --command="SELECT slug, name, noti
 ```bash
 npx wrangler d1 execute massic-forms --remote --command="SELECT slug, notify_email FROM sites WHERE notify_email LIKE '%example.com%' OR notify_email LIKE '%placeholder%';"
 ```
+
 → Must return 0 rows.
 
 ---
@@ -85,12 +87,12 @@ npx wrangler secret list --name massic-forms
 
 Every active site must have exactly one entry: `TURNSTILE_SECRET_<SLUG_UPPERCASE_UNDERSCORED>`
 
-| Site slug | Expected secret name |
-|---|---|
-| `rc-roofing` | `TURNSTILE_SECRET_RC_ROOFING` |
-| `rebellious-aging` | `TURNSTILE_SECRET_REBELLIOUS_AGING` |
+| Site slug              | Expected secret name                    |
+| ---------------------- | --------------------------------------- |
+| `rc-roofing`           | `TURNSTILE_SECRET_RC_ROOFING`           |
+| `rebellious-aging`     | `TURNSTILE_SECRET_REBELLIOUS_AGING`     |
 | `vaifoou-construction` | `TURNSTILE_SECRET_VAIFOOU_CONSTRUCTION` |
-| *(next site)* | `TURNSTILE_SECRET_<SLUG>` |
+| _(next site)_          | `TURNSTILE_SECRET_<SLUG>`               |
 
 If a site is missing its secret → all its form submissions return "Spam check failed".  
 If the secret value doesn't match the site key used on the frontend → same failure.
@@ -106,6 +108,7 @@ npx wrangler d1 execute massic-forms --remote --command="SELECT site_slug, COUNT
 ```
 
 **Pass criteria:**
+
 - `not_delivered` should only contain developer test entries (recognisable by `test@example.com`, `(000)0000000`, etc.)
 - No real customer names in `not_delivered`
 
@@ -184,9 +187,9 @@ The test entry will land in D1 with `email_sent_at: null` (because `test@example
 
 ## Known safe non-issues
 
-| Thing | Why it's fine |
-|---|---|
-| `contact_outbox` table in D1 | Legacy schema from an earlier worker version. Empty. Not used by current code. |
-| `num_tables: 0` in `wrangler d1 list` | That field is stale cached metadata from the Cloudflare API. The tables definitely exist — use `SELECT name FROM sqlite_master` to verify. |
-| `vaifoou-construction` leads with `email_sent_at: null` | Only the smoke test entry. No real customer leads. |
-| 4 `rc-roofing` leads with `email_sent_at: null` | All developer tests (Form Wiring Test, Dhruv Garg, Resend Domain Test). No real customers. |
+| Thing                                                   | Why it's fine                                                                                                                              |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `contact_outbox` table in D1                            | Legacy schema from an earlier worker version. Empty. Not used by current code.                                                             |
+| `num_tables: 0` in `wrangler d1 list`                   | That field is stale cached metadata from the Cloudflare API. The tables definitely exist — use `SELECT name FROM sqlite_master` to verify. |
+| `vaifoou-construction` leads with `email_sent_at: null` | Only the smoke test entry. No real customer leads.                                                                                         |
+| 4 `rc-roofing` leads with `email_sent_at: null`         | All developer tests (Form Wiring Test, Dhruv Garg, Resend Domain Test). No real customers.                                                 |

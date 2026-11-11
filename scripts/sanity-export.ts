@@ -15,7 +15,7 @@
  */
 
 import { execSync } from 'child_process';
-import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'fs';
+import { existsSync, mkdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 
 const BACKUP_DIR = './backups';
@@ -76,7 +76,7 @@ try {
         unlinkSync(filepath);
         console.log(`🗑️  Local file deleted: ${filepath}\n`);
       }
-    } catch (s3Error) {
+    } catch {
       console.error(`\n❌ S3 upload failed. Local backup preserved at: ${filepath}`);
       process.exit(1);
     }

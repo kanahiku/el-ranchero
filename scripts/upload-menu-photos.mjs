@@ -31,53 +31,53 @@ const client = createClient({
 // key: exact filename (without extension), value: Sanity menuItem _id
 const PHOTO_MAP = {
   // Drinks
-  'Guava Lemonade (Edit)':              'menuItem-guava-lemonade',
-  'Hibiscus Mamaki Tea (Edit)':         'menuItem-big-island-mamaki-mint-tea',
+  'Guava Lemonade (Edit)': 'menuItem-guava-lemonade',
+  'Hibiscus Mamaki Tea (Edit)': 'menuItem-big-island-mamaki-mint-tea',
 
   // Salads
-  'Aloha Caesar 02 (Edit)':             'menuItem-aloha-caesar',
-  'Aloha Mediterranean 04 (Edit)':      'menuItem-aloha-mediterranean',
-  'Aloha Passion 02 (Edit)':            'menuItem-aloha-passion',
-  'Kamuela Cobb 02 (Edit)':             'menuItem-kamuela-cobb',
-  'Mandarin Ginger 02 (Edit)':          'menuItem-mandarin-ginger',
-  'Ono Island Ahi 05 (Edit)':           'menuItem-ono-island-ahi',
-  'The Paniolo 03 (Edit)':              'menuItem-the-paniolo',
+  'Aloha Caesar 02 (Edit)': 'menuItem-aloha-caesar',
+  'Aloha Mediterranean 04 (Edit)': 'menuItem-aloha-mediterranean',
+  'Aloha Passion 02 (Edit)': 'menuItem-aloha-passion',
+  'Kamuela Cobb 02 (Edit)': 'menuItem-kamuela-cobb',
+  'Mandarin Ginger 02 (Edit)': 'menuItem-mandarin-ginger',
+  'Ono Island Ahi 05 (Edit)': 'menuItem-ono-island-ahi',
+  'The Paniolo 03 (Edit)': 'menuItem-the-paniolo',
 
   // Soups
-  'Tomato Bisque 03':                   'menuItem-tomato-bisque',
+  'Tomato Bisque 03': 'menuItem-tomato-bisque',
 
   // Wraps & Subs
-  'Aloha Gyro Wrap 01 (Edit)':          'menuItem-aloha-gyro-wrap',
-  'Chicken Pesto Sandwich 01 (Edit)':   'menuItem-chicken-pesto-sandwich',
-  'Club Sub 02 (Edit)':                 'menuItem-club-sub',
-  'Curried Chicken Wrap 01 (Edit)':     'menuItem-curried-chicken-wrap',
-  'Fresh Island Ahi Wrap 02 (Edit)':    'menuItem-fresh-island-ahi-wrap',
-  'Grilled Cheese Combo 01':            'menuItem-grilled-cheese-soup-combo',
-  'Grilled Steak Wrap 01 (Edit)':       'menuItem-grilled-steak-wrap',
-  'Hummus Pita Wrap 01 (Edit)':         'menuItem-hummus-pita-wrap',
-  "Tutu_s Chicken Salad Tortilla Wrap 01 (Edit)": 'menuItem-tutu-s-chicken-salad-tortilla-wrap',
+  'Aloha Gyro Wrap 01 (Edit)': 'menuItem-aloha-gyro-wrap',
+  'Chicken Pesto Sandwich 01 (Edit)': 'menuItem-chicken-pesto-sandwich',
+  'Club Sub 02 (Edit)': 'menuItem-club-sub',
+  'Curried Chicken Wrap 01 (Edit)': 'menuItem-curried-chicken-wrap',
+  'Fresh Island Ahi Wrap 02 (Edit)': 'menuItem-fresh-island-ahi-wrap',
+  'Grilled Cheese Combo 01': 'menuItem-grilled-cheese-soup-combo',
+  'Grilled Steak Wrap 01 (Edit)': 'menuItem-grilled-steak-wrap',
+  'Hummus Pita Wrap 01 (Edit)': 'menuItem-hummus-pita-wrap',
+  'Tutu_s Chicken Salad Tortilla Wrap 01 (Edit)': 'menuItem-tutu-s-chicken-salad-tortilla-wrap',
 };
 
 // ─── Alt text per item ────────────────────────────────────────────────────────
 const ALT_MAP = {
-  'menuItem-guava-lemonade':                    'Guava lemonade at El Ranchero',
-  'menuItem-big-island-mamaki-mint-tea':        'Hibiscus Mamaki mint tea at El Ranchero',
-  'menuItem-aloha-caesar':                      'Aloha Caesar salad at El Ranchero',
-  'menuItem-aloha-mediterranean':               'Aloha Mediterranean salad at El Ranchero',
-  'menuItem-aloha-passion':                     'Aloha Passion salad at El Ranchero',
-  'menuItem-kamuela-cobb':                      'Kamuela Cobb salad at El Ranchero',
-  'menuItem-mandarin-ginger':                   'Mandarin Ginger salad at El Ranchero',
-  'menuItem-ono-island-ahi':                    'Ono Island Ahi salad at El Ranchero',
-  'menuItem-the-paniolo':                       'The Paniolo salad at El Ranchero',
-  'menuItem-tomato-bisque':                     'Tomato bisque soup at El Ranchero',
-  'menuItem-aloha-gyro-wrap':                   'Aloha Gyro Wrap at El Ranchero',
-  'menuItem-chicken-pesto-sandwich':            'Chicken Pesto Sandwich at El Ranchero',
-  'menuItem-club-sub':                          'Club Sub sandwich at El Ranchero',
-  'menuItem-curried-chicken-wrap':              'Curried Chicken Wrap at El Ranchero',
-  'menuItem-fresh-island-ahi-wrap':             'Fresh Island Ahi Wrap at El Ranchero',
-  'menuItem-grilled-cheese-soup-combo':         'Grilled Cheese Soup Combo at El Ranchero',
-  'menuItem-grilled-steak-wrap':                'Grilled Steak Wrap at El Ranchero',
-  'menuItem-hummus-pita-wrap':                  'Hummus Pita Wrap at El Ranchero',
+  'menuItem-guava-lemonade': 'Guava lemonade at El Ranchero',
+  'menuItem-big-island-mamaki-mint-tea': 'Hibiscus Mamaki mint tea at El Ranchero',
+  'menuItem-aloha-caesar': 'Aloha Caesar salad at El Ranchero',
+  'menuItem-aloha-mediterranean': 'Aloha Mediterranean salad at El Ranchero',
+  'menuItem-aloha-passion': 'Aloha Passion salad at El Ranchero',
+  'menuItem-kamuela-cobb': 'Kamuela Cobb salad at El Ranchero',
+  'menuItem-mandarin-ginger': 'Mandarin Ginger salad at El Ranchero',
+  'menuItem-ono-island-ahi': 'Ono Island Ahi salad at El Ranchero',
+  'menuItem-the-paniolo': 'The Paniolo salad at El Ranchero',
+  'menuItem-tomato-bisque': 'Tomato bisque soup at El Ranchero',
+  'menuItem-aloha-gyro-wrap': 'Aloha Gyro Wrap at El Ranchero',
+  'menuItem-chicken-pesto-sandwich': 'Chicken Pesto Sandwich at El Ranchero',
+  'menuItem-club-sub': 'Club Sub sandwich at El Ranchero',
+  'menuItem-curried-chicken-wrap': 'Curried Chicken Wrap at El Ranchero',
+  'menuItem-fresh-island-ahi-wrap': 'Fresh Island Ahi Wrap at El Ranchero',
+  'menuItem-grilled-cheese-soup-combo': 'Grilled Cheese Soup Combo at El Ranchero',
+  'menuItem-grilled-steak-wrap': 'Grilled Steak Wrap at El Ranchero',
+  'menuItem-hummus-pita-wrap': 'Hummus Pita Wrap at El Ranchero',
   'menuItem-tutu-s-chicken-salad-tortilla-wrap': "Tutu's Chicken Salad Tortilla Wrap at El Ranchero",
 };
 
@@ -139,7 +139,8 @@ async function main() {
   for (const [stem, docId] of Object.entries(PHOTO_MAP)) {
     try {
       const success = await uploadAndPatch(stem, docId);
-      if (success) ok++; else fail++;
+      if (success) ok++;
+      else fail++;
     } catch (err) {
       console.error(`  ✗  Error for "${stem}":`, err.message);
       fail++;
@@ -149,4 +150,7 @@ async function main() {
   console.log(`\n✅  Done — ${ok} uploaded, ${fail} skipped/failed`);
 }
 
-main().catch((err) => { console.error(err); process.exit(1); });
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

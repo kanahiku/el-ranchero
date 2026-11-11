@@ -155,7 +155,10 @@ const contentBlocks = post.contentBlocks ?? [];
       return (
         <div class="mt-6 mb-8">
           {block.title && (
-            <h2 id={faqHeadingId} class:list={[headingClass, 'mt-10 md:mt-14 scroll-mt-[var(--blog-sticky-top,8.5rem)]']}>
+            <h2
+              id={faqHeadingId}
+              class:list={[headingClass, 'mt-10 md:mt-14 scroll-mt-[var(--blog-sticky-top,8.5rem)]']}
+            >
               {block.title}
             </h2>
           )}
