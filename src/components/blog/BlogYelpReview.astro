@@ -1,0 +1,21 @@
+---
+import type { BlogContentYelpReview } from '~/lib/content/types';
+
+export interface Props {
+  review: BlogContentYelpReview;
+}
+
+const { review } = Astro.props;
+---
+
+<figure class="blog-yelp-review mt-6 rounded-lg border border-card-light bg-card-light p-4 md:p-5">
+  <span class="yelp-review block text-[15px] leading-[160%] text-blog md:text-[16px]" data-review-id={review.reviewId} data-hostname="www.yelp.com">
+    Read <a href={review.reviewerUrl} rel="nofollow noopener" target="_blank">{review.reviewerName}</a>'s
+    <a href={review.reviewUrl} rel="nofollow noopener" target="_blank">review</a> of
+    <a href={review.businessUrl} rel="nofollow noopener" target="_blank">{review.businessName}</a> on
+    <a href="https://www.yelp.com" rel="nofollow noopener" target="_blank">Yelp</a>
+  </span>
+  <figcaption class="mt-4">
+    <a href={review.reviewUrl} target="_blank" rel="nofollow noopener noreferrer" class="btn-link">Read full review</a>
+  </figcaption>
+</figure>

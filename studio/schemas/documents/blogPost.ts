@@ -291,6 +291,25 @@ export const blogPost = defineType({
         }),
         defineArrayMember({
           type: 'object',
+          name: 'yelpEmbed',
+          title: 'Yelp review',
+          fields: [
+            defineField({ name: 'reviewId', title: 'Review ID', type: 'string', validation: (r) => r.required() }),
+            defineField({ name: 'reviewerName', title: 'Reviewer', type: 'string', validation: (r) => r.required() }),
+            defineField({ name: 'reviewerUrl', title: 'Reviewer URL', type: 'url' }),
+            defineField({ name: 'reviewUrl', title: 'Review URL', type: 'url', validation: (r) => r.required() }),
+            defineField({ name: 'businessName', title: 'Business', type: 'string' }),
+            defineField({ name: 'businessUrl', title: 'Business URL', type: 'url' }),
+          ],
+          preview: {
+            select: { title: 'reviewerName', subtitle: 'businessName' },
+            prepare({ title, subtitle }: { title?: string; subtitle?: string }) {
+              return { title: title ? `${title} on Yelp` : 'Yelp review', subtitle };
+            },
+          },
+        }),
+        defineArrayMember({
+          type: 'object',
           name: 'faq',
           title: 'FAQ section',
           fields: [

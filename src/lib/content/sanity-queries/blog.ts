@@ -101,6 +101,16 @@ const BLOG_POST_PROJECTION = /* groq */ `
       _key,
       title,
       "items": items[] { _key, question, answer }
+    },
+    _type == "yelpEmbed" => {
+      _type,
+      _key,
+      reviewId,
+      reviewerName,
+      reviewerUrl,
+      reviewUrl,
+      businessName,
+      businessUrl
     }
   }
 `;

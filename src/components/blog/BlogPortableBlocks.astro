@@ -4,8 +4,9 @@ import { formatTableCell } from '~/components/blog/blogClasses';
 import { Icon } from 'astro-icon/components';
 import Button from '~/components/ui/Button.astro';
 import BlogArticleImage from '~/components/blog/BlogArticleImage.astro';
+import BlogYelpReview from '~/components/blog/BlogYelpReview.astro';
 import { getPortableHeadingId } from '~/lib/content/blogArticle';
-import { paragraphClass, headingClass, h3Class } from '~/components/blog/blogClasses';
+import { paragraphClass, headingClass, h3Class, h4Class } from '~/components/blog/blogClasses';
 
 export interface Props {
   post: BlogPost;
@@ -20,14 +21,23 @@ const contentBlocks = post.contentBlocks ?? [];
     if (block._type === 'heading' && block.level === 2) {
       const headingId = getPortableHeadingId(post, block._key);
       return (
-        <h2 id={headingId} class:list={[headingClass, 'mt-10 md:mt-14 scroll-mt-28']}>
+        <h2 id={headingId} class:list={[headingClass, 'mt-10 md:mt-14 scroll-mt-[var(--blog-sticky-top,8.5rem)]']}>
           {block.text}
         </h2>
       );
     }
 
+    if (block._type === 'heading' && block.level === 4) {
+      return <h4 class={h4Class}>{block.text}</h4>;
+    }
+
     if (block._type === 'heading') {
-      return <h3 class={h3Class}>{block.text}</h3>;
+      const headingId = block.level === 3 ? getPortableHeadingId(post, block._key) : undefined;
+      return (
+        <h3 id={headingId} class:list={[h3Class, 'scroll-mt-[var(--blog-sticky-top,8.5rem)]']}>
+          {block.text}
+        </h3>
+      );
     }
 
     if (block._type === 'image') {
@@ -123,6 +133,10 @@ const contentBlocks = post.contentBlocks ?? [];
       );
     }
 
+    if (block._type === 'yelpReview') {
+      return <BlogYelpReview review={block} />;
+    }
+
     if (block._type === 'button') {
       return (
         <p class="mt-6">
@@ -132,9 +146,14 @@ const contentBlocks = post.contentBlocks ?? [];
     }
 
     if (block._type === 'faq') {
+      const faqHeadingId = block.title ? getPortableHeadingId(post, block._key) : undefined;
       return (
-        <div class="mt-10 mb-8">
-          <h2 class={headingClass}>{block.title || 'Frequently Asked Questions'}</h2>
+        <div class="mt-6 mb-8">
+          {block.title && (
+            <h2 id={faqHeadingId} class:list={[headingClass, 'mt-10 md:mt-14 scroll-mt-[var(--blog-sticky-top,8.5rem)]']}>
+              {block.title}
+            </h2>
+          )}
           <div class="space-y-0">
             {block.items.map((item, index) => (
               <details class:list={['group py-1', index > 0 && 'border-t border-default/15']} name="blog-faq">

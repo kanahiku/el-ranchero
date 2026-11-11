@@ -61,3 +61,9 @@ const unmatchedImages = usePortableBody ? [] : getUnmatchedInlineImages(post);
 
   {unmatchedImages.map((imageBlock) => <BlogArticleImage image={imageBlock.image} caption={imageBlock.caption} />)}
 </div>
+
+{
+  post.contentBlocks?.some((block) => block._type === 'yelpReview') && (
+    <script is:inline async src="https://www.yelp.com/embed/widgets.js"></script>
+  )
+}

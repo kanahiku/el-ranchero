@@ -296,7 +296,8 @@ export type BlogContentBlock =
   | BlogContentTable
   | BlogContentCallout
   | BlogContentButton
-  | BlogContentFaq;
+  | BlogContentFaq
+  | BlogContentYelpReview;
 
 export interface BlogContentParagraph {
   _type: 'paragraph';
@@ -311,7 +312,7 @@ export interface BlogContentParagraph {
 export interface BlogContentHeading {
   _type: 'heading';
   _key: string;
-  level: 2 | 3;
+  level: 2 | 3 | 4;
   text: string;
 }
 
@@ -370,6 +371,17 @@ export interface BlogContentFaq {
   _key: string;
   title?: string;
   items: BlogContentFaqItem[];
+}
+
+export interface BlogContentYelpReview {
+  _type: 'yelpReview';
+  _key: string;
+  reviewId: string;
+  reviewerName: string;
+  reviewerUrl: string;
+  reviewUrl: string;
+  businessName: string;
+  businessUrl: string;
 }
 
 // ─── Testimonials ─────────────────────────────────────────────────────────────

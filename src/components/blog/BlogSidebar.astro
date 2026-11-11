@@ -14,13 +14,18 @@ export interface Props {
 const { toc, ctaTitle = 'Have a question?', ctaHref = '/form', variant = 'sticky' } = Astro.props;
 
 const isSticky = variant === 'sticky';
+const tocLinkClass = (level: 2 | 3) =>
+  [
+    'block font-normal leading-[150%] text-muted hover:text-heading',
+    level === 3 ? 'pl-4 text-[13px] md:text-[14px]' : 'text-[14px] md:text-[15px]',
+  ].join(' ');
 ---
 
 <blog-toc-nav
   class:list={[
     'block',
     isSticky
-      ? 'hidden lg:block lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto'
+      ? 'hidden lg:block lg:sticky lg:top-[var(--blog-sticky-top,8.5rem)] lg:self-start lg:max-h-[calc(100vh-var(--blog-sticky-top,8.5rem)-1.5rem)] lg:overflow-y-auto'
       : 'lg:hidden mb-10',
   ]}
 >
@@ -38,11 +43,7 @@ const isSticky = variant === 'sticky';
             <ol class="space-y-2.5 mt-3">
               {toc.map((item) => (
                 <li>
-                  <a
-                    href={`#${item.id}`}
-                    data-toc-link
-                    class="block text-[14px] md:text-[15px] font-normal leading-[150%] text-muted hover:text-heading"
-                  >
+                  <a href={`#${item.id}`} data-toc-link class={tocLinkClass(item.level)}>
                     {item.title}
                   </a>
                 </li>
@@ -54,11 +55,7 @@ const isSticky = variant === 'sticky';
           <ol class="space-y-2.5">
             {toc.map((item) => (
               <li>
-                <a
-                  href={`#${item.id}`}
-                  data-toc-link
-                  class="block text-[14px] md:text-[15px] font-normal leading-[150%] text-muted hover:text-heading"
-                >
+                <a href={`#${item.id}`} data-toc-link class={tocLinkClass(item.level)}>
                   {item.title}
                 </a>
               </li>
@@ -108,13 +105,20 @@ const isSticky = variant === 'sticky';
         if (target) items.push({ link, target });
       }
 
-      if (!items.length) return;
-
-      const marker = () => {
+      const headerOffset = () => {
         const header = document.getElementById('header');
-        const headerH = header?.getBoundingClientRect().height ?? 72;
-        return Math.max(headerH + 56, 168);
+        const headerH = header?.getBoundingClientRect().height ?? 96;
+        const top = headerH + 28;
+        document.documentElement.style.setProperty('--blog-sticky-top', `${top}px`);
+        return top;
       };
+
+      if (!items.length) {
+        headerOffset();
+        return;
+      }
+
+      const marker = () => headerOffset() + 24;
 
       const sync = () => {
         const line = marker();

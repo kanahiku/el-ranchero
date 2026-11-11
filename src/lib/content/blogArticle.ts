@@ -3,6 +3,7 @@ import type { BlogContentBlock, BlogContentImage, BlogPost, ServiceSection } fro
 export interface TocItem {
   id: string;
   title: string;
+  level: 2 | 3;
 }
 
 export interface ArticleBlock {
@@ -91,15 +92,18 @@ export function getUnmatchedInlineImages(post: BlogPost): BlogContentImage[] {
 export function getArticleToc(post: BlogPost): TocItem[] {
   if (shouldUsePortableBody(post)) {
     const used = new Set<string>();
-    return (post.contentBlocks ?? [])
-      .filter(
-        (block): block is Extract<BlogContentBlock, { _type: 'heading' }> =>
-          block._type === 'heading' && block.level === 2
-      )
-      .map((block) => ({
-        id: uniqueHeadingId(block.text, used),
-        title: block.text,
-      }));
+    const items: TocItem[] = [];
+    for (const block of post.contentBlocks ?? []) {
+      const entry =
+        block._type === 'heading' && (block.level === 2 || block.level === 3)
+          ? { title: block.text, level: block.level }
+          : block._type === 'faq' && block.title?.trim()
+            ? { title: block.title.trim(), level: 2 as const }
+            : null;
+      if (!entry) continue;
+      items.push({ id: uniqueHeadingId(entry.title, used), title: entry.title, level: entry.level });
+    }
+    return items;
   }
 
   const used = new Set<string>();
@@ -108,7 +112,7 @@ export function getArticleToc(post: BlogPost): TocItem[] {
   for (const section of post.sections) {
     const heading = section.heading?.trim();
     if (!heading || heading === post.title) continue;
-    items.push({ id: uniqueHeadingId(heading, used), title: heading });
+    items.push({ id: uniqueHeadingId(heading, used), title: heading, level: 2 });
   }
 
   return items;
@@ -134,8 +138,14 @@ export function getArticleBlocks(post: BlogPost): ArticleBlock[] {
 export function getPortableHeadingId(post: BlogPost, key: string): string | undefined {
   const used = new Set<string>();
   for (const block of post.contentBlocks ?? []) {
-    if (block._type !== 'heading' || block.level !== 2) continue;
-    const id = uniqueHeadingId(block.text, used);
+    const title =
+      block._type === 'heading' && (block.level === 2 || block.level === 3)
+        ? block.text
+        : block._type === 'faq'
+          ? block.title?.trim()
+          : '';
+    if (!title) continue;
+    const id = uniqueHeadingId(title, used);
     if (block._key === key) return id;
   }
   return undefined;

@@ -12,7 +12,7 @@
  */
 export const site = {
   name: 'El Ranchero',
-  url: 'https://example.com',
+  url: 'https://www.elrancherohawaii.com',
   description:
     'Island-grown produce, never-frozen local ahi, and bowls built the way you like them. Kailua-born since 2006 — six spots on Oahu.',
   footerTagline:
