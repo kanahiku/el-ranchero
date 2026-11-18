@@ -11,6 +11,7 @@ export function urlFor(source: SanityImageSource) {
 export type SanityImageFields = {
   src?: string;
   alt?: string;
+  caption?: string;
   crop?: { top: number; bottom: number; left: number; right: number } | null;
   hotspot?: { x: number; y: number; height?: number; width?: number } | null;
   asset?: { _ref?: string; _id?: string; url?: string; _type?: string } | null;
@@ -40,14 +41,14 @@ export function resolveContentImage(image?: SanityImageFields | null): ContentIm
           url.searchParams.set('fp-x', String(image.hotspot.x));
           url.searchParams.set('fp-y', String(image.hotspot.y));
         }
-        return { src: url.toString(), alt };
+        return { src: url.toString(), alt, ...(image.caption ? { caption: image.caption } : {}) };
       }
     } catch {
       // Fall through to the raw / fallback URL.
     }
   }
 
-  if (image.src) return { src: image.src, alt };
+  if (image.src) return { src: image.src, alt, ...(image.caption ? { caption: image.caption } : {}) };
   return undefined;
 }
 

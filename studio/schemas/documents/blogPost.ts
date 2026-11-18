@@ -76,7 +76,10 @@ export const blogPost = defineType({
       group: 'content',
       description: 'Listing card and the photo at the top of the article. Extra photos go in the article body below.',
       options: { hotspot: true },
-      fields: [defineField({ name: 'alt', title: 'Alt text', type: 'string' })],
+      fields: [
+        defineField({ name: 'alt', title: 'Alt text', type: 'string' }),
+        defineField({ name: 'caption', title: 'Caption', type: 'string' }),
+      ],
     }),
     defineField({
       name: 'imageUrl',

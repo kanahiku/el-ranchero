@@ -3,11 +3,26 @@ import { sanityClient } from '../../sanity/client';
 import { resolveContentImage } from '../../sanity/image';
 import type { BlogPost } from '../types';
 import { type FetchedImage } from './shared';
-import { type SanityBlogPost, portableTextToContentBlocks, portableTextToParagraphs } from './portableText';
+import { type SanityBlogPost, isCaptionBlock, portableTextToContentBlocks, portableTextToParagraphs } from './portableText';
 
 function normalizeBlogPost(post: SanityBlogPost): BlogPost {
-  const contentBlocks = portableTextToContentBlocks(post.body);
-  const body = portableTextToParagraphs(post.body);
+  let contentBlocks = portableTextToContentBlocks(post.body);
+  let body = portableTextToParagraphs(post.body);
+  const image = resolveContentImage(post.image as FetchedImage | undefined);
+
+  if (image && !image.caption && Array.isArray(post.body) && post.body.length > 0) {
+    const heroCaption = isCaptionBlock(post.body[0]);
+    if (heroCaption) {
+      image.caption = heroCaption;
+      if (contentBlocks[0]?._type === 'paragraph' && contentBlocks[0].text === heroCaption) {
+        contentBlocks = contentBlocks.slice(1);
+      }
+      if (body[0] === heroCaption) {
+        body = body.slice(1);
+      }
+    }
+  }
+
   const excerpt = post.excerpt || body[0] || '';
   const metaTitle = post.metaTitle || post.meta?.title || post.title;
   const metaDescription = post.metaDescription || post.meta?.description || excerpt;
@@ -17,7 +32,7 @@ function normalizeBlogPost(post: SanityBlogPost): BlogPost {
     excerpt,
     publishDate: post.publishDate,
     author: post.author,
-    image: resolveContentImage(post.image as FetchedImage | undefined),
+    image,
     relatedPages: (post.relatedPages ?? []).map((key) => key.replace(/^\/+/, '')).filter(Boolean),
     meta: {
       title: metaTitle,
@@ -56,6 +71,7 @@ const BLOG_POST_CARD_PROJECTION = /* groq */ `
   "image": {
     "src": coalesce(image.asset->url, imageUrl, ""),
     "alt": coalesce(image.alt, imageAlt, title),
+    "caption": image.caption,
     "crop": image.crop,
     "hotspot": image.hotspot,
     "asset": image.asset

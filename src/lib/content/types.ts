@@ -4,6 +4,7 @@ import type { CallToAction } from '~/types';
 export interface ContentImage {
   src: string;
   alt: string;
+  caption?: string;
 }
 
 // ─── Navigation ───────────────────────────────────────────────────────────────

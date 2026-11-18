@@ -185,10 +185,27 @@ function yelpReviewFromBlock(
   };
 }
 
+export function isCaptionBlock(block: SanityPortableBlock | undefined | null): string | null {
+  if (!block || block._type !== 'block' || (block.style && block.style !== 'normal')) return null;
+  const text = portableBlockText(block).trim();
+  if (!text || text.length > 70) return null;
+  if (text.endsWith('.') && text.length > 40) return null;
+  const children = block.children ?? [];
+  if (!children.length) return null;
+  const allItalic = children.every(
+    (c) => c.text?.trim() === '' || (Array.isArray(c.marks) && c.marks.includes('em'))
+  );
+  if (allItalic) {
+    return text;
+  }
+  return null;
+}
+
 export function portableTextToContentBlocks(body: SanityPortableBlock[] | null | undefined): BlogContentBlock[] {
   if (!Array.isArray(body)) return [];
 
   const result: BlogContentBlock[] = [];
+  const skippedIndices = new Set<number>();
 
   let listBuffer: { _key: string; html: string; level: number }[] = [];
   let listType: 'bullet' | 'number' | null = null;
@@ -222,6 +239,8 @@ export function portableTextToContentBlocks(body: SanityPortableBlock[] | null |
   }
 
   body.forEach((block, index) => {
+    if (skippedIndices.has(index)) return;
+
     const key = block._key || `block-${index}`;
 
     if (block._type === 'ctaButton' || block._type === 'button') {
@@ -263,7 +282,14 @@ export function portableTextToContentBlocks(body: SanityPortableBlock[] | null |
         asset: block.asset,
       });
       if (!image?.src) return;
-      const caption = typeof block.caption === 'string' ? block.caption.trim() : '';
+      let caption = typeof block.caption === 'string' ? block.caption.trim() : '';
+      if (!caption && index + 1 < body.length) {
+        const nextCaption = isCaptionBlock(body[index + 1]);
+        if (nextCaption) {
+          caption = nextCaption;
+          skippedIndices.add(index + 1);
+        }
+      }
       result.push({ _type: 'image', _key: key, image, ...(caption ? { caption } : {}) });
       return;
     }
