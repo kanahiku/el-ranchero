@@ -72,7 +72,7 @@ export function spansToHtml(children: SanitySpan[] | undefined, markDefs: Sanity
   return children
     .map((span) => {
       if (span._type !== 'span') return '';
-      let html = escapeHtml(span.text ?? '');
+      let html = escapeHtml(span.text ?? '').replace(/\n/g, '<br />');
       for (const mark of span.marks ?? []) {
         const def = defsMap.get(mark);
         if (def?._type === 'link') {
