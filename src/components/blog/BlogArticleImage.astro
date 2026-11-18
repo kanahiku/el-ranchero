@@ -26,7 +26,9 @@ const { image, caption = image?.caption, eager = false, class: className = 'my-8
         decoding="async"
       />
       {caption && (
-        <figcaption class="mt-3 text-[14px] md:text-[15px] font-normal leading-[160%] text-blog italic">{caption}</figcaption>
+        <figcaption class="mt-3 text-[14px] md:text-[15px] font-normal leading-[160%] text-blog italic">
+          {caption}
+        </figcaption>
       )}
     </figure>
   )

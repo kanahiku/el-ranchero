@@ -3,7 +3,12 @@ import { sanityClient } from '../../sanity/client';
 import { resolveContentImage } from '../../sanity/image';
 import type { BlogPost } from '../types';
 import { type FetchedImage } from './shared';
-import { type SanityBlogPost, isCaptionBlock, portableTextToContentBlocks, portableTextToParagraphs } from './portableText';
+import {
+  type SanityBlogPost,
+  isCaptionBlock,
+  portableTextToContentBlocks,
+  portableTextToParagraphs,
+} from './portableText';
 
 function normalizeBlogPost(post: SanityBlogPost): BlogPost {
   let contentBlocks = portableTextToContentBlocks(post.body);

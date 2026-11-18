@@ -192,9 +192,7 @@ export function isCaptionBlock(block: SanityPortableBlock | undefined | null): s
   if (text.endsWith('.') && text.length > 40) return null;
   const children = block.children ?? [];
   if (!children.length) return null;
-  const allItalic = children.every(
-    (c) => c.text?.trim() === '' || (Array.isArray(c.marks) && c.marks.includes('em'))
-  );
+  const allItalic = children.every((c) => c.text?.trim() === '' || (Array.isArray(c.marks) && c.marks.includes('em')));
   if (allItalic) {
     return text;
   }
